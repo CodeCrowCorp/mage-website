@@ -1,4 +1,5 @@
 <script>
+  	import { PUBLIC_PRODUCTION } from "$env/static/public";
     import { onMount } from 'svelte'
     import { themeChange } from 'theme-change'
   
