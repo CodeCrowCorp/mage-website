@@ -5,10 +5,10 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev:only": "vite dev",
+		"dev:only": "vite dev --host",
 		"build:only": "vite build",
-		"tailwind:watch": "cross-env TAILWIND_MODE=watch cross-env NODE_ENV=development postcss src/assets/styles/tailwind.css -o src/assets/styles/tailwind-output.css -w",
-		"tailwind:build": "cross-env TAILWIND_MODE=build cross-env NODE_ENV=production postcss src/assets/styles/tailwind.css -o src/assets/styles/tailwind-output.css",
+		"tailwind:watch": "cross-env TAILWIND_MODE=watch cross-env NODE_ENV=development postcss src/app.css -o src/assets/styles/tailwind-output.css -w",
+		"tailwind:build": "cross-env TAILWIND_MODE=build cross-env NODE_ENV=production postcss src/app.css -o src/assets/styles/tailwind-output.css",
 		"dev": "concurrently \"npm run dev:only\" \"npm run tailwind:watch\"",
 		"build": "npm run tailwind:build && npm run build:only",
 		"preview": "vite preview",
@@ -50,6 +50,7 @@
 		"animate.css": "^4.1.1",
 		"daisyui": "^2.42.1",
 		"nprogress": "^0.2.0",
-		"playwright-e2e-coverage-report": "^1.0.20"
+		"playwright-e2e-coverage-report": "^1.0.20",
+		"theme-change": "^2.2.0"
 	}
 }

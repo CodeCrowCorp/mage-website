@@ -1,7 +1,7 @@
 <br>
 
 <h3 align="center">
-    A Svelte port of the Code Crow project
+    Svelte port of cro-website
 </h3>
 
 <br>
