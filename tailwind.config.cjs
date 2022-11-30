@@ -1,8 +1,19 @@
-/** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{html,js,svelte,ts}'],
-  theme: {
-    extend: {},
+  content: [
+    "./src/**/*.{html,js,svelte,ts}",
+  ],
+  theme: { extend: {} },
+  daisyui: {
+    themes: [
+      "light",
+      "dark"
+    ],
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/aspect-ratio'),
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
+    require("daisyui"),
+    require('tailwind-scrollbar'),
+  ]
 }

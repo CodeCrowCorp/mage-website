@@ -1,38 +1,47 @@
-# create-svelte
+<br>
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+<h3 align="center">
+    Svelte port of cro-website
+</h3>
 
-## Creating a project
+<br>
 
-If you're seeing this, you've probably already done this step. Congrats!
+<p align="center">
+    <a href="https://github.com/CodeCrowCorp/cro-website-sv"><img src="https://img.shields.io/github/v/release/CodeCrowCorp/cro-website-sv?color=%23ff00a0&include_prereleases&label=version&sort=semver"></a>
+    &nbsp;
+    <a href="https://github.com/CodeCrowCorp/cro-website-sv"><img src="https://img.shields.io/badge/built_with-svelte-FF3E00.svg"></a>
+    &nbsp;
+    <a href="https://github.com/CodeCrowCorp/cro-website-sv/actions"><img src="https://github.com/CodeCrowCorp/cro-website-sv/actions/workflows/ci-prod.yml/badge.svg"></a>
+    &nbsp;
+    <a href="https://codecov.io/gh/CodeCrowCorp/cro-website-sv/"><img src="https://codecov.io/gh/CodeCrowCorp/cro-website-sv/branch/main/graph/badge.svg"></a>
+    &nbsp;
+    <a href="https://dependabot.com/"><img src="https://img.shields.io/badge/dependabot-enabled-025e8c?logo=Dependabot"></a>
+    &nbsp;
+</p>
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+<p align="center">
+    <a href="https://github.com/CodeCrowCorp/cro-website-sv/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-GPL3.0-00bfff.svg"></a>
+    &nbsp;
+	<a href="https://discord.gg/codecrow"><img src="https://img.shields.io/discord/766681806463303680?label=discord&color=5a66f6"></a>
+	&nbsp;
+    <a href="https://twitter.com/CodeCrowCorp"><img src="https://img.shields.io/badge/twitter-follow_us-1d9bf0.svg"></a>
+    &nbsp;
+</p>
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+<br>
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Once you've forked and cloned the project:
 
-```bash
-npm run dev
+```sh
+# Install dependencies
+$ npm install
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+# Start a development server
+$ npm run dev
 ```
 
-## Building
+## Contributing
 
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+Your feedback is welcome and appreciated! Please use the issue tracker to talk about potential implementations or make feature requests. If you're interested in making a PR, we suggest opening up an issue to talk about the change you'd like to make as early as possible.
