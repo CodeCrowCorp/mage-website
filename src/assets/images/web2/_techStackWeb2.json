@@ -1,0 +1,398 @@
+[
+    {
+        "item_image": "/assets/images/web2/amazon-web-services.svg",
+        "item_text": "Amazon Web Services"
+    },
+    {
+        "item_image": "/assets/images/web2/android-os.svg",
+        "item_text": "Android"
+    },
+    {
+        "item_image": "/assets/images/web2/angularjs.svg",
+        "item_text": "Angular"
+    },
+    {
+        "item_image": "/assets/images/web2/ansible.svg",
+        "item_text": "Ansible"
+    },
+    {
+        "item_image": "/assets/images/web2/apollo.svg",
+        "item_text": "Apollo"
+    },
+    {
+        "item_image": "/assets/images/web2/arduino.svg",
+        "item_text": "Arduino"
+    },
+    {
+        "item_image": "/assets/images/web2/atom-editor.svg",
+        "item_text": "Atom Editor"
+    },
+    {
+        "item_image": "/assets/images/web2/azure.svg",
+        "item_text": "Azure"
+    },
+    {
+        "item_image": "/assets/images/web2/bitbucket.svg",
+        "item_text": "Bitbucket"
+    },
+    {
+        "item_image": "/assets/images/web2/c-programming.svg",
+        "item_text": "C"
+    },
+    {
+        "item_image": "/assets/images/web2/c-sharp-logo.svg",
+        "item_text": "C#"
+    },
+    {
+        "item_image": "/assets/images/web2/c++.svg",
+        "item_text": "C++"
+    },
+    {
+        "item_image": "/assets/images/web2/chaos-computer-club.svg",
+        "item_text": "Chaos Computer Club"
+    },
+    {
+        "item_image": "/assets/images/web2/circleci.svg",
+        "item_text": "CircleCI"
+    },
+    {
+        "item_image": "/assets/images/web2/cloudflare.svg",
+        "item_text": "Cloudflare"
+    },
+    {
+        "item_image": "/assets/images/logo_3.svg",
+        "item_text": "Code Crow"
+    },
+    {
+        "item_image": "/assets/images/web2/codepen.svg",
+        "item_text": "Codepen"
+    },
+    {
+        "item_image": "/assets/images/web2/coderwall.svg",
+        "item_text": "Coderwall"
+    },
+    {
+        "item_image": "/assets/images/web2/coffee-script.svg",
+        "item_text": "Coffee Script"
+    },
+    {
+        "item_image": "/assets/images/web2/connect-develop.svg",
+        "item_text": "Connect Develop"
+    },
+    {
+        "item_image": "/assets/images/web2/contao.svg",
+        "item_text": "Contao"
+    },
+    {
+        "item_image": "/assets/images/web2/css3.svg",
+        "item_text": "CSS3"
+    },
+    {
+        "item_image": "/assets/images/web2/cydia.svg",
+        "item_text": "Cydia"
+    },
+    {
+        "item_image": "/assets/images/web2/delphi-ide.svg",
+        "item_text": "Delphi IDE"
+    },
+    {
+        "item_image": "/assets/images/web2/dev-post.svg",
+        "item_text": "Dev Post"
+    },
+    {
+        "item_image": "/assets/images/web2/django.svg",
+        "item_text": "Django"
+    },
+    {
+        "item_image": "/assets/images/web2/docker.svg",
+        "item_text": "Docker"
+    },
+    {
+        "item_image": "/assets/images/web2/drupal.svg",
+        "item_text": "Drupal"
+    },
+    {
+        "item_image": "/assets/images/web2/encrypt.svg",
+        "item_text": "Encrypt"
+    },
+    {
+        "item_image": "/assets/images/web2/espeasy.svg",
+        "item_text": "Espeasy"
+    },
+    {
+        "item_image": "/assets/images/web2/flask.svg",
+        "item_text": "Flask"
+    },
+    {
+        "item_image": "/assets/images/web2/flutter.svg",
+        "item_text": "Flutter"
+    },
+    {
+        "item_image": "/assets/images/web2/fonticons.svg",
+        "item_text": "Fonticons"
+    },
+    {
+        "item_image": "/assets/images/web2/forumbee.svg",
+        "item_text": "Forumbee"
+    },
+    {
+        "item_image": "/assets/images/web2/git.svg",
+        "item_text": "Git"
+    },
+    {
+        "item_image": "/assets/images/web2/github.svg",
+        "item_text": "Github"
+    },
+    {
+        "item_image": "/assets/images/web2/gitlab.svg",
+        "item_text": "Gitlab"
+    },
+    {
+        "item_image": "/assets/images/web2/golang.svg",
+        "item_text": "Golang"
+    },
+    {
+        "item_image": "/assets/images/web2/google-cloud.svg",
+        "item_text": "Google Cloud"
+    },
+    {
+        "item_image": "/assets/images/web2/google-compute-engine.svg",
+        "item_text": "Google Compute Engine"
+    },
+    {
+        "item_image": "/assets/images/web2/google-firebase-console.svg",
+        "item_text": "Google Firebase Console"
+    },
+    {
+        "item_image": "/assets/images/web2/hadoop-distributed-file-system.svg",
+        "item_text": "Hadoop Distributed File System"
+    },
+    {
+        "item_image": "/assets/images/web2/haskell.svg",
+        "item_text": "Haskell"
+    },
+    {
+        "item_image": "/assets/images/web2/heroku.svg",
+        "item_text": "Heroku"
+    },
+    {
+        "item_image": "/assets/images/web2/html-5.svg",
+        "item_text": "HTML5"
+    },
+    {
+        "item_image": "/assets/images/web2/intellij-idea.svg",
+        "item_text": "IntelliJ Idea"
+    },
+    {
+        "item_image": "/assets/images/web2/java.svg",
+        "item_text": "Java"
+    },
+    {
+        "item_image": "/assets/images/web2/javascript.svg",
+        "item_text": "Javascript"
+    },
+    {
+        "item_image": "/assets/images/web2/jenkins.svg",
+        "item_text": "Jenkins"
+    },
+    {
+        "item_image": "/assets/images/web2/jsfiddle.svg",
+        "item_text": "JSFiddle"
+    },
+    {
+        "item_image": "/assets/images/web2/kali-linux.svg",
+        "item_text": "Kali Linux"
+    },
+    {
+        "item_image": "/assets/images/web2/kibana.svg",
+        "item_text": "Kibana"
+    },
+    {
+        "item_image": "/assets/images/web2/kotlin.svg",
+        "item_text": "Kotlin"
+    },
+    {
+        "item_image": "/assets/images/web2/kubernetes.svg",
+        "item_text": "Kubernetes"
+    },
+    {
+        "item_image": "/assets/images/web2/let's-encrypt.svg",
+        "item_text": "Let's Encrypt"
+    },
+    {
+        "item_image": "/assets/images/web2/lisp.svg",
+        "item_text": "Lisp"
+    },
+    {
+        "item_image": "/assets/images/web2/material-ui.svg",
+        "item_text": "Material UI"
+    },
+    {
+        "item_image": "/assets/images/web2/mongodb.svg",
+        "item_text": "MongoDB"
+    },
+    {
+        "item_image": "/assets/images/web2/mysql-logo.svg",
+        "item_text": "MySQL"
+    },
+    {
+        "item_image": "/assets/images/web2/nginx.svg",
+        "item_text": "Nginx"
+    },
+    {
+        "item_image": "/assets/images/web2/nodejs.svg",
+        "item_text": "Node.js"
+    },
+    {
+        "item_image": "/assets/images/web2/notepad++.svg",
+        "item_text": "NotePad++"
+    },
+    {
+        "item_image": "/assets/images/web2/npm.svg",
+        "item_text": "NPM"
+    },
+    {
+        "item_image": "/assets/images/web2/nutanix.svg",
+        "item_text": "Nutanix"
+    },
+    {
+        "item_image": "/assets/images/web2/octocat.svg",
+        "item_text": "Octocat"
+    },
+    {
+        "item_image": "/assets/images/web2/open-source.svg",
+        "item_text": "Open Source"
+    },
+    {
+        "item_image": "/assets/images/web2/openid.svg",
+        "item_text": "OpenID"
+    },
+    {
+        "item_image": "/assets/images/web2/openvpn.svg",
+        "item_text": "OpenVPN"
+    },
+    {
+        "item_image": "/assets/images/web2/perl.svg",
+        "item_text": "Perl"
+    },
+    {
+        "item_image": "/assets/images/web2/postgresql.svg",
+        "item_text": "PostgreSQL"
+    },
+    {
+        "item_image": "/assets/images/web2/pycharm.svg",
+        "item_text": "Pycharm"
+    },
+    {
+        "item_image": "/assets/images/web2/python.svg",
+        "item_text": "Python"
+    },
+    {
+        "item_image": "/assets/images/web2/raspberry-pi.svg",
+        "item_text": "Raspberry Pi"
+    },
+    {
+        "item_image": "/assets/images/web2/react-native.svg",
+        "item_text": "React Native"
+    },
+    {
+        "item_image": "/assets/images/web2/redux.svg",
+        "item_text": "Redux"
+    },
+    {
+        "item_image": "/assets/images/web2/ruby-gem.svg",
+        "item_text": "Ruby Gem"
+    },
+    {
+        "item_image": "/assets/images/web2/ruby-programming-language.svg",
+        "item_text": "Ruby"
+    },
+    {
+        "item_image": "/assets/images/web2/salesforce.svg",
+        "item_text": "Salesforce"
+    },
+    {
+        "item_image": "/assets/images/web2/sass.svg",
+        "item_text": "Sass"
+    },
+    {
+        "item_image": "/assets/images/web2/selenium.svg",
+        "item_text": "Selenium"
+    },
+    {
+        "item_image": "/assets/images/web2/slack-new.svg",
+        "item_text": "Slack"
+    },
+    {
+        "item_image": "/assets/images/web2/splunk.svg",
+        "item_text": "Splunk"
+    },
+    {
+        "item_image": "/assets/images/web2/spring-logo.svg",
+        "item_text": "Spring"
+    },
+    {
+        "item_image": "/assets/images/web2/stack-overflow.svg",
+        "item_text": "Stack Overflow"
+    },
+    {
+        "item_image": "/assets/images/web2/swift.svg",
+        "item_text": "Swift"
+    },
+    {
+        "item_image": "/assets/images/web2/symfony.svg",
+        "item_text": "Symfony"
+    },
+    {
+        "item_image": "/assets/images/web2/tensorflow.svg",
+        "item_text": "TensorFlow"
+    },
+    {
+        "item_image": "/assets/images/web2/tomcat.svg",
+        "item_text": "Tomcat"
+    },
+    {
+        "item_image": "/assets/images/web2/travis-ci.svg",
+        "item_text": "Travis CI"
+    },
+    {
+        "item_image": "/assets/images/web2/typescript.svg",
+        "item_text": "Typescript"
+    },
+    {
+        "item_image": "/assets/images/web2/visual-studio-2019.svg",
+        "item_text": "Visual Studio 2019"
+    },
+    {
+        "item_image": "/assets/images/web2/visual-studio-code-2019.svg",
+        "item_text": "Visual Studio Code"
+    },
+    {
+        "item_image": "/assets/images/web2/vue-js.svg",
+        "item_text": "Vue.js"
+    },
+    {
+        "item_image": "/assets/images/web2/web-components.svg",
+        "item_text": "Web Components"
+    },
+    {
+        "item_image": "/assets/images/web2/webflow.svg",
+        "item_text": "Webflow"
+    },
+    {
+        "item_image": "/assets/images/web2/webhook.svg",
+        "item_text": "Webhook"
+    },
+    {
+        "item_image": "/assets/images/web2/xamarin.svg",
+        "item_text": "Xamrin"
+    },
+    {
+        "item_image": "/assets/images/web2/xmpp.svg",
+        "item_text": "Xmpp"
+    },
+    {
+        "item_image": "/assets/images/web2/ruby-on-rails.svg",
+        "item_text": "Ruby on Rails"
+    }
+]
