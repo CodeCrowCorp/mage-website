@@ -6,11 +6,11 @@
 		const isHomePage = /^\/home\/(.*)/.test(page.path)
 		const isProfilePage = /^\/profile\/(.*)/.test(page.path)
 		const isPremiumPage = /^\/premium\/(.*)/.test(page.path)
-		const isChannelDetailsPage = /^\/channel\/(.*)/.test(page.path)
+		const isChannelPage = /^\/channel\/(.*)/.test(page.path)
 		const isMaintenanceModeEnabled = true
 		if (
 			!session.user &&
-			(isAdminPage || isHomePage || isProfilePage || isPremiumPage || isChannelDetailsPage)
+			(isAdminPage || isHomePage || isProfilePage || isPremiumPage || isChannelPage)
 		) {
 			return {
 				status: 302,
