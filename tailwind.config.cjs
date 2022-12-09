@@ -2,7 +2,13 @@ module.exports = {
   content: [
     "./src/**/*.{html,js,svelte,ts}",
   ],
-  theme: { extend: {} },
+  theme: {
+    extend: {
+      backgroundImage: {
+        'hero': "url('src/lib/assets/images/network-bg.png')",
+      },
+    }
+  },
   daisyui: {
     themes: [
       "light",

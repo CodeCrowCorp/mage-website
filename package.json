@@ -7,8 +7,8 @@
 	"scripts": {
 		"dev:only": "vite dev --host",
 		"build:only": "vite build",
-		"tailwind:watch": "cross-env TAILWIND_MODE=watch cross-env NODE_ENV=development postcss src/app.css -o src/assets/styles/tailwind-output.css -w",
-		"tailwind:build": "cross-env TAILWIND_MODE=build cross-env NODE_ENV=production postcss src/app.css -o src/assets/styles/tailwind-output.css",
+		"tailwind:watch": "cross-env TAILWIND_MODE=watch cross-env NODE_ENV=development postcss src/app.css -o src/lib/assets/styles/tailwind-output.css -w",
+		"tailwind:build": "cross-env TAILWIND_MODE=build cross-env NODE_ENV=production postcss src/app.css -o src/lib/assets/styles/tailwind-output.css",
 		"dev": "concurrently \"npm run dev:only\" \"npm run tailwind:watch\"",
 		"build": "npm run tailwind:build && npm run build:only",
 		"preview": "vite preview",
