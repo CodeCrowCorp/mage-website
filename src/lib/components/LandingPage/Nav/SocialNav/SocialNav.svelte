@@ -8,11 +8,11 @@
 	import dexlab from '$lib/assets/images/dexlab.svg';
 
 	const socialLinks = [
-		{ name: 'github', link: '/', image: github },
+		{ name: 'github', link: 'https://github.com/CodeCrowCorp', image: github },
 		{ name: 'discord', link: 'https://discord.com/invite/CodeCrow', image: discord },
-		{ name: 'twitter', link: '/', image: twitter },
-		{ name: 'magic-eden', link: '/', image: magicEden },
-		{ name: 'dexlab', link: '/', image: dexlab }
+		{ name: 'twitter', link: 'https://twitter.com/codecrowcorp', image: twitter },
+		{ name: 'magic-eden', link: 'https://magiceden.io/', image: magicEden },
+		{ name: 'dexlab', link: 'https://www.dexlab.space/', image: dexlab }
 	];
 </script>
 
