@@ -3,7 +3,7 @@ name: ci-dev.yml
 on:
   push:
     branches:
-      - main
+      - dev
   workflow_dispatch:
 
 jobs:
