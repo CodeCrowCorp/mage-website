@@ -1,12 +1,6 @@
 import { PUBLIC_API_URL } from '$env/static/public'
 
 class AdminStore {
-    public async fetchAdmins({ id }: { id: string }) {
-        return await fetch(`${PUBLIC_API_URL}/admin/${id}`, {
-            method: 'POST'
-        }).then(response => response.json())
-    }
-
     public async uploadFile({ file, url }: { file: File, url: string }) {
         return await fetch(url, {
             method: 'PUT',
