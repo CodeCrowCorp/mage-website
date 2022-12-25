@@ -57,30 +57,30 @@ jobs:
           files: ./results.json
           flags: "e2ecoverage"
 
-  # deploy:
-  #   if: ${{ github.actor != 'dependabot[bot]' }}
-  #   name: Deploy to Cloudflare Pages (Dev)
-  #   needs: [test]
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: read
-  #     deployments: write
+  deploy:
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    name: Deploy to Cloudflare Pages (Dev)
+    needs: [test]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-  #     - name: Install Node
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 17
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 17
 
-  #     - name: Install NPM and build
-  #       run: npm install && npm run build
+      - name: Install NPM and build
+        run: npm install && npm run build
 
-  #     - name: Publish
-  #       uses: cloudflare/wrangler-action@2.0.0
-  #       with:
-  #         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-  #         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-  #         command: pages publish ".svelte-kit/cloudflare" --project-name=cro-website
+      - name: Publish
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages publish ".svelte-kit/cloudflare" --project-name=mage-website
