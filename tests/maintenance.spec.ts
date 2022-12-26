@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-test('maintenance page has expected h1', async ({ page }) => {
+test('maintenance page had expected to load', async ({ page }) => {
     await page.goto('/maintenance')
-    expect(await page.textContent('h1')).toBe('Welcome to maintenance page')
+    await expect(page).toHaveURL(/.*maintenance/)
 })
