@@ -103,7 +103,7 @@ jobs:
         uses: martinbeentjes/npm-get-version-action@main
 
       - name: Create a tag and release
-        uses: ncipollo/release-action@v1.11.2
+        uses: ncipollo/release-action@v1.12.0
         with:
           tag: ${{ steps.package-version.outputs.current-version }}
           name: v${{ steps.package-version.outputs.current-version }}
