@@ -37,7 +37,7 @@
 
 <slot />
 
-<style global>
+<!-- <style global>
 	:root {
 		--color-default: #ffffff;
 	}
@@ -55,4 +55,4 @@
 	body {
 		background-color: var(--color-default);
 	}
-</style>
+</style> -->
