@@ -958,6 +958,26 @@ html {
   --tw-border-opacity: 0.2;
   border-radius: var(--rounded-btn, 0.5rem);
 }
+.hero {
+  display: grid;
+  width: 100%;
+  place-items: center;
+  background-size: cover;
+  background-position: center;
+}
+.hero > * {
+  grid-column-start: 1;
+  grid-row-start: 1;
+}
+.hero-content {
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 80rem;
+  gap: 1rem;
+  padding: 1rem;
+}
 .input {
   flex-shrink: 1;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
@@ -1403,6 +1423,9 @@ html {
 .hidden {
   display: none;
 }
+.h-12 {
+  height: 3rem;
+}
 .h-24 {
   height: 6rem;
 }
@@ -1417,6 +1440,12 @@ html {
 }
 .h-\[375px\] {
   height: 375px;
+}
+.min-h-screen {
+  min-height: 100vh;
+}
+.w-12 {
+  width: 3rem;
 }
 .w-full {
   width: 100%;
@@ -1444,6 +1473,9 @@ html {
 }
 .w-48 {
   width: 12rem;
+}
+.max-w-md {
+  max-width: 28rem;
 }
 .max-w-full {
   max-width: 100%;
@@ -1609,6 +1641,10 @@ html {
   --tw-border-opacity: 1;
   border-color: rgb(200 25 139 / var(--tw-border-opacity));
 }
+.bg-base-200 {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--b2, var(--b1)) / var(--tw-bg-opacity));
+}
 .bg-\[\#EEEEEE\] {
   --tw-bg-opacity: 1;
   background-color: rgb(238 238 238 / var(--tw-bg-opacity));
@@ -1689,6 +1725,10 @@ html {
 .object-cover {
   -o-object-fit: cover;
      object-fit: cover;
+}
+.py-6 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 .py-4 {
   padding-top: 1rem;
