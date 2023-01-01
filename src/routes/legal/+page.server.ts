@@ -1,12 +1,13 @@
 import { error } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
- 
-export const load = (async ({ params }) => {
-  const post = null
- 
-  if (post) {
-    return post
-  }
- 
-  throw error(404, 'Not found')
+import { adminStore } from '../../lib/stores/adminStore'
+
+export const load = (async () => {
+	// const post = null; //await adminStore.getLegalDocs()
+
+	// if (post) {
+	// 	return post
+	// }
+
+	// throw error(404, 'Not found')
 }) satisfies PageServerLoad
