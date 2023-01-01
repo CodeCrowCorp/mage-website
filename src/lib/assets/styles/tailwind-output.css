@@ -1281,16 +1281,6 @@ html {
   border-bottom-right-radius: var(--tab-radius, 0.5rem);
   border-bottom-left-radius: var(--tab-radius, 0.5rem);
 }
-.tab-lifted {
-  border: var(--tab-border, 1px) solid transparent;
-  border-width: 0 0 var(--tab-border, 1px) 0;
-  border-top-left-radius: var(--tab-radius, 0.5rem);
-  border-top-right-radius: var(--tab-radius, 0.5rem);
-  border-bottom-color: var(--tab-border-color);
-  padding-left: var(--tab-padding, 1rem);
-  padding-right: var(--tab-padding, 1rem);
-  padding-top: var(--tab-border, 1px);
-}
 .tab-lifted.tab-active {
   background-color: var(--tab-bg);
   border-width: var(--tab-border, 1px) var(--tab-border, 1px) 0 var(--tab-border, 1px);
@@ -1550,11 +1540,14 @@ html {
 .h-12 {
   height: 3rem;
 }
-.h-24 {
-  height: 6rem;
+.h-screen {
+  height: 100vh;
 }
 .h-full {
   height: 100%;
+}
+.h-24 {
+  height: 6rem;
 }
 .h-\[62px\] {
   height: 62px;
@@ -1564,23 +1557,6 @@ html {
 }
 .h-\[375px\] {
   height: 375px;
-}
-.h-max {
-  height: -moz-max-content;
-  height: max-content;
-}
-.h-fit {
-  height: -moz-fit-content;
-  height: fit-content;
-}
-.h-screen {
-  height: 100vh;
-}
-.h-5\/6 {
-  height: 83.333333%;
-}
-.h-4\/5 {
-  height: 80%;
 }
 .min-h-screen {
   min-height: 100vh;
