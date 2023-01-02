@@ -1,26 +1,26 @@
 <br>
 
 <h3 align="center">
-    Svelte port of cro-website
+    Mage Website
 </h3>
 
 <br>
 
 <p align="center">
-    <a href="https://github.com/CodeCrowCorp/cro-website-sv"><img src="https://img.shields.io/github/v/release/CodeCrowCorp/cro-website-sv?color=%23ff00a0&include_prereleases&label=version&sort=semver"></a>
+    <a href="https://github.com/CodeCrowCorp/mage-website"><img src="https://img.shields.io/github/v/release/CodeCrowCorp/mage-website?color=%23ff00a0&include_prereleases&label=version&sort=semver"></a>
     &nbsp;
-    <a href="https://github.com/CodeCrowCorp/cro-website-sv"><img src="https://img.shields.io/badge/built_with-svelte-FF3E00.svg"></a>
+    <a href="https://github.com/CodeCrowCorp/mage-website"><img src="https://img.shields.io/badge/built_with-svelte-FF3E00.svg"></a>
     &nbsp;
-    <a href="https://github.com/CodeCrowCorp/cro-website-sv/actions"><img src="https://github.com/CodeCrowCorp/cro-website-sv/actions/workflows/ci-prod.yml/badge.svg"></a>
+    <a href="https://github.com/CodeCrowCorp/mage-website/actions"><img src="https://github.com/CodeCrowCorp/cro-website-sv/actions/workflows/ci-prod.yml/badge.svg"></a>
     &nbsp;
-    <a href="https://codecov.io/gh/CodeCrowCorp/cro-website-sv/"><img src="https://codecov.io/gh/CodeCrowCorp/cro-website-sv/branch/main/graph/badge.svg"></a>
+    <a href="https://codecov.io/gh/CodeCrowCorp/mage-website/"><img src="https://codecov.io/gh/CodeCrowCorp/mage-website/branch/main/graph/badge.svg"></a>
     &nbsp;
     <a href="https://dependabot.com/"><img src="https://img.shields.io/badge/dependabot-enabled-025e8c?logo=Dependabot"></a>
     &nbsp;
 </p>
 
 <p align="center">
-    <a href="https://github.com/CodeCrowCorp/cro-website-sv/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-GPL3.0-00bfff.svg"></a>
+    <a href="https://github.com/CodeCrowCorp/mage-website/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-GPL3.0-00bfff.svg"></a>
     &nbsp;
 	<a href="https://discord.gg/codecrow"><img src="https://img.shields.io/discord/766681806463303680?label=discord&color=5a66f6"></a>
 	&nbsp;
