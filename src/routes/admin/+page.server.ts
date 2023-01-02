@@ -2,11 +2,11 @@ import { error } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
  
 export const load = (async ({ params }) => {
-  const post = null
+  // const post = null
  
-  if (post) {
-    return post
-  }
+  // if (post) {
+  //   return post
+  // }
  
-  throw error(404, 'Not found')
+  // throw error(404, 'Not found')
 }) satisfies PageServerLoad

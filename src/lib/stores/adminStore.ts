@@ -88,8 +88,8 @@ class AdminStore {
         }).then(response => response.json())
     }
 
-    public async getLegalDocs({ bucketName }: { bucketName: string }) {
-        return await fetch(`${PUBLIC_API_URL}/legal/get/objects?bucketName=${bucketName}`, {
+    public async getLegalDocs() {
+        return await fetch(`${PUBLIC_API_URL}/legal/get/objects?bucketName=legal`, {
             method: 'GET',
         }).then(response => response.json())
     }
