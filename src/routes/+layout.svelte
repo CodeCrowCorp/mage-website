@@ -63,7 +63,7 @@
 			</div>
 			<!-- Sidebar content here -->
 			<li>
-				<a href="">
+				<a href="/home">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -130,7 +130,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="">
+				<a href="/videos">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -146,7 +146,7 @@
 					Videos</a>
 			</li>
 			<li>
-				<a href="">
+				<a href="/creator-space">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -161,7 +161,7 @@
 					Creator Space</a>
 			</li>
 			<li>
-				<a href="" class="text-green-400">
+				<a href="/mint" class="text-green-400">
 					<svg
 						width="18"
 						height="19"
@@ -175,7 +175,7 @@
 					Mint</a>
 			</li>
 			<li>
-				<a href="" class="text-pink-500">
+				<a href="/premium" class="text-pink-500">
 					<svg
 						width="20"
 						height="22"
@@ -200,7 +200,7 @@
 					Premium</a>
 			</li>
 			<li>
-				<a href="">
+				<a href="/careers">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -242,7 +242,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="">
+				<a href="/settings">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
