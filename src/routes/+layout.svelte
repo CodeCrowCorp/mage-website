@@ -47,7 +47,7 @@
 		<ul class="menu p-4 w-80 bg-base-100 text-base-content">
 			<div class="navbar">
 				<a class="btn btn-ghost normal-case text-xl">Mage</a>
-			  </div>
+			</div>
 			<div class="hero">
 				<div class="hero-content text-center">
 					<div class="max-w-md">
@@ -129,7 +129,7 @@
 					</svg>
 				</a>
 			</li>
-			<li>
+			<!-- <li>
 				<a href="/videos">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -159,9 +159,9 @@
 							d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
 					</svg>
 					Creator Space</a>
-			</li>
+			</li> -->
 			<li>
-				<a href="/mint" class="text-green-400">
+				<a href="https://mint.codecrow.io" class="text-green-400">
 					<svg
 						width="18"
 						height="19"
@@ -216,7 +216,7 @@
 					Careers</a>
 			</li>
 			<li>
-				<a href="">
+				<div class="dropdown dropdown-bottom dropdown-end" tabindex="0">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -239,7 +239,11 @@
 						class="w-6 h-6">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
 					</svg>
-				</a>
+					<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+						<li><a href="/contact">Contact</a></li>
+						<li><a href="/legal">Legal</a></li>
+					</ul>
+				</div>
 			</li>
 			<li>
 				<a href="/settings">
