@@ -49,7 +49,7 @@
 		"@tailwindcss/forms": "^0.5.3",
 		"@tailwindcss/typography": "^0.5.8",
 		"animate.css": "^4.1.1",
-		"daisyui": "^2.46.0",
+		"daisyui": "^2.46.1",
 		"nprogress": "^0.2.0",
 		"playwright-e2e-coverage-report": "^1.0.20",
 		"theme-change": "^2.2.0"
