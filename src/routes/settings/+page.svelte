@@ -17,7 +17,12 @@
 				</label>
 				<label class="input-group">
 					<span>Email</span>
-					<input type="text" placeholder="nerf-this@gamer.com" class="input input-bordered" />
+					<input
+						id="email"
+						name="email"
+						type="email"
+						placeholder="nerf-this@gamer.com"
+						class="input input-bordered" />
 					<button class="btn btn-primary">Save</button>
 				</label>
 			</div>
