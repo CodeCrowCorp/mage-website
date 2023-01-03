@@ -1,7 +1,7 @@
 <div class="container mx-auto pt-16">
 	<div class="lg:flex">
 		<div
-			class="xl:w-2/5 lg:w-2/5 bg-indigo-700 py-16 xl:rounded-bl rounded-tl rounded-tr xl:rounded-tr-none">
+			class="xl:w-2/5 lg:w-2/5 bg-primary py-16 xl:rounded-bl rounded-tl rounded-tr xl:rounded-tr-none">
 			<div class="xl:w-5/6 xl:px-0 px-8 mx-auto">
 				<h1 class="xl:text-4xl text-3xl pb-4 text-white font-bold">Get in touch</h1>
 				<p class="text-xl text-white pb-8 leading-relaxed font-normal lg:pr-4">
@@ -99,10 +99,7 @@
 							id="message"
 							aria-label="enter your message input" />
 					</div>
-					<button
-						type="submit"
-						class="focus:outline-none bg-indigo-700 transition duration-150 ease-in-out hover:bg-indigo-600 rounded text-white px-8 py-3 text-sm leading-6 focus:border-4 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700"
-						>Submit</button>
+					<button type="submit" class="btn btn-primary">Submit</button>
 				</div>
 			</form>
 		</div>
