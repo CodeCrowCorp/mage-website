@@ -1,9 +1,26 @@
+<script>
+	import { onMount } from 'svelte'
+	import { themeChange } from 'theme-change'
+
+	onMount(() => {
+		themeChange(false)
+	})
+</script>
+
 <div class="hero min-h-screen bg-base-200">
 	<div class="text-center w-fit">
 		<h1 class="text-5xl font-bold">Settings</h1>
 		<div class="py-6">
-			<input type="text" placeholder="Email" class="input input-bordered w-80" />
-			<button class="btn btn-primary">Save</button>
+			<div class="form-control">
+				<label class="label">
+					<span class="label-text">Enter your email to receive the latest news</span>
+				</label>
+				<label class="input-group">
+					<span>Email</span>
+					<input type="text" placeholder="nerf-this@gamer.com" class="input input-bordered" />
+					<button class="btn btn-primary">Save</button>
+				</label>
+			</div>
 		</div>
 
 		<div class="flex flex-col border-opacity-50">
@@ -11,7 +28,13 @@
 			<div class="form-control w-96">
 				<label class="cursor-pointer label">
 					<span class="label-text">Enable dark mode</span>
-					<input type="checkbox" class="toggle toggle-accent" checked />
+					<input
+						type="checkbox"
+						class="toggle toggle-accent"
+						id="theme-toggle"
+						data-toggle-theme="light,dark"
+						data-act-class="ACTIVECLASS"
+						checked />
 				</label>
 			</div>
 			<div class="divider">1v1 chat</div>
