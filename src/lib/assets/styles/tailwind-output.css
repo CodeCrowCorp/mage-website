@@ -1995,6 +1995,13 @@ html {
 .input-primary:focus {
   outline: 2px solid hsl(var(--p));
 }
+.input-info {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--in) / var(--tw-border-opacity));
+}
+.input-info:focus {
+  outline: 2px solid hsl(var(--in));
+}
 .input-disabled,
   .input[disabled] {
   cursor: not-allowed;
@@ -2450,6 +2457,13 @@ html {
 .textarea:focus {
   outline: 2px solid hsla(var(--bc) / 0.2);
   outline-offset: 2px;
+}
+.textarea-info {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--in) / var(--tw-border-opacity));
+}
+.textarea-info:focus {
+  outline: 2px solid hsl(var(--in));
 }
 .textarea-disabled,
   .textarea[disabled] {
@@ -3924,6 +3938,10 @@ html {
 
   .sm\:col-span-2 {
     grid-column: span 2 / span 2;
+  }
+
+  .sm\:col-span-1 {
+    grid-column: span 1 / span 1;
   }
 
   .sm\:my-24 {

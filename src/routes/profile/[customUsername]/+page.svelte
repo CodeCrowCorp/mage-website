@@ -1,6 +1,8 @@
 <script lang="ts">
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
+	import ChannelList from '$lib/components/Profile/ChannelList.svelte'
+	import FollowList from '$lib/components/Profile/FollowList.svelte'
 
 	let tabs = ['Stats', 'Channels', 'Follows']
 	let activeTab = 0
@@ -21,7 +23,7 @@
 								type="text"
 								name="name"
 								id="name"
-								class="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+								class="input input-bordered input-info"
 								placeholder="Super Mario" />
 						</div>
 						<div class="w-full">
@@ -30,7 +32,7 @@
 								type="text"
 								name="brand"
 								id="brand"
-								class="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+								class="input input-bordered input-info"
 								placeholder="Product brand" />
 						</div>
 						<div class="w-full">
@@ -39,15 +41,13 @@
 								type="url"
 								name="url"
 								id="url"
-								class="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+								class="input input-bordered input-info"
 								placeholder="https://github.com"
 								required="" />
 						</div>
 						<div class="w-full">
 							<label for="category" class="block mb-2 text-sm font-medium ">Category</label>
-							<select
-								id="category"
-								class="border border-gray-300 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+							<select id="category" class="input input-bordered input-info">
 								<option selected="">Select category</option>
 								<option value="TV">TV/Monitors</option>
 								<option value="PC">PC</option>
@@ -62,8 +62,7 @@
 								type="file"
 								name="item-weight"
 								id="item-weight"
-								class="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-								placeholder="12"
+								class="input input-bordered input-info"
 								required="" />
 						</div>
 						<div class="w-full">
@@ -72,8 +71,7 @@
 								type="file"
 								name="item-weight"
 								id="item-weight"
-								class="border border-gray-300 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-								placeholder="12"
+								class="input input-bordered input-info"
 								required="" />
 						</div>
 						<div class="sm:col-span-2">
@@ -81,7 +79,7 @@
 							<textarea
 								id="description"
 								rows="8"
-								class="block p-2.5 w-full text-sm rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500"
+								class="block p-2.5 w-full textarea textarea-info"
 								placeholder="Your description here" />
 						</div>
 					</div>
@@ -254,8 +252,12 @@
 									</div>
 								</div>
 							</div>
-							<div class="flex-auto h-full" class:hidden={activeTab != 1}>hi</div>
-							<div class="flex-auto h-full" class:hidden={activeTab != 2}>hi</div>
+							<div class="flex-auto h-full" class:hidden={activeTab != 1}>
+								<ChannelList />
+							</div>
+							<div class="flex-auto h-full" class:hidden={activeTab != 2}>
+								<FollowList />
+							</div>
 						</div>
 					</div>
 				</div>
