@@ -137,7 +137,7 @@
 						<IconDrawerChevron />
 					</a>
 				</li>
-				<li>
+				<!-- <li>
 					<a href="/videos">
 						<IconDrawerVideos />
 						Videos
@@ -147,7 +147,7 @@
 					<a href="/creator-space">
 						<IconDrawerCreatorSpace />
 						Creator Space</a>
-				</li>
+				</li> -->
 				<li>
 					<a href="https://mint.codecrow.io" class="text-emerald-600">
 						<IconDrawerMint />
