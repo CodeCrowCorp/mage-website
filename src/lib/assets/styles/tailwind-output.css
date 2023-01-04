@@ -2879,6 +2879,12 @@ html {
 .h-screen {
   height: 100vh;
 }
+.h-\[31rem\] {
+  height: 31rem;
+}
+.h-32 {
+  height: 8rem;
+}
 .h-auto {
   height: auto;
 }
@@ -2893,27 +2899,6 @@ html {
 }
 .h-\[375px\] {
   height: 375px;
-}
-.h-96 {
-  height: 24rem;
-}
-.h-4\/5 {
-  height: 80%;
-}
-.h-2\/5 {
-  height: 40%;
-}
-.h-20 {
-  height: 5rem;
-}
-.h-\[31rem\] {
-  height: 31rem;
-}
-.h-1 {
-  height: 0.25rem;
-}
-.h-32 {
-  height: 8rem;
 }
 .min-h-screen {
   min-height: 100vh;
@@ -3075,9 +3060,6 @@ html {
 }
 .gap-3 {
   gap: 0.75rem;
-}
-.gap-10 {
-  gap: 2.5rem;
 }
 .space-y-20 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;

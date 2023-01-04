@@ -199,7 +199,7 @@
 										on:click={() => (activeTab = index)}>{tab}</button>
 								{/each}
 							</div>
-							<div class="flex-auto h-full bg-base-100 py-10" class:hidden={activeTab != 0}>
+							<div class="grid h-full bg-base-100 py-10" class:hidden={activeTab != 0}>
 								<div class="tooltip" data-tip="level 1">
 									<progress class="progress progress-accent w-64" value="30" max="100" />
 								</div>
