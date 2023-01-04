@@ -11,6 +11,57 @@
 	rel="stylesheet"
 	href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" />
 
+<!-- Put this part before </body> tag -->
+<div class="modal" id="my-modal-2">
+	<div class="modal-box">
+		<a href="#" class="btn btn-sm btn-circle absolute right-2 top-2">✕</a>
+
+		<h3 class="font-bold text-lg">Edit Profile</h3>
+		<div class="py-4 flex flex-col gap-4">
+			<div class="form-control">
+				<label class="input-group">
+					<span>Avatar</span>
+					<input type="file" class="file-input file-input-bordered w-full max-w-xs" />
+				</label>
+			</div>
+			<div class="form-control">
+				<label class="input-group">
+					<span>Banner</span>
+					<input type="file" class="file-input file-input-bordered w-full max-w-xs" />
+				</label>
+			</div>
+			<div class="form-control">
+				<label class="input-group">
+					<span>Display Name</span>
+					<input type="text" placeholder="Dr. Mario" class="input input-bordered" />
+				</label>
+			</div>
+			<div class="form-control">
+				<label class="input-group">
+					<span>Tag Name</span>
+					<input type="text" placeholder="@SuperMario" class="input input-bordered" />
+				</label>
+			</div>
+			<div class="form-control">
+				<label class="input-group">
+					<span>Description</span>
+					<input type="text" placeholder="Likes long walks" class="input input-bordered" />
+				</label>
+			</div>
+			<div class="form-control">
+				<label class="input-group">
+					<span>Categories</span>
+					<input type="text" placeholder="Fornite" class="input input-bordered" />
+				</label>
+			</div>
+		</div>
+		<div class="modal-action">
+			<a href="#" class="btn">Cancel</a>
+			<a href="#" class="btn btn-primary">Confirm</a>
+		</div>
+	</div>
+</div>
+
 <main class="profile-page">
 	<section class="relative block h-500-px">
 		<div
@@ -63,7 +114,7 @@
 									<ul
 										tabindex="0"
 										class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
-										<li><a>Edit</a></li>
+										<li><a href="#my-modal-2">Edit</a></li>
 										<li><a>Message</a></li>
 										<li><a>Block</a></li>
 										<li><a>Report</a></li>

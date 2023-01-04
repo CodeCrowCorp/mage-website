@@ -1,3 +1,8 @@
+<script>
+	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
+	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
+</script>
+
 <div class="carousel carousel-center max-w-md p-4 space-x-4 bg-neutral rounded-box">
 	<div class="carousel-item">
 		<img src="https://placeimg.com/250/180/arch" class="rounded-box" />
@@ -20,6 +25,21 @@
 	<div class="carousel-item">
 		<img src="https://placeimg.com/250/180/arch" class="rounded-box" />
 	</div>
+</div>
+
+<div class="flex gap-4 py-5 ">
+	<div class="form-control">
+		<div class="input-group">
+			<input type="text" placeholder="Search channels" class="input input-bordered input-primary" />
+			<button class="btn btn-square">
+				<IconSearch />
+			</button>
+		</div>
+	</div>
+
+	<button class="btn btn-wide btn-primary gap-2">
+		<IconCreate />
+		Create a channel</button>
 </div>
 
 <div class="overflow-x-auto w-full">
