@@ -1,7 +1,7 @@
 <script lang="ts">
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
-	import ChannelList from '$lib/components/Profile/ChannelList.svelte'
+	import ChannelList from '$lib/components/Home/ChannelList.svelte'
 	import FollowList from '$lib/components/Profile/FollowList.svelte'
 
 	let tabs = ['Stats', 'Channels', 'Follows']
@@ -170,7 +170,7 @@
 					</div>
 				</div>
 				<div class="text-center mt-12">
-					<h3 class="text-4xl font-semibold leading-normal mb-2 mb-2">Gagan Suie</h3>
+					<h3 class="text-4xl font-semibold leading-normal mb-2">Gagan Suie</h3>
 					<div class="text-lg leading-normal mt-0 mb-2 font-bold text-pink-500">@GaganSuie</div>
 					<div class="text-lg leading-normal mt-0 mb-2">Likes long walks in the multiverse</div>
 					<div class="pt-4">
@@ -179,10 +179,10 @@
 							<a class="link link-info">https://codecrow.io</a>
 						</div>
 						<div class="flex gap-2 justify-center">
-							<img src="/categories/games/call-of-duty-black-ops-4.svg" />
-							<img src="/categories/games/fortnite.svg" />
-							<img src="/categories/games/overwatch.svg" />
-							<img src="/categories/games/valorant.svg" />
+							<img src="/category/games/call-of-duty-black-ops-4.svg" />
+							<img src="/category/games/fortnite.svg" />
+							<img src="/category/games/overwatch.svg" />
+							<img src="/category/games/valorant.svg" />
 						</div>
 					</div>
 				</div>

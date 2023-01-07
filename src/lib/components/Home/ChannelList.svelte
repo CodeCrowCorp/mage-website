@@ -1,9 +1,11 @@
 <script>
 	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
+	import IconLock from '$lib/assets/icons/IconLock.svelte'
+	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
 </script>
 
-<div class="flex gap-4 py-5 ">
+<div class="flex gap-4 py-5 pl-5">
 	<div class="form-control">
 		<div class="input-group">
 			<input type="text" placeholder="Search channels" class="input input-bordered input-primary" />
@@ -23,17 +25,16 @@
 		<!-- head -->
 		<thead>
 			<tr>
-				<th>Category</th>
-				<th>Title</th>
-				<th>Description</th>
-				<th>Info</th>
-				<th>Tag</th>
 				<th>Host</th>
+				<th>Title</th>
+				<th>Viewers</th>
+				<th>Tag</th>
+				<th>Category</th>
 			</tr>
 		</thead>
 		<tbody>
 			<!-- row 1 -->
-			<tr>
+			<tr class="cursor-pointer">
 				<td>
 					<div class="flex items-center space-x-3">
 						<div class="avatar">
@@ -44,29 +45,41 @@
 							</div>
 						</div>
 						<div>
-							<div class="font-bold">Hart Hagerty</div>
-							<div class="text-sm opacity-50">United States</div>
+							<div class="font-bold">Gagan Suie</div>
+							<div class="text-sm text-pink-500">@GaganSuie</div>
 						</div>
 					</div>
 				</td>
 				<td>
-					Zemlak, Daniel and Leannon
+					Fornite gameplay
 					<br />
-					<span class="badge badge-ghost badge-sm">Desktop Support Technician</span>
+					<span class="text-sm">Testing new gameplay screen sharing</span>
 				</td>
-				<td>Purple</td>
-				<th>
-					<button class="btn btn-ghost btn-xs">details</button>
-				</th>
-				<th>
-					<button class="btn btn-ghost btn-xs">details</button>
-				</th>
-				<th>
-					<button class="btn btn-ghost btn-xs">details</button>
-				</th>
+				<td>
+					<div class="flex gap-2">
+						<IconLock />
+						<IconViewers />
+						<span>205</span>
+					</div>
+				</td>
+				<td>
+					<div class="flex flex-wrap gap-2 max-w-fit">
+						<div><span class="badge badge-primary badge-md">Community</span></div>
+						<div><span class="badge badge-primary badge-md">Gameplay</span></div>
+						<div><span class="badge badge-primary badge-md">Multiplayer</span></div>
+					</div>
+				</td>
+				<td>
+					<div class="flex">
+						<img src="/category/games/call-of-duty-black-ops-4.svg" />
+						<img src="/category/games/fortnite.svg" />
+						<img src="/category/games/overwatch.svg" />
+						<img src="/category/games/valorant.svg" />
+					</div>
+				</td>
 			</tr>
 			<!-- row 2 -->
-			<tr>
+			<tr class="cursor-pointer">
 				<td>
 					<div class="flex items-center space-x-3">
 						<div class="avatar">
@@ -87,19 +100,18 @@
 					<br />
 					<span class="badge badge-ghost badge-sm">Tax Accountant</span>
 				</td>
-				<td>Red</td>
-				<th>
+				<td>
 					<button class="btn btn-ghost btn-xs">details</button>
-				</th>
-				<th>
+				</td>
+				<td>
 					<button class="btn btn-ghost btn-xs">details</button>
-				</th>
-				<th>
+				</td>
+				<td>
 					<button class="btn btn-ghost btn-xs">details</button>
-				</th>
+				</td>
 			</tr>
 			<!-- row 3 -->
-			<tr>
+			<tr class="cursor-pointer">
 				<td>
 					<div class="flex items-center space-x-3">
 						<div class="avatar">
@@ -120,19 +132,18 @@
 					<br />
 					<span class="badge badge-ghost badge-sm">Office Assistant I</span>
 				</td>
-				<td>Crimson</td>
-				<th>
+				<td>
 					<button class="btn btn-ghost btn-xs">details</button>
-				</th>
-				<th>
+				</td>
+				<td>
 					<button class="btn btn-ghost btn-xs">details</button>
-				</th>
-				<th>
+				</td>
+				<td>
 					<button class="btn btn-ghost btn-xs">details</button>
-				</th>
+				</td>
 			</tr>
 			<!-- row 4 -->
-			<tr>
+			<tr class="cursor-pointer">
 				<td>
 					<div class="flex items-center space-x-3">
 						<div class="avatar">
@@ -151,29 +162,27 @@
 				<td>
 					Wyman-Ledner
 					<br />
-					<span class="badge badge-ghost badge-sm">Community Outreach Specialist</span>
+					<span class="badge badge-primary badge-md">Community Outreach Specialist</span>
 				</td>
-				<td>Indigo</td>
-				<th>
+				<td>
 					<button class="btn btn-ghost btn-xs">details</button>
-				</th>
-				<th>
+				</td>
+				<td>
 					<button class="btn btn-ghost btn-xs">details</button>
-				</th>
-				<th>
+				</td>
+				<td>
 					<button class="btn btn-ghost btn-xs">details</button>
-				</th>
+				</td>
 			</tr>
 		</tbody>
 		<!-- foot -->
 		<tfoot>
 			<tr>
-				<th>Category</th>
-				<th>Title</th>
-				<th>Description</th>
-				<th>Info</th>
-				<th>Tags</th>
 				<th>Host</th>
+				<th>Title</th>
+				<th>Viewers</th>
+				<th>Tags</th>
+				<th>Category</th>
 			</tr>
 		</tfoot>
 	</table>
