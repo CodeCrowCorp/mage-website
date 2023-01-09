@@ -1,22 +1,11 @@
 <script>
-	import { onMount } from 'svelte'
-	import { themeChange } from 'theme-change'
-
-	onMount(() => {
-		themeChange(false)
-	})
+	import IconLaunch from '../lib/assets/icons/IconLaunch.svelte'
+	import LoginPrompt from '../lib/components/Home/LoginPrompt.svelte'
 </script>
 
-<div class="relative overflow-hidden">
-	<div
-		class="container relative space-y-20 mt-12 mb-20 sm:space-y-24 sm:my-24 lg:space-y-32 lg:my-32 ml-auto mr-auto">
-		<h1>Welcome to SvelteKit</h1>
-		<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-		<input
-			type="checkbox"
-			class="toggle"
-			id="theme-toggle"
-			data-toggle-theme="light,dark"
-			data-act-class="ACTIVECLASS" />
-	</div>
+<div class="hero min-h-screen flex justify-center">
+	<!-- The button to open modal -->
+	<label for="my-modal-4" class="btn btn-primary gap-4"> <IconLaunch /> Launch dApp</label>
+
+	<LoginPrompt />
 </div>
