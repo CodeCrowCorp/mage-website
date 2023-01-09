@@ -25,6 +25,7 @@
 	import IconSocialTwitter from '$lib/assets/icons/social/IconSocialTwitter.svelte'
 	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svelte'
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
+	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
 	NProgress.configure({
 		minimum: 0.75,
 		showSpinner: false,
@@ -95,6 +96,12 @@
 					</a>
 				</li>
 				<!-- Sidebar content here -->
+				<li>
+					<a href="/admin">
+						<IconDrawerAdmin />
+						Admin
+					</a>
+				</li>
 				<li>
 					<a href="/home">
 						<IconDrawerHome />
