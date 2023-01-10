@@ -23,7 +23,7 @@
 		"@sveltejs/adapter-cloudflare": "^1.0.0",
 		"@svitejs/svelte-preprocess-svg": "^2.0.0",
 		"@sveltejs/kit": "^1.0.10",
-		"@typescript-eslint/eslint-plugin": "^5.47.0",
+		"@typescript-eslint/eslint-plugin": "^5.48.1",
 		"@typescript-eslint/parser": "^5.48.1",
 		"autoprefixer": "^10.4.13",
 		"concurrently": "^7.6.0",
