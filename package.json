@@ -24,7 +24,7 @@
 		"@svitejs/svelte-preprocess-svg": "^2.0.0",
 		"@sveltejs/kit": "^1.0.7",
 		"@typescript-eslint/eslint-plugin": "^5.47.0",
-		"@typescript-eslint/parser": "^5.47.0",
+		"@typescript-eslint/parser": "^5.48.1",
 		"autoprefixer": "^10.4.13",
 		"concurrently": "^7.6.0",
 		"cross-env": "^7.0.3",
