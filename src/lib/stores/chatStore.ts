@@ -1,9 +1,9 @@
 import { writable, type Writable } from 'svelte/store'
-import { socketStore } from './socketStore'
+import { socketStore } from '$lib/stores/socketStore'
 import { PUBLIC_API_URL } from '$env/static/public'
-import { userStore } from './userStore'
-import { authStore } from './authStore'
-import { channelStore } from './channelStore'
+import { userStore } from '$lib/stores/userStore'
+import { authStore } from '$lib/stores/authStore'
+import { channelStore } from '$lib/stores/channelStore'
 
 class ChatStore {
     public lastMessageSendDate: Date = new Date()

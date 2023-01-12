@@ -211,6 +211,7 @@ class ChannelStore {
     }
 
     async leaveChannel({ userId, deleteOrLeaveOnExit = false }: { userId: string, deleteOrLeaveOnExit?: boolean }) {
+        //TODO: fix writeable subscribe
         this.currentChannel.subscribe(async value => {
             if (value) {
                 if (value.user === userId) {
