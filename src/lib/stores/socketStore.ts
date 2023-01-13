@@ -76,13 +76,8 @@ class SocketStore {
         }
     }
 
-    async emitUserConnection(userId: string, isOnline: boolean) {
-        this.platformSocket?.send(
-            JSON.stringify({
-                eventName: isOnline ? 'user-connect' : 'user-disconnect',
-                userId: userId
-            })
-        )
+    async emitUserConnection({ userId, isOnline }: { userId: string, isOnline: boolean }) {
+        this.platformSocket?.send(JSON.stringify({ eventName: isOnline ? 'user-connect' : 'user-disconnect', userId: userId }))
     }
 
     emitRemovedUser({ channelId, userId }: { channelId: string, userId: string }) {
@@ -94,24 +89,11 @@ class SocketStore {
     }
 
     emitChannelAccessRequest({ channelId, userId }: { channelId: string, userId: string }) {
-        this.platformSocket?.send(
-            JSON.stringify({
-                eventName: `channel-access-request`,
-                channel: channelId,
-                user: userId
-            })
-        )
+        this.platformSocket?.send(JSON.stringify({ eventName: `channel-access-request`, channel: channelId, user: userId }))
     }
 
     emitChannelAccessResponse({ channelId, userId, isGrantedAccess }: { channelId: string, userId: string, isGrantedAccess: boolean }) {
-        this.platformSocket?.send(
-            JSON.stringify({
-                eventName: `channel-access-response`,
-                channel: channelId,
-                user: userId,
-                isGrantedAccess
-            })
-        )
+        this.platformSocket?.send(JSON.stringify({ eventName: `channel-access-response`, channel: channelId, user: userId, isGrantedAccess }))
     }
 
     /************ Recording ****************/
