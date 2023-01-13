@@ -1,130 +1,100 @@
-import { PUBLIC_API_URL } from '$env/static/public'
-import { writable } from "svelte/store"
+import { PUBLIC_API_URL, PUBLIC_WEBSOCKET_URL } from '$env/static/public'
+import { writable, type Writable } from "svelte/store"
 
 class SocketStore {
+    public platformSocket: WebSocket | undefined
+    public channelSocket: WebSocket | undefined
 
-    constructor() {
+    constructor(
+        public platformConnection: Writable<string> = writable(),
+        public channelConnection: Writable<string> = writable(),
+        public platformMessage: Writable<MessageEvent> = writable(),
+        public channelMessage: Writable<MessageEvent> = writable(),
+    ) {}
+
+    public async getApiSocket() {
+        return await fetch(`${PUBLIC_API_URL}/wsinit/wsid`, {
+            method: 'GET',
+        }).then(async response => {
+            const data = await response.text()
+            await this.setupWebsocketConnection({ websocketId: data, isChannelConnection: false })
+        })
     }
 
-    async setupWebsocketConnection(websocketId, isChannelConnection) {
+    public async getChannelSocket({ channelId }: { channelId: string }) {
+        return await fetch(`${PUBLIC_API_URL}/wsinit/channelid?channelId=${channelId}`, {
+            method: 'GET',
+        }).then(async response => {
+            const data = await response.text()
+            await this.setupWebsocketConnection({ websocketId: data, isChannelConnection: true })
+        })
+    }
+
+    async setupWebsocketConnection({ websocketId, isChannelConnection }: { websocketId: string, isChannelConnection: boolean }) {
         if (!isChannelConnection) {
-            return new Promise((resolve) => {
-                this.apiSocket = new WebSocket(`${environment.webSocketUrl}/wsinit/wsid/${websocketId}/connect`)
-
-                this.apiSocket.addEventListener('open', (data) => {
-                    console.log("socket connection open")
-                    console.log(data)
-                    resolve(true)
-                })
-                this.apiSocket.addEventListener('message', (data) => {
-                    console.log("listening to messages")
-                    console.log(data)
-                })
-                this.apiSocket.addEventListener('error', (data) => {
-                    console.log("socket connection error")
-                    console.log(data)
-                })
-                this.apiSocket.addEventListener('close', (data) => {
-                    console.log("socket connection close")
-                    console.log(data)
-                })
+            this.platformSocket = new WebSocket(`${PUBLIC_WEBSOCKET_URL}/wsinit/wsid/${websocketId}/connect`)
+            this.platformSocket?.addEventListener('open', (data) => {
+                console.log("socket connection open")
+                console.log(data)
+                this.platformConnection.set('open')
+            })
+            this.platformSocket?.addEventListener('message', (data) => {
+                console.log("listening to messages")
+                console.log(data)
+                this.platformMessage.set(data)
+            })
+            this.platformSocket?.addEventListener('error', (data) => {
+                console.log("socket connection error")
+                console.log(data)
+            })
+            this.platformSocket?.addEventListener('close', (data) => {
+                console.log("socket connection close")
+                console.log(data)
+                this.platformConnection.set('close')
+            })
+        } else {
+            this.channelSocket = new WebSocket(`${PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${websocketId}/connect`)
+            this.channelSocket?.addEventListener('open', (data) => {
+                console.log("channel socket connection open")
+                console.log(data)
+                this.channelConnection.set('open')
+            })
+            this.channelSocket?.addEventListener('message', (data) => {
+                console.log("listening to messages")
+                console.log(data)
+                this.channelMessage.set(data)
+            })
+            this.channelSocket?.addEventListener('error', (data) => {
+                console.log("socket connection error")
+                console.log(data)
+            })
+            this.channelSocket?.addEventListener('close', (data) => {
+                console.log("socket connection close")
+                console.log(data)
+                this.channelConnection.set('close')
             })
         }
-        if (isChannelConnection) {
-
-            return new Promise((resolve) => {
-                this.channelSocket = new WebSocket(`${environment.webSocketUrl}/wsinit/channelid/${websocketId}/connect`)
-
-                this.channelSocket.addEventListener('open', (data) => {
-                    console.log("channel socket connection open")
-                    console.log(data)
-                    resolve(true)
-                })
-                this.channelSocket.addEventListener('message', (data) => {
-                    console.log("listening to messages")
-                    console.log(data)
-                })
-                this.channelSocket.addEventListener('error', (data) => {
-                    console.log("socket connection error")
-                    console.log(data)
-                })
-                this.channelSocket.addEventListener('close', (data) => {
-                    console.log("socket connection close")
-                    console.log(data)
-                })
-            })
-
-        }
-    }
-
-    setupChannelSocketConnection(channelId) {
-        return this.http.get(`${environment.apiUrl}/wsinit/channelid?channelId=${channelId}`, { responseType: 'text' }).toPromise()
     }
 
     async emitUserConnection(userId: string, isOnline: boolean) {
-        if (!this.isBrowser) return
-        return new Promise((resolve) => {
-            this.apiSocket.send(
-                JSON.stringify({
-                    eventName: isOnline ? 'user-connect' : 'user-disconnect',
-                    userId: userId
-                })
-            )
-            resolve(isOnline)
-        })
-    }
-
-    listenToUserConnection(userId: string): Observable<any> {
-        return new Observable((observer) => {
-            this.apiSocket.addEventListener(`message`, (data) => {
-                if (JSON.parse(data.data).eventName === `user-connection-${userId}`) {
-                    this.sessionName = JSON.parse(data.data).user.userId
-                    observer.next(JSON.parse(data.data))
-                }
+        this.platformSocket?.send(
+            JSON.stringify({
+                eventName: isOnline ? 'user-connect' : 'user-disconnect',
+                userId: userId
             })
-        })
+        )
     }
 
-    listenToRemovedUser(channelId): Observable<any> {
-        return new Observable((observer) => {
-            this.channelSocket.addEventListener(`message`, (data) => {
-                if (JSON.parse(data.data).eventName === `user-removed-${channelId}`) {
-                    observer.next(JSON.parse(data.data))
-                }
-            })
-        })
+    emitRemovedUser({ channelId, userId }: { channelId: string, userId: string }) {
+        this.channelSocket?.send(JSON.stringify({ eventName: `user-removed`, channelId, userId }))
     }
 
-    emitRemovedUser(channelId, userId) {
-        this.channelSocket.send(JSON.stringify({ eventName: `user-removed`, channelId, userId }))
+    emitChannelUpdate({ channelId }: { channelId: string }) {
+        this.channelSocket?.send(JSON.stringify({ eventName: `channel-update`, channelId }))
     }
 
-    listenToChannelUpdate(channelId): Observable<any> {
-        return new Observable((observer) => {
-            this.channelSocket.addEventListener(`message`, (data) => {
-                if (JSON.parse(data.data).eventName === `channel-update-${channelId}`) {
-                    observer.next(JSON.parse(data.data))
-                }
-            })
-        })
-    }
-
-    emitChannelUpdate(channelId) {
-        this.channelSocket.send(JSON.stringify({ eventName: `channel-update`, channelId }))
-    }
-
-    listenToChannelAccessRequest({ channelId }): Observable<any> {
-        return new Observable((observer) => {
-            this.apiSocket.addEventListener(`message`, (data) => {
-                if (JSON.parse(data.data).eventName === `channel-access-request` && JSON.parse(data.data).channelId === channelId) {
-                    observer.next(data)
-                }
-            })
-        })
-    }
-
-    emitChannelAccessRequest({ channelId, userId }) {
-        this.apiSocket.send(
+    emitChannelAccessRequest({ channelId, userId }: { channelId: string, userId: string }) {
+        this.platformSocket?.send(
             JSON.stringify({
                 eventName: `channel-access-request`,
                 channel: channelId,
@@ -133,18 +103,8 @@ class SocketStore {
         )
     }
 
-    listenToChannelAccessResponse({ channelId }): Observable<any> {
-        return new Observable((observer) => {
-            this.apiSocket.addEventListener(`message`, (data) => {
-                if (JSON.parse(data.data).eventName === `channel-access-response` && JSON.parse(data.data).channelId === channelId) {
-                    observer.next(data)
-                }
-            })
-        })
-    }
-
-    emitChannelAccessResponse({ channelId, userId, isGrantedAccess }) {
-        this.apiSocket.send(
+    emitChannelAccessResponse({ channelId, userId, isGrantedAccess }: { channelId: string, userId: string, isGrantedAccess: boolean }) {
+        this.platformSocket?.send(
             JSON.stringify({
                 eventName: `channel-access-response`,
                 channel: channelId,
@@ -154,89 +114,32 @@ class SocketStore {
         )
     }
 
-
     /************ Recording ****************/
 
-    emitVideoRecordingStarted({ channelId }) {
-        this.apiSocket.send(JSON.stringify({ eventName: `video-recording-started`, channelId }))
+    emitVideoRecordingStarted({ channelId }: { channelId: string }) {
+        this.platformSocket?.send(JSON.stringify({ eventName: `video-recording-started`, channelId }))
     }
 
-    listenToVideoRecordingStarted({ channelId }): Observable<any> {
-        return new Observable((observer) => {
-            this.apiSocket.addEventListener(`message`, (data) => {
-                if (JSON.parse(data.data).eventName === `video-recording-started` && JSON.parse(data.data).channelId === channelId) {
-                    observer.next(JSON.parse(data.data))
-                    return data
-                }
-            })
-        })
-    }
-
-    emitVideoRecordingEnded({ channelId, sessionCounter }) {
-        this.apiSocket.send(
+    emitVideoRecordingEnded({ channelId, sessionCounter }: { channelId: string, sessionCounter: number }) {
+        this.platformSocket?.send(
             JSON.stringify({ eventName: 'video-recording-ended', channelId, sessionCounter })
         )
     }
 
-    listenToCompositionStatusUpdate({ channelId }): Observable<any> {
-        return new Observable((observer) => {
-            this.apiSocket.addEventListener(`message`, (data) => {
-                if (
-                    JSON.parse(data.data).eventName === `composition-status-update` &&
-                    JSON.parse(data.data).channelId === channelId
-                ) {
-                    observer.next(JSON.parse(data.data))
-                    return data
-                }
-            })
-        })
-    }
-
-    emitCompositionDeleted({ channelId, compositionSid }) {
-        this.apiSocket.send(
+    emitCompositionDeleted({ channelId, compositionSid }: { channelId: string, compositionSid: string }) {
+        this.platformSocket?.send(
             JSON.stringify({ eventName: 'composition-deleted', channelId, compositionSid })
         )
     }
 
-    listenToCompositionDeleted({ channelId }): Observable<any> {
-        return new Observable((observer) => {
-            this.apiSocket.addEventListener(`message`, (data) => {
-                if (JSON.parse(data.data).eventName === `composition-deleted` && JSON.parse(data.data).channelId === channelId) {
-                    observer.next(JSON.parse(data.data))
-                    return data
-                }
-            })
-        })
-    }
-
     /************ Chat ****************/
 
-    listenToChatMessages(): Observable<any> {
-        return new Observable((observer) => {
-            this.apiSocket.addEventListener(`message`, (data) => {
-                if (JSON.parse(data.data).eventName === `message-received`) {
-                    observer.next(JSON.parse(data.data))
-                }
-            })
-        })
+    emitChatMessage({ source1, source2, message }: { source1: string, source2: string, message: string }) {
+        this.platformSocket?.send(JSON.stringify({ eventName: `message-sent`, source1, source2, message }))
     }
 
-    emitChatMessage({ source1, source2, message }) {
-        this.apiSocket.send(JSON.stringify({ eventName: `message-sent`, source1, source2, message }))
-    }
-
-    listenToChatTyping(): Observable<any> {
-        return new Observable((observer) => {
-            this.apiSocket.addEventListener(`message`, (data) => {
-                if (JSON.parse(data.data).eventName === `chat-typing`) {
-                    observer.next(JSON.parse(data.data))
-                }
-            })
-        })
-    }
-
-    emitChatTypingByUser(userId) {
-        this.apiSocket.send(
+    emitChatTypingByUser({ userId }: { userId: string }) {
+        this.platformSocket?.send(
             JSON.stringify({
                 eventName: `chat-typing`,
                 user: userId,
@@ -249,7 +152,7 @@ class SocketStore {
 
     // listenToChannel(channelId): Observable<any> {
     //     return new Observable((observer) => {
-    //         this.channelSocket.addEventListener(`message`, (data) => {
+    //         this.channelSocket?.addEventListener(`message`, (data) => {
     //             const parsedData = JSON.parse(data.data)
     //             switch (parsedData.eventName) {
     //                 case `channel-message-${channelId}`:
@@ -260,35 +163,24 @@ class SocketStore {
     //     })
     // }
 
-    listenToChannelMessage(channelId): Observable<any> {
-        return new Observable((observer) => {
-            this.channelSocket.addEventListener(`message`, (data) => {
-                if (JSON.parse(data.data).eventName === `channel-message-${channelId}`) {
-                    observer.next(JSON.parse(data.data))
-                }
-            })
-        })
-    }
-
-    emitChannelSubscribeByUser(channelId, userId) {
-        this.channelSocket.send(
+    emitChannelSubscribeByUser({ channelId, userId }: { channelId: string, userId: string }) {
+        this.channelSocket?.send(
             JSON.stringify({
                 eventName: `channel-subscribe`,
                 channel: channelId,
                 userId: userId
             })
         )
-        debugger
     }
 
-    emitMessageToChannel(channelId, message) {
-        this.channelSocket.send(
+    emitMessageToChannel({ channelId, message }: { channelId: string, message: string }) {
+        this.channelSocket?.send(
             JSON.stringify({ eventName: `channel-message`, channel: channelId, message })
         )
     }
 
-    emitDeleteMessageToChannel(channelId, message) {
-        this.channelSocket.send(
+    emitDeleteMessageToChannel({ channelId, message }: { channelId: string, message: string }) {
+        this.channelSocket?.send(
             JSON.stringify({
                 eventName: `delete-channel-message`,
                 channel: channelId,
@@ -297,14 +189,14 @@ class SocketStore {
         )
     }
 
-    emitDeleteAllMessagesToChannel(channelId) {
-        this.channelSocket.send(
+    emitDeleteAllMessagesToChannel({ channelId }: { channelId: string }) {
+        this.channelSocket?.send(
             JSON.stringify({ eventName: `delete-all-channel-messages`, channel: channelId })
         )
     }
 
-    emitHistoryToChannel(channelId, skip) {
-        this.channelSocket.send(
+    emitHistoryToChannel({ channelId, skip }: { channelId: string, skip: number }) {
+        this.channelSocket?.send(
             JSON.stringify({
                 eventName: `channel-message-history`,
                 channel: channelId,
@@ -313,18 +205,8 @@ class SocketStore {
         )
     }
 
-    listenToChannelTyping(): Observable<any> {
-        return new Observable((observer) => {
-            this.channelSocket.addEventListener(`message`, (data) => {
-                if (JSON.parse(data.data).eventName === `typing`) {
-                    observer.next(JSON.parse(data.data))
-                }
-            })
-        })
-    }
-
-    emitChannelChatTypingByUser(channelId, typingUser) {
-        this.channelSocket.send(
+    emitChannelChatTypingByUser({ channelId, typingUser }: { channelId: string, typingUser: string }) {
+        this.channelSocket?.send(
             JSON.stringify({
                 eventName: `channel-chat-typing`,
                 channel: channelId,
@@ -335,20 +217,8 @@ class SocketStore {
 
     /************ Channel streaming ****************/
 
-    listenToRoomMemberUpdate({ channelId }): Observable<any> {
-        return new Observable((observer) => {
-            this.channelSocket.addEventListener(`message`, (data) => {
-                const parsedData = JSON.parse(data.data)
-                if (parsedData.eventName === `channel-streaming-room-member-update-${channelId}`) {
-                    console.log("parsedData", parsedData)
-                    observer.next(parsedData)
-                }
-            })
-        })
-    }
-
-    emitRoomMemberUpdate({ channelId, userData, isNewUser }) {
-        this.channelSocket.send(
+    emitRoomMemberUpdate({ channelId, userData, isNewUser }: { channelId: string, userData: any, isNewUser: boolean }) {
+        this.channelSocket?.send(
             JSON.stringify({
                 eventName: 'channel-streaming-room-member-update',
                 channel: channelId,
@@ -358,20 +228,8 @@ class SocketStore {
         )
     }
 
-    listenToUserActions({ channelId }): Observable<any> {
-        return new Observable((observer) => {
-            this.channelSocket.addEventListener(`message`, (data) => {
-                const parsedData = JSON.parse(data.data)
-                if (parsedData.eventName === `channel-streaming-user-actions-${channelId}`) {
-                    console.log("parsedData", parsedData)
-                    observer.next(parsedData)
-                }
-            })
-        })
-    }
-
-    emitUserActions({ channelId, userData, message }) {
-        this.channelSocket.send(
+    emitUserActions({ channelId, userData, message }: { channelId: string, userData: any, message: string }) {
+        this.channelSocket?.send(
             JSON.stringify({
                 eventName: `channel-streaming-user-actions`,
                 channel: channelId,
@@ -381,8 +239,8 @@ class SocketStore {
         )
     }
 
-    emitReactToMessage(channelId: string, message: Object, user: Object, reaction: string) {
-        this.channelSocket.send(
+    emitReactToMessage({ channelId, message, user, reaction }: { channelId: string, message: any, user: any, reaction: string }) {
+        this.channelSocket?.send(
             JSON.stringify({
                 eventName: `react-to-message`,
                 channel: channelId,
@@ -391,6 +249,145 @@ class SocketStore {
                 reaction
             })
         )
+    }
+
+
+
+
+
+
+
+
+
+    //TODO: place these everywhere we are using socket listeners
+
+    listenToUserConnection({ userId }: { userId: string }) {
+        this.platformMessage.subscribe(value => {
+            const parsedData = JSON.parse(value.data)
+            if (parsedData.eventName === `user-connection-${userId}`) {
+                //parsedData.user
+            }
+        })
+    }
+
+    listenToRemovedUser({ channelId }: { channelId: string }) {
+        this.channelMessage.subscribe(value => {
+            const parsedData = JSON.parse(value.data)
+            if (parsedData.eventName === `user-removed-${channelId}`) {
+                //parsedData.userId
+            }
+        })
+    }
+
+    listenToChannelUpdate({ channelId }: { channelId: string }) {
+        this.channelMessage.subscribe(value => {
+            const parsedData = JSON.parse(value.data)
+            if (parsedData.eventName === `channel-update-${channelId}`) {
+                // this.channelService.currentChannel.description = parsedData.channel.description
+                // this.channelService.currentChannel.thumbnail = parsedData.channel.thumbnail
+                // this.channelService.currentChannel.isPrivate = parsedData.channel.isPrivate
+                // this.channelService.currentChannel.attachments = parsedData.channel.attachments
+            }
+        })
+    }
+
+    listenToChannelAccessRequest({ channelId }: { channelId: string }) {
+        this.platformMessage.subscribe(value => {
+            const parsedData = JSON.parse(value.data)
+            if (parsedData.eventName === `channel-access-request` && parsedData.channelId === channelId) {
+                console.log("parsedData", parsedData)
+            }
+        })
+    }
+
+    listenToChannelAccessResponse({ channelId }: { channelId: string }) {
+        this.platformMessage.subscribe(value => {
+            const parsedData = JSON.parse(value.data)
+            if (parsedData.eventName === `channel-access-response` && parsedData.channelId === channelId) {
+                console.log("parsedData", parsedData)
+            }
+        })
+    }
+
+    listenToVideoRecordingStarted({ channelId }: { channelId: string }) {
+        this.platformMessage.subscribe(value => {
+            const parsedData = JSON.parse(value.data)
+            if (parsedData.eventName === `video-recording-started` && parsedData.channelId === channelId) {
+                console.log("parsedData", parsedData)
+            }
+        })
+    }
+
+    listenToCompositionStatusUpdate({ channelId }: { channelId: string }) {
+        this.platformMessage.subscribe(value => {
+            const parsedData = JSON.parse(value.data)
+            if (parsedData.eventName === `composition-status-update` && parsedData.channelId === channelId) {
+                console.log("parsedData", parsedData)
+            }
+        })
+    }
+
+    listenToCompositionDeleted({ channelId }: { channelId: string }) {
+        this.platformMessage.subscribe(value => {
+            const parsedData = JSON.parse(value.data)
+            if (parsedData.eventName === `composition-deleted` && parsedData.channelId === channelId) {
+                console.log("parsedData", parsedData)
+            }
+        })
+    }
+
+    listenToChatMessages() {
+        this.platformMessage.subscribe(value => {
+            const parsedData = JSON.parse(value.data)
+            if (parsedData.eventName === `message-received`) {
+                console.log("parsedData", parsedData)
+            }
+        })
+    }
+
+    listenToChatTyping() {
+        this.platformMessage.subscribe(value => {
+            const parsedData = JSON.parse(value.data)
+            if (parsedData.eventName === `chat-typing`) {
+                console.log("parsedData", parsedData)
+            }
+        })
+    }
+
+    listenToChannelMessage({ channelId }: { channelId: string }) {
+        this.channelMessage.subscribe(value => {
+            const parsedData = JSON.parse(value.data)
+            if (parsedData.eventName === `channel-message-${channelId}`) {
+                console.log("parsedData", parsedData)
+            }
+        })
+    }
+
+    listenToChannelTyping() {
+        this.channelMessage.subscribe(value => {
+            const parsedData = JSON.parse(value.data)
+            if (parsedData.eventName === `typing`) {
+                console.log("parsedData", parsedData)
+            }
+        })
+    }
+
+    listenToRoomMemberUpdate({ channelId }: { channelId: string }) {
+        this.channelMessage.subscribe(value => {
+            const parsedData = JSON.parse(value.data)
+            if (parsedData.eventName === `channel-streaming-room-member-update-${channelId}`) {
+                console.log("parsedData", parsedData)
+            }
+        })
+    }
+
+    listenToUserActions({ channelId }: { channelId: string }) {
+        this.channelMessage.subscribe(value => {
+            const parsedData = JSON.parse(value.data)
+            if (parsedData.eventName === `channel-streaming-user-actions-${channelId}`) {
+                console.log("parsedData", parsedData)
+            }
+        })
     }
 }
 
