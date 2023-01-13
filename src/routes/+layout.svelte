@@ -25,6 +25,7 @@
 	import IconSocialTwitter from '$lib/assets/icons/social/IconSocialTwitter.svelte'
 	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svelte'
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
+	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
 	NProgress.configure({
 		minimum: 0.75,
 		showSpinner: false,
@@ -65,7 +66,7 @@
 		<div class="menu p-4 w-80 bg-base-100 text-base-content flex flex-col">
 			<ul>
 				<div class="navbar">
-					<a href="/home" class="btn btn-ghost normal-case text-xl">Mage</a>
+					<a href="/browse" class="btn btn-ghost normal-case text-xl">Mage</a>
 				</div>
 				<li>
 					<a href="/profile/me" class="hero rounded-md cursor-pointer">
@@ -96,9 +97,15 @@
 				</li>
 				<!-- Sidebar content here -->
 				<li>
-					<a href="/home">
+					<a href="/admin">
+						<IconDrawerAdmin />
+						Admin
+					</a>
+				</li>
+				<li>
+					<a href="/browse">
 						<IconDrawerHome />
-						Channel List
+						Browse
 					</a>
 				</li>
 				<li>
@@ -151,6 +158,7 @@
 						<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 							<li><a href="/contact">Contact</a></li>
 							<li><a href="/legal">Legal</a></li>
+							<li><a href="https://code-crow.gitbook.io/whitepaper/">White Paper</a></li>
 						</ul>
 					</div>
 				</li>
@@ -166,6 +174,7 @@
 				</li>
 			</ul>
 			<footer class="mt-auto p-4">
+				<!-- <RisingStars /> -->
 				<div class="grid grid-flow-col gap-4">
 					<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 						<IconSocialGitHub />

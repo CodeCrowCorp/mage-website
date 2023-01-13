@@ -1,7 +1,7 @@
 <script lang="ts">
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
-	import ChannelList from '$lib/components/Home/ChannelList.svelte'
+	import ChannelList from '$lib/components/Browse/ChannelList.svelte'
 	import FollowList from '$lib/components/Profile/FollowList.svelte'
 
 	let tabs = ['Stats', 'Channels', 'Follows']

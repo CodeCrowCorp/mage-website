@@ -1,6 +1,6 @@
 <script>
 	import IconLaunch from '../lib/assets/icons/IconLaunch.svelte'
-	import LoginPrompt from '../lib/components/Home/LoginPrompt.svelte'
+	import LoginPrompt from '../lib/components/Browse/LoginPrompt.svelte'
 </script>
 
 <div class="hero min-h-screen flex justify-center">

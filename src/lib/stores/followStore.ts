@@ -31,6 +31,24 @@ class FollowStore {
             method: 'GET'
         }).then(response => response.json())
     }
+
+    public async toggleFollow({ follow, senderId, userId }: { follow: any, senderId: string, userId: string }) {
+        if (follow) {
+            if (!follow.isFollowing) {
+                await this.createFollow({
+                    source1: senderId,
+                    source2: userId
+                })
+                follow.isFollowing = true
+            } else {
+                await this.deleteFollow({
+                    source1: senderId,
+                    source2: userId
+                })
+                follow.isFollowing = false
+            }
+        }
+    }
 }
 
 export const followStore = new FollowStore()
