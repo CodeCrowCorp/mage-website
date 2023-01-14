@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          ref: main
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -30,11 +28,19 @@ jobs:
 
       - name: Install Playwright Browser
         run: |
+          sudo apt-get update
           npx playwright install-deps
 
       - name: Run Playwright Tests
         continue-on-error: true
-        run: npm run test
+        run: |
+          npm run check
+          npm run test
+        env:
+          PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
+          PUBLIC_WEBSOCKET_URL: ${{ secrets.PUBLIC_WEBSOCKET_URL }}
+          PUBLIC_X_API_KEY: ${{ secrets.PUBLIC_X_API_KEY }}
+          PUBLIC_CROSS_ORIGIN: ${{ secrets.PUBLIC_CROSS_ORIGIN }}
 
       - name: Convert E2E Report to Coverage Report
         run: |
@@ -77,6 +83,11 @@ jobs:
 
       - name: Install NPM and build
         run: npm install && npm run build
+        env:
+          PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
+          PUBLIC_WEBSOCKET_URL: ${{ secrets.PUBLIC_WEBSOCKET_URL }}
+          PUBLIC_X_API_KEY: ${{ secrets.PUBLIC_X_API_KEY }}
+          PUBLIC_CROSS_ORIGIN: ${{ secrets.PUBLIC_CROSS_ORIGIN }}
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
