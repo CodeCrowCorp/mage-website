@@ -1,4 +1,4 @@
-import { PUBLIC_API_URL } from '$env/static/public'
+import { env } from '$env/dynamic/public'
 import { writable, type Writable } from "svelte/store"
 
 class RemoteConfigStore {
@@ -11,14 +11,14 @@ class RemoteConfigStore {
     ) {}
 
     public async createRemoteConfig({ flagKey, flagValue }: { flagKey: string, flagValue: string }) {
-        return await fetch(`${PUBLIC_API_URL}/remote-config`, {
+        return await fetch(`${env.PUBLIC_API_URL}/remote-config`, {
             method: 'PUT',
             body: JSON.stringify({ flagKey, flagValue })
         }).then(response => response.json())
     }
 
     public async getRemoteConfigs() {
-        return await fetch(`${PUBLIC_API_URL}/remote-config`, {
+        return await fetch(`${env.PUBLIC_API_URL}/remote-config`, {
             method: 'GET'
         }).then(async response => {
             const remoteConfigs = await response.json()
@@ -33,7 +33,7 @@ class RemoteConfigStore {
     }
 
     public async getRemoteConfigByKey({ flagKey }: { flagKey: string }) {
-        return await fetch(`${PUBLIC_API_URL}/remote-config?flagKey=${flagKey}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/remote-config?flagKey=${flagKey}`, {
             method: 'GET'
         }).then(response => response.json())
     }

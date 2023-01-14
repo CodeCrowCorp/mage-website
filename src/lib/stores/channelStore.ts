@@ -1,5 +1,5 @@
 import { writable, type Writable } from "svelte/store"
-import { PUBLIC_API_URL } from '$env/static/public'
+import { env } from '$env/dynamic/public'
 
 class ChannelStore {
     private skip = 0
@@ -16,7 +16,7 @@ class ChannelStore {
     public async createChannel({ title, description, thumbnail, category, tags, isPrivate = false, user, channelType }
         : { title: string, description: string, thumbnail: string, category: string[], tags: string[], isPrivate: boolean, user: any, channelType: string }
     ) {
-        return await fetch(`${PUBLIC_API_URL}/channel`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channel`, {
             method: 'POST',
             body: JSON.stringify({
                 title,
@@ -42,19 +42,19 @@ class ChannelStore {
     }
 
     public async deleteChannel({ channelId }: { channelId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/channels/${channelId}?bucketName=attachments`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channels/${channelId}?bucketName=attachments`, {
             method: 'DELETE'
         })
     }
 
     public async getChannel({ channelId }: { channelId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/channel?channelId=${channelId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channel?channelId=${channelId}`, {
             method: 'GET'
         }).then(response => response.json())
     }
 
     public async addChannelToUser({ channelId }: { channelId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/users/channels?channelId=${channelId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/users/channels?channelId=${channelId}`, {
             method: 'GET'
         }).then(async response => {
             const res = await response.json()
@@ -63,7 +63,7 @@ class ChannelStore {
     }
 
     public async removeChannelFromUser({ channelId, userId }: { channelId: string, userId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/users/channels?channelId=${channelId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/users/channels?channelId=${channelId}`, {
             method: 'DELETE'
         }).then(async response => {
             const res = await response.json()
@@ -73,7 +73,7 @@ class ChannelStore {
     }
 
     public async addHostChannelToUser({ hostChannelId }: { hostChannelId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/users/host-channels?hostChannelId=${hostChannelId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/users/host-channels?hostChannelId=${hostChannelId}`, {
             method: 'PUT'
         }).then(async response => {
             const res = await response.json()
@@ -82,7 +82,7 @@ class ChannelStore {
     }
 
     public async removeHostChannelFromUser({ hostChannelId }: { hostChannelId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/users/host-channels?hostChannelId=${hostChannelId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/users/host-channels?hostChannelId=${hostChannelId}`, {
             method: 'DELETE'
         }).then(async response => {
             const res = await response.json()
@@ -91,19 +91,19 @@ class ChannelStore {
     }
 
     public async blockUserFromChannel({ channelId, userId }: { channelId: string, userId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/channels/blocked-users?channelId=${channelId}&userId=${userId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channels/blocked-users?channelId=${channelId}&userId=${userId}`, {
             method: 'PATCH'
         })
     }
 
     public async unblockUserFromChannel({ channelId, userId }: { channelId: string, userId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/channels/blocked-users?channelId=${channelId}&userId=${userId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channels/blocked-users?channelId=${channelId}&userId=${userId}`, {
             method: 'DELETE'
         })
     }
 
     public async updateChannelProperties({ channelId, updatedProperties }: { channelId: string, updatedProperties: any }) {
-        return await fetch(`${PUBLIC_API_URL}/channels?channelId=${channelId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channels?channelId=${channelId}`, {
             method: 'PATCH',
             body: JSON.stringify(updatedProperties)
         })
@@ -115,31 +115,31 @@ class ChannelStore {
     // }
 
     public async addAttachments({ channelId, attachmentUrl }: { channelId: string, attachmentUrl: string }) {
-        return await fetch(`${PUBLIC_API_URL}/channels/attachments?channelId=${channelId}&encodeURIComponent=${encodeURIComponent(attachmentUrl)}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channels/attachments?channelId=${channelId}&encodeURIComponent=${encodeURIComponent(attachmentUrl)}`, {
             method: 'PUT'
         })
     }
 
     public async deleteAttachment({ channelId, attachmentUrl }: { channelId: string, attachmentUrl: string }) {
-        return await fetch(`${PUBLIC_API_URL}/channels/attachments?channelId=${channelId}&encodeURIComponent=${encodeURIComponent(attachmentUrl)}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channels/attachments?channelId=${channelId}&encodeURIComponent=${encodeURIComponent(attachmentUrl)}`, {
             method: 'DELETE'
         })
     }
 
     public async addChannelNotificationSubscriber({ channelId, userId }: { channelId: string, userId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/channels/notification-subscribers?channelId=${channelId}&userId=${userId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channels/notification-subscribers?channelId=${channelId}&userId=${userId}`, {
             method: 'PUT'
         })
     }
 
     public async removeChannelNotificationSubscriber({ channelId, userId }: { channelId: string, userId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/channels/notification-subscribers?channelId=${channelId}&userId=${userId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channels/notification-subscribers?channelId=${channelId}&userId=${userId}`, {
             method: 'DELETE'
         })
     }
 
     public async deleteMembers({ channelId }: { channelId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/channel-members?channelId=${channelId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channel-members?channelId=${channelId}`, {
             method: 'DELETE'
         })
     }
@@ -165,13 +165,13 @@ class ChannelStore {
     }
 
     public async getMyChannels() {
-        return await fetch(`${PUBLIC_API_URL}/channels/me/hosted`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channels/me/hosted`, {
             method: 'GET'
         }).then(response => response.json())
     }
 
     public async getChannelsByUserId({ userId, searchQuery = '', skip = 0, limit = 50 }: { userId: string, searchQuery: string, skip?: number, limit?: number }) {
-        return await fetch(`${PUBLIC_API_URL}/channels/user?userId=${userId}&searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channels/user?userId=${userId}&searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`, {
             method: 'GET'
         }).then(response => response.json())
     }
@@ -181,7 +181,7 @@ class ChannelStore {
             this.resetSkipLimit()
         }
 
-        return await fetch(`${PUBLIC_API_URL}/channels?searchQuery=${this.searchQuery}&category=${this.filterTechList.map((item: any) => item.item_text).join()}&skip=${this.skip}&limit=${this.limit}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channels?searchQuery=${this.searchQuery}&category=${this.filterTechList.map((item: any) => item.item_text).join()}&skip=${this.skip}&limit=${this.limit}`, {
             method: 'GET'
         }).then(async response => {
             const res = await response.json()
@@ -262,7 +262,7 @@ class ChannelStore {
 
     // async sendToken({ channelId }) {
     //     await lastValueFrom(this.http
-    //         .get(`${PUBLIC_API_URL}/token/sendToken?channelId=${channelId}`, {
+    //         .get(`${env.PUBLIC_API_URL}/token/sendToken?channelId=${channelId}`, {
     //             responseType: 'text'
     //         })).then((res) => {
     //             return this.snackBar.open('You received 1 recursion Token', null, {
