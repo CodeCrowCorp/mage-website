@@ -30,6 +30,7 @@ jobs:
 
       - name: Install Playwright Browser
         run: |
+          apt-get update
           npx playwright install-deps
 
       - name: Run Playwright Tests
