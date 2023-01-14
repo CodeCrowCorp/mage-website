@@ -5,7 +5,7 @@
 
 <div class="hero min-h-screen flex justify-center">
 	<!-- The button to open modal -->
-	<label for="my-modal-4" class="btn btn-primary gap-4"> <IconLaunch /> Launch dApp</label>
+	<!-- <label for="my-modal-4" class="btn btn-primary gap-4"> <IconLaunch /> Launch dApp</label>
 
-	<LoginPrompt />
+	<LoginPrompt /> -->
 </div>

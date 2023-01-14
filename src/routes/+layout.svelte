@@ -26,6 +26,7 @@
 	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svelte'
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
+	import LoginPrompt from '$lib/components/Browse/LoginPrompt.svelte'
 	NProgress.configure({
 		minimum: 0.75,
 		showSpinner: false,
@@ -60,6 +61,7 @@
 		<label for="my-drawer-2" class="btn btn-ghost normal-case text-xl drawer-button lg:hidden"
 			>Mage</label>
 		<slot />
+		<LoginPrompt />
 	</div>
 	<div class="drawer-side">
 		<label for="my-drawer-2" class="drawer-overlay" />
@@ -134,7 +136,11 @@
 						Creator Space</a>
 				</li> -->
 				<li>
-					<a href="https://mint.codecrow.io" class="text-emerald-600">
+					<a
+						href="https://mint.codecrow.io"
+						class="text-emerald-600"
+						target="_blank"
+						rel="noreferrer">
 						<IconDrawerMint />
 						Mint <span class="badge">New</span>
 					</a>
@@ -158,7 +164,10 @@
 						<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 							<li><a href="/contact">Contact</a></li>
 							<li><a href="/legal">Legal</a></li>
-							<li><a href="https://code-crow.gitbook.io/whitepaper/">White Paper</a></li>
+							<li>
+								<a href="https://code-crow.gitbook.io/whitepaper/" target="_blank" rel="noreferrer"
+									>White Paper</a>
+							</li>
 						</ul>
 					</div>
 				</li>
@@ -168,7 +177,7 @@
 						Settings</a>
 				</li>
 				<li>
-					<a href="">
+					<a href="#login-prompt-modal">
 						<IconDrawerLogOut />
 						Log Out</a>
 				</li>
