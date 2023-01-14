@@ -1,4 +1,4 @@
-import { PUBLIC_API_URL } from '$env/static/public'
+import { env } from '$env/dynamic/public'
 import { writable, type Writable } from "svelte/store"
 const JWT_KEY = 'jwt'
 
@@ -34,7 +34,7 @@ class AuthStore {
         if (jwt === null || userId === null) {
             this.logout(); return null
         } else {
-            return await fetch(`${PUBLIC_API_URL}/auth/me`, {
+            return await fetch(`${env.PUBLIC_API_URL}/auth/me`, {
                 method: 'GET',
                 headers: {
                     'Authorization': jwt,
