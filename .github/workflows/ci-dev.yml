@@ -35,7 +35,9 @@ jobs:
 
       - name: Run Playwright Tests
         continue-on-error: true
-        run: npm run test
+        run: |
+          npm run check
+          npm run test
 
       - name: Convert E2E Report to Coverage Report
         run: |
