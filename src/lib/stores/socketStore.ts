@@ -116,7 +116,7 @@ class SocketStore {
 
     /************ Chat ****************/
 
-    emitChatMessage({ source1, source2, message }: { source1: string, source2: string, message: string }) {
+    emitChatMessage({ source1, source2, message }: { source1: string, source2: string, message: any }) {
         this.platformSocket?.send(JSON.stringify({ eventName: `message-sent`, source1, source2, message }))
     }
 
@@ -155,7 +155,7 @@ class SocketStore {
         )
     }
 
-    emitMessageToChannel({ channelId, message }: { channelId: string, message: string }) {
+    emitMessageToChannel({ channelId, message }: { channelId: string, message: any }) {
         this.channelSocket?.send(
             JSON.stringify({ eventName: `channel-message`, channel: channelId, message })
         )
