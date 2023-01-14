@@ -2,7 +2,10 @@
 	import '$lib/assets/styles/tailwind-output.css'
 	// @ts-ignore
 	import NProgress from 'nprogress'
+	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
+	// Auth store
+	import { authStore } from '$lib/stores/authStore'
 
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
@@ -41,8 +44,21 @@
 		}
 	}
 
-	export async function load({ page, session }: { page: any; session: any }) {
-		//TODO: show or hide the drawer based on the session
+	const { currentUser } = authStore
+	export let data: any
+
+	$: data.user, storeUserData()
+
+	function storeUserData() {
+		if (browser && data.user) {
+			authStore.setJWT({ jwt: data.user.token })
+			authStore.setUserId({ userId: data.user.userId })
+			authStore.me()
+		}
+	}
+
+	function logout() {
+		authStore.logout()
 	}
 </script>
 
@@ -68,33 +84,37 @@
 				<div class="navbar">
 					<a href="/browse" class="btn btn-ghost normal-case text-xl">Mage</a>
 				</div>
-				<li>
-					<a href="/profile/me" class="hero rounded-md cursor-pointer">
-						<div>
-							<div class="hero-content">
-								<div class="max-w-md">
-									<div class="avatar online">
-										<div
-											class="w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
-											<img src="https://placeimg.com/192/192/people" />
+				{#if $currentUser}
+					<li>
+						<a href="/profile/me" class="hero rounded-md cursor-pointer">
+							<div>
+								<div class="hero-content">
+									<div class="max-w-md">
+										<div class="avatar online">
+											<div
+												class="w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
+												<img
+													src={$currentUser.avatar_url || 'https://placeimg.com/192/192/people'}
+													alt="" />
+											</div>
 										</div>
 									</div>
+									<div class="grid grid-cols-3 gap-1">
+										<p class="col-span-3">{$currentUser.name || 'Gagan Suie'}</p>
+										<p class="col-span-3 text-pink-500">@{$currentUser.login || 'GaganSuie'}</p>
+										<IconDrawerStreak />
+										<p class="col-span-2 tooltip text-start" data-tip="62 day streak">62 d</p>
+										<IconDrawerStreamDuration />
+										<p class="col-span-2 tooltip text-start" data-tip="300 hours streamed">300 h</p>
+									</div>
 								</div>
-								<div class="grid grid-cols-3 gap-1">
-									<p class="col-span-3">Gagan Suie</p>
-									<p class="col-span-3 text-pink-500">@GaganSuie</p>
-									<IconDrawerStreak />
-									<p class="col-span-2 tooltip text-start" data-tip="62 day streak">62 d</p>
-									<IconDrawerStreamDuration />
-									<p class="col-span-2 tooltip text-start" data-tip="300 hours streamed">300 h</p>
+								<div class="tooltip" data-tip="level 1">
+									<progress class="progress progress-accent w-64" value="30" max="100" />
 								</div>
 							</div>
-							<div class="tooltip" data-tip="level 1">
-								<progress class="progress progress-accent w-64" value="30" max="100" />
-							</div>
-						</div>
-					</a>
-				</li>
+						</a>
+					</li>
+				{/if}
 				<!-- Sidebar content here -->
 				<li>
 					<a href="/admin">
@@ -168,7 +188,7 @@
 						Settings</a>
 				</li>
 				<li>
-					<a href="">
+					<a href="" on:click={logout}>
 						<IconDrawerLogOut />
 						Log Out</a>
 				</li>

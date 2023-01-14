@@ -1,5 +1,25 @@
+import type { Handle } from '@sveltejs/kit'
+
+export const handle: Handle = async ({ event, resolve }) => {
+	const token = event.url.searchParams.get('token')
+	const userId = event.url.searchParams.get('userId')
+
+	if (!token || !userId) {
+		return await resolve(event)
+	}
+
+	if (token && userId) {
+		event.locals.user = {
+			userId,
+			token
+		}
+	}
+
+	return await resolve(event)
+}
+
 // import { remoteConfigStore } from '$lib/stores/remoteConfigStore'
-import type { Handle, HandleServerError, RequestEvent } from '@sveltejs/kit'
+// import type { Handle, HandleServerError, RequestEvent } from '@sveltejs/kit'
 // import type { MaybePromise } from '@sveltejs/kit/types/private'
 // import { authStore } from '$lib/stores/authStore'
 
