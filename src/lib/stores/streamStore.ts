@@ -1,5 +1,5 @@
 import { writable, type Writable } from 'svelte/store'
-import { PUBLIC_API_URL } from '$env/static/public'
+import { env } from '$env/dynamic/public'
 import { channelStore } from '$lib/stores/channelStore'
 import { socketStore } from '$lib/stores/socketStore'
 
@@ -75,13 +75,13 @@ class StreamStore {
     ) {}
 
     async getMembers({ channelId, isParticipant, skip, limit }: { channelId: string, isParticipant: boolean, skip: number, limit: number }) {
-        return await fetch(`${PUBLIC_API_URL}/channel-members?channelId=${channelId}&isParticipant=${isParticipant}&skip=${skip}&limit=${limit}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channel-members?channelId=${channelId}&isParticipant=${isParticipant}&skip=${skip}&limit=${limit}`, {
             method: 'GET',
         }).then(response => response.json())
     }
 
     async getChannelMembersCount({ channelId }: { channelId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/channel-members/count?channelId=${channelId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/channel-members/count?channelId=${channelId}`, {
             method: 'GET'
         }).then(response => response.json())
     }
@@ -684,7 +684,7 @@ class StreamStore {
     }
 
     async createLiveStream({ channelId, title }: { channelId: string, title: string }) {
-        return await fetch(`${PUBLIC_API_URL}/streams`, {
+        return await fetch(`${env.PUBLIC_API_URL}/streams`, {
             method: 'POST',
             body: JSON.stringify({ channel: channelId, title })
         }).then(async response => {
@@ -695,19 +695,19 @@ class StreamStore {
 
     async updateLiveStream() {
         if (this.videoStreamId) {
-            return await fetch(`${PUBLIC_API_URL}/streams/${this.videoStreamId}/end`, {})
+            return await fetch(`${env.PUBLIC_API_URL}/streams/${this.videoStreamId}/end`, {})
         }
     }
 
     async getLiveInput(trackData: any) {
-        return await fetch(`${PUBLIC_API_URL}/cloudflare/live-input`, {
+        return await fetch(`${env.PUBLIC_API_URL}/cloudflare/live-input`, {
             method: 'POST',
             body: JSON.stringify(trackData)
         }).then(response => response.json())
     }
 
     async deleteLiveInput({ inputId }: { inputId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/cloudflare/live-input?inputId=${inputId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/cloudflare/live-input?inputId=${inputId}`, {
             method: 'DELETE'
         })
     }

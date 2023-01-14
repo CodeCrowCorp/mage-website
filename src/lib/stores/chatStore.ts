@@ -1,6 +1,6 @@
 import { writable, type Writable } from 'svelte/store'
 import { socketStore } from '$lib/stores/socketStore'
-import { PUBLIC_API_URL } from '$env/static/public'
+import { env } from '$env/dynamic/public'
 import { userStore } from '$lib/stores/userStore'
 import { authStore } from '$lib/stores/authStore'
 import { channelStore } from '$lib/stores/channelStore'
@@ -37,23 +37,23 @@ class ChatStore {
         formData.append('channelId', channelId)
         formData.append('name', fileToUpload.name)
         formData.append('type', fileToUpload.type)
-        return await fetch(`${PUBLIC_API_URL}/attachments/file`, { method: 'POST', body: JSON.stringify(formData) })
+        return await fetch(`${env.PUBLIC_API_URL}/attachments/file`, { method: 'POST', body: JSON.stringify(formData) })
     }
 
     public async deleteFile({ key }: { key: string }) {
-        return await fetch(`${PUBLIC_API_URL}/attachments/file?key=${key}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/attachments/file?key=${key}`, {
             method: 'DELETE'
         })
     }
 
     public async getTrendingGifs() {
-        return await fetch(`${PUBLIC_API_URL}/giphy/trending`, {
+        return await fetch(`${env.PUBLIC_API_URL}/giphy/trending`, {
             method: 'GET'
         }).then(response => response.json())
     }
 
     public async searchGifs({ query }: { query: string }) {
-        return await fetch(`${PUBLIC_API_URL}/giphy/search?${query}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/giphy/search?${query}`, {
             method: 'GET'
         }).then(response => response.json())
     }
@@ -159,7 +159,7 @@ class ChatStore {
     }
 
     public async createChat({ source1, source2 }: { source1: string, source2: string }) {
-        return await fetch(`${PUBLIC_API_URL}/chats`, {
+        return await fetch(`${env.PUBLIC_API_URL}/chats`, {
             method: 'PUT',
             body: JSON.stringify({ source1, source2 }),
         }).then(async response => {
@@ -174,7 +174,7 @@ class ChatStore {
     }
 
     public async getChat({ source1, source2 }: { source1: string, source2: string }) {
-        return await fetch(`${PUBLIC_API_URL}/chats/me?source1=${source1}&source2=${source2}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/chats/me?source1=${source1}&source2=${source2}`, {
             method: 'GET'
         }).then(response => response.json())
     }
@@ -184,7 +184,7 @@ class ChatStore {
             this.chats.set([])
             this.resetSkipLimit()
         }
-        return await fetch(`${PUBLIC_API_URL}/chats?searchQuery=${this.searchQuery}&skip=${this.skip}&limit=${this.limit}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/chats?searchQuery=${this.searchQuery}&skip=${this.skip}&limit=${this.limit}`, {
             method: 'GET'
         }).then(async response => {
             const res = await response.json()
@@ -217,7 +217,7 @@ class ChatStore {
 
         // dialogRef.afterClosed().subscribe(async (result: any) => {
         //     if (result) {
-        await fetch(`${PUBLIC_API_URL}/chats?chatId=${chat._id}`, {
+        await fetch(`${env.PUBLIC_API_URL}/chats?chatId=${chat._id}`, {
             method: 'DELETE'
         }).then(async response => {
             await response.json()
@@ -229,19 +229,19 @@ class ChatStore {
     }
 
     public async updateChatProperties({ chatId, updatedProperties }: { chatId: string, updatedProperties: any }) {
-        return await fetch(`${PUBLIC_API_URL}/chats?chatId=${chatId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/chats?chatId=${chatId}`, {
             method: 'PATCH', body: JSON.stringify(updatedProperties)
         }).then(response => response.json())
     }
 
     public async incrementUnreadMessageCount({ chatId }: { chatId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/chats?unread/chatId=${chatId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/chats?unread/chatId=${chatId}`, {
             method: 'PATCH'
         })
     }
 
     public async clearUnreadMessageCount({ chatId }: { chatId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/chats?unread/chatId=${chatId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/chats?unread/chatId=${chatId}`, {
             method: 'DELETE'
         })
     }

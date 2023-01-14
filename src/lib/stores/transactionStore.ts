@@ -1,4 +1,4 @@
-import { PUBLIC_API_URL } from '$env/static/public'
+import { env } from '$env/dynamic/public'
 
 class TransactionStore {
     public async createTransaction({ url, type, amount, receiverId, receiverName, senderId, senderName, channelId }
@@ -15,7 +15,7 @@ class TransactionStore {
             amount: amount,
             type: type
         }
-        return await fetch(`${PUBLIC_API_URL}/transactions`, {
+        return await fetch(`${env.PUBLIC_API_URL}/transactions`, {
             method: 'POST',
             body: JSON.stringify(data)
         }).then(response => response.json())
@@ -23,7 +23,7 @@ class TransactionStore {
 
     //TODO: send userId through header
     public async getTransactions() {
-        return await fetch(`${PUBLIC_API_URL}/transactions`, {
+        return await fetch(`${env.PUBLIC_API_URL}/transactions`, {
             method: 'GET'
         }).then(response => response.json())
     }
