@@ -2,13 +2,13 @@
 	import IconSocialDiscordInverse from '$lib/assets/icons/social/IconSocialDiscordInverse.svelte'
 	import IconSocialGoogle from '$lib/assets/icons/social/IconSocialGoogle.svelte'
 	import IconSocialGitHubInverse from '$lib/assets/icons/social/IconSocialGitHubInverse.svelte'
-	import { PUBLIC_API_URL, PUBLIC_X_API_KEY, PUBLIC_CROSS_ORIGIN } from '$env/static/public'
+	import { env } from '$env/dynamic/public'
 
 	async function getHref(provider: string) {
-		return await fetch(`${PUBLIC_API_URL}/auth/${provider}`, {
+		return await fetch(`${env.PUBLIC_API_URL}/auth/${provider}`, {
 			headers: {
 				Accept: '*/*',
-				'x-api-key': PUBLIC_X_API_KEY
+				'x-api-key': env.PUBLIC_X_API_KEY
 			}
 		}).then(async (response) => {
 			console.log(response)
@@ -23,14 +23,14 @@
 <div id="login-prompt-modal" class="modal cursor-pointer">
 	<label class="modal-box relative" for="">
 		<div class="py-4 space-y-5 px-10">
-			{#if PUBLIC_CROSS_ORIGIN === 'false'}
-				<a class="btn w-full btn-primary gap-4" href="{PUBLIC_API_URL}/auth/discord">
+			{#if env.PUBLIC_CROSS_ORIGIN === 'false'}
+				<a class="btn w-full btn-primary gap-4" href="{env.PUBLIC_API_URL}/auth/discord">
 					<IconSocialDiscordInverse />
 					Log in with Discord</a>
-				<a class="btn w-full btn-outline gap-4" href="{PUBLIC_API_URL}/auth/google">
+				<a class="btn w-full btn-outline gap-4" href="{env.PUBLIC_API_URL}/auth/google">
 					<IconSocialGoogle />
 					Log in with Google</a>
-				<a class="btn w-full bg-black gap-4" href="{PUBLIC_API_URL}/auth/github">
+				<a class="btn w-full bg-black gap-4" href="{env.PUBLIC_API_URL}/auth/github">
 					<IconSocialGitHubInverse />
 					Log in with GitHub</a>
 			{:else}

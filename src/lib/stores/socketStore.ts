@@ -1,4 +1,4 @@
-import { PUBLIC_API_URL, PUBLIC_WEBSOCKET_URL } from '$env/static/public'
+import { env.PUBLIC_API_URL, PUBLIC_WEBSOCKET_URL } from '$env/dynamic/public'
 import { writable, type Writable } from "svelte/store"
 
 class SocketStore {
@@ -13,7 +13,7 @@ class SocketStore {
     ) {}
 
     public async getApiSocket() {
-        return await fetch(`${PUBLIC_API_URL}/wsinit/wsid`, {
+        return await fetch(`${env.PUBLIC_API_URL}/wsinit/wsid`, {
             method: 'GET',
         }).then(async response => {
             const data = await response.text()
@@ -22,7 +22,7 @@ class SocketStore {
     }
 
     public async getChannelSocket({ channelId }: { channelId: string }) {
-        return await fetch(`${PUBLIC_API_URL}/wsinit/channelid?channelId=${channelId}`, {
+        return await fetch(`${env.PUBLIC_API_URL}/wsinit/channelid?channelId=${channelId}`, {
             method: 'GET',
         }).then(async response => {
             const data = await response.text()
