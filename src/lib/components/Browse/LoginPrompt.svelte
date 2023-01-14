@@ -1,29 +1,56 @@
-<script>
+<script lang="ts">
 	import IconSocialDiscordInverse from '$lib/assets/icons/social/IconSocialDiscordInverse.svelte'
 	import IconSocialGoogle from '$lib/assets/icons/social/IconSocialGoogle.svelte'
 	import IconSocialGitHubInverse from '$lib/assets/icons/social/IconSocialGitHubInverse.svelte'
-	import { PUBLIC_API_URL } from '$env/static/public'
 	import { getGitHubUrl, getDiscordUrl, getGoogleUrl } from '$lib/utils/authUrl'
+	import { PUBLIC_API_URL, PUBLIC_X_API_KEY, PUBLIC_CROSS_ORIGIN } from '$env/static/public'
+
+	async function getHref(provider: string) {
+		return await fetch(`${PUBLIC_API_URL}/auth/${provider}`, {
+			headers: {
+				Accept: '*/*',
+				'x-api-key': PUBLIC_X_API_KEY
+			}
+		}).then(async (response) => {
+			console.log(response)
+			window.open(response.url)
+			return response.url
+		})
+	}
 </script>
 
-<!-- Put this part before </body> tag -->
-<input type="checkbox" id="my-modal-4" class="modal-toggle" />
-<label for="my-modal-4" class="modal cursor-pointer">
+<!-- Fix to close on click away -->
+<!-- <input type="checkbox" id="login-prompt" class="modal-toggle" /> -->
+<div id="login-prompt-modal" class="modal cursor-pointer">
 	<label class="modal-box relative" for="">
 		<div class="py-4 space-y-5 px-10">
-			<a class="btn w-full btn-primary gap-4" href={getDiscordUrl('/auth/discord')}>
-				<IconSocialDiscordInverse />
-				Log in with Discord</a>
-			<a class="btn w-full btn-outline gap-4" href={getGoogleUrl('/auth/google')}>
-				<IconSocialGoogle />
-				Log in with Google</a>
-			<a class="btn w-full bg-black gap-4" href={getGitHubUrl('/auth/github')}>
-				<IconSocialGitHubInverse />
-				Log in with GitHub</a>
+			{#if PUBLIC_CROSS_ORIGIN === 'false'}
+				<a class="btn w-full btn-primary gap-4" href="{PUBLIC_API_URL}/auth/discord">
+					<IconSocialDiscordInverse />
+					Log in with Discord</a>
+				<a class="btn w-full btn-outline gap-4" href="{PUBLIC_API_URL}/auth/google">
+					<IconSocialGoogle />
+					Log in with Google</a>
+				<a class="btn w-full bg-black gap-4" href="{PUBLIC_API_URL}/auth/github">
+					<IconSocialGitHubInverse />
+					Log in with GitHub</a>
+			{:else}
+				<button
+					class="btn w-full btn-primary gap-4"
+					on:click={async () => await getHref('discord')}>
+					<IconSocialDiscordInverse />
+					Log in with Discord</button>
+				<button class="btn w-full btn-outline gap-4" on:click={async () => await getHref('google')}>
+					<IconSocialGoogle />
+					Log in with Google</button>
+				<button class="btn w-full bg-black gap-4" on:click={async () => await getHref('github')}>
+					<IconSocialGitHubInverse />
+					Log in with GitHub</button>
+			{/if}
 			<p>
 				By using our platform, you confirm that you are atleast 18 years old and agree to
 				<a class="link link-info" href="/legal">all of our policies </a>
 			</p>
 		</div>
 	</label>
-</label>
+</div>

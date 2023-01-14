@@ -24,11 +24,11 @@ class ChatStore {
     }
 
     deleteMessage({ message, channelId }: { message: any, channelId: string }) {
-        socketStore.emitDeleteMessageToChannel(channelId, JSON.stringify(message))
+        socketStore.emitDeleteMessageToChannel({ channelId, message: JSON.stringify(message) })
     }
 
     deleteAllMessages({ channelId }: { channelId: string }) {
-        socketStore.emitDeleteAllMessagesToChannel(channelId)
+        socketStore.emitDeleteAllMessagesToChannel({ channelId })
     }
 
     public async postFile({ channelId, fileToUpload }: { channelId: string, fileToUpload: File }) {
@@ -63,7 +63,7 @@ class ChatStore {
         if (chatType == 'channelChat') {
             this.skip = this.skip + this.limit
             data.skip = this.skip
-            socketStore.emitHistoryToChannel(chat.channel, data.skip)
+            socketStore.emitHistoryToChannel({ channelId: chat.channel, skip: data.skip })
         } else if (chatType == 'oneToOneChat') {
             data.skip = chat.skip
         }
@@ -91,7 +91,7 @@ class ChatStore {
                 user: user,
                 author: user.displayName
             }
-            socketStore.emitMessageToChannel(channel._id, completeMessage)
+            socketStore.emitMessageToChannel({ channelId: channel._id, message: completeMessage })
             this.lastMessageSendDate = new Date()
             // this.sendEmailAndWebNotifications({ channel: channel._id, user, attributes })
         }
@@ -154,7 +154,7 @@ class ChatStore {
         if (!channelId) {
             socketStore.emitChatTypingByUser(typingUser)
         } else {
-            socketStore.emitChannelChatTypingByUser(channelId, typingUser)
+            socketStore.emitChannelChatTypingByUser({ channelId, typingUser })
         }
     }
 
