@@ -1,4 +1,4 @@
-import { env.PUBLIC_API_URL, PUBLIC_WEBSOCKET_URL } from '$env/dynamic/public'
+import { env } from '$env/dynamic/public'
 import { writable, type Writable } from "svelte/store"
 
 class SocketStore {
@@ -32,7 +32,7 @@ class SocketStore {
 
     async setupWebsocketConnection({ websocketId, isChannelConnection }: { websocketId: string, isChannelConnection: boolean }) {
         if (!isChannelConnection) {
-            this.platformSocket = new WebSocket(`${PUBLIC_WEBSOCKET_URL}/wsinit/wsid/${websocketId}/connect`)
+            this.platformSocket = new WebSocket(`${env.PUBLIC_WEBSOCKET_URL}/wsinit/wsid/${websocketId}/connect`)
             this.platformSocket?.addEventListener('open', (data) => {
                 console.log("socket connection open")
                 console.log(data)
@@ -53,7 +53,7 @@ class SocketStore {
                 this.platformConnection.set('close')
             })
         } else {
-            this.channelSocket = new WebSocket(`${PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${websocketId}/connect`)
+            this.channelSocket = new WebSocket(`${env.PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${websocketId}/connect`)
             this.channelSocket?.addEventListener('open', (data) => {
                 console.log("channel socket connection open")
                 console.log(data)
