@@ -40,7 +40,7 @@ jobs:
           PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
           PUBLIC_WEBSOCKET_URL: ${{ secrets.PUBLIC_WEBSOCKET_URL }}
           PUBLIC_X_API_KEY: ${{ secrets.PUBLIC_X_API_KEY }}
-          PUBLIC_CROSS_ORIGIN: ${{ secrets.PUBLIC_CROSS_ORIGIN  }}
+          PUBLIC_CROSS_ORIGIN: ${{ secrets.PUBLIC_CROSS_ORIGIN }}
 
       - name: Convert E2E Report to Coverage Report
         run: |
@@ -83,6 +83,11 @@ jobs:
 
       - name: Install NPM and build
         run: npm install && npm run build
+        env:
+          PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
+          PUBLIC_WEBSOCKET_URL: ${{ secrets.PUBLIC_WEBSOCKET_URL }}
+          PUBLIC_X_API_KEY: ${{ secrets.PUBLIC_X_API_KEY }}
+          PUBLIC_CROSS_ORIGIN: ${{ secrets.PUBLIC_CROSS_ORIGIN }}
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
