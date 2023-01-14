@@ -8,7 +8,7 @@ class AuthStore {
 	public logout() {
 		this.setUser({ user: null })
 		window.localStorage.clear()
-		window.location.href = '/'
+		window.location.href = '/logout'
 	}
 
 	public setJWT({ jwt }: { jwt: string }) {
@@ -17,6 +17,14 @@ class AuthStore {
 
 	public setUserId({ userId }: { userId: string }) {
 		window.localStorage.setItem('userId', userId)
+	}
+
+	public getJWT() {
+		return window.localStorage.getItem(JWT_KEY)
+	}
+
+	public getUserId() {
+		return window.localStorage.getItem('userId')
 	}
 
 	public setUser({ user }: { user: any }) {
@@ -47,6 +55,7 @@ class AuthStore {
 					return res.user
 				})
 				.catch((err) => {
+					console.log(err)
 					if (err.status === 401 || err.includes('Error')) this.logout()
 					return null
 				})

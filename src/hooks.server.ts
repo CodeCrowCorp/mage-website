@@ -1,14 +1,16 @@
 import type { Handle } from '@sveltejs/kit'
 
 export const handle: Handle = async ({ event, resolve }) => {
-	const token = event.url.searchParams.get('token')
-	const userId = event.url.searchParams.get('userId')
+	const token = event.url.searchParams.get('token') || event.cookies.get('token')
+	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId')
 
 	if (!token || !userId) {
 		return await resolve(event)
 	}
 
 	if (token && userId) {
+		event.cookies.set('token', token)
+		event.cookies.set('userId', userId)
 		event.locals.user = {
 			userId,
 			token

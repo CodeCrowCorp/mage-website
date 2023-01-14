@@ -3,6 +3,7 @@
 	// @ts-ignore
 	import NProgress from 'nprogress'
 	import { browser } from '$app/environment'
+	import { onMount } from 'svelte'
 	import { navigating } from '$app/stores'
 	// Auth store
 	import { authStore } from '$lib/stores/authStore'
@@ -51,10 +52,21 @@
 	$: data.user, storeUserData()
 
 	function storeUserData() {
-		if (browser && data.user) {
-			authStore.setJWT({ jwt: data.user.token })
-			authStore.setUserId({ userId: data.user.userId })
-			authStore.me()
+		if (browser) {
+			let token, userId
+			if (data.user) {
+				token = data.user.token
+				userId = data.user.userId
+			} else {
+				token = authStore.getJWT()
+				userId = authStore.getUserId()
+			}
+
+			if (token || userId) {
+				authStore.setJWT({ jwt: token })
+				authStore.setUserId({ userId })
+				authStore.me()
+			}
 		}
 	}
 
@@ -96,14 +108,14 @@
 											<div
 												class="w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
 												<img
-													src={$currentUser.avatar_url || 'https://placeimg.com/192/192/people'}
+													src={$currentUser.avatar || 'https://placeimg.com/192/192/people'}
 													alt="" />
 											</div>
 										</div>
 									</div>
 									<div class="grid grid-cols-3 gap-1">
-										<p class="col-span-3">{$currentUser.name || 'Gagan Suie'}</p>
-										<p class="col-span-3 text-pink-500">@{$currentUser.login || 'GaganSuie'}</p>
+										<p class="col-span-3">{$currentUser.displayName || 'Gagan Suie'}</p>
+										<p class="col-span-3 text-pink-500">@{$currentUser.username || 'GaganSuie'}</p>
 										<IconDrawerStreak />
 										<p class="col-span-2 tooltip text-start" data-tip="62 day streak">62 d</p>
 										<IconDrawerStreamDuration />
@@ -118,18 +130,22 @@
 					</li>
 				{/if}
 				<!-- Sidebar content here -->
-				<li>
-					<a href="/admin">
-						<IconDrawerAdmin />
-						Admin
-					</a>
-				</li>
-				<li>
-					<a href="/browse">
-						<IconDrawerHome />
-						Browse
-					</a>
-				</li>
+
+				{#if $currentUser}
+					<li>
+						<a href="/admin">
+							<IconDrawerAdmin />
+							Admin
+						</a>
+					</li>
+				{:else}
+					<li>
+						<a href="/browse">
+							<IconDrawerHome />
+							Browse
+						</a>
+					</li>
+				{/if}
 				<li>
 					<a href="">
 						<IconDrawerCommunity />
@@ -197,11 +213,19 @@
 						<IconDrawerSettings />
 						Settings</a>
 				</li>
-				<li>
-					<a href="#login-prompt-modal">
-						<IconDrawerLogOut />
-						Log Out</a>
-				</li>
+				{#if $currentUser}
+					<li>
+						<button on:click={logout}>
+							<IconDrawerLogOut />
+							Log Out</button>
+					</li>
+				{:else}
+					<li>
+						<a href="#login-prompt-modal">
+							<IconDrawerLogOut />
+							Log In</a>
+					</li>
+				{/if}
 			</ul>
 			<footer class="mt-auto p-4">
 				<!-- <RisingStars /> -->
