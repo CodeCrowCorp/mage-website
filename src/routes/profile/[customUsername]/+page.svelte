@@ -42,13 +42,12 @@
 								name="url"
 								id="url"
 								class="input input-bordered input-info"
-								placeholder="https://github.com"
-								required="" />
+								placeholder="https://github.com" />
 						</div>
 						<div class="w-full">
 							<label for="category" class="block mb-2 text-sm font-medium ">Category</label>
 							<select id="category" class="input input-bordered input-info">
-								<option selected="">Select category</option>
+								<option>Select category</option>
 								<option value="TV">TV/Monitors</option>
 								<option value="PC">PC</option>
 								<option value="GA">Gaming/Console</option>
@@ -62,8 +61,7 @@
 								type="file"
 								name="item-weight"
 								id="item-weight"
-								class="input input-bordered input-info"
-								required="" />
+								class="input input-bordered input-info" />
 						</div>
 						<div class="w-full">
 							<label for="item-weight" class="block mb-2 text-sm font-medium ">Banner</label>
@@ -71,8 +69,7 @@
 								type="file"
 								name="item-weight"
 								id="item-weight"
-								class="input input-bordered input-info"
-								required="" />
+								class="input input-bordered input-info" />
 						</div>
 						<div class="sm:col-span-2">
 							<label for="description" class="block mb-2 text-sm font-medium ">Description</label>
