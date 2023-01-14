@@ -38,6 +38,9 @@ jobs:
         run: |
           npm run check
           npm run test
+        env:
+          PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
+          PUBLIC_WEBSOCKET_URL: ${{ secrets.PUBLIC_WEBSOCKET_URL }}
 
       - name: Convert E2E Report to Coverage Report
         run: |
