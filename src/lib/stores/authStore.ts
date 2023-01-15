@@ -1,5 +1,5 @@
 import { env } from '$env/dynamic/public'
-import { writable, type Writable } from "svelte/store"
+import { writable, type Writable } from 'svelte/store'
 const JWT_KEY = 'jwt'
 
 export const currentUser: Writable<any> = writable(null)

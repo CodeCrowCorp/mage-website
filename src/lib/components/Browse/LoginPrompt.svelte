@@ -2,6 +2,7 @@
 	import IconSocialDiscordInverse from '$lib/assets/icons/social/IconSocialDiscordInverse.svelte'
 	import IconSocialGoogle from '$lib/assets/icons/social/IconSocialGoogle.svelte'
 	import IconSocialGitHubInverse from '$lib/assets/icons/social/IconSocialGitHubInverse.svelte'
+	import { getGitHubUrl, getDiscordUrl, getGoogleUrl } from '$lib/utils/authUrl'
 	import { env } from '$env/dynamic/public'
 
 	async function getHref(provider: string) {
