@@ -1,6 +1,6 @@
 import { writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
-import { channelStore } from '$lib/stores/channelStore'
+// import { currentChannel } from '$lib/stores/channelStore'
 import { socketStore } from '$lib/stores/socketStore'
 
 class StreamStore {
@@ -522,20 +522,20 @@ class StreamStore {
     }
 
     async leaveRoom() {
-        if (channelStore.currentChannel) {
-            this.disconnected()
-            this.stopObsStream()
-            this.stopScreenStream()
-            this.stopWebcamStream()
-            this.stopAudioStream()
-            //TODO: fix subscribring to room members writeable
-            // if (this.roomMembersSubscription) {
-            //     this.roomMembersSubscription.unsubscribe()
-            // }
-            // if (this.userActionsSubscription) {
-            //     this.userActionsSubscription.unsubscribe()
-            // }
-        }
+        // if (channelStore.currentChannel) {
+        this.disconnected()
+        this.stopObsStream()
+        this.stopScreenStream()
+        this.stopWebcamStream()
+        this.stopAudioStream()
+        //TODO: fix subscribring to room members writeable
+        // if (this.roomMembersSubscription) {
+        //     this.roomMembersSubscription.unsubscribe()
+        // }
+        // if (this.userActionsSubscription) {
+        //     this.userActionsSubscription.unsubscribe()
+        // }
+        // }
     }
 
     toggleRaiseHand() {
@@ -625,13 +625,13 @@ class StreamStore {
     }
 
     sendDataToRoom(message: any) {
-        if (channelStore.currentChannel) {
-            socketStore.emitUserActions({
-                channelId: '',//TODO: get channelId from writeable channelStore.currentChannel._id,
-                userData: this.userData,
-                message: JSON.stringify(message)
-            })
-        }
+        // if (channelStore.currentChannel) {
+        socketStore.emitUserActions({
+            channelId: '',//TODO: get channelId from writeable channelStore.currentChannel._id,
+            userData: this.userData,
+            message: JSON.stringify(message)
+        })
+        // }
     }
 
     public waitOneSecondObs() {

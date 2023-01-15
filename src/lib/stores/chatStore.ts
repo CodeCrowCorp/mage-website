@@ -1,9 +1,8 @@
 import { writable, type Writable } from 'svelte/store'
 import { socketStore } from '$lib/stores/socketStore'
 import { env } from '$env/dynamic/public'
-import { userStore } from '$lib/stores/userStore'
-import { authStore } from '$lib/stores/authStore'
-import { channelStore } from '$lib/stores/channelStore'
+// import { currentUser } from './userStore'
+// import { currentChannel } from './channelStore'
 
 class ChatStore {
     public lastMessageSendDate: Date = new Date()
@@ -280,7 +279,7 @@ class ChatStore {
     }
 
     public async activateChatTab({ chat }: { chat: any }) {
-        const user = authStore.currentUser
+        // const user = authStore.currentUser
         if (this.checkAlreadyExist(chat)) return
         //TODO: get writable activeTabs
         // this.activeTabs.push(chat)
@@ -289,7 +288,7 @@ class ChatStore {
     }
 
     public async activateGroupTab({ group }: { group: any }) {
-        const user = authStore.currentUser
+        // const user = authStore.currentUser
         if (this.checkAlreadyExist(group)) return
         //TODO: get writable activeTabs
         // socketStore.emitChannelSubscribeByUser(group.channelId, user._id)
@@ -309,8 +308,8 @@ class ChatStore {
     }
 
     public async incomingMessageActivateChatTab(data: any) {
-        const user = authStore.currentUser
-        const otherUser = userStore.getUserById(data.source1)
+        // const user = authStore.currentUser
+        // const otherUser = userStore.getUserById(data.source1)
         const chat = null
         //TODO: get writable currentUser
         // const existingChat = await this.getChat({
@@ -382,16 +381,16 @@ class ChatStore {
     }
 
     public async commitDeleteMessage({ oneVone, message }: { oneVone: boolean, message: any }) {
-        let chan = null
-        if (oneVone || !channelStore.currentChannel) {
-            chan = { _id: message.channelId } // if friend chat
-        } else {
-            chan = channelStore.currentChannel // if channel chat
-        }
-        if (chan) {
-            //TODO: get writable channel id
-            // this.deleteMessage({ message, channelId: chan._id })
-        }
+        // let chan = null
+        // if (oneVone || !channelStore.currentChannel) {
+        //     chan = { _id: message.channelId } // if friend chat
+        // } else {
+        //     chan = channelStore.currentChannel // if channel chat
+        // }
+        // if (chan) {
+        //     //TODO: get writable channel id
+        //     this.deleteMessage({ message, channelId: chan._id })
+        // }
     }
 }
 
