@@ -10,6 +10,15 @@ function logout() {
     window.location.href = '/'
 }
 
+
+function getJWT() {
+    return window.localStorage.getItem(JWT_KEY)
+}
+
+function getUserId() {
+    return window.localStorage.getItem('userId')
+}
+
 function setJWT({ jwt }: { jwt: string }) {
     window.localStorage.setItem(JWT_KEY, jwt)
 }
@@ -51,6 +60,8 @@ async function me() {
 
 export {
     logout,
+    getJWT,
+    getUserId,
     setJWT,
     setUserId,
     setUser,
