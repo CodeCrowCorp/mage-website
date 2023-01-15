@@ -3,10 +3,8 @@
 	// @ts-ignore
 	import NProgress from 'nprogress'
 	import { browser } from '$app/environment'
-	import { onMount } from 'svelte'
 	import { navigating } from '$app/stores'
-	// Auth store
-	import { authStore } from '$lib/stores/authStore'
+	import { getJWT, getUserId, me, setJWT, setUserId, currentUser } from '$lib/stores/authStore'
 
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
@@ -46,7 +44,6 @@
 		}
 	}
 
-	const { currentUser } = authStore
 	export let data: any
 
 	$: data.user, storeUserData()
@@ -58,20 +55,20 @@
 				token = data.user.token
 				userId = data.user.userId
 			} else {
-				token = authStore.getJWT()
-				userId = authStore.getUserId()
+				token = getJWT()
+				userId = getUserId()
 			}
 
 			if (token || userId) {
-				authStore.setJWT({ jwt: token })
-				authStore.setUserId({ userId })
-				authStore.me()
+				setJWT({ jwt: token })
+				setUserId({ userId })
+				me()
 			}
 		}
 	}
 
 	function logout() {
-		authStore.logout()
+		logout()
 	}
 </script>
 
@@ -253,23 +250,3 @@
 	</div>
 </div>
 <!-- {/if} -->
-
-<!-- <style global>
-	:root {
-		--color-default: #ffffff;
-	}
-	@media (prefers-color-scheme: dark) {
-		:root {
-			--my-color: #25252a;
-		}
-	}
-	[data-theme='dark'] {
-		--color-default: #25252a;
-	}
-	[data-theme='light'] {
-		--my-color: #ffffff;
-	}
-	body {
-		background-color: var(--color-default);
-	}
-</style> -->
