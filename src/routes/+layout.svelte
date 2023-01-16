@@ -4,7 +4,7 @@
 	import NProgress from 'nprogress'
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
-	import { getJWT, getUserId, me, setJWT, setUserId, currentUser } from '$lib/stores/authStore'
+	import { currentUser } from '$lib/stores/authStore'
 	import { login_modal } from '$lib/stores/helperStore'
 
 	// NProgress Loading bar
@@ -53,25 +53,10 @@
 
 	function storeUserData() {
 		if (browser) {
-			let token, userId
-			if (data.user) {
-				token = data.user.token
-				userId = data.user.userId
-			} else {
-				token = getJWT()
-				userId = getUserId()
-			}
-
-			if (token || userId) {
-				setJWT({ jwt: token })
-				setUserId({ userId })
-				me()
+			if (data?.user?.user) {
+				$currentUser = data.user.user
 			}
 		}
-	}
-
-	function logout() {
-		logout()
 	}
 </script>
 
@@ -215,7 +200,7 @@
 				</li>
 				{#if $currentUser}
 					<li>
-						<button on:click={logout}>
+						<button>
 							<IconDrawerLogOut />
 							Log Out</button>
 					</li>
@@ -233,6 +218,7 @@
 					</li>
 				{/if}
 			</ul>
+
 			<footer class="mt-auto p-4">
 				<!-- <RisingStars /> -->
 				<div class="grid grid-flow-col gap-4">
@@ -258,4 +244,5 @@
 		</div>
 	</div>
 </div>
+
 <!-- {/if} -->

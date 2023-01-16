@@ -5,8 +5,9 @@
 declare namespace App {
 	interface Locals {
 		user: {
-			token: string
-			userId: string
+			token?: string
+			userId?: string
+			user?: object
 		}
 	}
 	// interface PageData {}
