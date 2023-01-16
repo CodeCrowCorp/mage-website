@@ -2,39 +2,39 @@ import { getUserDetails } from '$lib/stores/authStore'
 import type { Handle } from '@sveltejs/kit'
 
 export const handle: Handle = async ({ event, resolve }) => {
-	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId')
-	let token = event.url.searchParams.get('token') || event.cookies.get('token')
-	let user
+    const userId = event.url.searchParams.get('userId') || event.cookies.get('userId')
+    let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
+    let user
 
-	if (event.locals && event.locals.user) {
-		user = event.locals.user.user
-	}
+    if (event.locals && event.locals.user) {
+        user = event.locals.user.user
+    }
 
-	if (!token || !userId) {
-		return await resolve(event)
-	}
+    if (!token || !userId) {
+        return await resolve(event)
+    }
 
-	if (token && userId) {
-		if (!user) {
-			const response = await getUserDetails(token, userId)
-			if (response) {
-				if (response.freshJwt) {
-					token = response.freshJwt
-				}
-				user = response.user
-			}
-		}
+    if (token && userId) {
+        if (!user) {
+            const response = await getUserDetails(token, userId)
+            if (response) {
+                if (response.freshJwt) {
+                    token = response.freshJwt
+                }
+                user = response.user
+            }
+        }
 
-		event.cookies.set('token', token)
-		event.cookies.set('userId', userId)
-		event.locals.user = {
-			userId,
-			token,
-			user
-		}
-	}
+        event.cookies.set('token', token)
+        event.cookies.set('userId', userId)
+        event.locals.user = {
+            userId,
+            token,
+            user
+        }
+    }
 
-	return await resolve(event)
+    return await resolve(event)
 }
 
 // import { remoteConfigStore } from '$lib/stores/remoteConfigStore'
