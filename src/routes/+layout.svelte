@@ -30,6 +30,8 @@
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
 	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
+	import Community from '$lib/components/MainDrawer/Community.svelte'
+	import Messages from '$lib/components/MainDrawer/Messages.svelte'
 	NProgress.configure({
 		minimum: 0.75,
 		showSpinner: false,
@@ -66,7 +68,6 @@
 		rel="stylesheet" />
 </svelte:head>
 
-<!-- {#if $isAuthenticated} -->
 <div class="drawer drawer-mobile">
 	<input id="my-drawer-2" bind:this={nav_drawer} type="checkbox" class="drawer-toggle" />
 	<div class="drawer-content bg-base-200">
@@ -79,6 +80,8 @@
 	<div class="drawer-side">
 		<label for="my-drawer-2" class="drawer-overlay" />
 		<div class="menu p-4 w-80 bg-base-100 text-base-content flex flex-col">
+			<!-- <Community /> -->
+			<!-- <Messages /> -->
 			<ul>
 				<div class="navbar">
 					<a href="/browse" class="btn btn-ghost normal-case text-xl">Mage</a>
@@ -123,14 +126,13 @@
 							Admin
 						</a>
 					</li>
-				{:else}
-					<li>
-						<a href="/browse">
-							<IconDrawerHome />
-							Browse
-						</a>
-					</li>
 				{/if}
+				<li>
+					<a href="/browse">
+						<IconDrawerHome />
+						Browse
+					</a>
+				</li>
 				<li>
 					<a href="">
 						<IconDrawerCommunity />
@@ -244,5 +246,3 @@
 		</div>
 	</div>
 </div>
-
-<!-- {/if} -->
