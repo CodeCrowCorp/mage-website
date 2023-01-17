@@ -4,26 +4,32 @@
 	import IconSocialGitHubInverse from '$lib/assets/icons/social/IconSocialGitHubInverse.svelte'
 	// import { getGitHubUrl, getDiscordUrl, getGoogleUrl } from '$lib/utils/authUrl'
 	import { env } from '$env/dynamic/public'
+	import { login_modal } from '$lib/stores/helperStore'
 
 	async function getHref(provider: string) {
 		return await fetch(`${env.PUBLIC_API_URL}/auth/${provider}`, {
 			headers: {
-				Accept: '*/*',
 				'x-api-key': env.PUBLIC_X_API_KEY
 			}
 		}).then(async (response) => {
 			console.log(response)
-			window.open(response.url)
-			return response.url
+			window.location.href = response.url
 		})
 	}
 </script>
 
-<!-- Fix to close on click away -->
-<!-- <input type="checkbox" id="login-prompt" class="modal-toggle" /> -->
-<div id="login-prompt-modal" class="modal cursor-pointer">
-	<label class="modal-box relative" for="">
-		<div class="py-4 space-y-5 px-10">
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<div
+	class="modal cursor-pointer {$login_modal ? 'modal-open' : ''}"
+	on:click={() => {
+		$login_modal = false
+	}}>
+	<div
+		class="modal-box relative"
+		on:click={(e) => {
+			e.stopPropagation()
+		}}>
+		<div class="py-4 space-y-5 px-4 md:px-10">
 			{#if env.PUBLIC_CROSS_ORIGIN === 'false'}
 				<a class="btn w-full btn-primary gap-4" href="{env.PUBLIC_API_URL}/auth/discord">
 					<IconSocialDiscordInverse />
@@ -52,5 +58,5 @@
 				<a class="link link-info" href="/legal">all of our policies </a>
 			</p>
 		</div>
-	</label>
+	</div>
 </div>

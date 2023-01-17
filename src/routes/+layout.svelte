@@ -4,7 +4,8 @@
 	import NProgress from 'nprogress'
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
-	import { getJWT, getUserId, me, setJWT, setUserId, currentUser } from '$lib/stores/authStore'
+	import { currentUser } from '$lib/stores/authStore'
+	import { login_modal } from '$lib/stores/helperStore'
 
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
@@ -28,7 +29,7 @@
 	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svelte'
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
-	import LoginPrompt from '$lib/components/Browse/LoginPrompt.svelte'
+	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
 	NProgress.configure({
 		minimum: 0.75,
 		showSpinner: false,
@@ -46,29 +47,16 @@
 
 	export let data: any
 
+	let nav_drawer: HTMLInputElement
+
 	$: data.user, storeUserData()
 
 	function storeUserData() {
 		if (browser) {
-			let token, userId
-			if (data.user) {
-				token = data.user.token
-				userId = data.user.userId
-			} else {
-				token = getJWT()
-				userId = getUserId()
-			}
-
-			if (token || userId) {
-				setJWT({ jwt: token })
-				setUserId({ userId })
-				me()
+			if (data?.user?.user) {
+				$currentUser = data.user.user
 			}
 		}
-	}
-
-	function logout() {
-		logout()
 	}
 </script>
 
@@ -80,7 +68,7 @@
 
 <!-- {#if $isAuthenticated} -->
 <div class="drawer drawer-mobile">
-	<input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+	<input id="my-drawer-2" bind:this={nav_drawer} type="checkbox" class="drawer-toggle" />
 	<div class="drawer-content bg-base-200">
 		<!-- Page content here -->
 		<label for="my-drawer-2" class="btn btn-ghost normal-case text-xl drawer-button lg:hidden"
@@ -212,18 +200,25 @@
 				</li>
 				{#if $currentUser}
 					<li>
-						<button on:click={logout}>
+						<button>
 							<IconDrawerLogOut />
 							Log Out</button>
 					</li>
 				{:else}
 					<li>
-						<a href="#login-prompt-modal">
+						<button
+							on:click={() => {
+								$login_modal = true
+								if (nav_drawer.checked) {
+									nav_drawer.checked = false
+								}
+							}}>
 							<IconDrawerLogOut />
-							Log In</a>
+							Log In</button>
 					</li>
 				{/if}
 			</ul>
+
 			<footer class="mt-auto p-4">
 				<!-- <RisingStars /> -->
 				<div class="grid grid-flow-col gap-4">
@@ -249,4 +244,5 @@
 		</div>
 	</div>
 </div>
+
 <!-- {/if} -->
