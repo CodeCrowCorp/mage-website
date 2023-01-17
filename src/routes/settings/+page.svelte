@@ -22,7 +22,7 @@
 						name="email"
 						type="email"
 						placeholder="nerf-this@gamer.com"
-						class="input input-bordered" />
+						class="input input-bordered input-primary w-72" />
 					<button class="btn btn-primary">Save</button>
 				</label>
 			</div>

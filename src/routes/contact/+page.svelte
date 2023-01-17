@@ -52,8 +52,8 @@
 								id="full_name"
 								name="full_name"
 								type="text"
-								class="focus:outline-none focus:border focus:border-indigo-700 font-normal w-64 h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
-								placeholder="Full Name"
+								class="input input-bordered input-primary w-64 h-10 flex"
+								placeholder="Elizabeth Caledonia"
 								aria-label="enter your full name input" />
 						</div>
 					</div>
@@ -66,7 +66,7 @@
 								id="email"
 								name="email"
 								type="email"
-								class="focus:outline-none focus:border focus:border-indigo-700 font-normal w-64 h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+								class="input input-bordered input-primary w-64 h-10 flex"
 								placeholder="example@email.com"
 								aria-label="enter your email input" />
 						</div>
@@ -82,7 +82,7 @@
 								id="subject"
 								name="subject"
 								type="tel"
-								class="focus:outline-none focus:border focus:border-indigo-700 font-normal w-64 h-10 flex items-center pl-3 text-sm border-gray-300 rounded border"
+								class="input input-bordered input-primary w-64 h-10 flex"
 								placeholder="Subject"
 								aria-label="enter a subject" />
 						</div>
@@ -94,7 +94,7 @@
 						<textarea
 							placeholder=""
 							name="message"
-							class="border-gray-300 border mb-4 rounded py-2 text-sm outline-none resize-none px-3 focus:border focus:border-indigo-700"
+							class="textarea textarea-bordered textarea-primary flex mb-4 py-2 px-3"
 							rows="8"
 							id="message"
 							aria-label="enter your message input" />
