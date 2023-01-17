@@ -9,13 +9,11 @@
 	async function getHref(provider: string) {
 		return await fetch(`${env.PUBLIC_API_URL}/auth/${provider}`, {
 			headers: {
-				Accept: '*/*',
 				'x-api-key': env.PUBLIC_X_API_KEY
 			}
 		}).then(async (response) => {
 			console.log(response)
-			window.open(response.url)
-			return response.url
+			window.location.href = response.url
 		})
 	}
 </script>
