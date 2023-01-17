@@ -29,7 +29,7 @@
 	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svelte'
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
-	import LoginPrompt from '$lib/components/Browse/LoginPrompt.svelte'
+	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
 	NProgress.configure({
 		minimum: 0.75,
 		showSpinner: false,
