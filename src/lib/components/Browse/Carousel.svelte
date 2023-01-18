@@ -103,13 +103,6 @@
 		@apply bg-slate-400 w-full h-80 flex items-center justify-center text-white rounded-md cursor-pointer;
 	}
 
-	.right {
-		right: max(30px, (100% - 600px) / 2);
-	}
-	.left {
-		left: max(30px, (100% - 600px) / 2);
-	}
-
 	.blank-width {
 		width: calc((100% - 600px) / 2);
 	}
