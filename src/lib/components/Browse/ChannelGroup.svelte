@@ -9,7 +9,7 @@
 	<div class="font-semibold my-3">Channel Group Section</div>
 
 	<div class="relative flex flex-row">
-		<div class="absolute bg-white rounded-full p-2 left-0 top-2/3">
+		<div class="absolute bg-white rounded-full p-2 left-0 top-1/2">
 			<IconDrawerLeft />
 		</div>
 
@@ -21,7 +21,7 @@
 			{/each}
 		</div>
 
-		<div class="absolute bg-white rounded-full p-2 right-0 top-2/3">
+		<div class="absolute bg-white rounded-full p-2 right-0 top-1/2">
 			<IconDrawerChevron />
 		</div>
 	</div>

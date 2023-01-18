@@ -18,7 +18,7 @@
 
 	const next = () => {
 		if (ref) {
-			showback = ref.scrollLeft > 20
+			showback = true
 			ref.scrollTo({
 				left: ref.scrollLeft + 500,
 				behavior: 'smooth'
@@ -60,7 +60,7 @@
 <div class="relative">
 	{#if showback}
 		<div
-			class="bg-white rounded-full p-3 absolute top-2/4 left z-10 cursor-pointer"
+			class="bg-white rounded-full p-3 absolute top-2/4 left-1 z-10 cursor-pointer"
 			on:click={prev}>
 			<IconDrawerLeft />
 		</div>
@@ -68,7 +68,7 @@
 	<div
 		bind:this={ref}
 		class="carousel-content relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto pt-14 flex-grow">
-		<div class="shrink-0 blank-width" />
+		<!-- <div class="shrink-0 blank-width" /> -->
 		<div class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[600px] rounded-md">
 			<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
 				Video Thumbnail 1
@@ -90,10 +90,10 @@
 			</div>
 		</div>
 
-		<div class="shrink-0 blank-width" />
+		<!-- <div class="shrink-0 blank-width" /> -->
 	</div>
 
-	<div class="bg-white rounded-full p-3 absolute top-2/4 right cursor-pointer" on:click={next}>
+	<div class="bg-white rounded-full p-3 absolute top-2/4 right-1 cursor-pointer" on:click={next}>
 		<IconDrawerChevron />
 	</div>
 </div>
