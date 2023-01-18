@@ -1,14 +1,15 @@
 import { writable, type Writable } from "svelte/store"
 import { env } from '$env/dynamic/public'
+import { currentUser } from '$lib/stores/authStore'
 
 let skip = 0
 let limit = 100
-let filterTechList: any[] = []
-const techList = []
 
 export const searchQuery: Writable<string> = writable('')
-export const channels: Writable<[]> = writable([])
 export const currentChannel: Writable<any> = writable(null)
+export const myChannels: Writable<[]> = writable([])
+export const channels: Writable<[]> = writable([])
+export const searchedchannels: Writable<[]> = writable([])
 
 async function createChannel({ title, description, thumbnail, category, tags, isPrivate = false, user, channelType }
     : { title: string, description: string, thumbnail: string, category: string[], tags: string[], isPrivate: boolean, user: any, channelType: string }
@@ -146,25 +147,13 @@ function resetSkipLimit() {
     limit = 100
 }
 
-async function getInitialChannels() {
-    currentChannel.set(null)
-    searchQuery.set('')
-    filterTechList = []
-    const user = null
-    //TODO: get this.authStore.currentUser
-    if (user) {
-        channels.set(await getMyChannels())
-    } else {
-        channels.set([])
-    }
-    await getChannels({ isRefresh: true })
-    return channels
-}
-
 async function getMyChannels() {
     return await fetch(`${env.PUBLIC_API_URL}/channels/me/hosted`, {
         method: 'GET'
-    }).then(response => response.json())
+    }).then(async response => {
+        const res = await response.json()
+        myChannels.set(res)
+    })
 }
 
 async function getChannelsByUserId({ userId, searchQuery = '', skip = 0, limit = 50 }: { userId: string, searchQuery: string, skip?: number, limit?: number }) {
@@ -178,14 +167,17 @@ async function getChannels({ isRefresh = false }: { isRefresh?: boolean } = {}) 
         resetSkipLimit()
     }
 
-    return await fetch(`${env.PUBLIC_API_URL}/channels?searchQuery=${searchQuery}&category=${filterTechList.map((item: any) => item.item_text).join()}&skip=${skip}&limit=${limit}`, {
+    return await fetch(`${env.PUBLIC_API_URL}/channels?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`, {
         method: 'GET'
     }).then(async response => {
+        console.log("response", response)
+
         const res = await response.json()
         if (res.length) {
             skip += limit
+            console.log("res", res)
             //TODO: push res to channels
-            // this.channels.push(...res)
+            // channels.update(current => [...current, res])
         } else {
             //TODO: show alert
             // if ((this.searchQuery || this.filterTechList.length) && !this.skip)
@@ -195,15 +187,6 @@ async function getChannels({ isRefresh = false }: { isRefresh?: boolean } = {}) 
         }
         return channels
     })
-}
-
-async function searchChannels() {
-    channels.set([])
-    if (!searchQuery && !filterTechList.length) {
-        return getInitialChannels()
-    } else {
-        return getChannels({ isRefresh: true })
-    }
 }
 
 async function leaveChannel({ userId, deleteOrLeaveOnExit = false }: { userId: string, deleteOrLeaveOnExit?: boolean }) {
@@ -319,11 +302,9 @@ export {
     addChannelNotificationSubscriber,
     removeChannelNotificationSubscriber,
     deleteMembers,
-    getInitialChannels,
     getMyChannels,
     getChannelsByUserId,
     getChannels,
-    searchChannels,
     leaveChannel,
     enterChannel,
     toggleNotifications
