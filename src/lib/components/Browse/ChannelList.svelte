@@ -3,6 +3,7 @@
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
 	import IconLock from '$lib/assets/icons/IconLock.svelte'
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
+	import ChannelGroup from '$lib/components/Browse/ChannelGroup.svelte'
 </script>
 
 <div class="flex gap-4 py-5 pl-5">
@@ -22,6 +23,10 @@
 		<IconCreate />
 		Create a channel</button>
 </div>
+
+<ChannelGroup />
+
+<ChannelGroup />
 
 <div class="overflow-x-auto w-full">
 	<table class="table table-zebra w-full">
