@@ -1,3 +1,8 @@
+<script>
+	import IconDrawerLeft from '$lib/assets/icons/drawer/IconDrawerLeft.svelte'
+	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
+</script>
+
 <!-- <div class="carousel w-full">
 	<div id="slide1" class="carousel-item relative w-full">
 		<img src="https://placeimg.com/800/200/arch" class="w-full" />
@@ -29,9 +34,12 @@
 	</div>
 </div> -->
 <div class="relative">
-	<div class="bg-white rounded-full p-3 absolute top-2/4 left z-10">P</div>
+	<div class="bg-white rounded-full p-3 absolute top-2/4 left z-10">
+		<IconDrawerLeft />
+	</div>
 
-	<div class="relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto pt-14 flex-grow">
+	<div
+		class="carousel-content relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto pt-14 flex-grow">
 		<div class="shrink-0 blank-width" />
 		<div class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[600px] rounded-md">
 			<div class="video-thumbnail">Video Thumbnail 1</div>
@@ -49,7 +57,9 @@
 		<div class="shrink-0 blank-width" />
 	</div>
 
-	<div class="bg-white rounded-full p-3 absolute top-2/4 right">N</div>
+	<div class="bg-white rounded-full p-3 absolute top-2/4 right">
+		<IconDrawerChevron />
+	</div>
 </div>
 
 <style>
@@ -66,5 +76,9 @@
 
 	.blank-width {
 		width: calc((100% - 600px) / 2);
+	}
+
+	.carousel-content::-webkit-scrollbar {
+		display: none;
 	}
 </style>
