@@ -123,14 +123,13 @@
 							Admin
 						</a>
 					</li>
-				{:else}
-					<li>
-						<a href="/browse">
-							<IconDrawerHome />
-							Browse
-						</a>
-					</li>
 				{/if}
+				<li>
+					<a href="/browse">
+						<IconDrawerHome />
+						Browse
+					</a>
+				</li>
 				<li>
 					<a href="">
 						<IconDrawerCommunity />
