@@ -387,10 +387,10 @@ html {
 
 :root {
   color-scheme: light;
-  --pf: 259 94% 41%;
-  --sf: 314 100% 38%;
-  --af: 174 60% 41%;
-  --nf: 219 14% 22%;
+  --pf: 258.89 94.378% 40.941%;
+  --sf: 314 100% 37.647%;
+  --af: 174 60% 40.784%;
+  --nf: 219 14.085% 22.275%;
   --in: 198 93% 60%;
   --su: 158 64% 52%;
   --wa: 43 96% 56%;
@@ -409,27 +409,27 @@ html {
   --border-btn: 1px;
   --tab-border: 1px;
   --tab-radius: 0.5rem;
-  --p: 259 94% 51%;
+  --p: 258.89 94.378% 51.176%;
   --pc: 0 0% 100%;
-  --s: 314 100% 47%;
+  --s: 314 100% 47.059%;
   --sc: 0 0% 100%;
-  --a: 174 60% 51%;
-  --ac: 175 44% 15%;
-  --n: 219 14% 28%;
+  --a: 174 60% 50.98%;
+  --ac: 174.71 43.59% 15.294%;
+  --n: 219 14.085% 27.843%;
   --nc: 0 0% 100%;
   --b1: 0 0% 100%;
-  --b2: 0 0% 95%;
-  --b3: 180 2% 90%;
-  --bc: 215 28% 17%;
+  --b2: 0 0% 94.902%;
+  --b3: 180 1.9608% 90%;
+  --bc: 215 27.907% 16.863%;
 }
 
 @media (prefers-color-scheme: dark) {
 
   :root {
     color-scheme: dark;
-    --pf: 262 80% 40%;
-    --sf: 316 70% 40%;
-    --af: 175 70% 33%;
+    --pf: 262.35 80.315% 40.157%;
+    --sf: 315.75 70.196% 40%;
+    --af: 174.69 70.335% 32.784%;
     --in: 198 93% 60%;
     --su: 158 64% 52%;
     --wa: 43 96% 56%;
@@ -448,28 +448,28 @@ html {
     --border-btn: 1px;
     --tab-border: 1px;
     --tab-radius: 0.5rem;
-    --p: 262 80% 50%;
+    --p: 262.35 80.315% 50.196%;
     --pc: 0 0% 100%;
-    --s: 316 70% 50%;
+    --s: 315.75 70.196% 50%;
     --sc: 0 0% 100%;
-    --a: 175 70% 41%;
+    --a: 174.69 70.335% 40.98%;
     --ac: 0 0% 100%;
-    --n: 218 18% 12%;
-    --nf: 223 17% 8%;
-    --nc: 220 13% 69%;
-    --b1: 220 18% 20%;
-    --b2: 220 17% 17%;
-    --b3: 219 18% 15%;
-    --bc: 220 13% 69%;
+    --n: 218.18 18.033% 11.961%;
+    --nf: 222.86 17.073% 8.0392%;
+    --nc: 220 13.376% 69.216%;
+    --b1: 220 17.647% 20%;
+    --b2: 220 17.241% 17.059%;
+    --b3: 218.57 17.949% 15.294%;
+    --bc: 220 13.376% 69.216%;
   }
 }
 
 [data-theme=light] {
   color-scheme: light;
-  --pf: 259 94% 41%;
-  --sf: 314 100% 38%;
-  --af: 174 60% 41%;
-  --nf: 219 14% 22%;
+  --pf: 258.89 94.378% 40.941%;
+  --sf: 314 100% 37.647%;
+  --af: 174 60% 40.784%;
+  --nf: 219 14.085% 22.275%;
   --in: 198 93% 60%;
   --su: 158 64% 52%;
   --wa: 43 96% 56%;
@@ -488,25 +488,25 @@ html {
   --border-btn: 1px;
   --tab-border: 1px;
   --tab-radius: 0.5rem;
-  --p: 259 94% 51%;
+  --p: 258.89 94.378% 51.176%;
   --pc: 0 0% 100%;
-  --s: 314 100% 47%;
+  --s: 314 100% 47.059%;
   --sc: 0 0% 100%;
-  --a: 174 60% 51%;
-  --ac: 175 44% 15%;
-  --n: 219 14% 28%;
+  --a: 174 60% 50.98%;
+  --ac: 174.71 43.59% 15.294%;
+  --n: 219 14.085% 27.843%;
   --nc: 0 0% 100%;
   --b1: 0 0% 100%;
-  --b2: 0 0% 95%;
-  --b3: 180 2% 90%;
-  --bc: 215 28% 17%;
+  --b2: 0 0% 94.902%;
+  --b3: 180 1.9608% 90%;
+  --bc: 215 27.907% 16.863%;
 }
 
 [data-theme=dark] {
   color-scheme: dark;
-  --pf: 262 80% 40%;
-  --sf: 316 70% 40%;
-  --af: 175 70% 33%;
+  --pf: 262.35 80.315% 40.157%;
+  --sf: 315.75 70.196% 40%;
+  --af: 174.69 70.335% 32.784%;
   --in: 198 93% 60%;
   --su: 158 64% 52%;
   --wa: 43 96% 56%;
@@ -525,19 +525,19 @@ html {
   --border-btn: 1px;
   --tab-border: 1px;
   --tab-radius: 0.5rem;
-  --p: 262 80% 50%;
+  --p: 262.35 80.315% 50.196%;
   --pc: 0 0% 100%;
-  --s: 316 70% 50%;
+  --s: 315.75 70.196% 50%;
   --sc: 0 0% 100%;
-  --a: 175 70% 41%;
+  --a: 174.69 70.335% 40.98%;
   --ac: 0 0% 100%;
-  --n: 218 18% 12%;
-  --nf: 223 17% 8%;
-  --nc: 220 13% 69%;
-  --b1: 220 18% 20%;
-  --b2: 220 17% 17%;
-  --b3: 219 18% 15%;
-  --bc: 220 13% 69%;
+  --n: 218.18 18.033% 11.961%;
+  --nf: 222.86 17.073% 8.0392%;
+  --nc: 220 13.376% 69.216%;
+  --b1: 220 17.647% 20%;
+  --b2: 220 17.241% 17.059%;
+  --b3: 218.57 17.949% 15.294%;
+  --bc: 220 13.376% 69.216%;
 }
 
 * {
@@ -2963,6 +2963,21 @@ html {
 .left-0 {
   left: 0px;
 }
+.top-5 {
+  top: 1.25rem;
+}
+.top-10 {
+  top: 2.5rem;
+}
+.top-12 {
+  top: 3rem;
+}
+.top-3\/4 {
+  top: 75%;
+}
+.top-2\/3 {
+  top: 66.666667%;
+}
 .z-10 {
   z-index: 10;
 }
@@ -2978,6 +2993,18 @@ html {
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
+}
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.my-5 {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.my-3 {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 .mt-auto {
   margin-top: auto;
@@ -3072,6 +3099,15 @@ html {
 .h-8 {
   height: 2rem;
 }
+.h-64 {
+  height: 16rem;
+}
+.h-2\/5 {
+  height: 40%;
+}
+.h-80 {
+  height: 20rem;
+}
 .min-h-screen {
   min-height: 100vh;
 }
@@ -3159,6 +3195,12 @@ html {
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+.grid-cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.flex-row {
+  flex-direction: row;
+}
 .flex-col {
   flex-direction: column;
 }
@@ -3206,11 +3248,19 @@ html {
   margin-right: calc(-1px * var(--tw-space-x-reverse));
   margin-left: calc(-1px * calc(1 - var(--tw-space-x-reverse)));
 }
+.space-x-5 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1.25rem * var(--tw-space-x-reverse));
+  margin-left: calc(1.25rem * calc(1 - var(--tw-space-x-reverse)));
+}
 .overflow-hidden {
   overflow: hidden;
 }
 .overflow-x-auto {
   overflow-x: auto;
+}
+.overflow-x-hidden {
+  overflow-x: hidden;
 }
 .overflow-y-scroll {
   overflow-y: scroll;
@@ -3295,6 +3345,10 @@ html {
   --tw-bg-opacity: 1;
   background-color: rgb(239 246 255 / var(--tw-bg-opacity));
 }
+.bg-slate-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(203 213 225 / var(--tw-bg-opacity));
+}
 .bg-cover {
   background-size: cover;
 }
@@ -3321,6 +3375,9 @@ html {
 }
 .p-3 {
   padding: 0.75rem;
+}
+.p-5 {
+  padding: 1.25rem;
 }
 .py-6 {
   padding-top: 1.5rem;
@@ -3571,6 +3628,9 @@ html {
 }
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+.scrollbar.overflow-x-hidden {
+  overflow-x: hidden;
 }
 .scrollbar-thin {
   --scrollbar-track: initial;
@@ -3875,4 +3935,10 @@ html {
     font-size: 2.25rem;
     line-height: 2.5rem;
   }
+}
+
+.\[\&\:not\(\:first-child\)\]\:space-x-4:not(:first-child) > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
 }
