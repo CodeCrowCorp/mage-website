@@ -8,9 +8,11 @@
 <div class="flex flex-col my-4">
 	<div class="font-semibold my-3">Channel Group Section</div>
 
-	<div class="relative flex flex-row">
-		<div class="absolute bg-white rounded-full p-2 left-0 top-1/2">
-			<IconDrawerLeft />
+	<div class="flex flex-row">
+		<div class="relative flex items-center">
+			<div class="absolute bg-white rounded-full p-2 left-0">
+				<IconDrawerLeft />
+			</div>
 		</div>
 
 		<div class="flex flex-row space-x-4 w-full">
@@ -21,8 +23,10 @@
 			{/each}
 		</div>
 
-		<div class="absolute bg-white rounded-full p-2 right-0 top-1/2">
-			<IconDrawerChevron />
+		<div class="relative flex items-center">
+			<div class="absolute bg-white rounded-full p-2 right-0">
+				<IconDrawerChevron />
+			</div>
 		</div>
 	</div>
 </div>
