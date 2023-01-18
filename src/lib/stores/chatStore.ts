@@ -123,7 +123,7 @@ async function sendChatMessage({ chat, attributes }: { chat: any, attributes: an
 //             if (user.isWebNotificationsEnabled) sendNotificationsTo.push(user._id)
 //             // if (user.isEmailNotificationsEnabled) sendEmailsTo.push(user._id)
 //         })
-//         const body = `${user.customUsername}: ${attributes.text}`
+//         const body = `${user.username}: ${attributes.text}`
 //         const title = `New message at ${channel.title}`
 //         const sendToList = []
 //         // if (sendNotificationsTo.length) {
