@@ -1,6 +1,7 @@
 <script lang="ts">
 	import IconDrawerLeft from '$lib/assets/icons/drawer/IconDrawerLeft.svelte'
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
+	import { goto } from '$app/navigation'
 
 	let ref: any,
 		showback = false
@@ -69,16 +70,24 @@
 		class="carousel-content relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto pt-14 flex-grow">
 		<div class="shrink-0 blank-width" />
 		<div class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[600px] rounded-md">
-			<div class="video-thumbnail">Video Thumbnail 1</div>
+			<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
+				Video Thumbnail 1
+			</div>
 		</div>
 		<div class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[600px] rounded-md">
-			<div class="video-thumbnail">Video Thumbnail 2</div>
+			<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
+				Video Thumbnail 2
+			</div>
 		</div>
 		<div class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[600px] rounded-md">
-			<div class="video-thumbnail">Video Thumbnail 3</div>
+			<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
+				Video Thumbnail 3
+			</div>
 		</div>
 		<div class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[600px] rounded-md">
-			<div class="video-thumbnail">Video Thumbnail 4</div>
+			<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
+				Video Thumbnail 4
+			</div>
 		</div>
 
 		<div class="shrink-0 blank-width" />
@@ -91,7 +100,7 @@
 
 <style>
 	.video-thumbnail {
-		@apply bg-slate-400 w-full h-80 flex items-center justify-center text-white rounded-md;
+		@apply bg-slate-400 w-full h-80 flex items-center justify-center text-white rounded-md cursor-pointer;
 	}
 
 	.right {
