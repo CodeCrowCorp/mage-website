@@ -8,7 +8,7 @@
 
 	const prev = () => {
 		if (ref) {
-			showback = ref.scrollLeft > 1000
+			showback = ref.scrollLeft > 500
 			ref.scrollTo({
 				left: ref.scrollLeft - 500,
 				behavior: 'smooth'
