@@ -9,7 +9,7 @@ let hasActiveTracks = false
 const userData: {
     id: string
     avatar: any
-    customUsername: any
+    username: any
     displayName: string
     userType: string
     obsState: string
@@ -24,7 +24,7 @@ const userData: {
 } = {
     id: '',
     avatar: null,
-    customUsername: null,
+    username: null,
     displayName: '',
     userType: 'listener',
     obsState: 'restricted',
@@ -296,13 +296,13 @@ function disconnected() {
     // }
 }
 
-function getMember({ _id, avatar, customUsername, displayName, obsStream, screenStream, webcamStream, audioStream }
-    : { _id: string, avatar: string, customUsername: string, displayName: string, obsStream: string, screenStream: string, webcamStream: string, audioStream: string }) {
+function getMember({ _id, avatar, username, displayName, obsStream, screenStream, webcamStream, audioStream }
+    : { _id: string, avatar: string, username: string, displayName: string, obsStream: string, screenStream: string, webcamStream: string, audioStream: string }) {
     return {
         id: _id,
-        avatar: avatar,
-        customUsername: customUsername,
-        displayName: displayName,
+        avatar,
+        username,
+        displayName,
         userType: '',//TODO: fix subscribing to writeables _id == channelStore.currentChannel.user ? 'host' : 'listener',
         obsState: 'hibernate',
         screenState: 'hibernate',

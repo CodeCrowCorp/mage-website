@@ -19,8 +19,8 @@ async function getUsersByName({ name }: { name: string }) {
     }).then(response => response.json())
 }
 
-async function getUserByCustomUsername({ customUsername }: { customUsername: string }) {
-    return await fetch(`${env.PUBLIC_API_URL}/users/search/custom-username?customUsername=${customUsername}`, {
+async function getUserByUsername({ username }: { username: string }) {
+    return await fetch(`${env.PUBLIC_API_URL}/users/search/username?username=${username}`, {
         method: 'GET'
     }).then(response => response.json())
 }
@@ -52,10 +52,10 @@ async function updateAvatar({ fileToUpload, fileName }: { fileToUpload: any, fil
     })
 }
 
-async function updateCustomUsername({ customUsername }: { customUsername: string }) {
-    return await fetch(`${env.PUBLIC_API_URL}/users/current/custom-username`, {
+async function updateUsername({ username }: { username: string }) {
+    return await fetch(`${env.PUBLIC_API_URL}/users/current/username`, {
         method: 'PATCH',
-        body: JSON.stringify({ customUsername })
+        body: JSON.stringify({ username })
     }).then(async response => {
         //TODO: update user in auth service
         const userUpdate = await response.json()
@@ -70,8 +70,8 @@ export {
     getUserById,
     getUsersByIds,
     getUsersByName,
-    getUserByCustomUsername,
+    getUserByUsername,
     updateUser,
     updateAvatar,
-    updateCustomUsername
+    updateUsername
 }
