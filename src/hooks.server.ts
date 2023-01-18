@@ -21,7 +21,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 				if (response.freshJwt) {
 					token = response.freshJwt
 				}
-				user = response.user
+				user = response
 			}
 		}
 
