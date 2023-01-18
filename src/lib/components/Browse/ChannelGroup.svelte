@@ -1,5 +1,7 @@
 <script>
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
+	import IconDrawerLeft from '$lib/assets/icons/drawer/IconDrawerLeft.svelte'
+
 	const channels = ['audio', 'video', 'video more', 'game']
 </script>
 
@@ -8,7 +10,7 @@
 
 	<div class="relative flex flex-row">
 		<div class="absolute bg-white rounded-full p-2 left-0 top-2/3">
-			<IconDrawerChevron />
+			<IconDrawerLeft />
 		</div>
 
 		<div class="flex flex-row space-x-4 w-full">
