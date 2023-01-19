@@ -1801,6 +1801,11 @@ html {
   --tw-text-opacity: 1;
   color: hsl(var(--ac) / var(--tw-text-opacity));
 }
+.btm-nav>*:where(.active) {
+  border-top-width: 2px;
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--b1) / var(--tw-bg-opacity));
+}
 .btm-nav>* .label {
   font-size: 1rem;
   line-height: 1.5rem;
@@ -2769,6 +2774,18 @@ html {
   line-height: 1.25rem;
   padding-left: 0.563rem;
   padding-right: 0.563rem;
+}
+.btm-nav-xs>*:where(.active) {
+  border-top-width: 1px;
+}
+.btm-nav-sm>*:where(.active) {
+  border-top-width: 2px;
+}
+.btm-nav-md>*:where(.active) {
+  border-top-width: 2px;
+}
+.btm-nav-lg>*:where(.active) {
+  border-top-width: 4px;
 }
 .btn-xs {
   height: 1.5rem;
@@ -3822,6 +3839,13 @@ html {
 
   .sm\:gap-6 {
     gap: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+
+  .md\:basis-\[600px\] {
+    flex-basis: 600px;
   }
 }
 

@@ -3,6 +3,8 @@
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
 	import { goto } from '$app/navigation'
 
+	export let title: string = ''
+
 	let ref: any
 	const channels = ['audio', 'video', 'video more', 'game']
 
@@ -26,7 +28,7 @@
 </script>
 
 <div class="flex flex-col my-4">
-	<div class="font-semibold my-3">Channel Group Section</div>
+	<div class="font-semibold my-3">{title || 'Channel Group'}</div>
 	<div class="flex flex-row">
 		<div class="relative flex items-center">
 			<div class="absolute bg-white rounded-full p-2 left-0 z-10 cursor-pointer" on:click={prev}>

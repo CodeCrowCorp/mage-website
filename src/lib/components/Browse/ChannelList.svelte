@@ -24,9 +24,13 @@
 		Create a channel</button>
 </div>
 
-<ChannelGroup />
+<ChannelGroup title="Daily category" />
 
-<ChannelGroup />
+<ChannelGroup title="Most active" />
+
+<ChannelGroup title="Top streamers" />
+
+<ChannelGroup title="Rising stars" />
 
 <div class="overflow-x-auto w-full">
 	<table class="table table-zebra w-full">
