@@ -1,4 +1,4 @@
-import { writable, type Writable } from "svelte/store"
+import { writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
 import { currentUser } from '$lib/stores/authStore'
 
@@ -11,100 +11,134 @@ export const myChannels: Writable<[]> = writable([])
 export const channels: Writable<[]> = writable([])
 export const searchedchannels: Writable<[]> = writable([])
 
-async function createChannel({ title, description, thumbnail, category, tags, isPrivate = false, user, channelType }
-    : { title: string, description: string, thumbnail: string, category: string[], tags: string[], isPrivate: boolean, user: any, channelType: string }
-) {
-    return await fetch(`${env.PUBLIC_API_URL}/channel`, {
-        method: 'POST',
-        body: JSON.stringify({
-            title,
-            description,
-            thumbnail,
-            category,
-            tags,
-            isPrivate,
-            user: user._id,
-            createdBy: user.displayName,
-            avatar: user.avatar,
-            isHostActive: true,
-            channelType
-        })
-    }).then(async response => {
-        const res = await response.json()
-        if (channelType === "channel") {
-            await addHostChannelToUser({ hostChannelId: res.channel._id })
-            currentChannel.set(res)
-        }
-        return res
-    })
+async function createChannel({
+	title,
+	description,
+	thumbnail,
+	category,
+	tags,
+	isPrivate = false,
+	user,
+	channelType
+}: {
+	title: string
+	description: string
+	thumbnail: string
+	category: string[]
+	tags: string[]
+	isPrivate: boolean
+	user: any
+	channelType: string
+}) {
+	return await fetch(`${env.PUBLIC_API_URL}/channel`, {
+		method: 'POST',
+		body: JSON.stringify({
+			title,
+			description,
+			thumbnail,
+			category,
+			tags,
+			isPrivate,
+			user: user._id,
+			createdBy: user.displayName,
+			avatar: user.avatar,
+			isHostActive: true,
+			channelType
+		})
+	}).then(async (response) => {
+		const res = await response.json()
+		if (channelType === 'channel') {
+			await addHostChannelToUser({ hostChannelId: res.channel._id })
+			currentChannel.set(res)
+		}
+		return res
+	})
 }
 
 async function deleteChannel({ channelId }: { channelId: string }) {
-    return await fetch(`${env.PUBLIC_API_URL}/channels/${channelId}?bucketName=attachments`, {
-        method: 'DELETE'
-    })
+	return await fetch(`${env.PUBLIC_API_URL}/channels/${channelId}?bucketName=attachments`, {
+		method: 'DELETE'
+	})
 }
 
 async function getChannel({ channelId }: { channelId: string }) {
-    return await fetch(`${env.PUBLIC_API_URL}/channel?channelId=${channelId}`, {
-        method: 'GET'
-    }).then(response => response.json())
+	return await fetch(`${env.PUBLIC_API_URL}/channel?channelId=${channelId}`, {
+		method: 'GET'
+	}).then((response) => response.json())
 }
 
 async function addChannelToUser({ channelId }: { channelId: string }) {
-    return await fetch(`${env.PUBLIC_API_URL}/users/channels?channelId=${channelId}`, {
-        method: 'GET'
-    }).then(async response => {
-        const res = await response.json()
-        //TODO: update user in authStore
-    })
+	return await fetch(`${env.PUBLIC_API_URL}/users/channels?channelId=${channelId}`, {
+		method: 'GET'
+	}).then(async (response) => {
+		const res = await response.json()
+		//TODO: update user in authStore
+	})
 }
 
-async function removeChannelFromUser({ channelId, userId }: { channelId: string, userId: string }) {
-    return await fetch(`${env.PUBLIC_API_URL}/users/channels?channelId=${channelId}`, {
-        method: 'DELETE'
-    }).then(async response => {
-        const res = await response.json()
-        //TODO: update user in authStore
-        //if (this.user == userId) this.authService.setUser(userUpdate)
-    })
+async function removeChannelFromUser({ channelId, userId }: { channelId: string; userId: string }) {
+	return await fetch(`${env.PUBLIC_API_URL}/users/channels?channelId=${channelId}`, {
+		method: 'DELETE'
+	}).then(async (response) => {
+		const res = await response.json()
+		//TODO: update user in authStore
+		//if (this.user == userId) this.authService.setUser(userUpdate)
+	})
 }
 
 async function addHostChannelToUser({ hostChannelId }: { hostChannelId: string }) {
-    return await fetch(`${env.PUBLIC_API_URL}/users/host-channels?hostChannelId=${hostChannelId}`, {
-        method: 'PUT'
-    }).then(async response => {
-        const res = await response.json()
-        //TODO: update user in authStore
-    })
+	return await fetch(`${env.PUBLIC_API_URL}/users/host-channels?hostChannelId=${hostChannelId}`, {
+		method: 'PUT'
+	}).then(async (response) => {
+		const res = await response.json()
+		//TODO: update user in authStore
+	})
 }
 
 async function removeHostChannelFromUser({ hostChannelId }: { hostChannelId: string }) {
-    return await fetch(`${env.PUBLIC_API_URL}/users/host-channels?hostChannelId=${hostChannelId}`, {
-        method: 'DELETE'
-    }).then(async response => {
-        const res = await response.json()
-        //TODO: update user in authStore
-    })
+	return await fetch(`${env.PUBLIC_API_URL}/users/host-channels?hostChannelId=${hostChannelId}`, {
+		method: 'DELETE'
+	}).then(async (response) => {
+		const res = await response.json()
+		//TODO: update user in authStore
+	})
 }
 
-async function blockUserFromChannel({ channelId, userId }: { channelId: string, userId: string }) {
-    return await fetch(`${env.PUBLIC_API_URL}/channels/blocked-users?channelId=${channelId}&userId=${userId}`, {
-        method: 'PATCH'
-    })
+async function blockUserFromChannel({ channelId, userId }: { channelId: string; userId: string }) {
+	return await fetch(
+		`${env.PUBLIC_API_URL}/channels/blocked-users?channelId=${channelId}&userId=${userId}`,
+		{
+			method: 'PATCH'
+		}
+	)
 }
 
-async function unblockUserFromChannel({ channelId, userId }: { channelId: string, userId: string }) {
-    return await fetch(`${env.PUBLIC_API_URL}/channels/blocked-users?channelId=${channelId}&userId=${userId}`, {
-        method: 'DELETE'
-    })
+async function unblockUserFromChannel({
+	channelId,
+	userId
+}: {
+	channelId: string
+	userId: string
+}) {
+	return await fetch(
+		`${env.PUBLIC_API_URL}/channels/blocked-users?channelId=${channelId}&userId=${userId}`,
+		{
+			method: 'DELETE'
+		}
+	)
 }
 
-async function updateChannelProperties({ channelId, updatedProperties }: { channelId: string, updatedProperties: any }) {
-    return await fetch(`${env.PUBLIC_API_URL}/channels?channelId=${channelId}`, {
-        method: 'PATCH',
-        body: JSON.stringify(updatedProperties)
-    })
+async function updateChannelProperties({
+	channelId,
+	updatedProperties
+}: {
+	channelId: string
+	updatedProperties: any
+}) {
+	return await fetch(`${env.PUBLIC_API_URL}/channels?channelId=${channelId}`, {
+		method: 'PATCH',
+		body: JSON.stringify(updatedProperties)
+	})
 }
 
 //TODO: fix this
@@ -112,131 +146,197 @@ async function updateChannelProperties({ channelId, updatedProperties }: { chann
 //     return this.currentChannel.blockedUsers?.some((user) => !!(user == userId))
 // }
 
-async function addAttachments({ channelId, attachmentUrl }: { channelId: string, attachmentUrl: string }) {
-    return await fetch(`${env.PUBLIC_API_URL}/channels/attachments?channelId=${channelId}&encodeURIComponent=${encodeURIComponent(attachmentUrl)}`, {
-        method: 'PUT'
-    })
+async function addAttachments({
+	channelId,
+	attachmentUrl
+}: {
+	channelId: string
+	attachmentUrl: string
+}) {
+	return await fetch(
+		`${
+			env.PUBLIC_API_URL
+		}/channels/attachments?channelId=${channelId}&encodeURIComponent=${encodeURIComponent(
+			attachmentUrl
+		)}`,
+		{
+			method: 'PUT'
+		}
+	)
 }
 
-async function deleteAttachment({ channelId, attachmentUrl }: { channelId: string, attachmentUrl: string }) {
-    return await fetch(`${env.PUBLIC_API_URL}/channels/attachments?channelId=${channelId}&encodeURIComponent=${encodeURIComponent(attachmentUrl)}`, {
-        method: 'DELETE'
-    })
+async function deleteAttachment({
+	channelId,
+	attachmentUrl
+}: {
+	channelId: string
+	attachmentUrl: string
+}) {
+	return await fetch(
+		`${
+			env.PUBLIC_API_URL
+		}/channels/attachments?channelId=${channelId}&encodeURIComponent=${encodeURIComponent(
+			attachmentUrl
+		)}`,
+		{
+			method: 'DELETE'
+		}
+	)
 }
 
-async function addChannelNotificationSubscriber({ channelId, userId }: { channelId: string, userId: string }) {
-    return await fetch(`${env.PUBLIC_API_URL}/channels/notification-subscribers?channelId=${channelId}&userId=${userId}`, {
-        method: 'PUT'
-    })
+async function addChannelNotificationSubscriber({
+	channelId,
+	userId
+}: {
+	channelId: string
+	userId: string
+}) {
+	return await fetch(
+		`${env.PUBLIC_API_URL}/channels/notification-subscribers?channelId=${channelId}&userId=${userId}`,
+		{
+			method: 'PUT'
+		}
+	)
 }
 
-async function removeChannelNotificationSubscriber({ channelId, userId }: { channelId: string, userId: string }) {
-    return await fetch(`${env.PUBLIC_API_URL}/channels/notification-subscribers?channelId=${channelId}&userId=${userId}`, {
-        method: 'DELETE'
-    })
+async function removeChannelNotificationSubscriber({
+	channelId,
+	userId
+}: {
+	channelId: string
+	userId: string
+}) {
+	return await fetch(
+		`${env.PUBLIC_API_URL}/channels/notification-subscribers?channelId=${channelId}&userId=${userId}`,
+		{
+			method: 'DELETE'
+		}
+	)
 }
 
 async function deleteMembers({ channelId }: { channelId: string }) {
-    return await fetch(`${env.PUBLIC_API_URL}/channel-members?channelId=${channelId}`, {
-        method: 'DELETE'
-    })
+	return await fetch(`${env.PUBLIC_API_URL}/channel-members?channelId=${channelId}`, {
+		method: 'DELETE'
+	})
 }
 
 function resetSkipLimit() {
-    skip = 0
-    limit = 100
+	skip = 0
+	limit = 100
 }
 
 async function getMyChannels() {
-    return await fetch(`${env.PUBLIC_API_URL}/channels/me/hosted`, {
-        method: 'GET'
-    }).then(async response => {
-        const res = await response.json()
-        myChannels.set(res)
-    })
+	return await fetch(`${env.PUBLIC_API_URL}/channels/me/hosted`, {
+		method: 'GET'
+	}).then(async (response) => {
+		const res = await response.json()
+		myChannels.set(res)
+	})
 }
 
-async function getChannelsByUserId({ userId, searchQuery = '', skip = 0, limit = 50 }: { userId: string, searchQuery: string, skip?: number, limit?: number }) {
-    return await fetch(`${env.PUBLIC_API_URL}/channels/user?userId=${userId}&searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`, {
-        method: 'GET'
-    }).then(response => response.json())
+async function getChannelsByUserId({
+	userId,
+	searchQuery = '',
+	skip = 0,
+	limit = 50
+}: {
+	userId: string
+	searchQuery: string
+	skip?: number
+	limit?: number
+}) {
+	return await fetch(
+		`${env.PUBLIC_API_URL}/channels/user?userId=${userId}&searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`,
+		{
+			method: 'GET'
+		}
+	).then((response) => response.json())
 }
 
 async function getChannels({ isRefresh = false }: { isRefresh?: boolean } = {}) {
-    if (isRefresh) {
-        resetSkipLimit()
-    }
+	if (isRefresh) {
+		resetSkipLimit()
+	}
 
-    return await fetch(`${env.PUBLIC_API_URL}/channels?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`, {
-        method: 'GET'
-    }).then(async response => {
-        console.log("response", response)
+	return await fetch(
+		`${env.PUBLIC_API_URL}/channels?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`,
+		{
+			method: 'GET'
+		}
+	).then(async (response) => {
+		console.log('response', response)
 
-        const res = await response.json()
-        if (res.length) {
-            skip += limit
-            console.log("res", res)
-            //TODO: push res to channels
-            // channels.update(current => [...current, res])
-        } else {
-            //TODO: show alert
-            // if ((this.searchQuery || this.filterTechList.length) && !this.skip)
-            //     this.snackBar.open('No results with the search criteria', null, {
-            //         duration: 2000
-            //     })
-        }
-        return channels
-    })
+		const res = await response.json()
+		if (res.length) {
+			skip += limit
+			console.log('res', res)
+			//TODO: push res to channels
+			// channels.update(current => [...current, res])
+		} else {
+			//TODO: show alert
+			// if ((this.searchQuery || this.filterTechList.length) && !this.skip)
+			//     this.snackBar.open('No results with the search criteria', null, {
+			//         duration: 2000
+			//     })
+		}
+		return channels
+	})
 }
 
-async function leaveChannel({ userId, deleteOrLeaveOnExit = false }: { userId: string, deleteOrLeaveOnExit?: boolean }) {
-    //TODO: fix writeable subscribe
-    currentChannel.subscribe(async value => {
-        if (value) {
-            if (value.user === userId) {
-                // if host
-                if (deleteOrLeaveOnExit) {
-                    await removeHostChannelFromUser({
-                        hostChannelId: value._id
-                    })
-                    await deleteChannel({ channelId: value._id })
-                    await deleteMembers({
-                        channelId: value._id
-                    })
-                }
-            } else {
-                // if participant
-                if (deleteOrLeaveOnExit) {
-                    await removeChannelFromUser({
-                        channelId: value._id,
-                        userId
-                    })
-                }
-            }
-            currentChannel.set(null)
-        }
-    })
+async function leaveChannel({
+	userId,
+	deleteOrLeaveOnExit = false
+}: {
+	userId: string
+	deleteOrLeaveOnExit?: boolean
+}) {
+	//TODO: fix writeable subscribe
+	currentChannel.subscribe(async (value) => {
+		if (value) {
+			if (value.user === userId) {
+				// if host
+				if (deleteOrLeaveOnExit) {
+					await removeHostChannelFromUser({
+						hostChannelId: value._id
+					})
+					await deleteChannel({ channelId: value._id })
+					await deleteMembers({
+						channelId: value._id
+					})
+				}
+			} else {
+				// if participant
+				if (deleteOrLeaveOnExit) {
+					await removeChannelFromUser({
+						channelId: value._id,
+						userId
+					})
+				}
+			}
+			currentChannel.set(null)
+		}
+	})
 }
 
 async function enterChannel({ channel }: { channel: any }) {
-    currentChannel.set(channel)
-    return currentChannel
+	currentChannel.set(channel)
+	return currentChannel
 }
 
-async function toggleNotifications({ channel, userId }: { channel: any, userId: string }) {
-    if (channel?.notificationSubscribers?.includes(userId)) {
-        await removeChannelFromUser({ channelId: channel._id, userId })
-        await removeChannelNotificationSubscriber({
-            channelId: channel._id,
-            userId
-        })
-    } else {
-        await addChannelToUser({ channelId: channel._id })
-        await addChannelNotificationSubscriber({
-            channelId: channel._id,
-            userId
-        })
-    }
+async function toggleNotifications({ channel, userId }: { channel: any; userId: string }) {
+	if (channel?.notificationSubscribers?.includes(userId)) {
+		await removeChannelFromUser({ channelId: channel._id, userId })
+		await removeChannelNotificationSubscriber({
+			channelId: channel._id,
+			userId
+		})
+	} else {
+		await addChannelToUser({ channelId: channel._id })
+		await addChannelNotificationSubscriber({
+			channelId: channel._id,
+			userId
+		})
+	}
 }
 
 // async sendToken({ channelId }) {
@@ -287,25 +387,25 @@ async function toggleNotifications({ channel, userId }: { channel: any, userId: 
 // }
 
 export {
-    createChannel,
-    deleteChannel,
-    getChannel,
-    addChannelToUser,
-    removeChannelFromUser,
-    addHostChannelToUser,
-    removeHostChannelFromUser,
-    blockUserFromChannel,
-    unblockUserFromChannel,
-    updateChannelProperties,
-    addAttachments,
-    deleteAttachment,
-    addChannelNotificationSubscriber,
-    removeChannelNotificationSubscriber,
-    deleteMembers,
-    getMyChannels,
-    getChannelsByUserId,
-    getChannels,
-    leaveChannel,
-    enterChannel,
-    toggleNotifications
+	createChannel,
+	deleteChannel,
+	getChannel,
+	addChannelToUser,
+	removeChannelFromUser,
+	addHostChannelToUser,
+	removeHostChannelFromUser,
+	blockUserFromChannel,
+	unblockUserFromChannel,
+	updateChannelProperties,
+	addAttachments,
+	deleteAttachment,
+	addChannelNotificationSubscriber,
+	removeChannelNotificationSubscriber,
+	deleteMembers,
+	getMyChannels,
+	getChannelsByUserId,
+	getChannels,
+	leaveChannel,
+	enterChannel,
+	toggleNotifications
 }

@@ -1,6 +1,7 @@
 <script>
 	import IconLock from '$lib/assets/icons/IconLock.svelte'
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
+	import ChannelGroup from '$lib/components/Browse/ChannelGroup.svelte'
 </script>
 
 <div class="overflow-x-auto w-full">
