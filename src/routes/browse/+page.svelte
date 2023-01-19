@@ -1,7 +1,9 @@
 <script>
 	import Carousel from '$lib/components/Browse/Carousel.svelte'
-	import ChannelList from '$lib/components/Browse/ChannelList.svelte'
+	import ChannelSearch from '$lib/components/Browse/ChannelSearch.svelte'
+	import ChannelList from '$lib/components/Browse/ChannelTable.svelte'
 </script>
 
 <Carousel />
+<ChannelSearch />
 <ChannelList />
