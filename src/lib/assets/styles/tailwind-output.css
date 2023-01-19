@@ -2951,11 +2951,14 @@ html {
 .top-2\/4 {
   top: 50%;
 }
+.left-1 {
+  left: 0.25rem;
+}
+.right-1 {
+  right: 0.25rem;
+}
 .left-0 {
   left: 0px;
-}
-.top-2\/3 {
-  top: 66.666667%;
 }
 .right-2 {
   right: 0.5rem;
@@ -2968,12 +2971,6 @@ html {
 }
 .bottom-0 {
   bottom: 0px;
-}
-.left-1 {
-  left: 0.25rem;
-}
-.right-1 {
-  right: 0.25rem;
 }
 .z-10 {
   z-index: 10;
@@ -3098,10 +3095,6 @@ html {
 .h-8 {
   height: 2rem;
 }
-.h-fit {
-  height: -moz-fit-content;
-  height: fit-content;
-}
 .min-h-screen {
   min-height: 100vh;
 }
@@ -3178,6 +3171,9 @@ html {
 }
 .basis-\[600px\] {
   flex-basis: 600px;
+}
+.basis-\[400px\] {
+  flex-basis: 400px;
 }
 .-translate-y-1\/2 {
   --tw-translate-y: -50%;
