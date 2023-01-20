@@ -8,7 +8,7 @@
 		channels: any = undefined
 
 	let ref: any
-	$: channels = channels && channels.splice(0, 5)
+	$: channels = channels && channels.splice(0, 10)
 
 	const prev = () => {
 		if (ref) {

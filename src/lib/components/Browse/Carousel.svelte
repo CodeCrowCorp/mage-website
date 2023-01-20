@@ -3,8 +3,12 @@
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
 	import { goto } from '$app/navigation'
 
+	export let channels: any = []
+
 	let ref: any,
 		showback = false
+
+	$: channels = channels && channels.splice(0, 5)
 
 	const prev = () => {
 		if (ref) {
@@ -69,7 +73,17 @@
 		bind:this={ref}
 		class="carousel-content relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto pt-14 flex-grow">
 		<div class="shrink-0 blank-width" />
-		<div
+		{#if channels && channels.length}
+			{#each channels as channel}
+				<div
+					class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[400px] md:basis-[600px] rounded-md">
+					<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
+						{channel.title}
+					</div>
+				</div>
+			{/each}
+		{/if}
+		<!-- <div
 			class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[400px] md:basis-[600px] rounded-md">
 			<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
 				Video Thumbnail 1
@@ -92,7 +106,7 @@
 			<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
 				Video Thumbnail 4
 			</div>
-		</div>
+		</div> -->
 
 		<div class="shrink-0 blank-width" />
 	</div>

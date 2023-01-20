@@ -13,7 +13,7 @@
 	$: console.log(channels)
 </script>
 
-<Carousel />
+<Carousel bind:channels />
 <ChannelSearch />
 
 <ChannelSection title="Daily category" bind:channels />
