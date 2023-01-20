@@ -79,7 +79,17 @@
 				<div
 					class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[400px] md:basis-[600px] rounded-md">
 					<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
-						{channel.title}
+						<div class="flex flex-row">
+							<div class="avatar my-3 ml-2">
+								<div class="w-14 rounded-full">
+									<img src={channel.avatar} alt="" />
+								</div>
+							</div>
+							<div class="mt-2 ml-2">
+								<p class="text-2xl font-semibold">{channel.title}</p>
+								<p class="">{channel.description}</p>
+							</div>
+						</div>
 					</div>
 				</div>
 			{/each}
@@ -113,7 +123,7 @@
 
 <style>
 	.video-thumbnail {
-		@apply bg-slate-400 w-full h-80 flex items-center justify-center text-white rounded-md cursor-pointer;
+		@apply bg-slate-400 w-full h-80 flex items-end text-white rounded-md cursor-pointer;
 	}
 
 	.blank-width {
