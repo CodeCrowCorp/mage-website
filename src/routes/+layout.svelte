@@ -176,12 +176,14 @@
 						Mint <span class="badge">New</span>
 					</a>
 				</li>
-				<li>
-					<a href="/premium" class="text-pink-500">
-						<IconDrawerPremium />
-						Premium <span class="badge">New</span>
-					</a>
-				</li>
+				{#if $currentUser}
+					<li>
+						<a href="/premium" class="text-pink-500">
+							<IconDrawerPremium />
+							Premium <span class="badge">New</span>
+						</a>
+					</li>
+				{/if}
 				<li>
 					<a href="/careers">
 						<IconDrawerCareers />
