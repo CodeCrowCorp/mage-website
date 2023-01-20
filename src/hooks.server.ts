@@ -4,9 +4,9 @@ import { Authenticate } from '$lib/authentication/authentication'
 import type { Handle } from '@sveltejs/kit'
 
 export const handle: Handle = async ({ event, resolve }) => {
+	const pathname = event.url.pathname
 	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
 	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
-	let pathname = event.url.pathname
 	let user
 
 	if (event.locals && event.locals.user) {
@@ -21,6 +21,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 					token = response.freshJwt
 				}
 				user = response
+				user.isAdmin = true
 			}
 		}
 
@@ -35,7 +36,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	const user_role = (user && user.isAdmin && 'admin') || '*'
 
-	if (Authenticate(pathname, user_role) || pathname === '/browse') {
+	if (Authenticate(pathname, user_role) || pathname === '/browse' || pathname === '/') {
 		return await resolve(event)
 	}
 	throw redirect(302, '/browse')
