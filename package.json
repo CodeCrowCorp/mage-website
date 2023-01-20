@@ -22,6 +22,7 @@
 		"@playwright/test": "1.29.2",
 		"@sveltejs/adapter-cloudflare": "^1.0.4",
 		"@sveltejs/kit": "^1.1.3",
+		"@sveltejs/svelte-virtual-list": "^3.0.1",
 		"@svitejs/svelte-preprocess-svg": "^2.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.48.2",
 		"@typescript-eslint/parser": "^5.48.2",

@@ -1,13 +1,72 @@
 <script lang="ts">
 	import IconLock from '$lib/assets/icons/IconLock.svelte'
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
+	import VirtualList from '@sveltejs/svelte-virtual-list'
 
 	export let channels: any = undefined
 </script>
 
+<!-- <div class="flex flex-col table-zebra">
+	<div class="grid grid-cols-5 uppercase font-semibold text-sm w-full">
+		<div class="py-2 px-4">Host</div>
+		<div class="py-2 px-4">Title</div>
+		<div class="py-2 px-4">Viewers</div>
+		<div class="py-2 px-4">Tag</div>
+		<div class="py-2 px-4">Category</div>
+	</div>
+
+	{#if channels && channels.length}
+		<VirtualList height="500px" items={channels} let:item>
+			<div class="grid grid-cols-5 w-full first:ml-3">
+				<div>
+					<div class="flex items-center space-x-3 p-1">
+						<div class="avatar">
+							<div class="w-12 rounded-full">
+								<img src={item.avatar} alt="" />
+							</div>
+						</div>
+						<div>
+							<div class="font-bold">{item.createdBy || 'No user'}</div>
+							<div class="text-sm text-pink-500">@GaganSuie</div>
+						</div>
+					</div>
+				</div>
+				<div class="p-1">
+					{item.title}
+					<br />
+					<span class="text-sm">{item.description}</span>
+				</div>
+				<div>
+					<div class="flex gap-2 p-1">
+						<IconLock />
+						<IconViewers />
+						<span>205</span>
+					</div>
+				</div>
+				<div>
+					<div class="flex flex-wrap gap-2 max-w-fit p-1">
+						{#if item.tags && item.tags.length}
+							{#each item.tags as tag}
+								<div><span class="badge badge-primary badge-md">{tag}</span></div>
+							{/each}
+						{/if}
+					</div>
+				</div>
+				<div>
+					<div class="flex p-1">
+						<img src="/category/games/call-of-duty-black-ops-4.svg" />
+						<img src="/category/games/fortnite.svg" />
+						<img src="/category/games/overwatch.svg" />
+						<img src="/category/games/valorant.svg" />
+					</div>
+				</div>
+			</div>
+		</VirtualList>
+	{/if}
+</div> -->
+
 <div class="overflow-x-auto w-full">
 	<table class="table table-zebra w-full">
-		<!-- head -->
 		<thead>
 			<tr>
 				<th>Host</th>
@@ -18,7 +77,6 @@
 			</tr>
 		</thead>
 		<tbody>
-			<!-- row 1 -->
 			{#if channels && channels.length}
 				{#each channels as channel}
 					<tr class="cursor-pointer">
@@ -52,8 +110,6 @@
 								{#if channel.tags && channel.tags.length}
 									{#each channel.tags as tag}
 										<div><span class="badge badge-primary badge-md">{tag}</span></div>
-										<!-- <div><span class="badge badge-primary badge-md">Gameplay</span></div>
-								<div><span class="badge badge-primary badge-md">Multiplayer</span></div> -->
 									{/each}
 								{/if}
 							</div>
@@ -69,7 +125,6 @@
 					</tr>
 				{/each}
 			{:else}
-				<!-- Skeleton Loader -->
 				<tr>
 					<td>
 						<div
@@ -109,7 +164,6 @@
 				</tr>
 			{/if}
 		</tbody>
-		<!-- foot -->
 		<tfoot>
 			<tr>
 				<th>Host</th>
