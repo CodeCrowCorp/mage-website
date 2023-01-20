@@ -78,7 +78,10 @@
 			{#each channels as channel}
 				<div
 					class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[400px] md:basis-[600px] rounded-md">
-					<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<div
+						class="video-thumbnail"
+						on:click|preventDefault={() => goto(`/channel/${channel._id}`)}>
 						<div class="flex flex-row">
 							<div class="avatar my-3 ml-2">
 								<div class="w-14 rounded-full">

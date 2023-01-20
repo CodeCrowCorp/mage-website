@@ -45,7 +45,10 @@
 				{#each channels as channel}
 					<div class="flex flex-col shrink-0 first:pl-8 last:pr-8 basis-[400px] rounded-md">
 						<div class="relative">
-							<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
+							<!-- svelte-ignore a11y-click-events-have-key-events -->
+							<div
+								class="video-thumbnail"
+								on:click|preventDefault={() => goto(`/channel/${channel._id}`)}>
 								{#if channel.thumbnail}
 									<div
 										class="video-thumbnail"
