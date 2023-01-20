@@ -1,6 +1,7 @@
 <script lang="ts">
 	import IconDrawerLeft from '$lib/assets/icons/drawer/IconDrawerLeft.svelte'
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
+	import IconPlay from '$lib/assets/icons/IconPlay.svelte'
 	import { goto } from '$app/navigation'
 
 	export let title: string = '',
@@ -43,9 +44,15 @@
 				class="item-content relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto flex-grow">
 				{#each channels as channel}
 					<div class="flex flex-col shrink-0 first:pl-8 last:pr-8 basis-[400px] rounded-md">
-						<div class="">
+						<div class="relative">
 							<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
 								{channel.title}
+							</div>
+
+							<div class="absolute top-0 w-full h-full opacity-0 hover:opacity-100 cursor-pointer">
+								<div class="flex h-full justify-center items-center">
+									<IconPlay />
+								</div>
 							</div>
 						</div>
 						<div class="flex flex-row gap-5 max-w-[400px]">
