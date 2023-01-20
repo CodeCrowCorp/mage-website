@@ -2,6 +2,7 @@
 	import '$lib/assets/styles/tailwind-output.css'
 	// @ts-ignore
 	import NProgress from 'nprogress'
+	import { goto } from '$app/navigation'
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
 	import { currentUser } from '$lib/stores/authStore'
@@ -59,6 +60,13 @@
 				$currentUser = data.user.user
 			}
 		}
+	}
+
+	function logout() {
+		setTimeout(() => {
+			$currentUser = null
+		}, 500)
+		goto('/logout')
 	}
 </script>
 
@@ -168,12 +176,14 @@
 						Mint <span class="badge">New</span>
 					</a>
 				</li>
-				<li>
-					<a href="/premium" class="text-pink-500">
-						<IconDrawerPremium />
-						Premium <span class="badge">New</span>
-					</a>
-				</li>
+				{#if $currentUser}
+					<li>
+						<a href="/premium" class="text-pink-500">
+							<IconDrawerPremium />
+							Premium <span class="badge">New</span>
+						</a>
+					</li>
+				{/if}
 				<li>
 					<a href="/careers">
 						<IconDrawerCareers />
@@ -202,7 +212,7 @@
 				</li>
 				{#if $currentUser}
 					<li>
-						<button>
+						<button on:click={logout}>
 							<IconDrawerLogOut />
 							Log Out</button>
 					</li>
