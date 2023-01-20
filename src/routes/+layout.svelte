@@ -2,6 +2,7 @@
 	import '$lib/assets/styles/tailwind-output.css'
 	// @ts-ignore
 	import NProgress from 'nprogress'
+	import { goto } from '$app/navigation'
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
 	import { currentUser } from '$lib/stores/authStore'
@@ -59,6 +60,11 @@
 				$currentUser = data.user.user
 			}
 		}
+	}
+
+	function logout() {
+		$currentUser = null
+		goto('/logout')
 	}
 </script>
 
@@ -202,7 +208,7 @@
 				</li>
 				{#if $currentUser}
 					<li>
-						<button>
+						<button on:click={logout}>
 							<IconDrawerLogOut />
 							Log Out</button>
 					</li>
