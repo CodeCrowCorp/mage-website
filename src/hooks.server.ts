@@ -1,17 +1,16 @@
+import { redirect } from '@sveltejs/kit'
 import { getUserDetails } from '$lib/stores/authStore'
+import { Authenticate } from '$lib/authentication/authentication'
 import type { Handle } from '@sveltejs/kit'
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
 	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
+	let pathname = event.url.pathname
 	let user
 
 	if (event.locals && event.locals.user) {
 		user = event.locals.user.user
-	}
-
-	if (!token || !userId) {
-		return await resolve(event)
 	}
 
 	if (token && userId) {
@@ -34,10 +33,15 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 	}
 
-	return await resolve(event)
+	const user_role = (user && user.isAdmin && 'admin') || '*'
+
+	if (Authenticate(pathname, user_role) || pathname === '/browse') {
+		return await resolve(event)
+	}
+	throw redirect(302, '/browse')
 }
 
-export function handleError({ error, event }) {
+export function handleError({ error }) {
 	console.log('error', error)
 	return {
 		message: 'Whoops something wrong!'
