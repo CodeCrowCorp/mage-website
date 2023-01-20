@@ -34,6 +34,7 @@ const routes = {
 	contact: [{ path: '/', access: user_contexts }],
 	videos: [{ path: '/', access: user_contexts }],
 	legal: [{ path: '/', access: user_contexts }],
+	logout: [{ path: '/', access: admin_contexts }],
 	'creator-space': [{ path: '/', access: user_contexts }]
 }
 

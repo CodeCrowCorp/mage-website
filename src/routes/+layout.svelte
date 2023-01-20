@@ -63,7 +63,9 @@
 	}
 
 	function logout() {
-		$currentUser = null
+		setTimeout(() => {
+			$currentUser = null
+		}, 500)
 		goto('/logout')
 	}
 </script>
