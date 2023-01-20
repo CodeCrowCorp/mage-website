@@ -1,40 +1,52 @@
+import { redirect } from '@sveltejs/kit'
 import { getUserDetails } from '$lib/stores/authStore'
+import { Authenticate } from '$lib/authentication/authentication'
 import type { Handle } from '@sveltejs/kit'
 
 export const handle: Handle = async ({ event, resolve }) => {
-    const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
-    let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
-    let user
+	const pathname = event.url.pathname
+	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
+	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
+	let user
 
-    if (event.locals && event.locals.user) {
-        user = event.locals.user.user
-    }
+	if (event.locals && event.locals.user) {
+		user = event.locals.user.user
+	}
 
-    if (!token || !userId) {
-        return await resolve(event)
-    }
+	if (token && userId) {
+		if (!user) {
+			const response = await getUserDetails(token, userId)
+			if (response) {
+				if (response.freshJwt) {
+					token = response.freshJwt
+				}
+				user = response
+				user.isAdmin = true
+			}
+		}
 
-    if (token && userId) {
-        if (!user) {
-            const response = await getUserDetails(token, userId)
-            if (response) {
-                if (response.freshJwt) {
-                    token = response.freshJwt
-                }
-                user = response
-            }
-        }
+		event.cookies.set('token', token)
+		event.cookies.set('userId', userId)
+		event.locals.user = {
+			userId,
+			token,
+			user
+		}
+	}
 
-        event.cookies.set('token', token)
-        event.cookies.set('userId', userId)
-        event.locals.user = {
-            userId,
-            token,
-            user
-        }
-    }
+	const user_role = (user && user.isAdmin && 'admin') || '*'
 
-    return await resolve(event)
+	if (Authenticate(pathname, user_role) || pathname === '/browse' || pathname === '/') {
+		return await resolve(event)
+	}
+	throw redirect(302, '/browse')
+}
+
+export function handleError({ error }) {
+	console.log('error', error)
+	return {
+		message: 'Whoops something wrong!'
+	}
 }
 
 // const isAdminPage = /^\/admin\/(.*)/.test(route.id)
