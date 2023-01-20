@@ -3779,6 +3779,9 @@ input[type="range"].range-lg::-moz-range-thumb {
 .top-5 {
   top: 1.25rem;
 }
+.right-1\/2 {
+  right: 50%;
+}
 .z-10 {
   z-index: 10;
 }
@@ -4269,6 +4272,9 @@ input[type="range"].range-lg::-moz-range-thumb {
 .max-w-full {
   max-width: 100%;
 }
+.max-w-prose {
+  max-width: 65ch;
+}
 .flex-auto {
   flex: 1 1 auto;
 }
@@ -4449,6 +4455,9 @@ input[type="range"].range-lg::-moz-range-thumb {
 .gap-8 {
   gap: 2rem;
 }
+.gap-5 {
+  gap: 1.25rem;
+}
 .gap-y-4 {
   row-gap: 1rem;
 }
@@ -4584,6 +4593,11 @@ input[type="range"].range-lg::-moz-range-thumb {
 }
 .overscroll-contain {
   overscroll-behavior: contain;
+}
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .whitespace-normal {
   white-space: normal;
@@ -7122,6 +7136,10 @@ input[type="range"].range-lg::-moz-range-thumb {
 
 .hover\:underline:hover {
   text-decoration-line: underline;
+}
+
+.hover\:opacity-100:hover {
+  opacity: 1;
 }
 
 .dark .dark\:block {

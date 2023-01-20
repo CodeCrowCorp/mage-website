@@ -48,16 +48,16 @@
 								{channel.title}
 							</div>
 						</div>
-						<div class="flex flex-row gap-5">
-							<div class="avatar my-3">
+						<div class="flex flex-row gap-5 max-w-[400px]">
+							<div class="avatar my-3 ml-2">
 								<div class="w-9 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
 									<img src={channel.avatar} alt="" />
 								</div>
 							</div>
 
-							<div class="">
+							<div class="truncate">
 								<p class="text-lg font-semibold">{channel.title}</p>
-								<p class="text-sm text-gray-600 truncate max-w-[400px] ">{channel.description}</p>
+								<p class="text-sm text-gray-600">{channel.description}</p>
 							</div>
 						</div>
 					</div>
