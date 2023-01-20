@@ -258,29 +258,38 @@ async function getChannels({ isRefresh = false }: { isRefresh?: boolean } = {}) 
 		resetSkipLimit()
 	}
 
-	return await fetch(
+	const result = await fetch(
 		`${env.PUBLIC_API_URL}/channels?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`,
 		{
 			method: 'GET'
 		}
-	).then(async (response) => {
-		console.log('response', response)
+	)
 
-		const res = await response.json()
-		if (res.length) {
-			skip += limit
-			console.log('res', res)
-			//TODO: push res to channels
-			// channels.update(current => [...current, res])
-		} else {
-			//TODO: show alert
-			// if ((this.searchQuery || this.filterTechList.length) && !this.skip)
-			//     this.snackBar.open('No results with the search criteria', null, {
-			//         duration: 2000
-			//     })
-		}
-		return channels
-	})
+	if (result.ok) {
+		return await result.json()
+	} else {
+		throw new Error('Error fetching channels')
+	}
+
+	// then(async (response) => {
+	// 	console.log('response', response)
+
+	// 	const res = await response.json()
+	// 	if (res.length) {
+	// 		skip += limit
+	// 		console.log('res', res)
+	//TODO: push res to channels
+	// channels.update(current => [...current, res])
+	// } else {
+	//TODO: show alert
+	// if ((this.searchQuery || this.filterTechList.length) && !this.skip)
+	//     this.snackBar.open('No results with the search criteria', null, {
+	//         duration: 2000
+	//     })
+	// }
+	// console.log(channels)
+	// return channels
+	// })
 }
 
 async function leaveChannel({
