@@ -71,23 +71,38 @@
 			{:else}
 				<tr>
 					<td>
-						<div role="status" class="animate-pulse">
-							<div class="h-40 bg-gray-200 dark:bg-gray-700 w-[200px] mb-4" />
+						<div
+							role="status"
+							class="flex w-full h-12 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+							<span class="sr-only">Loading...</span>
 						</div>
 					</td>
 					<td>
-						<div role="status" class="animate-pulse">
-							<div class="h-40 bg-gray-200 dark:bg-gray-700 w-[200px] mb-4" />
+						<div
+							role="status"
+							class="flex w-full h-12 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+							<span class="sr-only">Loading...</span>
 						</div>
 					</td>
 					<td>
-						<div role="status" class="gap-6 animate-pulse">
-							<div class="h-40 bg-gray-200 dark:bg-gray-700 w-[200px] mb-4" />
+						<div
+							role="status"
+							class="flex w-full h-12 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+							<span class="sr-only">Loading...</span>
 						</div>
 					</td>
 					<td>
-						<div role="status" class="animate-pulse">
-							<div class="h-40 bg-gray-200 dark:bg-gray-700 w-[200px] mb-4" />
+						<div
+							role="status"
+							class="flex w-full h-12 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+							<span class="sr-only">Loading...</span>
+						</div>
+					</td>
+					<td>
+						<div
+							role="status"
+							class="flex w-full h-12 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+							<span class="sr-only">Loading...</span>
 						</div>
 					</td>
 				</tr>
