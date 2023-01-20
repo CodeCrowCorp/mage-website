@@ -3,10 +3,11 @@
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
 	import { goto } from '$app/navigation'
 
-	export let title: string = ''
+	export let title: string = '',
+		channels = undefined
 
 	let ref: any
-	const channels = ['audio', 'video', 'video more', 'game']
+	$: channels = channels && channels.splice(0, 5)
 
 	const prev = () => {
 		if (ref) {
@@ -29,31 +30,42 @@
 
 <div class="flex flex-col my-4">
 	<div class="font-semibold my-3">{title || 'Channel Group'}</div>
-	<div class="flex flex-row">
-		<div class="relative flex items-center">
-			<div class="absolute bg-white rounded-full p-2 left-0 z-10 cursor-pointer" on:click={prev}>
-				<IconDrawerLeft />
-			</div>
-		</div>
-
-		<div
-			bind:this={ref}
-			class="item-content relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto flex-grow">
-			{#each channels as channel}
-				<div class="shrink-0 first:pl-8 last:pr-8 basis-[400px] rounded-md">
-					<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
-						{channel}
-					</div>
+	{#if channels && channels.length}
+		<div class="flex flex-row">
+			<div class="relative flex items-center">
+				<div class="absolute bg-white rounded-full p-2 left-0 z-10 cursor-pointer" on:click={prev}>
+					<IconDrawerLeft />
 				</div>
-			{/each}
-		</div>
+			</div>
 
-		<div class="relative flex items-center">
-			<div class="absolute bg-white rounded-full p-2 right-0 z-10 cursor-pointer" on:click={next}>
-				<IconDrawerChevron />
+			<div
+				bind:this={ref}
+				class="item-content relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto flex-grow">
+				{#each channels as channel}
+					<div class="shrink-0 first:pl-8 last:pr-8 basis-[400px] rounded-md">
+						<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
+							{channel.title}
+						</div>
+					</div>
+				{/each}
+			</div>
+
+			<div class="relative flex items-center">
+				<div class="absolute bg-white rounded-full p-2 right-0 z-10 cursor-pointer" on:click={next}>
+					<IconDrawerChevron />
+				</div>
 			</div>
 		</div>
-	</div>
+	{:else}
+		<div role="status" class="flex flex-row gap-6 animate-pulse">
+			<div class="h-64 bg-gray-200 dark:bg-gray-700 w-[400px] mb-4" />
+			<div class="h-64 bg-gray-200 dark:bg-gray-700 w-[400px] mb-4" />
+			<div class="h-64 bg-gray-200 dark:bg-gray-700 w-[400px] mb-4" />
+			<div class="h-64 bg-gray-200 dark:bg-gray-700 w-[400px] mb-4" />
+
+			<span class="sr-only">Loading...</span>
+		</div>
+	{/if}
 </div>
 
 <style>
