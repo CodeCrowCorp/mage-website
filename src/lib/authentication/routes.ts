@@ -1,4 +1,4 @@
-const user_contexts = ['*']
+const user_contexts = ['*', 'admin']
 const admin_contexts = ['admin']
 
 const routes = {
