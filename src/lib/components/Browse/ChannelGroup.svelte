@@ -42,9 +42,23 @@
 				bind:this={ref}
 				class="item-content relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto flex-grow">
 				{#each channels as channel}
-					<div class="shrink-0 first:pl-8 last:pr-8 basis-[400px] rounded-md">
-						<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
-							{channel.title}
+					<div class="flex flex-col shrink-0 first:pl-8 last:pr-8 basis-[400px] rounded-md">
+						<div class="">
+							<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
+								{channel.title}
+							</div>
+						</div>
+						<div class="flex flex-row gap-5">
+							<div class="avatar my-3">
+								<div class="w-9 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+									<img src={channel.avatar} alt="" />
+								</div>
+							</div>
+
+							<div class="">
+								<p class="text-lg font-semibold">{channel.title}</p>
+								<p class="text-sm text-gray-600 truncate max-w-[400px] ">{channel.description}</p>
+							</div>
 						</div>
 					</div>
 				{/each}
