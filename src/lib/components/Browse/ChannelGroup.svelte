@@ -46,7 +46,12 @@
 					<div class="flex flex-col shrink-0 first:pl-8 last:pr-8 basis-[400px] rounded-md">
 						<div class="relative">
 							<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
-								{channel.title}
+								{#if channel.thumbnail}
+									<div
+										class="video-thumbnail"
+										style="background-image: url({channel.thumbnail}); background-size: 100%" />
+								{/if}
+								{channel.thumbnail ? '' : channel.title}
 							</div>
 
 							<div class="absolute top-0 w-full h-full opacity-0 hover:opacity-100 cursor-pointer">
