@@ -5,7 +5,7 @@
 	import { goto } from '$app/navigation'
 
 	export let title: string = '',
-		channels = undefined
+		channels: any = undefined
 
 	let ref: any
 	$: channels = channels && channels.splice(0, 5)

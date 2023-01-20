@@ -20,4 +20,4 @@
 <ChannelSection title="Most active" bind:channels />
 <ChannelSection title="Top streamers" bind:channels />
 
-<ChannelList />
+<ChannelList bind:channels />
