@@ -25,8 +25,17 @@ export const handle: Handle = async ({ event, resolve }) => {
 			}
 		}
 
-		event.cookies.set('token', token)
-		event.cookies.set('userId', userId)
+		if (pathname === '/') {
+			event.cookies.set('token', token, {
+				path: '/',
+				maxAge: 60 * 60 * 24 * 30
+			})
+			event.cookies.set('userId', userId, {
+				path: '/',
+				maxAge: 60 * 60 * 24 * 30
+			})
+		}
+
 		event.locals.user = {
 			userId,
 			token,
@@ -34,7 +43,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 	}
 
-	const user_role = (user && user.isAdmin && 'admin') || '*'
+	let user_role = 'user'
+
+	if (user && user.isAdmin) {
+		user_role = 'admin'
+	}
 
 	if (Authenticate(pathname, user_role) || pathname === '/browse' || pathname === '/') {
 		return await resolve(event)
