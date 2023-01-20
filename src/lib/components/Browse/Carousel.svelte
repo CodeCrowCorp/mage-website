@@ -63,6 +63,7 @@
 </div> -->
 <div class="relative">
 	<!-- {#if showback} -->
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div
 		class="bg-white rounded-full p-3 absolute top-2/4 left-1 z-10 cursor-pointer"
 		on:click={prev}>
@@ -72,8 +73,8 @@
 	<div
 		bind:this={ref}
 		class="carousel-content relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto pt-14 flex-grow">
-		<div class="shrink-0 blank-width" />
 		{#if channels && channels.length}
+			<div class="shrink-0 blank-width" />
 			{#each channels as channel}
 				<div
 					class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[400px] md:basis-[600px] rounded-md">
@@ -82,35 +83,29 @@
 					</div>
 				</div>
 			{/each}
-		{/if}
-		<!-- <div
-			class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[400px] md:basis-[600px] rounded-md">
-			<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
-				Video Thumbnail 1
+			<div class="shrink-0 blank-width" />
+		{:else}
+			<div
+				role="status"
+				class="flex w-full max-w-lg h-80 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+				<span class="sr-only">Loading...</span>
 			</div>
-		</div>
-		<div
-			class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[400px] md:basis-[600px] rounded-md">
-			<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
-				Video Thumbnail 2
-			</div>
-		</div>
-		<div
-			class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[400px] md:basis-[600px] rounded-md">
-			<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
-				Video Thumbnail 3
-			</div>
-		</div>
-		<div
-			class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[400px] md:basis-[600px] rounded-md">
-			<div class="video-thumbnail" on:click|preventDefault={() => goto('/channel/1')}>
-				Video Thumbnail 4
-			</div>
-		</div> -->
 
-		<div class="shrink-0 blank-width" />
+			<div
+				role="status"
+				class="flex w-full max-w-lg h-80 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+				<span class="sr-only">Loading...</span>
+			</div>
+
+			<div
+				role="status"
+				class="flex w-full max-w-lg h-80 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+				<span class="sr-only">Loading...</span>
+			</div>
+		{/if}
 	</div>
 
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div class="bg-white rounded-full p-3 absolute top-2/4 right-1 cursor-pointer" on:click={next}>
 		<IconDrawerChevron />
 	</div>
