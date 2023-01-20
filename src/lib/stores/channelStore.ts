@@ -53,7 +53,7 @@ async function getChannel({ channelId }: { channelId: string }) {
 
 async function addChannelToUser({ channelId }: { channelId: string }) {
     return await fetch(`${env.PUBLIC_API_URL}/users/channels?channelId=${channelId}`, {
-        method: 'GET'
+        method: 'PUT'
     }).then(async response => {
         const res = await response.json()
         //TODO: update user in authStore
