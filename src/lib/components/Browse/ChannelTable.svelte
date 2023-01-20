@@ -25,8 +25,8 @@
 						<td>
 							<div class="flex items-center space-x-3">
 								<div class="avatar">
-									<div class="mask mask-squircle w-12 h-12">
-										<img src={channel.avater} alt="" />
+									<div class="w-12 rounded-full">
+										<img src={channel.avatar} alt="" />
 									</div>
 								</div>
 								<div>
@@ -69,6 +69,7 @@
 					</tr>
 				{/each}
 			{:else}
+				<!-- Skeleton Loader -->
 				<tr>
 					<td>
 						<div
@@ -107,102 +108,6 @@
 					</td>
 				</tr>
 			{/if}
-			<!-- row 2 -->
-			<!-- <tr class="cursor-pointer">
-				<td>
-					<div class="flex items-center space-x-3">
-						<div class="avatar">
-							<div class="mask mask-squircle w-12 h-12">
-								<img
-									src="https://placeimg.com/192/192/people"
-									alt="Avatar Tailwind CSS Component" />
-							</div>
-						</div>
-						<div>
-							<div class="font-bold">Brice Swyre</div>
-							<div class="text-sm opacity-50">China</div>
-						</div>
-					</div>
-				</td>
-				<td>
-					Carroll Group
-					<br />
-					<span class="badge badge-ghost badge-sm">Tax Accountant</span>
-				</td>
-				<td>
-					<button class="btn btn-ghost btn-xs">details</button>
-				</td>
-				<td>
-					<button class="btn btn-ghost btn-xs">details</button>
-				</td>
-				<td>
-					<button class="btn btn-ghost btn-xs">details</button>
-				</td>
-			</tr> -->
-			<!-- row 3 -->
-			<!-- <tr class="cursor-pointer">
-				<td>
-					<div class="flex items-center space-x-3">
-						<div class="avatar">
-							<div class="mask mask-squircle w-12 h-12">
-								<img
-									src="https://placeimg.com/192/192/people"
-									alt="Avatar Tailwind CSS Component" />
-							</div>
-						</div>
-						<div>
-							<div class="font-bold">Marjy Ferencz</div>
-							<div class="text-sm opacity-50">Russia</div>
-						</div>
-					</div>
-				</td>
-				<td>
-					Rowe-Schoen
-					<br />
-					<span class="badge badge-ghost badge-sm">Office Assistant I</span>
-				</td>
-				<td>
-					<button class="btn btn-ghost btn-xs">details</button>
-				</td>
-				<td>
-					<button class="btn btn-ghost btn-xs">details</button>
-				</td>
-				<td>
-					<button class="btn btn-ghost btn-xs">details</button>
-				</td>
-			</tr> -->
-			<!-- row 4 -->
-			<!-- <tr class="cursor-pointer">
-				<td>
-					<div class="flex items-center space-x-3">
-						<div class="avatar">
-							<div class="mask mask-squircle w-12 h-12">
-								<img
-									src="https://placeimg.com/192/192/people"
-									alt="Avatar Tailwind CSS Component" />
-							</div>
-						</div>
-						<div>
-							<div class="font-bold">Yancy Tear</div>
-							<div class="text-sm opacity-50">Brazil</div>
-						</div>
-					</div>
-				</td>
-				<td>
-					Wyman-Ledner
-					<br />
-					<span class="badge badge-primary badge-md">Community Outreach Specialist</span>
-				</td>
-				<td>
-					<button class="btn btn-ghost btn-xs">details</button>
-				</td>
-				<td>
-					<button class="btn btn-ghost btn-xs">details</button>
-				</td>
-				<td>
-					<button class="btn btn-ghost btn-xs">details</button>
-				</td>
-			</tr> -->
 		</tbody>
 		<!-- foot -->
 		<tfoot>
