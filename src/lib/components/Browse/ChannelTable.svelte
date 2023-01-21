@@ -91,7 +91,7 @@
 									</div>
 								</div>
 								<div>
-									<div class="font-bold">{channel.createdBy}</div>
+									<div class="font-bold">{channel.createdBy || ''}</div>
 									<div class="text-sm text-pink-500">@GaganSuie</div>
 								</div>
 							</div>
