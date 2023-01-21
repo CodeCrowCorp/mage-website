@@ -7,6 +7,7 @@
 	import { navigating } from '$app/stores'
 	import { currentUser } from '$lib/stores/authStore'
 	import { login_modal } from '$lib/stores/helperStore'
+	import { env } from '$env/dynamic/public'
 
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
@@ -141,6 +142,7 @@
 						Browse
 					</a>
 				</li>
+				{#if $currentUser}
 				<li>
 					<a href="">
 						<IconDrawerCommunity />
@@ -155,6 +157,7 @@
 						<IconDrawerChevron />
 					</a>
 				</li>
+				{/if}
 				<!-- <li>
 					<a href="/videos">
 						<IconDrawerVideos />
@@ -205,11 +208,13 @@
 						</ul>
 					</div>
 				</li>
+				{#if $currentUser}
 				<li>
 					<a href="/settings">
 						<IconDrawerSettings />
 						Settings</a>
 				</li>
+				{/if}
 				{#if $currentUser}
 					<li>
 						<button on:click={logout}>
@@ -251,7 +256,7 @@
 					</a>
 				</div>
 				<p>Code Crow Corp © 2023</p>
-				<p class="text-gray-500">v0.0.1 [beta]</p>
+				<p class="text-gray-500">v{__VERSION__} [{env.PUBLIC_ENV}]</p>
 			</footer>
 		</div>
 	</div>

@@ -65,7 +65,7 @@
 	<!-- {#if showback} -->
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div
-		class="bg-white rounded-full p-3 absolute top-2/4 left-1 z-10 cursor-pointer"
+		class="bg-base-200 rounded-full p-3 absolute top-2/4 left-1 z-10 cursor-pointer"
 		on:click={prev}>
 		<IconDrawerLeft />
 	</div>
@@ -118,7 +118,7 @@
 	</div>
 
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<div class="bg-white rounded-full p-3 absolute top-2/4 right-1 cursor-pointer" on:click={next}>
+	<div class="bg-base-200 rounded-full p-3 absolute top-2/4 right-1 cursor-pointer" on:click={next}>
 		<IconDrawerChevron />
 	</div>
 </div>
