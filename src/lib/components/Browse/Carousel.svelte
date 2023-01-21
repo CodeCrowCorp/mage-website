@@ -76,8 +76,7 @@
 		{#if channels && channels.length}
 			<div class="shrink-0 blank-width" />
 			{#each channels as channel}
-				<div
-					class="snap-center shrink-0 first:pl-8 last:pr-8 basis-[400px] md:basis-[600px] rounded-md">
+				<div class="snap-center shrink-0 first:pl-8 last:pr-8 w-[400px] md:w-[600px] rounded-md">
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<div
 						class="video-thumbnail"
@@ -88,9 +87,9 @@
 									<img src={channel.avatar} alt="" />
 								</div>
 							</div>
-							<div class="mt-2 ml-2">
+							<div class="mt-2 ml-2 w-80">
 								<p class="text-2xl font-semibold">{channel.title}</p>
-								<p class="">{channel.description}</p>
+								<p class="truncate">{channel.description}</p>
 							</div>
 						</div>
 					</div>

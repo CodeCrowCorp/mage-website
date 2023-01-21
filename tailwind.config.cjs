@@ -1,8 +1,5 @@
 module.exports = {
-	content: [
-		'./src/**/*.{html,js,svelte,ts}',
-		'./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}'
-	],
+	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		extend: {
 			backgroundImage: {
@@ -27,7 +24,6 @@ module.exports = {
 		require('@tailwindcss/typography'),
 		require('daisyui'),
 		require('tailwind-scrollbar')({ nocompatible: true }),
-		require('tailwind-clip-path'),
-		require('flowbite/plugin')
+		require('tailwind-clip-path')
 	]
 }
