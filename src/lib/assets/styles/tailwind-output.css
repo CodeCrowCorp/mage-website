@@ -2923,6 +2923,9 @@ html {
 .pointer-events-none {
   pointer-events: none;
 }
+.invisible {
+  visibility: hidden;
+}
 .absolute {
   position: absolute;
 }
@@ -3036,6 +3039,9 @@ html {
 }
 .mt-10 {
   margin-top: 2.5rem;
+}
+.mr-2 {
+  margin-right: 0.5rem;
 }
 .block {
   display: block;
@@ -3157,6 +3163,9 @@ html {
 }
 .w-\[600px\] {
   width: 600px;
+}
+.w-\[300px\] {
+  width: 300px;
 }
 .min-w-0 {
   min-width: 0px;
@@ -3504,6 +3513,9 @@ html {
 }
 .pt-8 {
   padding-top: 2rem;
+}
+.pr-2 {
+  padding-right: 0.5rem;
 }
 .text-left {
   text-align: left;
@@ -3867,8 +3879,20 @@ html {
 
 @media (min-width: 768px) {
 
+  .md\:visible {
+    visibility: visible;
+  }
+
+  .md\:block {
+    display: block;
+  }
+
   .md\:w-\[600px\] {
     width: 600px;
+  }
+
+  .md\:w-\[400px\] {
+    width: 400px;
   }
 
   .md\:basis-\[600px\] {

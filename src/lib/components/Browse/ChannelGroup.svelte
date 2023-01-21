@@ -43,7 +43,8 @@
 				bind:this={ref}
 				class="item-content relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto flex-grow">
 				{#each channels as channel}
-					<div class="flex flex-col shrink-0 first:pl-8 last:pr-8 basis-[400px] rounded-md">
+					<div
+						class="flex flex-col shrink-0 first:pl-8 last:pr-8 w-[300px] md:w-[400px] rounded-md">
 						<div class="relative">
 							<!-- svelte-ignore a11y-click-events-have-key-events -->
 							<div
@@ -70,7 +71,7 @@
 								</div>
 							</div>
 
-							<div class="truncate">
+							<div class="truncate mr-2">
 								<p class="text-lg font-semibold">{channel.title}</p>
 								<p class="text-sm text-gray-600">{channel.description}</p>
 							</div>
@@ -89,8 +90,8 @@
 		<div role="status" class="flex flex-row gap-6 animate-pulse">
 			<div class="h-64 bg-gray-200 dark:bg-gray-700 w-[400px] mb-4" />
 			<div class="h-64 bg-gray-200 dark:bg-gray-700 w-[400px] mb-4" />
-			<div class="h-64 bg-gray-200 dark:bg-gray-700 w-[400px] mb-4" />
-			<div class="h-64 bg-gray-200 dark:bg-gray-700 w-[400px] mb-4" />
+			<div class="h-64 bg-gray-200 hidden md:block dark:bg-gray-700 w-[400px] mb-4" />
+			<div class="h-64 bg-gray-200 hidden md:block dark:bg-gray-700 w-[400px] mb-4" />
 
 			<span class="sr-only">Loading...</span>
 		</div>

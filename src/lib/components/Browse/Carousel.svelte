@@ -99,19 +99,19 @@
 		{:else}
 			<div
 				role="status"
-				class="flex w-full max-w-lg h-80 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+				class="w-full max-w-lg h-80 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
 				<span class="sr-only">Loading...</span>
 			</div>
 
 			<div
 				role="status"
-				class="flex w-full max-w-lg h-80 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+				class="w-full max-w-lg h-80 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
 				<span class="sr-only">Loading...</span>
 			</div>
 
 			<div
 				role="status"
-				class="flex w-full max-w-lg h-80 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+				class="hidden md:block w-full max-w-lg h-80 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
 				<span class="sr-only">Loading...</span>
 			</div>
 		{/if}
