@@ -5,8 +5,7 @@
 
 	export let channels: any = undefined
 
-	$: channels =
-		channels && channels.length && channels.filter((channel: any) => channel.isPrivate == true)
+	$: channels = undefined
 </script>
 
 <!-- <div class="flex flex-col table-zebra">
@@ -124,7 +123,7 @@
 								<img src="/category/games/call-of-duty-black-ops-4.svg" />
 								<img src="/category/games/fortnite.svg" />
 								<img src="/category/games/overwatch.svg" />
-								<!-- <img src="/category/games/valorant.svg" /> -->
+								<img src="/category/games/valorant.svg" />
 							</div>
 						</td>
 					</tr>
