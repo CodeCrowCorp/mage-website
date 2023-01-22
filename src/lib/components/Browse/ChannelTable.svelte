@@ -4,6 +4,9 @@
 	import VirtualList from '@sveltejs/svelte-virtual-list'
 
 	export let channels: any = undefined
+
+	$: channels =
+		channels && channels.length && channels.filter((channel: any) => channel.isPrivate == true)
 </script>
 
 <!-- <div class="flex flex-col table-zebra">
@@ -65,8 +68,8 @@
 	{/if}
 </div> -->
 
-<div class="overflow-x-auto w-full">
-	<table class="table table-zebra w-full">
+<div class="w-full">
+	<table class="table table-auto table-zebra w-full">
 		<thead>
 			<tr>
 				<th>Host</th>
@@ -81,14 +84,14 @@
 				{#each channels as channel}
 					<tr class="cursor-pointer">
 						<td>
-							<div class="flex items-center space-x-3">
+							<div class="flex items-center space-x-2">
 								<div class="avatar">
 									<div class="w-12 rounded-full">
 										<img src={channel.avatar} alt="" />
 									</div>
 								</div>
 								<div>
-									<div class="font-bold">{channel.createdBy}</div>
+									<div class="font-bold">{channel.createdBy || ''}</div>
 									<div class="text-sm text-pink-500">@GaganSuie</div>
 								</div>
 							</div>
@@ -100,13 +103,15 @@
 						</td>
 						<td>
 							<div class="flex gap-2">
-								<IconLock />
+								{#if channel.isPrivate}
+									<IconLock />
+								{/if}
 								<IconViewers />
-								<span>205</span>
+								<span>{channel.memberCount || ''}</span>
 							</div>
 						</td>
 						<td>
-							<div class="flex flex-wrap gap-2 max-w-fit">
+							<div class="flex flex-wrap gap-2">
 								{#if channel.tags && channel.tags.length}
 									{#each channel.tags as tag}
 										<div><span class="badge badge-primary badge-md">{tag}</span></div>
@@ -115,11 +120,11 @@
 							</div>
 						</td>
 						<td>
-							<div class="flex">
+							<div class="flex flex-wrap">
 								<img src="/category/games/call-of-duty-black-ops-4.svg" />
 								<img src="/category/games/fortnite.svg" />
 								<img src="/category/games/overwatch.svg" />
-								<img src="/category/games/valorant.svg" />
+								<!-- <img src="/category/games/valorant.svg" /> -->
 							</div>
 						</td>
 					</tr>
