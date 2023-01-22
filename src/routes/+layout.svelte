@@ -4,7 +4,7 @@
 	import NProgress from 'nprogress'
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
-	import { getJWT, getUserId, me, setJWT, setUserId, currentUser } from '$lib/stores/authStore'
+	import { getJWT, getUserId, me, setJWT, setUserId, currentUser, logout } from '$lib/stores/authStore'
 
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
@@ -67,9 +67,6 @@
 		}
 	}
 
-	function logout() {
-		logout()
-	}
 </script>
 
 <svelte:head>

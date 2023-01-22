@@ -6,16 +6,15 @@
 	import { env } from '$env/dynamic/public'
 
 	async function getHref(provider: string) {
-		return await fetch(`${env.PUBLIC_API_URL}/auth/${provider}`, {
+		
+		const response = await fetch(`${env.PUBLIC_API_URL}/auth/${provider}`, {
 			headers: {
 				Accept: '*/*',
 				'x-api-key': env.PUBLIC_X_API_KEY
 			}
-		}).then(async (response) => {
-			console.log(response)
-			window.open(response.url)
-			return response.url
 		})
+		const {loginUrl} = await response.json()
+		window.location.replace(loginUrl)
 	}
 </script>
 

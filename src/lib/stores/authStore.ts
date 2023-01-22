@@ -36,7 +36,7 @@ function setUser({ user }: { user: any }) {
 
 async function me() {
     const jwt = window.localStorage.getItem('jwt')
-    const userId = window.localStorage.getItem('jwt')
+    const userId = window.localStorage.getItem('userId')
     if (jwt === null || userId === null) {
         logout(); return null
     } else {
