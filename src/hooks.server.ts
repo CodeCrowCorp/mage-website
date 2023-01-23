@@ -1,7 +1,8 @@
 import { redirect } from '@sveltejs/kit'
 import { getUserDetails } from '$lib/stores/authStore'
 import { Authenticate } from '$lib/authentication/authentication'
-import type { Handle } from '@sveltejs/kit'
+import type { Handle, HandleFetch } from '@sveltejs/kit'
+import { env } from '$env/dynamic/public'
 
 export const handle: Handle = async ({ event, resolve }) => {
     const pathname = event.url.pathname
@@ -61,6 +62,26 @@ export function handleError({ error }: { error: any }) {
         message: 'Whoops something wrong!'
     }
 }
+
+//TODO: fix global handleFetch
+// export const handleFetch: HandleFetch = async ({ request, fetch }) => {
+//     let headers: any = {}
+//     if (request.url.startsWith(env.PUBLIC_API_URL)) {
+//         if (env.PUBLIC_CROSS_ORIGIN === 'false') {
+//             headers = {
+//                 authorization: request.locals.user.token,
+//                 userId: request.locals.user.userId,
+//             }
+//         } else {
+//             headers = {
+//                 'x-api-key': env.PUBLIC_API_KEY,
+//                 userId: request.locals.user.userId,
+//             }
+//         }
+//     }
+//     return fetch(request, headers)
+// }
+
 
 // const isAdminPage = /^\/admin\/(.*)/.test(route.id)
 // const isProfilePage = /^\/profile\/(.*)/.test(route.id)
