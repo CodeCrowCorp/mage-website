@@ -4,62 +4,62 @@ import { Authenticate } from '$lib/authentication/authentication'
 import type { Handle } from '@sveltejs/kit'
 
 export const handle: Handle = async ({ event, resolve }) => {
-	const pathname = event.url.pathname
-	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
-	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
-	let user
+    const pathname = event.url.pathname
+    const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
+    let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
+    let user
 
-	if (event.locals && event.locals.user) {
-		user = event.locals.user.user
-	}
+    if (event.locals && event.locals.user) {
+        user = event.locals.user.user
+    }
 
-	if (token && userId) {
-		if (!user) {
-			const response = await getUserDetails(token, userId)
-			if (response) {
-				if (response.freshJwt) {
-					token = response.freshJwt
-				}
-				user = response
-				user.isAdmin = true
-			}
-		}
+    if (token && userId) {
+        if (!user) {
+            const response = await getUserDetails(token, userId)
+            if (response) {
+                if (response.freshJwt) {
+                    token = response.freshJwt
+                }
+                user = response
+                user.isAdmin = true
+            }
+        }
 
-		if (pathname === '/') {
-			event.cookies.set('token', token, {
-				path: '/',
-				maxAge: 60 * 60 * 24 * 30
-			})
-			event.cookies.set('userId', userId, {
-				path: '/',
-				maxAge: 60 * 60 * 24 * 30
-			})
-		}
+        if (pathname === '/') {
+            event.cookies.set('token', token, {
+                path: '/',
+                maxAge: 60 * 60 * 24 * 30
+            })
+            event.cookies.set('userId', userId, {
+                path: '/',
+                maxAge: 60 * 60 * 24 * 30
+            })
+        }
 
-		event.locals.user = {
-			userId,
-			token,
-			user
-		}
-	}
+        event.locals.user = {
+            userId,
+            token,
+            user
+        }
+    }
 
-	let user_role = 'user'
+    let user_role = 'user'
 
-	if (user && user.isAdmin) {
-		user_role = 'admin'
-	}
+    if (user && user.isAdmin) {
+        user_role = 'admin'
+    }
 
-	if (Authenticate(pathname, user_role) || pathname === '/browse' || pathname === '/') {
-		return await resolve(event)
-	}
-	throw redirect(302, '/browse')
+    if (Authenticate({ pathname, user_role }) || pathname === '/browse' || pathname === '/') {
+        return await resolve(event)
+    }
+    throw redirect(302, '/browse')
 }
 
-export function handleError({ error }) {
-	console.log('error', error)
-	return {
-		message: 'Whoops something wrong!'
-	}
+export function handleError({ error }: { error: any }) {
+    console.log('error', error)
+    return {
+        message: 'Whoops something wrong!'
+    }
 }
 
 // const isAdminPage = /^\/admin\/(.*)/.test(route.id)
