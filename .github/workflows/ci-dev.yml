@@ -96,4 +96,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages publish ".svelte-kit/cloudflare" --project-name=mage-website
+          command: pages publish ".svelte-kit/cloudflare" --branch=dev --project-name=mage-website
