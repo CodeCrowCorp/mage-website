@@ -114,9 +114,9 @@ async function initRoomMembers() {
     //         channelStore.currentChannel._id,
     //         `${channelStore.currentChannel.title}-${channelStore.currentChannel.user}`
     //     )
-    //     await channelStore.updateIsStreaming({
+    //     await channelStore.updateisLive({
     //         channelId: channelStore.currentChannel._id,
-    //         isStreaming: true
+    //         isLive: true
     //     })
     // }
 }
@@ -289,9 +289,9 @@ function disconnected() {
     // })
     // if (authService.currentUser && channelStore.currentChannel.user == authService.currentUser._id) {
     //     updateLiveStream()
-    //     channelStore.updateIsStreaming({
+    //     channelStore.updateisLive({
     //         channelId: channelStore.currentChannel._id,
-    //         isStreaming: false
+    //         isLive: false
     //     })
     // }
 }

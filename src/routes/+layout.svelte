@@ -2,10 +2,12 @@
 	import '$lib/assets/styles/tailwind-output.css'
 	// @ts-ignore
 	import NProgress from 'nprogress'
+	import { goto } from '$app/navigation'
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
 	import { currentUser } from '$lib/stores/authStore'
 	import { login_modal } from '$lib/stores/helperStore'
+	import { env } from '$env/dynamic/public'
 
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
@@ -59,6 +61,13 @@
 				$currentUser = data.user.user
 			}
 		}
+	}
+
+	function logout() {
+		setTimeout(() => {
+			$currentUser = null
+		}, 500)
+		goto('/logout')
 	}
 </script>
 
@@ -133,6 +142,7 @@
 						Browse
 					</a>
 				</li>
+				{#if $currentUser}
 				<li>
 					<a href="">
 						<IconDrawerCommunity />
@@ -147,6 +157,7 @@
 						<IconDrawerChevron />
 					</a>
 				</li>
+				{/if}
 				<!-- <li>
 					<a href="/videos">
 						<IconDrawerVideos />
@@ -168,12 +179,14 @@
 						Mint <span class="badge">New</span>
 					</a>
 				</li>
-				<li>
-					<a href="/premium" class="text-pink-500">
-						<IconDrawerPremium />
-						Premium <span class="badge">New</span>
-					</a>
-				</li>
+				{#if $currentUser}
+					<li>
+						<a href="/premium" class="text-pink-500">
+							<IconDrawerPremium />
+							Premium <span class="badge">New</span>
+						</a>
+					</li>
+				{/if}
 				<li>
 					<a href="/careers">
 						<IconDrawerCareers />
@@ -195,14 +208,16 @@
 						</ul>
 					</div>
 				</li>
+				{#if $currentUser}
 				<li>
 					<a href="/settings">
 						<IconDrawerSettings />
 						Settings</a>
 				</li>
+				{/if}
 				{#if $currentUser}
 					<li>
-						<button>
+						<button on:click={logout}>
 							<IconDrawerLogOut />
 							Log Out</button>
 					</li>
@@ -241,7 +256,7 @@
 					</a>
 				</div>
 				<p>Code Crow Corp © 2023</p>
-				<p class="text-gray-500">v0.0.1 [beta]</p>
+				<p class="text-gray-500">v{__VERSION__} [{env.PUBLIC_ENV}]</p>
 			</footer>
 		</div>
 	</div>

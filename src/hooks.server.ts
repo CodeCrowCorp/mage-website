@@ -1,17 +1,17 @@
+import { redirect } from '@sveltejs/kit'
 import { getUserDetails } from '$lib/stores/authStore'
-import type { Handle } from '@sveltejs/kit'
+import { Authenticate } from '$lib/authentication/authentication'
+import type { Handle, HandleFetch } from '@sveltejs/kit'
+import { env } from '$env/dynamic/public'
 
 export const handle: Handle = async ({ event, resolve }) => {
+    const pathname = event.url.pathname
     const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
     let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
     let user
 
     if (event.locals && event.locals.user) {
         user = event.locals.user.user
-    }
-
-    if (!token || !userId) {
-        return await resolve(event)
     }
 
     if (token && userId) {
@@ -22,11 +22,21 @@ export const handle: Handle = async ({ event, resolve }) => {
                     token = response.freshJwt
                 }
                 user = response
+                user.isAdmin = true
             }
         }
 
-        event.cookies.set('token', token)
-        event.cookies.set('userId', userId)
+        if (pathname === '/') {
+            event.cookies.set('token', token, {
+                path: '/',
+                maxAge: 60 * 60 * 24 * 30
+            })
+            event.cookies.set('userId', userId, {
+                path: '/',
+                maxAge: 60 * 60 * 24 * 30
+            })
+        }
+
         event.locals.user = {
             userId,
             token,
@@ -34,8 +44,44 @@ export const handle: Handle = async ({ event, resolve }) => {
         }
     }
 
-    return await resolve(event)
+    let user_role = 'user'
+
+    if (user && user.isAdmin) {
+        user_role = 'admin'
+    }
+
+    if (Authenticate({ pathname, user_role }) || pathname === '/browse' || pathname === '/') {
+        return await resolve(event)
+    }
+    throw redirect(302, '/browse')
 }
+
+export function handleError({ error }: { error: any }) {
+    console.log('error', error)
+    return {
+        message: 'Whoops something wrong!'
+    }
+}
+
+//TODO: fix global handleFetch
+// export const handleFetch: HandleFetch = async ({ request, fetch }) => {
+//     let headers: any = {}
+//     if (request.url.startsWith(env.PUBLIC_API_URL)) {
+//         if (env.PUBLIC_CROSS_ORIGIN === 'false') {
+//             headers = {
+//                 authorization: request.locals.user.token,
+//                 userId: request.locals.user.userId,
+//             }
+//         } else {
+//             headers = {
+//                 'x-api-key': env.PUBLIC_API_KEY,
+//                 userId: request.locals.user.userId,
+//             }
+//         }
+//     }
+//     return fetch(request, headers)
+// }
+
 
 // const isAdminPage = /^\/admin\/(.*)/.test(route.id)
 // const isProfilePage = /^\/profile\/(.*)/.test(route.id)
