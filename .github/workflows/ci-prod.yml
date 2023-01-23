@@ -45,6 +45,7 @@ jobs:
           PUBLIC_WEBSOCKET_URL: ${{ secrets.PUBLIC_WEBSOCKET_URL }}
           PUBLIC_X_API_KEY: ${{ secrets.PUBLIC_X_API_KEY }}
           PUBLIC_CROSS_ORIGIN: ${{ secrets.PUBLIC_CROSS_ORIGIN }}
+          PUBLIC_ENV: ${{ secrets.PUBLIC_ENV }}
 
       - name: Convert E2E Report to Coverage Report
         run: |
@@ -92,6 +93,7 @@ jobs:
           PUBLIC_WEBSOCKET_URL: ${{ secrets.PUBLIC_WEBSOCKET_URL }}
           PUBLIC_X_API_KEY: ${{ secrets.PUBLIC_X_API_KEY }}
           PUBLIC_CROSS_ORIGIN: ${{ secrets.PUBLIC_CROSS_ORIGIN }}
+          PUBLIC_ENV: ${{ secrets.PUBLIC_ENV }}
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
