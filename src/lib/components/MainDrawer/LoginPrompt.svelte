@@ -4,25 +4,38 @@
 	import IconSocialGitHubInverse from '$lib/assets/icons/social/IconSocialGitHubInverse.svelte'
 	// import { getGitHubUrl, getDiscordUrl, getGoogleUrl } from '$lib/utils/authUrl'
 	import { env } from '$env/dynamic/public'
+	import { login_modal } from '$lib/stores/helperStore'
 
 	async function getHref(provider: string) {
 		
 		const response = await fetch(`${env.PUBLIC_API_URL}/auth/${provider}`, {
 			headers: {
-				Accept: '*/*',
 				'x-api-key': env.PUBLIC_X_API_KEY
 			}
+<<<<<<< HEAD:src/lib/components/Browse/LoginPrompt.svelte
+=======
+		}).then(async (response) => {
+			console.log(response)
+			window.location.href = response.url
+>>>>>>> d8cfda9ab86f9d8e0f31f66680c230fca68bdb3f:src/lib/components/MainDrawer/LoginPrompt.svelte
 		})
 		const {loginUrl} = await response.json()
 		window.location.replace(loginUrl)
 	}
 </script>
 
-<!-- Fix to close on click away -->
-<!-- <input type="checkbox" id="login-prompt" class="modal-toggle" /> -->
-<div id="login-prompt-modal" class="modal cursor-pointer">
-	<label class="modal-box relative" for="">
-		<div class="py-4 space-y-5 px-10">
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<div
+	class="modal cursor-pointer {$login_modal ? 'modal-open' : ''}"
+	on:click={() => {
+		$login_modal = false
+	}}>
+	<div
+		class="modal-box relative"
+		on:click={(e) => {
+			e.stopPropagation()
+		}}>
+		<div class="py-4 space-y-5 px-4 md:px-10">
 			{#if env.PUBLIC_CROSS_ORIGIN === 'false'}
 				<a class="btn w-full btn-primary gap-4" href="{env.PUBLIC_API_URL}/auth/discord">
 					<IconSocialDiscordInverse />
@@ -51,5 +64,5 @@
 				<a class="link link-info" href="/legal">all of our policies </a>
 			</p>
 		</div>
-	</label>
+	</div>
 </div>
