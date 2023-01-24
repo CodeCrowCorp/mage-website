@@ -19,5 +19,6 @@
 <ChannelSection title="Daily category" bind:channels />
 <ChannelSection title="Most active" bind:channels />
 <ChannelSection title="Top streamers" bind:channels />
+<ChannelSection title="Rising stars" bind:channels />
 
 <ChannelList bind:channels />

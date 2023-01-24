@@ -10,15 +10,11 @@
 		
 		const response = await fetch(`${env.PUBLIC_API_URL}/auth/${provider}`, {
 			headers: {
+				Accept: '*/*',
 				'x-api-key': env.PUBLIC_X_API_KEY
 			}
-<<<<<<< HEAD:src/lib/components/Browse/LoginPrompt.svelte
-=======
-		}).then(async (response) => {
-			console.log(response)
-			window.location.href = response.url
->>>>>>> d8cfda9ab86f9d8e0f31f66680c230fca68bdb3f:src/lib/components/MainDrawer/LoginPrompt.svelte
-		})
+		}
+		)
 		const {loginUrl} = await response.json()
 		window.location.replace(loginUrl)
 	}

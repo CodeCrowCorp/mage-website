@@ -3,7 +3,7 @@
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
 </script>
 
-<div class="flex gap-4 py-5 pl-5">
+<div class="flex flex-col md:flex-row gap-4 py-5 pl-5">
 	<div class="form-control">
 		<div class="input-group">
 			<input
@@ -16,7 +16,9 @@
 		</div>
 	</div>
 
-	<button class="btn btn-wide btn-primary gap-2">
-		<IconCreate />
-		Create a channel</button>
+	<div class="form-control">
+		<button class="btn w-[21rem] btn-primary gap-2">
+			<IconCreate />
+			Create a channel</button>
+	</div>
 </div>

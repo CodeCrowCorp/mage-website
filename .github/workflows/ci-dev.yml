@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18.12.1
+          node-version: 18
 
       - name: Install Dependencies
         run: |
@@ -41,6 +41,7 @@ jobs:
           PUBLIC_WEBSOCKET_URL: ${{ secrets.PUBLIC_WEBSOCKET_URL }}
           PUBLIC_X_API_KEY: ${{ secrets.PUBLIC_X_API_KEY }}
           PUBLIC_CROSS_ORIGIN: ${{ secrets.PUBLIC_CROSS_ORIGIN }}
+          PUBLIC_ENV: ${{ secrets.PUBLIC_ENV }}
 
       - name: Convert E2E Report to Coverage Report
         run: |
@@ -79,7 +80,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18.12.1
+          node-version: 18
 
       - name: Install NPM and build
         run: npm install && npm run build
@@ -88,10 +89,11 @@ jobs:
           PUBLIC_WEBSOCKET_URL: ${{ secrets.PUBLIC_WEBSOCKET_URL }}
           PUBLIC_X_API_KEY: ${{ secrets.PUBLIC_X_API_KEY }}
           PUBLIC_CROSS_ORIGIN: ${{ secrets.PUBLIC_CROSS_ORIGIN }}
+          PUBLIC_ENV: ${{ secrets.PUBLIC_ENV }}
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages publish ".svelte-kit/cloudflare" --project-name=mage-website
+          command: pages publish ".svelte-kit/cloudflare" --branch=dev --project-name=mage-website
