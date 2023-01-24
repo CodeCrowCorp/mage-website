@@ -1,41 +1,41 @@
-const user_contexts = ['user', 'admin']
-const admin_contexts = ['admin']
+const USER_COTEXT = 'user'
+const ADMIN_COTEXT = 'admin'
 
 const routes: any = {
-    admin: [
-        { path: '/admins', access: admin_contexts },
-        { path: '/channels', access: admin_contexts },
-        { path: '/fun-facts', access: admin_contexts },
-        { path: '/fun-facts', access: admin_contexts },
-        { path: '/legal', access: admin_contexts },
-        { path: '/settings', access: admin_contexts },
-        { path: '/users', access: admin_contexts }
-    ],
-    browse: [
-        { path: '/', access: user_contexts },
-        { path: '/(.*)/$', access: user_contexts }
-    ],
-    channel: [
-        { path: '/', access: user_contexts },
-        { path: '/(.*)/$', access: user_contexts }
-    ],
-    profile: [
-        { path: '/', access: admin_contexts },
-        { path: '/(.*)/$', access: admin_contexts }
-    ],
-    search: [
-        { path: '/', access: user_contexts },
-        { path: '/(.*)/', access: user_contexts }
-    ],
-    maintenance: [{ path: '/', access: user_contexts }],
-    settings: [{ path: '/', access: user_contexts }],
-    premium: [{ path: '/', access: admin_contexts }],
-    careers: [{ path: '/', access: user_contexts }],
-    contact: [{ path: '/', access: user_contexts }],
-    videos: [{ path: '/', access: user_contexts }],
-    legal: [{ path: '/', access: user_contexts }],
-    logout: [{ path: '/', access: admin_contexts }],
-    'creator-space': [{ path: '/', access: user_contexts }]
+	admin: [
+		{ path: '/admins', access: [ADMIN_COTEXT] },
+		{ path: '/channels', access: [ADMIN_COTEXT] },
+		{ path: '/fun-facts', access: [ADMIN_COTEXT] },
+		{ path: '/fun-facts', access: [ADMIN_COTEXT] },
+		{ path: '/legal', access: [ADMIN_COTEXT] },
+		{ path: '/settings', access: [ADMIN_COTEXT] },
+		{ path: '/users', access: [ADMIN_COTEXT] }
+	],
+	browse: [
+		{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] },
+		{ path: '/(.*)/$', access: [USER_COTEXT, ADMIN_COTEXT] }
+	],
+	channel: [
+		{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] },
+		{ path: '/(.*)/$', access: [USER_COTEXT, ADMIN_COTEXT] }
+	],
+	profile: [
+		{ path: '/', access: [ADMIN_COTEXT] },
+		{ path: '/(.*)/$', access: [ADMIN_COTEXT] }
+	],
+	search: [
+		{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] },
+		{ path: '/(.*)/', access: [USER_COTEXT, ADMIN_COTEXT] }
+	],
+	maintenance: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
+	settings: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
+	premium: [{ path: '/', access: [ADMIN_COTEXT] }],
+	careers: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
+	contact: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
+	videos: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
+	legal: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
+	logout: [{ path: '/', access: [ADMIN_COTEXT] }],
+	'creator-space': [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }]
 }
 
 export default routes

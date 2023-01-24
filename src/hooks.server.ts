@@ -1,87 +1,108 @@
 import { redirect } from '@sveltejs/kit'
 import { getUserDetails } from '$lib/stores/authStore'
+import { getUserRole, getRoles } from '$lib/stores/adminStore'
 import { Authenticate } from '$lib/authentication/authentication'
 import type { Handle, HandleFetch } from '@sveltejs/kit'
 import { env } from '$env/dynamic/public'
 
 export const handle: Handle = async ({ event, resolve }) => {
-    const pathname = event.url.pathname
-    const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
-    let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
-    let user
+	const pathname = event.url.pathname
+	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
+	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
+	let user
 
-    if (event.locals && event.locals.user) {
-        user = event.locals.user.user
-    }
+	if (event.locals && event.locals.user) {
+		user = event.locals.user.user
+	}
 
-    if (token && userId) {
-        if (!user) {
-            const response = await getUserDetails(token, userId)
-            if (response) {
-                if (response.freshJwt) {
-                    token = response.freshJwt
-                }
-                user = response
-                user.isAdmin = true
-            }
-        }
+	if (token && userId) {
+		if (!user) {
+			const response = await getUserDetails(token, userId)
+			if (response) {
+				if (response.freshJwt) {
+					token = response.freshJwt
+				}
+				user = response
+				user.isAdmin = true
+			}
+		}
 
-        if (pathname === '/') {
-            event.cookies.set('token', token, {
-                path: '/',
-                maxAge: 60 * 60 * 24 * 30
-            })
-            event.cookies.set('userId', userId, {
-                path: '/',
-                maxAge: 60 * 60 * 24 * 30
-            })
-        }
+		if (pathname === '/') {
+			event.cookies.set('token', token, {
+				path: '/',
+				maxAge: 60 * 60 * 24 * 30
+			})
+			event.cookies.set('userId', userId, {
+				path: '/',
+				maxAge: 60 * 60 * 24 * 30
+			})
+		}
 
-        event.locals.user = {
-            userId,
-            token,
-            user
-        }
-    }
+		event.locals.user = {
+			userId,
+			token,
+			user
+		}
+	}
 
-    let user_role = 'user'
+	let user_role = 'user'
 
-    if (user && user.isAdmin) {
-        user_role = 'admin'
-    }
+	if (user) {
+		try {
+			const headers = {
+				userId: userId
+			}
+			if (env.PUBLIC_CROSS_ORIGIN === 'false') {
+				headers['authorization'] = token
+			} else {
+				headers['x-api-key'] = env.PUBLIC_API_KEY
+			}
 
-    if (Authenticate({ pathname, user_role }) || pathname === '/browse' || pathname === '/') {
-        return await resolve(event)
-    }
-    throw redirect(302, '/browse')
+			const all_roles = await getRoles(true, headers)
+			if (Array.isArray(all_roles)) {
+				const role = await getUserRole(true, headers)
+				if (role && role.role) {
+					user_role = all_roles.find((item) => {
+						return item._id == role.role
+					})?.name
+				}
+			}
+		} catch (e) {
+			console.log('something wrong', e)
+		}
+	}
+
+	if (Authenticate({ pathname, user_role }) || pathname === '/browse' || pathname === '/') {
+		return await resolve(event)
+	}
+	throw redirect(302, '/browse')
 }
 
 export function handleError({ error }: { error: any }) {
-    console.log('error', error)
-    return {
-        message: 'Whoops something wrong!'
-    }
+	console.log('error', error)
+	return {
+		message: 'Whoops something wrong!'
+	}
 }
 
 //TODO: fix global handleFetch
 // export const handleFetch: HandleFetch = async ({ request, fetch }) => {
-//     let headers: any = {}
-//     if (request.url.startsWith(env.PUBLIC_API_URL)) {
-//         if (env.PUBLIC_CROSS_ORIGIN === 'false') {
-//             headers = {
-//                 authorization: request.locals.user.token,
-//                 userId: request.locals.user.userId,
-//             }
-//         } else {
-//             headers = {
-//                 'x-api-key': env.PUBLIC_API_KEY,
-//                 userId: request.locals.user.userId,
-//             }
-//         }
-//     }
-//     return fetch(request, headers)
+// 	let headers: any = {}
+// 	if (request.url.startsWith(env.PUBLIC_API_URL)) {
+// 		if (env.PUBLIC_CROSS_ORIGIN === 'false') {
+// 			headers = {
+// 				authorization: request.locals.user.token,
+// 				userId: request.locals.user.userId
+// 			}
+// 		} else {
+// 			headers = {
+// 				'x-api-key': env.PUBLIC_API_KEY,
+// 				userId: request.locals.user.userId
+// 			}
+// 		}
+// 	}
+// 	return fetch(request, headers)
 // }
-
 
 // const isAdminPage = /^\/admin\/(.*)/.test(route.id)
 // const isProfilePage = /^\/profile\/(.*)/.test(route.id)
