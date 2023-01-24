@@ -4,8 +4,6 @@
 	import VirtualList from '@sveltejs/svelte-virtual-list'
 
 	export let channels: any = undefined
-
-	$: channels = undefined
 </script>
 
 <!-- <div class="flex flex-col table-zebra">
