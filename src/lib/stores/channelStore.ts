@@ -398,24 +398,15 @@ async function toggleNotifications({ channel, userId }: { channel: any; userId: 
 
 async function getTechList() {
 	if (get(techList).length < 1) {
-		let web2Assets: any = await fetch(
-			`${env.PUBLIC_LOCAL_API_URL}/category/web2/_categoryWeb2.json`,
-			{
-				method: 'GET'
-			}
-		)
-		let web3Assets: any = await fetch(
-			`${env.PUBLIC_LOCAL_API_URL}/category/web3/_categoryWeb3.json`,
-			{
-				method: 'GET'
-			}
-		)
-		let gameAssets: any = await fetch(
-			`${env.PUBLIC_LOCAL_API_URL}/category/games/_categoryGames.json`,
-			{
-				method: 'GET'
-			}
-		)
+		let web2Assets: any = await fetch(`/category/web2/_categoryWeb2.json`, {
+			method: 'GET'
+		})
+		let web3Assets: any = await fetch(`/category/web3/_categoryWeb3.json`, {
+			method: 'GET'
+		})
+		let gameAssets: any = await fetch(`/category/games/_categoryGames.json`, {
+			method: 'GET'
+		})
 		if (web2Assets.ok) {
 			web2Assets = await web2Assets.json()
 		}
