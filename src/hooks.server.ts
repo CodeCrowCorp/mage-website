@@ -1,30 +1,37 @@
 import { redirect } from '@sveltejs/kit'
-import { getUserDetails } from '$lib/stores/authStore'
+import { currentUser, me } from '$lib/stores/authStore'
 import { Authenticate } from '$lib/authentication/authentication'
 import type { Handle, HandleFetch } from '@sveltejs/kit'
-import { env } from '$env/dynamic/public'
+
 
 export const handle: Handle = async ({ event, resolve }) => {
     const pathname = event.url.pathname
     const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
     let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
-    let user
+    let user: any
 
     if (event.locals && event.locals.user) {
         user = event.locals.user.user
     }
 
+
     if (token && userId) {
-        if (!user) {
-            const response = await getUserDetails(token, userId)
-            if (response) {
-                if (response.freshJwt) {
-                    token = response.freshJwt
+        console.log("we have a token")
+            if (!user) {
+                currentUser.set({userId: userId, jwt: token})
+                console.log("we don't have a user")
+                const response = await me(userId,token)
+                console.log(response)
+                if (response) {
+                    if (response.freshJwt) {
+                        token = response.freshJwt
+                    }
+                    user = response.user
+                    
+                    user.isAdmin = true
                 }
-                user = response
-                user.isAdmin = true
             }
-        }
+
 
         if (pathname === '/') {
             event.cookies.set('token', token, {

@@ -1,69 +1,59 @@
 import { env } from '$env/dynamic/public'
+import { onMount } from 'svelte'
+import { browser } from '$app/environment';
 import { writable, type Writable } from 'svelte/store'
 const JWT_KEY = 'jwt'
 
-export const currentUser: Writable<any> = writable(null)
-
-function logout() {
-    setUser({ user: null })
-    window.localStorage.clear()
-    window.location.href = '/'
-}
+const defaultValue = null;
+const initialValue = browser ? {userId: window.localStorage.getItem('userId'), jwt: window.localStorage.getItem('jwt'), user: {}} ?? defaultValue : defaultValue;
 
 
-function getJWT() {
-    return window.localStorage.getItem(JWT_KEY)
-}
+export const currentUser: Writable<any> = writable(initialValue)
 
-function getUserId() {
-    return window.localStorage.getItem('userId')
-}
+const logout = () => currentUser.set(null);
 
-function setJWT({ jwt }: { jwt: string }) {
-    window.localStorage.setItem(JWT_KEY, jwt)
-}
 
-function setUserId({ userId }: { userId: string }) {
-    window.localStorage.setItem('userId', userId)
-}
-
-function setUser({ user }: { user: any }) {
-    if (!user) {
-        window.localStorage.clear()
+currentUser.subscribe((value) => {
+    if(browser)
+    if (value)
+    {
+        localStorage.setItem('userId', (value.userId));
+        localStorage.setItem('jwt', (value.jwt));
     }
-    currentUser.set(user)
-}
-
-async function me() {
-    const jwt = window.localStorage.getItem('jwt')
-    const userId = window.localStorage.getItem('userId')
-    if (jwt === null || userId === null) {
-        logout(); return null
-    } else {
-        return await fetch(`${env.PUBLIC_API_URL}/auth/me`, {
-            method: 'GET',
-            headers: {
-                'Authorization': jwt,
-                'userId': userId
-            }
-        }).then(async response => {
-            const res = await response.json()
-            setUser({ user: res.user })
-            if (res.freshJwt) setJWT({ jwt: res.freshJwt })
-            return res.user
-        }).catch((err) => {
-            if (err.status === 401 || err.includes('Error')) logout()
-            return null
-        })
+    else{
+        window.localStorage.clear(); // for logout
     }
+  });
+
+
+async function me(userId: string, jwt: string) {
+
+    try{
+         const response = await fetch(`${env.PUBLIC_API_URL}/auth/me`, {
+             method: 'GET',
+             headers: {
+                 'Authorization': jwt,
+                 'userId': userId
+             }
+         })
+
+         const res = await response.json()
+
+        // console.log(res.user)
+       //  setUser({ user: res.user })
+
+         if (res.freshJwt) currentUser.set({userId: userId, jwt: res.freshJwt, user: res.user })
+         return res
+     }
+    catch(err: any) {
+             if (err.status === 401 || err.includes('Error')) logout()
+             return null
+         }
+     
 }
 
 export {
     logout,
-    getJWT,
-    getUserId,
-    setJWT,
-    setUserId,
-    setUser,
+  //  setUser,
     me
 }

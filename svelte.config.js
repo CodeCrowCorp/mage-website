@@ -6,6 +6,20 @@ import { sveltePreprocessSvg } from '@svitejs/svelte-preprocess-svg'
 const config = {
 	// Consult https://github.com/sveltejs/svelte-preprocess
 	// for more information about preprocessors
+
+	kit: {
+    	adapter: adapter({
+      	fallback: 'index.html',
+    	})
+	},
+	prerender: {
+		entries: [],
+	  },
+
+	ssr: false,
+
+	  // hydrate the <div id="svelte"> element in src/app.html
+	target: '#svelte',
 	preprocess: [
         preprocess({
 		    postcss: true
@@ -15,9 +29,6 @@ const config = {
 		}),
 ],
 
-	kit: {
-		adapter: adapter()
-	},
 };
 
 export default config;
