@@ -447,7 +447,7 @@ async function getTechList() {
 
 async function getTechListJson() {
 	if (get(techList).length < 1) {
-		let gameAssets: any = await fetch(`svg-images/image_urls.json`, {
+		let gameAssets: any = await fetch(`svg-json/image_urls.json`, {
 			method: 'GET'
 		})
 		if (gameAssets.ok) {
