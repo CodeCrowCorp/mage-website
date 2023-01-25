@@ -1,8 +1,6 @@
 import { env } from '$env/dynamic/public'
-import { onMount } from 'svelte'
 import { browser } from '$app/environment';
 import { writable, type Writable } from 'svelte/store'
-const JWT_KEY = 'jwt'
 
 const defaultValue = null;
 const initialValue = browser ? {userId: window.localStorage.getItem('userId'), jwt: window.localStorage.getItem('jwt'), user: {}} ?? defaultValue : defaultValue;
@@ -39,9 +37,6 @@ async function me(userId: string, jwt: string) {
 
          const res = await response.json()
 
-        // console.log(res.user)
-       //  setUser({ user: res.user })
-
          if (res.freshJwt) currentUser.set({userId: userId, jwt: res.freshJwt, user: res.user })
          return res
      }
@@ -54,6 +49,5 @@ async function me(userId: string, jwt: string) {
 
 export {
     logout,
-  //  setUser,
     me
 }
