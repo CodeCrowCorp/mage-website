@@ -1,6 +1,6 @@
 <script lang="ts">
-	import IconLock from '$lib/assets/icons/IconLock.svelte'
-	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
+	import { IconLock, IconViewers } from '$lib/utils/icons'
+
 	import VirtualList from '@sveltejs/svelte-virtual-list'
 
 	export let channels: any = undefined

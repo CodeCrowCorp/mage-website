@@ -1,6 +1,5 @@
 <script lang="ts">
-	import IconDrawerLeft from '$lib/assets/icons/drawer/IconDrawerLeft.svelte'
-	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
+	import { IconDrawerLeft, IconDrawerChevron } from '$lib/utils/icons'
 	import { goto } from '$app/navigation'
 
 	export let channels: any = []
