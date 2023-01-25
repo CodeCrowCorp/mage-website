@@ -2,25 +2,26 @@ import { env } from '$env/dynamic/public'
 import { browser } from '$app/environment';
 import { writable, type Writable } from 'svelte/store'
 
-const defaultValue = null;
-const initialValue = browser ? {userId: window.localStorage.getItem('userId'), jwt: window.localStorage.getItem('jwt'), user: {}} ?? defaultValue : defaultValue;
-
-
-export const currentUser: Writable<any> = writable(initialValue)
+export const currentUser: Writable<any> = writable(null)
 
 const logout = () => currentUser.set(null);
 
 
 currentUser.subscribe((value) => {
-    if(browser)
-    if (value)
-    {
-        localStorage.setItem('userId', (value.userId));
-        localStorage.setItem('jwt', (value.jwt));
+    if(browser){
+        if (value)
+        {
+            console.log(value)
+            window.localStorage.setItem('userId', (value.userId));
+            window.localStorage.setItem('jwt', (value.jwt));
+        }
+        else{
+            window.localStorage.removeItem('userId');
+            window.localStorage.removeItem('jwt') // for logout
+            logout()
+        }
     }
-    else{
-        window.localStorage.clear(); // for logout
-    }
+
   });
 
 
@@ -36,7 +37,6 @@ async function me(userId: string, jwt: string) {
          })
 
          const res = await response.json()
-
          if (res.freshJwt) currentUser.set({userId: userId, jwt: res.freshJwt, user: res.user })
          return res
      }

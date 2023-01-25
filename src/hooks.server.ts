@@ -16,18 +16,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 
     if (token && userId) {
-        console.log("we have a token")
             if (!user) {
-                currentUser.set({userId: userId, jwt: token})
-                console.log("we don't have a user")
                 const response = await me(userId,token)
-                console.log(response)
                 if (response) {
                     if (response.freshJwt) {
                         token = response.freshJwt
                     }
                     user = response.user
-                    
+
                     user.isAdmin = true
                 }
             }
