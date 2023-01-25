@@ -1,9 +1,8 @@
 <script lang="ts">
-	// import IconDrawerLeft from '$lib/assets/icons/drawer/IconDrawerLeft.svelte'
-	// import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
-	// import IconPlay from '$lib/assets/icons/IconPlay.svelte'
+	import IconDrawerLeft from '$lib/assets/icons/drawer/IconDrawerLeft.svelte'
+	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
+	import IconPlay from '$lib/assets/icons/IconPlay.svelte'
 	import { goto } from '$app/navigation'
-	import { IconPlay, IconDrawerLeft, IconDrawerChevron } from '$lib/utils/icons'
 
 	export let title: string = '',
 		channels: any = undefined

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { IconLock, IconViewers } from '$lib/utils/icons'
+	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
+	import IconLock from '$lib/assets/icons/IconLock.svelte'
 	import VirtualList from '@sveltejs/svelte-virtual-list'
 	import { techList } from '$lib/stores/channelStore'
 
