@@ -16,7 +16,7 @@
 	})
 	// $: console.log($techList)
 
-	$: console.log(channels)
+	// $: console.log(channels)
 </script>
 
 <Carousel bind:channels />

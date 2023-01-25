@@ -440,7 +440,7 @@ async function getTechList() {
 		web2Assets.push(...gameAssets)
 		techList.set(web2Assets)
 
-		console.log(web2Assets)
+		// console.log(web2Assets)
 	}
 	// return get(techList)
 }
