@@ -7,17 +7,17 @@ const config = {
 	// Consult https://github.com/sveltejs/svelte-preprocess
 	// for more information about preprocessors
 	preprocess: [
-        preprocess({
-		    postcss: true
-        }),
-        sveltePreprocessSvg({
-			// svgo: true,
+		preprocess({
+			postcss: true
 		}),
-],
+		sveltePreprocessSvg({
+			svgo: true
+		})
+	],
 
 	kit: {
 		adapter: adapter()
-	},
-};
+	}
+}
 
-export default config;
+export default config
