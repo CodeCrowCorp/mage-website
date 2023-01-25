@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { IconLock, IconViewers } from '$lib/utils/icons'
-
 	import VirtualList from '@sveltejs/svelte-virtual-list'
+	import { techList } from '$lib/stores/channelStore'
 
 	export let channels: any = undefined
 </script>
@@ -118,10 +118,15 @@
 						</td>
 						<td>
 							<div class="flex flex-wrap">
-								<img src="/category/games/call-of-duty-black-ops-4.svg" />
+								{#if channel.category && channel.category.length}
+									{#each channel.category as category}
+										<img src={$techList[category]} alt="" class="h-7 w-7 m-1" />
+										<!-- <img src="/category/games/call-of-duty-black-ops-4.svg" />
 								<img src="/category/games/fortnite.svg" />
 								<img src="/category/games/overwatch.svg" />
-								<img src="/category/games/valorant.svg" />
+								<img src="/category/games/valorant.svg" /> -->
+									{/each}
+								{/if}
 							</div>
 						</td>
 					</tr>

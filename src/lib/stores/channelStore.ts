@@ -454,6 +454,18 @@ async function getTechList() {
 	// return get(techList)
 }
 
+async function getTechListJson() {
+	if (get(techList).length < 1) {
+		let gameAssets: any = await fetch(`svg-images/image_urls.json`, {
+			method: 'GET'
+		})
+		if (gameAssets.ok) {
+			gameAssets = await gameAssets.json()
+		}
+		techList.set(gameAssets)
+		return gameAssets
+	}
+}
 export {
 	createChannel,
 	deleteChannel,
@@ -476,5 +488,6 @@ export {
 	leaveChannel,
 	enterChannel,
 	toggleNotifications,
-	getTechList
+	getTechList,
+	getTechListJson
 }
