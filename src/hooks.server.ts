@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit'
-import { getUserDetails } from '$lib/stores/authStore'
+import { get } from 'svelte/store'
+import { getUserDetails, userRole, currentUser } from '$lib/stores/authStore'
 import { getUserRole, getRoles } from '$lib/stores/adminStore'
 import { Authenticate } from '$lib/authentication/authentication'
 import type { Handle, HandleFetch } from '@sveltejs/kit'
@@ -9,11 +10,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname
 	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
 	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
-	let user
-
-	if (event.locals && event.locals.user) {
-		user = event.locals.user.user
-	}
+	let user = get(currentUser),
+		role = get(userRole)
 
 	if (token && userId) {
 		if (!user) {
@@ -23,7 +21,34 @@ export const handle: Handle = async ({ event, resolve }) => {
 					token = response.freshJwt
 				}
 				user = response
-				user.isAdmin = true
+				currentUser.set(user)
+			}
+		}
+
+		if (!role) {
+			try {
+				const headers = {
+					userId: userId
+				}
+				if (env.PUBLIC_CROSS_ORIGIN === 'false') {
+					headers['authorization'] = token
+				} else {
+					headers['x-api-key'] = env.PUBLIC_API_KEY
+				}
+
+				const all_roles = await getRoles(true, headers)
+				if (Array.isArray(all_roles)) {
+					const get_role = await getUserRole(true, headers)
+					if (get_role && get_role.role) {
+						role = all_roles.find((item) => {
+							return item._id == get_role.role
+						})?.name
+
+						userRole.set(role)
+					}
+				}
+			} catch (e) {
+				console.log('something wrong', e)
 			}
 		}
 
@@ -45,34 +70,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 	}
 
-	let user_role = 'user'
-
-	if (user) {
-		try {
-			const headers = {
-				userId: userId
-			}
-			if (env.PUBLIC_CROSS_ORIGIN === 'false') {
-				headers['authorization'] = token
-			} else {
-				headers['x-api-key'] = env.PUBLIC_API_KEY
-			}
-
-			const all_roles = await getRoles(true, headers)
-			if (Array.isArray(all_roles)) {
-				const role = await getUserRole(true, headers)
-				if (role && role.role) {
-					user_role = all_roles.find((item) => {
-						return item._id == role.role
-					})?.name
-				}
-			}
-		} catch (e) {
-			console.log('something wrong', e)
-		}
-	}
-
-	if (Authenticate({ pathname, user_role }) || pathname === '/browse' || pathname === '/') {
+	if (
+		Authenticate({ pathname, user_role: role || 'user' }) ||
+		pathname === '/browse' ||
+		pathname === '/'
+	) {
 		return await resolve(event)
 	}
 	throw redirect(302, '/browse')
