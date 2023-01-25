@@ -143,20 +143,20 @@
 					</a>
 				</li>
 				{#if $currentUser}
-				<li>
-					<a href="">
-						<IconDrawerCommunity />
-						Community
-						<IconDrawerChevron />
-					</a>
-				</li>
-				<li>
-					<a href="">
-						<IconDrawerMessages />
-						Messages
-						<IconDrawerChevron />
-					</a>
-				</li>
+					<li>
+						<a href="">
+							<IconDrawerCommunity />
+							Community
+							<IconDrawerChevron />
+						</a>
+					</li>
+					<li>
+						<a href="">
+							<IconDrawerMessages />
+							Messages
+							<IconDrawerChevron />
+						</a>
+					</li>
 				{/if}
 				<!-- <li>
 					<a href="/videos">
@@ -209,11 +209,11 @@
 					</div>
 				</li>
 				{#if $currentUser}
-				<li>
-					<a href="/settings">
-						<IconDrawerSettings />
-						Settings</a>
-				</li>
+					<li>
+						<a href="/settings">
+							<IconDrawerSettings />
+							Settings</a>
+					</li>
 				{/if}
 				{#if $currentUser}
 					<li>
