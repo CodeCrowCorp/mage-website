@@ -25,10 +25,13 @@
 	import IconDrawerHelpAndLegal from '$lib/assets/icons/drawer/IconDrawerHelpAndLegal.svelte'
 	import IconDrawerSettings from '$lib/assets/icons/drawer/IconDrawerSettings.svelte'
 	import IconDrawerLogOut from '$lib/assets/icons/drawer/IconDrawerLogOut.svelte'
-	import IconSocialDexlab from '$lib/assets/icons/social/IconSocialDexlab.svelte'
-	import IconSocialMagicEden from '$lib/assets/icons/social/IconSocialMagicEden.svelte'
 	import IconSocialTwitter from '$lib/assets/icons/social/IconSocialTwitter.svelte'
-	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svelte'
+	import IconSocialDiscord from '$lib/assets/icons/social/IconDiscord.svg'
+	import IconDexlab from '$lib/assets/icons/social/IconDexlab.svg'
+	import IconMagicEden from '$lib/assets/icons/social/IconMagicEden.svg'
+	// import IconSocialDexlab from '$lib/assets/icons/social/IconSocialDexlab.svelte'
+	// import IconSocialMagicEden from '$lib/assets/icons/social/IconSocialMagicEden.svelte'
+	// import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svelte'
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
 	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
@@ -254,16 +257,19 @@
 						<IconSocialGitHub />
 					</a>
 					<a href="https://discord.gg/CodeCrow" target="_blank" rel="noreferrer">
-						<IconSocialDiscord />
+						<!-- <IconSocialDiscord /> -->
+						<img src={IconSocialDiscord} alt="" />
 					</a>
 					<a href="https://twitter.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 						<IconSocialTwitter />
 					</a>
 					<a href="https://magiceden.io" target="_blank" rel="noreferrer">
-						<IconSocialMagicEden />
+						<!-- <IconSocialMagicEden /> -->
+						<img src={IconMagicEden} alt="" />
 					</a>
 					<a href="https://www.dexlab.space" target="_blank" rel="noreferrer">
-						<IconSocialDexlab />
+						<!-- <IconSocialDexlab /> -->
+						<img src={IconDexlab} alt="" />
 					</a>
 				</div>
 				<p>Code Crow Corp © 2023</p>
