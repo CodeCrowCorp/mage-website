@@ -8,8 +8,8 @@ declare namespace App {
 			token?: string
 			userId?: string
 			user?: object
-			isBanned?: boolean
 		}
+		isBanned?: boolean
 	}
 	// interface PageData {}
 	// interface Error {}
