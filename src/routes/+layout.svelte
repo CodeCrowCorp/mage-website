@@ -48,6 +48,7 @@
 			NProgress.start()
 		}
 		if (!$navigating) {
+			storeUserData()
 			NProgress.done()
 		}
 	}
@@ -56,12 +57,12 @@
 
 	let nav_drawer: HTMLInputElement
 
-	$: data.user, storeUserData()
-
 	function storeUserData() {
 		if (browser) {
 			if (data?.user?.user) {
 				$currentUser = data.user.user
+			} else {
+				$currentUser = null
 			}
 		}
 	}
@@ -87,7 +88,7 @@
 		<label for="my-drawer-2" class="btn btn-ghost normal-case text-xl drawer-button lg:hidden"
 			>Mage</label>
 
-		{#if data && data.user && data.user.isBanned}
+		{#if data && data.isBanned}
 			<div class="alert alert-error shadow-lg">
 				<div>
 					<div class="font-bold text-white	">

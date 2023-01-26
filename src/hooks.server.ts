@@ -2,6 +2,7 @@ import { redirect } from '@sveltejs/kit'
 import { get } from 'svelte/store'
 import { getUserDetails, userRole, currentUser } from '$lib/stores/authStore'
 import { getUserRole, getRoles } from '$lib/stores/adminStore'
+import { getRemoteConfigs, isMaintenanceModeEnabled } from '$lib/stores/remoteConfigStore'
 import { Authenticate } from '$lib/authentication/authentication'
 import type { Handle, HandleFetch } from '@sveltejs/kit'
 import { env } from '$env/dynamic/public'
@@ -13,6 +14,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 	let user = get(currentUser),
 		role = get(userRole),
 		isBanned = false
+
+	await getRemoteConfigs()
+	const maintenance_mode = get(isMaintenanceModeEnabled) || false
 
 	if (token && userId) {
 		if (!user) {
@@ -53,11 +57,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 			}
 		}
 
-		if (user && user.isBanned) {
-			isBanned = true
-			userRole.set('user')
-		}
-
 		if (pathname === '/') {
 			event.cookies.set('token', token, {
 				path: '/',
@@ -69,14 +68,30 @@ export const handle: Handle = async ({ event, resolve }) => {
 			})
 		}
 
-		console.log('isBanned', isBanned)
-
-		event.locals.user = {
-			userId,
-			token,
-			user,
-			isBanned
+		event.locals = {
+			user: {
+				userId,
+				token,
+				user
+			}
 		}
+	}
+
+	if (user && user.isBanned) {
+		isBanned = true
+
+		const cookieItem = ['token', 'userId']
+		cookieItem.forEach((item) => {
+			event.cookies.set(item, '', {
+				path: '/',
+				expires: new Date(0)
+			})
+		})
+
+		currentUser.set(null)
+		userRole.set('user')
+
+		event.locals['isBanned'] = isBanned
 	}
 
 	if (
@@ -84,7 +99,15 @@ export const handle: Handle = async ({ event, resolve }) => {
 		pathname === '/browse' ||
 		pathname === '/'
 	) {
-		return await resolve(event)
+		if (maintenance_mode && !['/contact', '/legal', '/maintenance'].includes(pathname) && !user) {
+			if (pathname === '/maintenance') {
+				return await resolve(event)
+			} else {
+				throw redirect(302, '/maintenance')
+			}
+		} else {
+			return await resolve(event)
+		}
 	}
 	throw redirect(302, '/browse')
 }
