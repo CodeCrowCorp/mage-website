@@ -439,10 +439,7 @@ async function getTechList() {
 		})
 		web2Assets.push(...gameAssets)
 		techList.set(web2Assets)
-
-		// console.log(web2Assets)
 	}
-	// return get(techList)
 }
 
 async function getTechListJson() {
@@ -479,6 +476,5 @@ export {
 	leaveChannel,
 	enterChannel,
 	toggleNotifications,
-	getTechList,
 	getTechListJson
 }
