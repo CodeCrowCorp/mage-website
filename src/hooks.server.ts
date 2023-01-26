@@ -27,7 +27,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
         if (!role) {
             try {
-                const headers = {
+                const headers: any = {
                     userId: userId
                 }
                 if (env.PUBLIC_CROSS_ORIGIN === 'false') {
