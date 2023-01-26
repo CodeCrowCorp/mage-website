@@ -2,7 +2,6 @@
 	import IconSocialDiscordInverse from '$lib/assets/icons/social/IconSocialDiscordInverse.svelte'
 	import IconSocialGoogle from '$lib/assets/icons/social/IconSocialGoogle.svelte'
 	import IconSocialGitHubInverse from '$lib/assets/icons/social/IconSocialGitHubInverse.svelte'
-	// import { getGitHubUrl, getDiscordUrl, getGoogleUrl } from '$lib/utils/authUrl'
 	import { env } from '$env/dynamic/public'
 	import { login_modal } from '$lib/stores/helperStore'
 
@@ -13,7 +12,7 @@
 				'x-api-key': env.PUBLIC_X_API_KEY
 			}
 		})
-		const {loginUrl} = await response.json()
+		const { loginUrl } = await response.json()
 		window.location.replace(loginUrl)
 	}
 </script>

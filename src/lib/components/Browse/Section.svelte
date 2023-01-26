@@ -34,7 +34,9 @@
 	{#if channels && channels.length}
 		<div class="flex flex-row">
 			<div class="relative flex items-center">
-				<div class="absolute bg-base-200 rounded-full p-2 left-0 z-10 cursor-pointer" on:click={prev}>
+				<div
+					class="absolute bg-base-200 rounded-full p-2 left-0 z-10 cursor-pointer"
+					on:click={prev}>
 					<IconDrawerLeft />
 				</div>
 			</div>
@@ -81,7 +83,9 @@
 			</div>
 
 			<div class="relative flex items-center">
-				<div class="absolute bg-base-200 rounded-full p-2 right-0 z-10 cursor-pointer" on:click={next}>
+				<div
+					class="absolute bg-base-200 rounded-full p-2 right-0 z-10 cursor-pointer"
+					on:click={next}>
 					<IconDrawerChevron />
 				</div>
 			</div>

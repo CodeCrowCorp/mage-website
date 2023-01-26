@@ -4,13 +4,15 @@
 	import ChannelList from '$lib/components/Browse/ChannelTable.svelte'
 	import ChannelSection from '$lib/components/Browse/Section.svelte'
 	import { onMount } from 'svelte'
-	import { getChannels } from '$lib/stores/channelStore'
+	import { getChannels, getTechListJson, techList } from '$lib/stores/channelStore'
 
 	let channels: any
 	onMount(async () => {
+		if (!$techList.length) {
+			await getTechListJson()
+		}
 		channels = await getChannels()
 	})
-	$: console.log(channels)
 </script>
 
 <Carousel bind:channels />

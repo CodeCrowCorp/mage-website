@@ -3,6 +3,8 @@ import { writable, type Writable } from 'svelte/store'
 
 export const currentUser: Writable<any> = writable(null)
 
+export const userRole: Writable<any> = writable(null)
+
 async function getUserDetails(jwt: string, userId: string) {
     if (!jwt || !userId) {
         return null
@@ -13,7 +15,7 @@ async function getUserDetails(jwt: string, userId: string) {
                 authorization: jwt,
                 userId
             }
-        }).then(async response => {
+        }).then(async (response) => {
             const res = await response.json()
             return res.user
         }).catch(() => {
@@ -22,6 +24,4 @@ async function getUserDetails(jwt: string, userId: string) {
     }
 }
 
-export {
-    getUserDetails
-}
+export { getUserDetails }
