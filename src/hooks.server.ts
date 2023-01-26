@@ -52,6 +52,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 			}
 		}
 
+		if (user && user.isBanned) {
+			userRole.set('user')
+		}
+
 		if (pathname === '/') {
 			event.cookies.set('token', token, {
 				path: '/',
