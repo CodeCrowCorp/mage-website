@@ -11,10 +11,14 @@
 				Accept: '*/*',
 				'x-api-key': env.PUBLIC_X_API_KEY
 			}
-		}).then(async (response) => {
-			const res = await response.json()
-			window.location.replace(res)
 		})
+			.then(async (response) => {
+				const res = await response.json()
+				window.location.replace(res)
+			})
+			.catch((err) => {
+				console.log('Something wrong in Oauth')
+			})
 	}
 </script>
 

@@ -55,6 +55,8 @@
 
 	$: data.user, storeUserData()
 
+	$: console.log('test data', data.user)
+
 	function storeUserData() {
 		if (browser) {
 			if (data?.user?.user) {
