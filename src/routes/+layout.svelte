@@ -55,8 +55,6 @@
 
 	$: data.user, storeUserData()
 
-	$: console.log('test data', data.user)
-
 	function storeUserData() {
 		if (browser) {
 			if (data?.user?.user) {
@@ -85,6 +83,17 @@
 		<!-- Page content here -->
 		<label for="my-drawer-2" class="btn btn-ghost normal-case text-xl drawer-button lg:hidden"
 			>Mage</label>
+
+		{#if data && data.user && data.user.isBanned}
+			<div class="alert alert-error shadow-lg">
+				<div>
+					<div class="font-bold text-white	">
+						<h3>Your account is banned</h3>
+					</div>
+				</div>
+			</div>
+		{/if}
+
 		<slot />
 		<LoginPrompt />
 	</div>

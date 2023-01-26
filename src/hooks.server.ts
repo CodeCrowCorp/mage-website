@@ -79,17 +79,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 	}
 
-	console.log('role', role)
-	return await resolve(event)
-
-	// if (
-	// 	Authenticate({ pathname, user_role: role || 'user' }) ||
-	// 	pathname === '/browse' ||
-	// 	pathname === '/'
-	// ) {
-	// 	return await resolve(event)
-	// }
-	// throw redirect(302, '/browse')
+	if (
+		Authenticate({ pathname, user_role: role || 'user' }) ||
+		pathname === '/browse' ||
+		pathname === '/'
+	) {
+		return await resolve(event)
+	}
+	throw redirect(302, '/browse')
 }
 
 export function handleError({ error }: { error: any }) {
