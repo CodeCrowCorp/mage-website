@@ -5,7 +5,7 @@
 	import { goto } from '$app/navigation'
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
-	import { currentUser, userRole } from '$lib/stores/authStore'
+	import { currentUser } from '$lib/stores/authStore'
 	import { login_modal } from '$lib/stores/helperStore'
 	import { env } from '$env/dynamic/public'
 

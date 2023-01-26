@@ -19,8 +19,8 @@ const routes: any = {
         { path: '/(.*)/$', access: [USER_COTEXT, ADMIN_COTEXT] }
     ],
     profile: [
-        { path: '/', access: [USER_COTEXT] },
-        { path: '/(.*)/$', access: [USER_COTEXT] }
+        { path: '/', access: [USER_COTEXT, ADMIN_COTEXT] },
+        { path: '/(.*)/$', access: [USER_COTEXT, ADMIN_COTEXT] }
     ],
     search: [
         { path: '/', access: [USER_COTEXT, ADMIN_COTEXT] },
@@ -33,7 +33,7 @@ const routes: any = {
     contact: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
     videos: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
     legal: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
-    logout: [{ path: '/', access: [ADMIN_COTEXT] }],
+    logout: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
     'creator-space': [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }]
 }
 

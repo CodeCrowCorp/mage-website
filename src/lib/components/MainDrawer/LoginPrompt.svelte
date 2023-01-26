@@ -2,19 +2,19 @@
 	import IconSocialDiscordInverse from '$lib/assets/icons/social/IconSocialDiscordInverse.svelte'
 	import IconSocialGoogle from '$lib/assets/icons/social/IconSocialGoogle.svelte'
 	import IconSocialGitHubInverse from '$lib/assets/icons/social/IconSocialGitHubInverse.svelte'
-	// import { getGitHubUrl, getDiscordUrl, getGoogleUrl } from '$lib/utils/authUrl'
 	import { env } from '$env/dynamic/public'
 	import { login_modal } from '$lib/stores/helperStore'
 
 	async function getHref(provider: string) {
-		const response = await fetch(`${env.PUBLIC_API_URL}/auth/${provider}`, {
+		await fetch(`${env.PUBLIC_API_URL}/auth/${provider}`, {
 			headers: {
 				Accept: '*/*',
 				'x-api-key': env.PUBLIC_X_API_KEY
 			}
+		}).then(async (response) => {
+			const res = await response.json()
+			window.location.replace(res)
 		})
-		const {loginUrl} = await response.json()
-		window.location.replace(loginUrl)
 	}
 </script>
 
