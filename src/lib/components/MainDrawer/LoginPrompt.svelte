@@ -6,15 +6,14 @@
 	import { login_modal } from '$lib/stores/helperStore'
 
 	async function getHref(provider: string) {
-		await fetch(`${env.PUBLIC_API_URL}/auth/${provider}`, {
+		const response = await fetch(`${env.PUBLIC_API_URL}/auth/${provider}`, {
 			headers: {
 				Accept: '*/*',
 				'x-api-key': env.PUBLIC_X_API_KEY
 			}
-		}).then(async (response) => {
-			const res = await response.json()
-			window.location.replace(res)
 		})
+		const { loginUrl } = await response.json()
+		window.location.replace(loginUrl)
 	}
 </script>
 
