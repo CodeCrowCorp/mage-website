@@ -1,4 +1,4 @@
-import { writable, type Writable } from 'svelte/store'
+import { get, writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
 import { currentUser } from '$lib/stores/authStore'
 
@@ -10,6 +10,7 @@ export const currentChannel: Writable<any> = writable(null)
 export const myChannels: Writable<[]> = writable([])
 export const channels: Writable<[]> = writable([])
 export const searchedchannels: Writable<[]> = writable([])
+export const techList: Writable<[]> = writable([])
 
 async function createChannel({
 	title,
@@ -395,6 +396,64 @@ async function toggleNotifications({ channel, userId }: { channel: any; userId: 
 //     }
 // }
 
+async function getTechList() {
+	if (get(techList).length < 1) {
+		let web2Assets: any = await fetch(`/category/web2/_categoryWeb2.json`, {
+			method: 'GET'
+		})
+		let web3Assets: any = await fetch(`/category/web3/_categoryWeb3.json`, {
+			method: 'GET'
+		})
+		let gameAssets: any = await fetch(`/category/games/_categoryGames.json`, {
+			method: 'GET'
+		})
+		if (web2Assets.ok) {
+			web2Assets = await web2Assets.json()
+		}
+		if (web3Assets.ok) {
+			web3Assets = await web3Assets.json()
+		}
+		if (gameAssets.ok) {
+			gameAssets = await gameAssets.json()
+		}
+
+		web3Assets.forEach((file: any) => {
+			let fileName = file.item_image.substring(file.item_image.lastIndexOf('/') + 1)
+			fileName = fileName.substring(0, fileName.indexOf('.'))
+			const nameAndTickerList = fileName.split('-')
+			const ticker = nameAndTickerList.pop().toUpperCase()
+			const fullName = nameAndTickerList
+				.map((name: any) => name.charAt(0).toUpperCase() + name.slice(1))
+				.join(' ')
+			file.item_text = `${fullName} (${ticker})`
+		})
+		web2Assets.push(...web3Assets)
+		gameAssets.forEach((file: any) => {
+			let fileName = file.item_image.substring(file.item_image.lastIndexOf('/') + 1)
+			fileName = fileName.substring(0, fileName.indexOf('.'))
+			const nameSplitList = fileName.split('-')
+			const fullName = nameSplitList
+				.map((name: any) => name.charAt(0).toUpperCase() + name.slice(1))
+				.join(' ')
+			file.item_text = fullName
+		})
+		web2Assets.push(...gameAssets)
+		techList.set(web2Assets)
+	}
+}
+
+async function getTechListJson() {
+	if (get(techList).length < 1) {
+		let gameAssets: any = await fetch(`svg-json/image_urls.json`, {
+			method: 'GET'
+		})
+		if (gameAssets.ok) {
+			gameAssets = await gameAssets.json()
+		}
+		techList.set(gameAssets)
+		return gameAssets
+	}
+}
 export {
 	createChannel,
 	deleteChannel,
@@ -416,5 +475,6 @@ export {
 	getChannels,
 	leaveChannel,
 	enterChannel,
-	toggleNotifications
+	toggleNotifications,
+	getTechListJson
 }

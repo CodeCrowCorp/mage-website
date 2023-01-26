@@ -1,11 +1,10 @@
 <script lang="ts">
-	import IconLock from '$lib/assets/icons/IconLock.svelte'
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
+	import IconLock from '$lib/assets/icons/IconLock.svelte'
 	import VirtualList from '@sveltejs/svelte-virtual-list'
+	import { techList } from '$lib/stores/channelStore'
 
 	export let channels: any = undefined
-
-	$: channels = undefined
 </script>
 
 <!-- <div class="flex flex-col table-zebra">
@@ -120,10 +119,15 @@
 						</td>
 						<td>
 							<div class="flex flex-wrap">
-								<img src="/category/games/call-of-duty-black-ops-4.svg" />
+								{#if channel.category && channel.category.length}
+									{#each channel.category as category}
+										<img src={$techList[category]} alt="" class="h-7 w-7 m-1" />
+										<!-- <img src="/category/games/call-of-duty-black-ops-4.svg" />
 								<img src="/category/games/fortnite.svg" />
 								<img src="/category/games/overwatch.svg" />
-								<img src="/category/games/valorant.svg" />
+								<img src="/category/games/valorant.svg" /> -->
+									{/each}
+								{/if}
 							</div>
 						</td>
 					</tr>
