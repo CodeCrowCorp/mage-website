@@ -9,8 +9,9 @@
 <!-- UI for modal -->
 
 <input type="checkbox" id="create-channel-modal" class="modal-toggle" />
-<label for="create-channel-modal" class="modal">
-	<div class="modal-box relative">
+<label for="create-channel-modal" class="modal cursor-pointer">
+	<label class="modal-box relative">
+		<p class="text-xl mb-5 pb-2 border-purple-500 border-b-2">Create a new channel</p>
 		<p class="text-xs">
 			When you create a channel, you may allow viewer's to observe your desktop as you host your
 			channel
@@ -34,10 +35,10 @@
 				<input type="checkbox" class="checkbox mr-3" /> Private
 			</div>
 
-			<div class="flex flex-row mt-32 gap-2">
+			<div class="flex flex-row mt-28 gap-2">
 				<button type="button" class="btn btn-default grow">Cancel</button>
 				<button type="button" class="btn btn-primary grow">Add</button>
 			</div>
 		</div>
-	</div>
+	</label>
 </label>
