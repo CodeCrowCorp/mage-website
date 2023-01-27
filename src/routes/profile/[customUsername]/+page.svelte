@@ -134,7 +134,7 @@
 							<button class="btn btn-secondary">Follow</button>
 							<button class="btn btn-primary">Send Tip</button>
 
-							<div class="dropdown dropdown-hover dropdown-end">
+							<div class="dropdown dropdown-end">
 								<button class="btn btn-circle" tabindex="0">
 									<IconMore />
 								</button>
