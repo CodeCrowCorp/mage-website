@@ -1,6 +1,13 @@
 <script>
 	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
+	import CreateChannel from './CreateChannel.svelte'
+
+	let openDrawer = false
+
+	const toggleDrawer = () => {
+		openDrawer = !openDrawer
+	}
 </script>
 
 <div class="flex flex-col md:flex-row gap-4 py-5 pl-5">
@@ -17,8 +24,24 @@
 	</div>
 
 	<div class="form-control">
-		<button class="btn w-[21rem] btn-primary gap-2">
+		<!-- <button class="btn w-[21rem] btn-primary gap-2" on:click={() => toggleDrawer()}>
 			<IconCreate />
-			Create a channel</button>
+			Create a channel</button> -->
+
+		<!-- <label for="create-channel-drawer" class="btn w-[21rem] btn-primary gap-2 drawer-button">
+			<IconCreate />
+			Create a channel</label> -->
+
+		<label for="create-channel-modal" class="btn w-[21rem] btn-primary gap-2">
+			<IconCreate />
+			Create a channel</label>
 	</div>
+
+	<CreateChannel />
+
+	<!-- Drawer style -->
+	<!-- <div class="drawer absolute w-96 z-20 top-1">
+		<input id="create-channel-drawer" type="checkbox" class="drawer-toggle" />
+		<CreateChannel />
+	</div> -->
 </div>
