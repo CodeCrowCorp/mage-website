@@ -9,11 +9,35 @@
 <!-- UI for modal -->
 
 <input type="checkbox" id="create-channel-modal" class="modal-toggle" />
-<label for="create-channel-modal" class="modal cursor-pointer">
-	<label class="modal-box relative" for="">
-		<h3 class="text-lg font-bold">Congratulations random Internet user!</h3>
-		<p class="py-4">
-			You've been selected for a chance to get one year of subscription to use Wikipedia for free!
+<label for="create-channel-modal" class="modal">
+	<div class="modal-box relative">
+		<p class="text-xs">
+			When you create a channel, you may allow viewer's to observe your desktop as you host your
+			channel
 		</p>
-	</label>
+		<div class="flex flex-col">
+			<p class="text-lg font-semibold  mt-10">Please hide all sensitive data before going live.</p>
+			<input type="text" placeholder="Title" class="input input-bordered mt-5 w-full" />
+			<textarea
+				placeholder="Description"
+				class="textarea textarea-bordered mt-5 textarea-md w-full h-28" />
+			<p class="text-base text-gray-500 mt-5">Suggested Tags</p>
+			<div class="flex flex-wrap">
+				<span>Questions</span>
+				<span>Questions</span>
+				<span>Questions</span>
+			</div>
+			<input type="text" placeholder="Tags" class="input input-bordered mt-5 w-full" />
+			<input type="text" placeholder="Categories" class="input input-bordered mt-5 w-full " />
+
+			<div class="flex flex-row mt-5 ">
+				<input type="checkbox" class="checkbox mr-3" /> Private
+			</div>
+
+			<div class="flex flex-row mt-32 gap-2">
+				<button type="button" class="btn btn-default grow">Cancel</button>
+				<button type="button" class="btn btn-primary grow">Add</button>
+			</div>
+		</div>
+	</div>
 </label>
