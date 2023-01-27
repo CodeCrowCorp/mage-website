@@ -7,7 +7,7 @@
 	<div class="drawer-side">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
-		<div class="bg-white p-3 w-[32rem]">
+		<div class="bg-white p-3 md:w-[32rem]">
 			<p class="text-xl mb-5 pb-2 border-purple-500 border-b-2">Create a new channel</p>
 			<p class="text-xs">
 				When you create a channel, you may allow viewer's to observe your desktop as you host your
@@ -17,6 +17,8 @@
 				<p class="text-lg font-semibold  mt-10">
 					Please hide all sensitive data before going live.
 				</p>
+				<input type="file" class="file-input file-input-bordered file-input-primary w-full mt-5" />
+
 				<input
 					type="text"
 					placeholder="Title"
@@ -43,7 +45,7 @@
 					<input type="checkbox" class="checkbox checkbox-primary mr-3" /> Private
 				</div>
 
-				<div class="flex flex-row mt-28 gap-2">
+				<div class="flex flex-row mt-20 md:mt-32 gap-2">
 					<button type="button" class="btn btn-default grow" on:click={() => (showDrawer = false)}
 						>Cancel</button>
 					<button type="button" class="btn btn-primary grow">Add</button>
