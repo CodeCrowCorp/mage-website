@@ -1,4 +1,5 @@
 import { writable, type Writable } from 'svelte/store'
+import { getHeaders } from '$lib/stores/helperStore'
 
 export enum SoundEffect {
     All = 'All',
