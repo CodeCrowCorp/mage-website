@@ -1,5 +1,16 @@
 <script lang="ts">
+	import { tags, getTags } from '$lib/stores/channelStore'
+	import { onMount } from 'svelte'
+
+	onMount(async () => {
+		if (!$tags.length) {
+			await getTags()
+		}
+	})
+
 	export let showDrawer: boolean
+
+	// $: console.log($tags)
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-1 right-0">
@@ -30,9 +41,15 @@
 					class="textarea textarea-primary textarea-bordered mt-5 textarea-md w-full h-28" />
 				<p class="text-base text-gray-500 mt-5">Suggested Tags</p>
 				<div class="flex flex-wrap">
-					<span class="badge badge-primary mx-1">Questions</span>
-					<span class="badge badge-primary mx-1">Questions</span>
-					<span class="badge badge-primary mx-1">Questions</span>
+					{#if $tags && $tags.length > 0}
+						{#each $tags as tag}
+							<span class="badge badge-primary mx-1 cursor-pointer">{tag.name}</span>
+						{/each}
+					{:else}
+						<div class="flex justify-center w-full">
+							<span class="btn btn-circle btn-outline btn-sm loading" />
+						</div>
+					{/if}
 				</div>
 				<input
 					type="text"

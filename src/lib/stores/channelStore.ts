@@ -11,6 +11,7 @@ export const myChannels: Writable<[]> = writable([])
 export const channels: Writable<[]> = writable([])
 export const searchedchannels: Writable<[]> = writable([])
 export const techList: Writable<[]> = writable([])
+export const tags: Writable<[]> = writable([])
 
 async function createChannel({
 	title,
@@ -456,13 +457,16 @@ async function getTechListJson() {
 }
 
 async function getTags() {
-	let tags: any = await fetch(`${env.PUBLIC_API_URL}/tags`, {
+	let res: any = await fetch(`${env.PUBLIC_API_URL}/tags`, {
 		method: 'GET'
 	})
-	if (tags.ok) {
-		tags = await tags.json()
+	if (res.ok) {
+		res = await res.json()
+		tags.set(res)
+	} else {
+		throw new Error('Tags not found')
 	}
-	return tags
+	return res
 }
 
 export {
