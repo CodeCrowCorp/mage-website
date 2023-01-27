@@ -1,12 +1,12 @@
 <script lang="ts">
-	let showDrawer: HTMLInputElement
-	let showModal: HTMLInputElement
+	export let showDrawer: boolean
 </script>
 
-<!-- <div class="drawer absolute w-96 z-20 top-1">
-	<input id="create-channel-drawer" type="checkbox" bind:this={showDrawer} class="drawer-toggle" />
+<div class="drawer drawer-end absolute w-full z-20 top-1 right-0">
+	<input id="create-channel-drawer" type="checkbox" class="drawer-toggle" />
 	<div class="drawer-side">
-		<label for="create-channel-drawer" class="drawer-overlay" />
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
 		<div class="bg-white p-3">
 			<p class="text-xl mb-5 pb-2 border-purple-500 border-b-2">Create a new channel</p>
 			<p class="text-xs">
@@ -35,19 +35,17 @@
 				</div>
 
 				<div class="flex flex-row mt-28 gap-2">
-					<button
-						type="button"
-						class="btn btn-default grow"
-						on:click={() => (showModal.checked = false)}>Cancel</button>
+					<button type="button" class="btn btn-default grow" on:click={() => (showDrawer = false)}
+						>Cancel</button>
 					<button type="button" class="btn btn-primary grow">Add</button>
 				</div>
 			</div>
 		</div>
 	</div>
-</div> -->
+</div>
 <!-- UI for modal -->
 
-<input type="checkbox" id="create-channel-modal" bind:this={showModal} class="modal-toggle" />
+<!-- <input type="checkbox" id="create-channel-modal" class="modal-toggle" />
 <label for="create-channel-modal" class="modal cursor-pointer">
 	<label class="modal-box relative">
 		<p class="text-xl mb-5 pb-2 border-purple-500 border-b-2">Create a new channel</p>
@@ -75,12 +73,10 @@
 			</div>
 
 			<div class="flex flex-row mt-28 gap-2">
-				<button
-					type="button"
-					class="btn btn-default grow"
-					on:click={() => (showModal.checked = false)}>Cancel</button>
+				<button type="button" class="btn btn-default grow" on:click={() => (showDrawer = false)}
+					>Cancel</button>
 				<button type="button" class="btn btn-primary grow">Add</button>
 			</div>
 		</div>
 	</label>
-</label>
+</label> -->
