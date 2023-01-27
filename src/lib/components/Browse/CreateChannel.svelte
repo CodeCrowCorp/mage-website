@@ -1,3 +1,7 @@
+<script lang="ts">
+	let showModal: HTMLInputElement
+</script>
+
 <!-- <div class="drawer-side">
 	<label for="create-channel-drawer" class="drawer-overlay" />
 	<ul class="menu p-4 w-96 bg-base-100 text-base-content">
@@ -8,7 +12,7 @@
 
 <!-- UI for modal -->
 
-<input type="checkbox" id="create-channel-modal" class="modal-toggle" />
+<input type="checkbox" id="create-channel-modal" bind:this={showModal} class="modal-toggle" />
 <label for="create-channel-modal" class="modal cursor-pointer">
 	<label class="modal-box relative">
 		<p class="text-xl mb-5 pb-2 border-purple-500 border-b-2">Create a new channel</p>
@@ -24,9 +28,9 @@
 				class="textarea textarea-bordered mt-5 textarea-md w-full h-28" />
 			<p class="text-base text-gray-500 mt-5">Suggested Tags</p>
 			<div class="flex flex-wrap">
-				<span>Questions</span>
-				<span>Questions</span>
-				<span>Questions</span>
+				<span class="badge badge-primary mx-1">Questions</span>
+				<span class="badge badge-primary mx-1">Questions</span>
+				<span class="badge badge-primary mx-1">Questions</span>
 			</div>
 			<input type="text" placeholder="Tags" class="input input-bordered mt-5 w-full" />
 			<input type="text" placeholder="Categories" class="input input-bordered mt-5 w-full " />
@@ -36,7 +40,10 @@
 			</div>
 
 			<div class="flex flex-row mt-28 gap-2">
-				<button type="button" class="btn btn-default grow">Cancel</button>
+				<button
+					type="button"
+					class="btn btn-default grow"
+					on:click={() => (showModal.checked = false)}>Cancel</button>
 				<button type="button" class="btn btn-primary grow">Add</button>
 			</div>
 		</div>
