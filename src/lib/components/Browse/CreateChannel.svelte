@@ -7,7 +7,7 @@
 	<div class="drawer-side">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
-		<div class="bg-white p-3">
+		<div class="bg-white p-3 w-[32rem]">
 			<p class="text-xl mb-5 pb-2 border-purple-500 border-b-2">Create a new channel</p>
 			<p class="text-xs">
 				When you create a channel, you may allow viewer's to observe your desktop as you host your
