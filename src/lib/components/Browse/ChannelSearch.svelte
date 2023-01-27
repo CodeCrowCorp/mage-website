@@ -27,10 +27,13 @@
 			on:click={() => (showDrawer = true)}>
 			<IconCreate />
 			Create a channel</label>
-		<!-- <label for="create-channel-modal" class="btn w-[21rem] btn-primary gap-2">
-			<IconCreate />
-			Create a channel
-		</label> -->
+		<!-- <label
+		for="create-channel-modal"
+		class="btn w-[21rem] btn-primary gap-2"
+		on:click={() => (showDrawer = true)}>
+		<IconCreate />
+		Create a channel
+	</label> -->
 	</div>
 
 	{#if showDrawer}
