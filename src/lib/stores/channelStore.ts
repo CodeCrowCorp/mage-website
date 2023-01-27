@@ -454,6 +454,17 @@ async function getTechListJson() {
 		return gameAssets
 	}
 }
+
+async function getTags() {
+	let tags: any = await fetch(`${env.PUBLIC_API_URL}/tags`, {
+		method: 'GET'
+	})
+	if (tags.ok) {
+		tags = await tags.json()
+	}
+	return tags
+}
+
 export {
 	createChannel,
 	deleteChannel,
@@ -476,5 +487,6 @@ export {
 	leaveChannel,
 	enterChannel,
 	toggleNotifications,
-	getTechListJson
+	getTechListJson,
+	getTags
 }
