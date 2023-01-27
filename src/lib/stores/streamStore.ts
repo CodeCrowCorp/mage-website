@@ -2,6 +2,7 @@ import { writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
 // import { currentChannel } from '$lib/stores/channelStore'
 import { emitRoomMemberUpdate, emitUserActions } from '$lib/stores/socketStore'
+import { getHeaders } from '$lib/stores/helperStore'
 
 let videoStreamId = ''
 let hasActiveTracks = false
@@ -74,12 +75,15 @@ export const channelMembersCount: Writable<number> = writable(0)
 async function getMembers({ channelId, isParticipant, skip, limit }: { channelId: string, isParticipant: boolean, skip: number, limit: number }) {
     return await fetch(`${env.PUBLIC_API_URL}/channel-members?channelId=${channelId}&isParticipant=${isParticipant}&skip=${skip}&limit=${limit}`, {
         method: 'GET',
+        headers: getHeaders()
     }).then(response => response.json())
 }
 
 async function getChannelMembersCount({ channelId }: { channelId: string }) {
     return await fetch(`${env.PUBLIC_API_URL}/channel-members/count?channelId=${channelId}`, {
         method: 'GET'
+        ,
+        headers: getHeaders()
     }).then(response => response.json())
 }
 
@@ -683,7 +687,8 @@ async function waitOneSecondSilence() {
 async function createLiveStream({ channelId, title }: { channelId: string, title: string }) {
     return await fetch(`${env.PUBLIC_API_URL}/streams`, {
         method: 'POST',
-        body: JSON.stringify({ channel: channelId, title })
+        body: JSON.stringify({ channel: channelId, title }),
+        headers: getHeaders()
     }).then(async response => {
         const res = await response.json()
         videoStreamId = res._id
@@ -699,7 +704,8 @@ async function updateLiveStream() {
 async function getLiveInput(trackData: any) {
     return await fetch(`${env.PUBLIC_API_URL}/cloudflare/live-input`, {
         method: 'POST',
-        body: JSON.stringify(trackData)
+        body: JSON.stringify(trackData),
+        headers: getHeaders()
     }).then(response => response.json())
 }
 
