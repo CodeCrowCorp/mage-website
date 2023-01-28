@@ -110,7 +110,7 @@
 						</div>
 					{/if}
 				</div>
-				<Tags bind:tags={newChannel.channelTags} maxTags={maxTag} />
+				<Tags bind:tags={newChannel.channelTags} maxTags={maxTag} placeholder="Tags" />
 
 				<input
 					bind:value={newChannel.channelCategory}
