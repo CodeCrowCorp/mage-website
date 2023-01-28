@@ -58,7 +58,7 @@
 	<div class="drawer-side">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
-		<div class="bg-white p-3 md:w-[32rem]">
+		<div class="bg-base-200 p-3 md:w-[32rem]">
 			<p class="text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 				Create a new channel
 			</p>
@@ -147,6 +147,8 @@
 		height: 3rem;
 		padding-left: 1rem !important;
 		padding-right: 1rem !important;
+		--tw-bg-opacity: 1 !important;
+		background-color: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
 	}
 	:global(.svelte-tags-input-layout) {
 		@apply mt-5 w-full;
@@ -158,6 +160,7 @@
 	:global(.svelte-tags-input) {
 		font-size: 1rem !important;
 		font-family: inherit !important;
+		background-color: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
 	}
 
 	:global(.svelte-tags-input-tag) {
