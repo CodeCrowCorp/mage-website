@@ -12,6 +12,9 @@
 			channelCategory: '',
 			channelIsPrivate: false
 		},
+		fileuploader: HTMLInputElement,
+		thumbnail: any,
+		showThumbnail = false,
 		maxTag = 3
 
 	onMount(async () => {
@@ -21,6 +24,22 @@
 	})
 
 	export let showDrawer: boolean
+
+	const fileupload = async () => {
+		const file = fileuploader.files && fileuploader.files[0]
+
+		if (file) {
+			const reader = new FileReader()
+			reader.addEventListener('load', function () {
+				thumbnail.setAttribute('src', reader.result)
+			})
+			reader.readAsDataURL(file)
+
+			showThumbnail = true
+			return
+		}
+		showThumbnail = false
+	}
 
 	const addTag = (tagName: string) => {
 		tagName && newChannel.channelTags.length < maxTag ? newChannel.channelTags.push(tagName) : ''
@@ -51,13 +70,21 @@
 
 				<div class="flex flex-row justify-center w-full">
 					<div class="card w-40 shadow-xl">
-						<div class="card-body items-center">
-							<IconPhoto />
+						<div class="card-body items-center max-h-40 {showThumbnail ? '!p-3' : ''}">
+							{#if showThumbnail}
+								<img bind:this={thumbnail} src="" alt="Preview" class="rounded-lg h-full" />
+							{:else}
+								<IconPhoto />
+							{/if}
 						</div>
 					</div>
 				</div>
 
-				<input type="file" class="file-input file-input-bordered file-input-primary w-full mt-5" />
+				<input
+					bind:this={fileuploader}
+					on:change={fileupload}
+					type="file"
+					class="file-input file-input-bordered file-input-primary w-full mt-5" />
 
 				<input
 					bind:value={newChannel.channelTitle}
