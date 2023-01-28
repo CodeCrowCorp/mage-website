@@ -2,6 +2,7 @@
 	import IconPhoto from '$lib/assets/icons/IconPhoto.svelte'
 	import { tags, getTags } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
+	import Tags from 'svelte-tags-input'
 
 	let newChannel = {
 		channelTitle: '',
@@ -74,10 +75,12 @@
 						</div>
 					{/if}
 				</div>
-				<input
+				<Tags bind:tags={newChannel.channelTags} maxTags={3} />
+
+				<!-- <input
 					type="text"
 					placeholder="Tags"
-					class="input input-primary input-bordered mt-5 w-full" />
+					class="input input-primary input-bordered mt-5 w-full" /> -->
 				<input
 					bind:value={newChannel.channelCategory}
 					type="text"
@@ -138,3 +141,24 @@
 		</div>
 	</label>
 </label> -->
+<style>
+	:global(.svelte-tags-input-layout) {
+		--tw-border-opacity: 1 !important;
+		border-color: hsl(var(--p) / var(--tw-border-opacity)) !important;
+		border-radius: var(--rounded-btn, 0.5rem) !important;
+		height: 3rem;
+		padding-left: 1rem !important;
+		padding-right: 1rem !important;
+	}
+	:global(.svelte-tags-input-layout) {
+		@apply mt-5 w-full;
+	}
+	:global(.svelte-tags-input-layout:focus-within) {
+		outline: 2px solid hsl(var(--p)) !important;
+		outline-offset: 2px !important;
+	}
+	:global(.svelte-tags-input) {
+		font-size: 1rem !important;
+		font-family: inherit !important;
+	}
+</style>
