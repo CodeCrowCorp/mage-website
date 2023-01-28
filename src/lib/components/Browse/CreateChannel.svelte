@@ -5,13 +5,14 @@
 	import Tags from 'svelte-tags-input'
 
 	let newChannel = {
-		channelTitle: '',
-		channelDescription: '',
-		channelThumbnail: '',
-		channelTags: '',
-		channelCategory: '',
-		channelIsPrivate: false
-	}
+			channelTitle: '',
+			channelDescription: '',
+			channelThumbnail: '',
+			channelTags: [],
+			channelCategory: '',
+			channelIsPrivate: false
+		},
+		maxTag = 3
 
 	onMount(async () => {
 		if (!$tags.length) {
@@ -21,6 +22,10 @@
 
 	export let showDrawer: boolean
 
+	const addTag = (tagName: string) => {
+		tagName && newChannel.channelTags.length < maxTag ? newChannel.channelTags.push(tagName) : ''
+		newChannel = newChannel
+	}
 	const addChannel = async () => {
 		console.log(newChannel)
 	}
@@ -67,7 +72,10 @@
 				<div class="flex flex-wrap">
 					{#if $tags && $tags.length > 0}
 						{#each $tags as tag}
-							<span class="badge badge-primary mx-1 cursor-pointer">{tag.name}</span>
+							<!-- svelte-ignore a11y-click-events-have-key-events -->
+							<span
+								class="badge badge-primary mx-1 cursor-pointer"
+								on:click={() => addTag(tag.name)}>{tag.name}</span>
 						{/each}
 					{:else}
 						<div class="flex justify-center w-full">
@@ -75,7 +83,7 @@
 						</div>
 					{/if}
 				</div>
-				<Tags bind:tags={newChannel.channelTags} maxTags={3} />
+				<Tags bind:tags={newChannel.channelTags} maxTags={maxTag} />
 
 				<!-- <input
 					type="text"
