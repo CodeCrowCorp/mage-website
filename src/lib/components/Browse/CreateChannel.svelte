@@ -1,6 +1,16 @@
 <script lang="ts">
+	import IconPhoto from '$lib/assets/icons/IconPhoto.svelte'
 	import { tags, getTags } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
+
+	let newChannel = {
+		channelTitle: '',
+		channelDescription: '',
+		channelThumbnail: '',
+		channelTags: '',
+		channelCategory: '',
+		channelIsPrivate: false
+	}
 
 	onMount(async () => {
 		if (!$tags.length) {
@@ -10,7 +20,9 @@
 
 	export let showDrawer: boolean
 
-	// $: console.log($tags)
+	const addChannel = async () => {
+		console.log(newChannel)
+	}
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-1 right-0">
@@ -30,13 +42,24 @@
 				<p class="text-lg font-semibold  mt-10">
 					Please hide all sensitive data before going live.
 				</p>
+
+				<div class="flex flex-row justify-center w-full">
+					<div class="card w-40 shadow-xl">
+						<div class="card-body items-center">
+							<IconPhoto />
+						</div>
+					</div>
+				</div>
+
 				<input type="file" class="file-input file-input-bordered file-input-primary w-full mt-5" />
 
 				<input
+					bind:value={newChannel.channelTitle}
 					type="text"
 					placeholder="Title"
 					class="input input-primary input-bordered mt-5 w-full" />
 				<textarea
+					bind:value={newChannel.channelDescription}
 					placeholder="Description"
 					class="textarea textarea-primary textarea-bordered mt-5 textarea-md w-full h-28" />
 				<p class="text-base text-gray-500 mt-5">Suggested Tags</p>
@@ -56,18 +79,23 @@
 					placeholder="Tags"
 					class="input input-primary input-bordered mt-5 w-full" />
 				<input
+					bind:value={newChannel.channelCategory}
 					type="text"
 					placeholder="Categories"
 					class="input input-primary input-bordered mt-5 w-full " />
 
 				<div class="flex flex-row mt-5 ">
-					<input type="checkbox" class="checkbox checkbox-primary mr-3" /> Private
+					<input
+						bind:checked={newChannel.channelIsPrivate}
+						type="checkbox"
+						class="checkbox checkbox-primary mr-3" /> Private
 				</div>
 
 				<div class="flex flex-row mt-20 md:mt-32 gap-2">
 					<button type="button" class="btn btn-default grow" on:click={() => (showDrawer = false)}
 						>Cancel</button>
-					<button type="button" class="btn btn-primary grow">Add</button>
+					<button type="button" class="btn btn-primary grow" on:click={() => addChannel()}
+						>Add</button>
 				</div>
 			</div>
 		</div>
