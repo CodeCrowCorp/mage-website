@@ -15,7 +15,7 @@ async function getUserDetails(jwt: string, userId: string) {
                 authorization: jwt,
                 userId
             }
-        }).then(async (response) => {
+        }).then(async response => {
             const res = await response.json()
             return res.user
         }).catch(() => {

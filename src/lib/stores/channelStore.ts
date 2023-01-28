@@ -1,6 +1,7 @@
 import { get, writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
 import { currentUser } from '$lib/stores/authStore'
+import { getHeaders } from '$lib/stores/helperStore'
 
 let skip = 0
 let limit = 100
@@ -46,7 +47,8 @@ async function createChannel({
 			avatar: user.avatar,
 			isHostActive: true,
 			channelType
-		})
+		}),
+		headers: getHeaders()
 	}).then(async (response) => {
 		const res = await response.json()
 		if (channelType === 'channel') {
@@ -65,13 +67,15 @@ async function deleteChannel({ channelId }: { channelId: string }) {
 
 async function getChannel({ channelId }: { channelId: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/channel?channelId=${channelId}`, {
-		method: 'GET'
+		method: 'GET',
+		headers: getHeaders()
 	}).then((response) => response.json())
 }
 
 async function addChannelToUser({ channelId }: { channelId: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/users/channels?channelId=${channelId}`, {
-		method: 'GET'
+		method: 'GET',
+		headers: getHeaders()
 	}).then(async (response) => {
 		const res = await response.json()
 		//TODO: update user in authStore
@@ -80,7 +84,8 @@ async function addChannelToUser({ channelId }: { channelId: string }) {
 
 async function removeChannelFromUser({ channelId, userId }: { channelId: string; userId: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/users/channels?channelId=${channelId}`, {
-		method: 'DELETE'
+		method: 'DELETE',
+		headers: getHeaders()
 	}).then(async (response) => {
 		const res = await response.json()
 		//TODO: update user in authStore
@@ -90,7 +95,8 @@ async function removeChannelFromUser({ channelId, userId }: { channelId: string;
 
 async function addHostChannelToUser({ hostChannelId }: { hostChannelId: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/users/host-channels?hostChannelId=${hostChannelId}`, {
-		method: 'PUT'
+		method: 'PUT',
+		headers: getHeaders()
 	}).then(async (response) => {
 		const res = await response.json()
 		//TODO: update user in authStore
@@ -99,7 +105,8 @@ async function addHostChannelToUser({ hostChannelId }: { hostChannelId: string }
 
 async function removeHostChannelFromUser({ hostChannelId }: { hostChannelId: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/users/host-channels?hostChannelId=${hostChannelId}`, {
-		method: 'DELETE'
+		method: 'DELETE',
+		headers: getHeaders()
 	}).then(async (response) => {
 		const res = await response.json()
 		//TODO: update user in authStore
@@ -229,7 +236,8 @@ function resetSkipLimit() {
 
 async function getMyChannels() {
 	return await fetch(`${env.PUBLIC_API_URL}/channels/me/hosted`, {
-		method: 'GET'
+		method: 'GET',
+		headers: getHeaders()
 	}).then(async (response) => {
 		const res = await response.json()
 		myChannels.set(res)
