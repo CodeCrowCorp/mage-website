@@ -1,16 +1,18 @@
 <script lang="ts">
 	import IconPhoto from '$lib/assets/icons/IconPhoto.svelte'
-	import { tags, getTags } from '$lib/stores/channelStore'
+	import { tags, getTags, createChannel } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
 
 	let newChannel = {
-			channelTitle: '',
-			channelDescription: '',
-			channelThumbnail: '',
-			channelTags: [],
-			channelCategory: '',
-			channelIsPrivate: false
+			title: '',
+			description: '',
+			thumbnail: '',
+			category: [],
+			tags: [],
+			isPrivate: false,
+			user: '',
+			channelType: ''
 		},
 		fileuploader: HTMLInputElement,
 		thumbnail: any,
@@ -42,11 +44,12 @@
 	}
 
 	const addTag = (tagName: string) => {
-		tagName && newChannel.channelTags.length < maxTag ? newChannel.channelTags.push(tagName) : ''
+		tagName && newChannel.tags.length < maxTag ? newChannel.tags.push(tagName) : ''
 		newChannel = newChannel
 	}
 	const addChannel = async () => {
-		console.log(newChannel)
+		let res = await createChannel(newChannel)
+		console.log(await res.json())
 	}
 </script>
 
@@ -87,12 +90,12 @@
 					class="file-input file-input-bordered file-input-primary w-full mt-5" />
 
 				<input
-					bind:value={newChannel.channelTitle}
+					bind:value={newChannel.title}
 					type="text"
 					placeholder="Title"
 					class="input input-primary input-bordered mt-5 w-full" />
 				<textarea
-					bind:value={newChannel.channelDescription}
+					bind:value={newChannel.description}
 					placeholder="Description"
 					class="textarea textarea-primary textarea-bordered mt-5 textarea-md w-full h-28" />
 				<p class="text-base text-gray-500 mt-5">Suggested Tags</p>
@@ -110,17 +113,17 @@
 						</div>
 					{/if}
 				</div>
-				<Tags bind:tags={newChannel.channelTags} maxTags={maxTag} placeholder="Tags" />
+				<Tags bind:tags={newChannel.tags} maxTags={maxTag} placeholder="Tags" />
 
 				<input
-					bind:value={newChannel.channelCategory}
+					bind:value={newChannel.category}
 					type="text"
 					placeholder="Categories"
 					class="input input-primary input-bordered mt-5 w-full " />
 
 				<div class="flex flex-row mt-5 ">
 					<input
-						bind:checked={newChannel.channelIsPrivate}
+						bind:checked={newChannel.isPrivate}
 						type="checkbox"
 						class="checkbox checkbox-primary mr-3" /> Private
 				</div>
