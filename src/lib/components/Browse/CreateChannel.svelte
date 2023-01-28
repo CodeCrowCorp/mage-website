@@ -161,4 +161,11 @@
 		font-size: 1rem !important;
 		font-family: inherit !important;
 	}
+
+	:global(.svelte-tags-input-tag) {
+		background-color: hsl(var(--p) / var(--tw-bg-opacity)) !important;
+		padding-left: 0.5rem !important;
+		padding-right: 0.5rem !important;
+		border-radius: var(--rounded-badge, 1.5rem) !important;
+	}
 </style>
