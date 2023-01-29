@@ -12,7 +12,7 @@ export const myChannels: Writable<[]> = writable([])
 export const channels: Writable<[]> = writable([])
 export const searchedchannels: Writable<[]> = writable([])
 export const techList: Writable<[]> = writable([])
-export const tags: Writable<[]> = writable([])
+export const tags: Writable<any> = writable([])
 
 async function createChannel({
 	title,

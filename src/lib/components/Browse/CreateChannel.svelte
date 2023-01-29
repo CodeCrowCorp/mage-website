@@ -6,18 +6,7 @@
 
 	export let showDrawer: boolean
 
-	interface Channel {
-		title: string
-		description: string
-		thumbnail: string | ArrayBuffer | null
-		category: string[]
-		tags: string[]
-		isPrivate: boolean
-		user: any
-		channelType: string
-	}
-
-	let newChannel: Channel = {
+	let newChannel: any = {
 			title: '',
 			description: '',
 			thumbnail: '',
