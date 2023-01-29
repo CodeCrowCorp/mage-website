@@ -26,7 +26,7 @@
 			channelType: ''
 		},
 		fileuploader: HTMLInputElement,
-		thumbnail: any,
+		thumbnailRef: any,
 		showThumbnail = false,
 		maxTag = 3,
 		maxCategory = 4
@@ -45,7 +45,7 @@
 		if (file) {
 			const reader = new FileReader()
 			reader.addEventListener('load', function () {
-				thumbnail.setAttribute('src', reader.result)
+				thumbnailRef.setAttribute('src', reader.result)
 			})
 			reader.readAsDataURL(file)
 
@@ -71,7 +71,7 @@
 	<div class="drawer-side">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
-		<div class="bg-base-200 w-80 md:w-96">
+		<div class="bg-base-200 w-80 md:w-[30rem]">
 			<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 				Create a new channel
 			</p>
@@ -88,7 +88,7 @@
 					<div class="card w-40 shadow-xl">
 						<div class="card-body items-center max-h-40 {showThumbnail ? '!p-3' : ''}">
 							{#if showThumbnail}
-								<img bind:this={thumbnail} src="" alt="Preview" class="rounded-lg h-full" />
+								<img bind:this={thumbnailRef} src="" alt="Preview" class="rounded-lg h-full" />
 							{:else}
 								<IconPhoto />
 							{/if}
