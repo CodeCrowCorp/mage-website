@@ -98,7 +98,7 @@
 				<textarea
 					bind:value={newChannel.description}
 					placeholder="Description"
-					class="textarea textarea-primary textarea-bordered mt-5 textarea-md w-full h-28" />
+					class="textarea textarea-primary mt-5 text-base w-full h-28" />
 				<p class="text-base text-gray-500 mt-5">Suggested Tags</p>
 				<div class="flex flex-wrap">
 					{#if $tags && $tags.length > 0}
