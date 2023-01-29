@@ -58,15 +58,15 @@
 	<div class="drawer-side">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
-		<div class="bg-base-200 p-3 md:w-[32rem]">
-			<p class="text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
+		<div class="bg-base-200 md:w-[32rem]">
+			<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 				Create a new channel
 			</p>
-			<p class="text-xs">
-				When you create a channel, you may allow viewer's to observe your desktop as you host your
-				channel
-			</p>
-			<div class="flex flex-col">
+			<div class="flex flex-col p-3">
+				<p class="text-xs">
+					When you create a channel, you may allow viewer's to observe your desktop as you host your
+					channel
+				</p>
 				<p class="text-lg font-semibold  mt-10">
 					Please hide all sensitive data before going live.
 				</p>
