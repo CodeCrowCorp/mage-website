@@ -17,7 +17,8 @@
 		fileuploader: HTMLInputElement,
 		thumbnail: any,
 		showThumbnail = false,
-		maxTag = 3
+		maxTag = 3,
+		maxCategory = 4
 
 	onMount(async () => {
 		if (!$tags.length) {
@@ -113,14 +114,25 @@
 						</div>
 					{/if}
 				</div>
-				<Tags bind:tags={newChannel.tags} maxTags={maxTag} placeholder="Tags" />
-
-				<input
-					bind:value={newChannel.category}
-					type="text"
-					placeholder="Categories"
-					class="input input-primary input-bordered mt-5 w-full " />
-
+				<div class="relative">
+					<Tags
+						bind:tags={newChannel.tags}
+						maxTags={maxTag}
+						placeholder={newChannel.tags.length > 0 ? '' : 'Tags'} />
+					<span class="absolute right-0 top-1/2 text-gray-400 pr-3"
+						>({newChannel.tags.length == maxTag ? 'max reached' : 'max ' + maxTag})</span>
+				</div>
+				<div class="relative">
+					<input
+						bind:value={newChannel.category}
+						type="text"
+						placeholder="Categories"
+						class="input input-primary input-bordered mt-5 w-full " />
+					<span class="absolute right-0 top-1/2 text-gray-400 pr-3"
+						>({newChannel.category.length == maxCategory
+							? 'max reached'
+							: 'max ' + maxCategory})</span>
+				</div>
 				<div class="flex flex-row mt-5 ">
 					<input
 						bind:checked={newChannel.isPrivate}
