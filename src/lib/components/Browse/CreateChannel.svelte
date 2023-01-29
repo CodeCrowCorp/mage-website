@@ -4,7 +4,18 @@
 	import { onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
 
-	let newChannel = {
+	interface Channel {
+		title: string
+		description: string
+		thumbnail: string | ArrayBuffer | null
+		category: string[]
+		tags: string[]
+		isPrivate: boolean
+		user: any
+		channelType: string
+	}
+
+	let newChannel: Channel = {
 			title: '',
 			description: '',
 			thumbnail: '',
@@ -38,6 +49,7 @@
 			})
 			reader.readAsDataURL(file)
 
+			// newChannel.thumbnail = reader.result
 			showThumbnail = true
 			return
 		}
@@ -50,7 +62,7 @@
 	}
 	const addChannel = async () => {
 		let res = await createChannel(newChannel)
-		console.log(await res.json())
+		console.log(res)
 	}
 </script>
 
