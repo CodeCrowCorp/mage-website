@@ -17,3 +17,5 @@ declare namespace App {
 }
 
 declare const __VERSION__: string
+
+declare module 'svelte-tags-input'
