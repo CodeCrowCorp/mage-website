@@ -1,15 +1,198 @@
-<div class="drawer drawer-end">
-	<input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
-	<div class="drawer-content">
-		<!-- Page content here -->
-		<label for="my-drawer-4" class="drawer-button btn btn-primary">Open drawer</label>
-	</div>
+<script lang="ts">
+	import IconPhoto from '$lib/assets/icons/IconPhoto.svelte'
+	import { tags, getTags, createChannel } from '$lib/stores/channelStore'
+	import { onMount } from 'svelte'
+	import Tags from 'svelte-tags-input'
+
+	export let showDrawer: boolean
+
+	interface Channel {
+		title: string
+		description: string
+		thumbnail: string | ArrayBuffer | null
+		category: string[]
+		tags: string[]
+		isPrivate: boolean
+		user: any
+		channelType: string
+	}
+
+	let newChannel: Channel = {
+			title: '',
+			description: '',
+			thumbnail: '',
+			category: [],
+			tags: [],
+			isPrivate: false,
+			user: '',
+			channelType: ''
+		},
+		fileuploader: HTMLInputElement,
+		thumbnailRef: any,
+		showThumbnail = false,
+		maxTag = 3,
+		maxCategory = 4
+
+	$: maxTagLabel = newChannel.tags.length == maxTag ? 'max reached' : 'max ' + maxTag
+	$: maxCategoryLabel =
+		newChannel.category.length == maxCategory ? 'max reached' : 'max ' + maxCategory
+
+	onMount(async () => {
+		if (!$tags.length) {
+			await getTags()
+		}
+	})
+
+	const fileupload = async () => {
+		const file = fileuploader.files && fileuploader.files[0]
+
+		if (file) {
+			const reader = new FileReader()
+			reader.addEventListener('load', function () {
+				thumbnailRef.setAttribute('src', reader.result)
+			})
+			reader.readAsDataURL(file)
+
+			// newChannel.thumbnail = reader.result
+			showThumbnail = true
+			return
+		}
+		showThumbnail = false
+	}
+
+	const addTag = (tagName: string) => {
+		tagName && newChannel.tags.length < maxTag ? newChannel.tags.push(tagName) : ''
+		newChannel = newChannel
+	}
+	const addChannel = async () => {
+		let res = await createChannel(newChannel)
+		console.log(res)
+	}
+</script>
+
+<div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
+	<input id="create-channel-drawer" type="checkbox" class="drawer-toggle" />
 	<div class="drawer-side">
-		<label for="my-drawer-4" class="drawer-overlay" />
-		<ul class="menu p-4 w-80 bg-base-100 text-base-content">
-			<!-- Sidebar content here -->
-			<li><a>Sidebar Item 1</a></li>
-			<li><a>Sidebar Item 2</a></li>
-		</ul>
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
+		<div class="bg-base-200 w-80 md:w-[30rem]">
+			<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
+				Create a new channel
+			</p>
+			<div class="flex flex-col p-3">
+				<p class="text-xs">
+					When you create a channel, you may allow viewer's to observe your desktop as you host your
+					channel
+				</p>
+				<p class="text-lg font-semibold  mt-10">
+					Please hide all sensitive data before going live.
+				</p>
+
+				<div class="flex flex-row justify-center w-full">
+					<div class="card w-40 shadow-xl">
+						<div class="card-body items-center max-h-40 {showThumbnail ? '!p-3' : ''}">
+							{#if showThumbnail}
+								<img bind:this={thumbnailRef} src="" alt="Preview" class="rounded-lg h-full" />
+							{:else}
+								<IconPhoto />
+							{/if}
+						</div>
+					</div>
+				</div>
+
+				<input
+					bind:this={fileuploader}
+					on:change={fileupload}
+					type="file"
+					class="file-input file-input-bordered file-input-primary w-full mt-5" />
+
+				<input
+					bind:value={newChannel.title}
+					type="text"
+					placeholder="Title"
+					class="input input-primary input-bordered mt-5 w-full" />
+				<textarea
+					bind:value={newChannel.description}
+					placeholder="Description"
+					class="textarea textarea-primary mt-5 text-base w-full h-28" />
+				<p class="text-base text-gray-500 mt-5">Suggested Tags</p>
+				<div class="flex flex-wrap">
+					{#if $tags && $tags.length > 0}
+						{#each $tags as tag}
+							<!-- svelte-ignore a11y-click-events-have-key-events -->
+							<span
+								class="badge badge-primary mx-1 cursor-pointer"
+								on:click={() => addTag(tag.name)}>{tag.name}</span>
+						{/each}
+					{:else}
+						<div class="flex justify-center w-full">
+							<span class="btn btn-circle btn-outline btn-sm loading" />
+						</div>
+					{/if}
+				</div>
+				<div class="relative">
+					<Tags
+						bind:tags={newChannel.tags}
+						maxTags={maxTag}
+						placeholder={newChannel.tags.length > 0 ? '' : 'Tags'} />
+					<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxTagLabel})</span>
+				</div>
+				<div class="relative">
+					<input
+						bind:value={newChannel.category}
+						type="text"
+						placeholder="Categories"
+						class="input input-primary input-bordered mt-5 w-full " />
+					<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
+				</div>
+				<div class="flex flex-row mt-5 ">
+					<input
+						bind:checked={newChannel.isPrivate}
+						type="checkbox"
+						class="checkbox checkbox-primary mr-3" /> Private
+				</div>
+
+				<div class="flex flex-row mt-20 md:mt-32 gap-2">
+					<button type="button" class="btn btn-default grow" on:click={() => (showDrawer = false)}
+						>Cancel</button>
+					<button type="button" class="btn btn-primary grow" on:click={() => addChannel()}
+						>Add</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
+
+<style>
+	:global(.svelte-tags-input-layout) {
+		--tw-border-opacity: 1 !important;
+		border-color: hsl(var(--p) / var(--tw-border-opacity)) !important;
+		border-radius: var(--rounded-btn, 0.5rem) !important;
+		height: 3rem;
+		padding-left: 1rem !important;
+		padding-right: 1rem !important;
+		--tw-bg-opacity: 1 !important;
+		background-color: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
+		flex-wrap: nowrap !important;
+	}
+	:global(.svelte-tags-input-layout) {
+		@apply mt-5 w-full;
+	}
+	:global(.svelte-tags-input-layout:focus-within) {
+		outline: 2px solid hsl(var(--p)) !important;
+		outline-offset: 2px !important;
+	}
+	:global(.svelte-tags-input) {
+		width: 100%;
+		font-size: 1rem !important;
+		font-family: inherit !important;
+		background-color: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
+	}
+
+	:global(.svelte-tags-input-tag) {
+		background-color: hsl(var(--p) / var(--tw-bg-opacity)) !important;
+		padding-left: 0.5rem !important;
+		padding-right: 0.5rem !important;
+		border-radius: var(--rounded-badge, 1.5rem) !important;
+	}
+</style>

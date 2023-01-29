@@ -1,6 +1,9 @@
-<script>
+<script lang="ts">
 	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
+	import CreateChannel from './CreateChannel.svelte'
+
+	let showDrawer = false
 </script>
 
 <div class="flex flex-col md:flex-row gap-4 py-5 pl-5">
@@ -17,8 +20,16 @@
 	</div>
 
 	<div class="form-control">
-		<button class="btn w-[21rem] btn-primary gap-2">
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<label
+			for="create-channel-drawer"
+			class="btn w-[21rem] btn-primary gap-2 drawer-button"
+			on:click={() => (showDrawer = true)}>
 			<IconCreate />
-			Create a channel</button>
+			Create a channel</label>
 	</div>
+
+	{#if showDrawer}
+		<CreateChannel bind:showDrawer />
+	{/if}
 </div>
