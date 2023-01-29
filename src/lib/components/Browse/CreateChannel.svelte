@@ -4,6 +4,8 @@
 	import { onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
 
+	export let showDrawer: boolean
+
 	interface Channel {
 		title: string
 		description: string
@@ -31,13 +33,15 @@
 		maxTag = 3,
 		maxCategory = 4
 
+	$: maxTagLabel = newChannel.tags.length == maxTag ? 'max reached' : 'max ' + maxTag
+	$: maxCategoryLabel =
+		newChannel.category.length == maxCategory ? 'max reached' : 'max ' + maxCategory
+
 	onMount(async () => {
 		if (!$tags.length) {
 			await getTags()
 		}
 	})
-
-	export let showDrawer: boolean
 
 	const fileupload = async () => {
 		const file = fileuploader.files && fileuploader.files[0]
@@ -131,8 +135,7 @@
 						bind:tags={newChannel.tags}
 						maxTags={maxTag}
 						placeholder={newChannel.tags.length > 0 ? '' : 'Tags'} />
-					<span class="absolute right-0 top-1/2 text-gray-400 pr-3"
-						>({newChannel.tags.length == maxTag ? 'max reached' : 'max ' + maxTag})</span>
+					<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxTagLabel})</span>
 				</div>
 				<div class="relative">
 					<input
@@ -140,10 +143,7 @@
 						type="text"
 						placeholder="Categories"
 						class="input input-primary input-bordered mt-5 w-full " />
-					<span class="absolute right-0 top-1/2 text-gray-400 pr-3"
-						>({newChannel.category.length == maxCategory
-							? 'max reached'
-							: 'max ' + maxCategory})</span>
+					<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
 				</div>
 				<div class="flex flex-row mt-5 ">
 					<input
