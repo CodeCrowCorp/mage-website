@@ -53,12 +53,12 @@
 	}
 </script>
 
-<div class="drawer drawer-end absolute w-full z-20 top-1 right-0">
+<div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
 	<input id="create-channel-drawer" type="checkbox" class="drawer-toggle" />
 	<div class="drawer-side">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
-		<div class="bg-base-200 md:w-[32rem]">
+		<div class="bg-base-200 w-80">
 			<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 				Create a new channel
 			</p>
