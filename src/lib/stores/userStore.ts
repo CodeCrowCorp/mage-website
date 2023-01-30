@@ -30,6 +30,13 @@ async function getUserByUsername({ username }: { username: string }) {
     }).then(response => response.json())
 }
 
+async function getHighestRankedUsers({ skip, limit }: { skip: string, limit: string }) {
+    return await fetch(`${env.PUBLIC_API_URL}/users/highest-ranked?skip=${skip}&limit=${limit}`, {
+        method: 'GET',
+        headers: getHeaders()
+    }).then(response => response.json())
+}
+
 async function updateUser(body: any) {
     return await fetch(`${env.PUBLIC_API_URL}/users/current`, {
         method: 'PATCH',
@@ -80,6 +87,7 @@ export {
     getUsersByIds,
     getUsersByName,
     getUserByUsername,
+    getHighestRankedUsers,
     updateUser,
     updateAvatar,
     updateUsername
