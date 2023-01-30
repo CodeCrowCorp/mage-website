@@ -64,7 +64,7 @@
 	<div class="drawer-side">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
-		<div class="bg-base-200 w-80 md:w-[30rem]">
+		<div class="bg-base-200 w-80 md:w-[30rem] flex flex-col">
 			<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 				Create a new channel
 			</p>
@@ -140,13 +140,13 @@
 						type="checkbox"
 						class="checkbox checkbox-primary mr-3" /> Private
 				</div>
+			</div>
 
-				<div class="flex flex-row mt-20 md:mt-32 gap-2">
-					<button type="button" class="btn btn-default grow" on:click={() => (showDrawer = false)}
-						>Cancel</button>
-					<button type="button" class="btn btn-primary grow" on:click={() => addChannel()}
-						>Add</button>
-				</div>
+			<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
+				<button type="button" class="btn btn-default grow" on:click={() => (showDrawer = false)}
+					>Cancel</button>
+				<button type="button" class="btn btn-primary grow" on:click={() => addChannel()}
+					>Add</button>
 			</div>
 		</div>
 	</div>
