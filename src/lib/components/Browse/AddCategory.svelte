@@ -10,8 +10,44 @@
 	let categories: any = [],
 		maxCategory = 4,
 		tabs = ['Games', 'Web2', 'Web3'],
-		activeTab = 'Games'
+		activeTab = 'Games',
+		web2Assets = [],
+		web3Assets = [],
+		gamesAssets = []
 
+	const loadWeb2 = async () => {
+		if (web2Assets.length == 0) {
+			let res = await fetch(`/category/web2/_categoryWeb2.json`, {
+				method: 'GET'
+			})
+			res.ok ? (web2Assets = await res.json()) : ''
+		}
+	}
+	const loadWeb3 = async () => {
+		if (web3Assets.length == 0) {
+			let res = await fetch(`/category/web3/_categoryWeb3.json`, {
+				method: 'GET'
+			})
+
+			res.ok ? (web3Assets = await res.json()) : ''
+		}
+	}
+	const loadGame = async () => {
+		if (gamesAssets.length == 0) {
+			let res = await fetch(`/category/games/_categoryGames.json`, {
+				method: 'GET'
+			})
+
+			res.ok ? (gamesAssets = await res.json()) : ''
+		}
+	}
+
+	const setActiveTab = async (tab: string) => {
+		activeTab = tab
+		loadWeb2()
+		loadGame()
+		loadWeb3()
+	}
 	$: maxCategoryLabel = categories.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 
 	$: console.log(Object.entries($techList))
@@ -38,7 +74,7 @@
 					class="tab"
 					href="#"
 					class:tab-active={activeTab == tab}
-					on:click={() => (activeTab = tab)}>{tab}</a>
+					on:click={() => setActiveTab(tab)}>{tab}</a>
 			{/each}
 		</div>
 
