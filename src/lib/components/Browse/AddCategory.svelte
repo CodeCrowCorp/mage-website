@@ -81,13 +81,11 @@
 		<div class="flex flex-col grow h-80 overflow-y-scroll mt-5">
 			{#if Object.entries($techList).length}
 				{#each Object.entries($techList) as [name, image_url]}
-					<div class="form-control">
-						<span class="cursor-pointer flex items-center gap-2 pb-2">
-							<input type="checkbox" class="checkbox checkbox-primary" />
-							<img src={image_url} alt="" class="h-7 w-7 m-1" />
-							<span class="label-text">{name}</span>
-						</span>
-					</div>
+					<span class="cursor-pointer flex items-center gap-1 pb-2">
+						<input type="checkbox" class="checkbox checkbox-primary" />
+						<img src={image_url} alt="" class="h-7 w-7 m-1" />
+						<span class="label-text">{name}</span>
+					</span>
 				{/each}
 			{/if}
 		</div>
