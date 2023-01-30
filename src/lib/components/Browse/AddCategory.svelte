@@ -92,6 +92,7 @@
 						on:click={() => addCategory(name, image_url)}>
 						<input
 							type="checkbox"
+							checked={categories.includes(name)}
 							class="checkbox checkbox-primary"
 							disabled={categories.length == maxCategory && !categories.includes(name)} />
 						<img src={image_url} alt="" class="h-7 w-7 m-1" />
