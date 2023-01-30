@@ -4,6 +4,8 @@
 	import { goto } from '$app/navigation'
 
 	export let channels: any = []
+	let skip = 0
+	let limit = 5
 
 	let ref: any,
 		showback = false
