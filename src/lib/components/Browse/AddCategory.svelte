@@ -105,7 +105,8 @@
 	<div class="flex flex-row mt-auto gap-2 md:mb-4 p-3">
 		<button type="button" class="btn btn-default grow" on:click={() => (showAddCategory = false)}
 			>Cancel</button>
-		<button type="button" class="btn btn-primary grow" on:click={() => addCategory()}>Add</button>
+		<button type="button" class="btn btn-primary grow" on:click={() => (showAddCategory = false)}
+			>Add</button>
 	</div>
 </div>
 

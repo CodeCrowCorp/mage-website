@@ -67,7 +67,7 @@
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
 		{#if showAddCategory}
-			<AddCategory bind:showAddCategory />
+			<AddCategory bind:showAddCategory bind:categories={newChannel.category} />
 		{:else}
 			<div class="bg-base-200 w-80 md:w-[30rem]">
 				<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
