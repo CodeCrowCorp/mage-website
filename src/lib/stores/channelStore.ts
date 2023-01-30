@@ -3,14 +3,8 @@ import { env } from '$env/dynamic/public'
 import { currentUser } from '$lib/stores/authStore'
 import { getHeaders } from '$lib/stores/helperStore'
 
-let skip = 0
-let limit = 100
-
 export const searchQuery: Writable<string> = writable('')
 export const currentChannel: Writable<any> = writable(null)
-export const myChannels: Writable<[]> = writable([])
-export const channels: Writable<[]> = writable([])
-export const searchedchannels: Writable<[]> = writable([])
 export const techList: Writable<[]> = writable([])
 export const tags: Writable<any> = writable([])
 
@@ -229,19 +223,11 @@ async function deleteMembers({ channelId }: { channelId: string }) {
 	})
 }
 
-function resetSkipLimit() {
-	skip = 0
-	limit = 100
-}
-
-async function getMyChannels() {
-	return await fetch(`${env.PUBLIC_API_URL}/channels/me/hosted`, {
+async function getMyChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
+	return await fetch(`${env.PUBLIC_API_URL}/channels/me/hosted?skip=${skip}&limit=${limit}`, {
 		method: 'GET',
 		headers: getHeaders()
-	}).then(async (response) => {
-		const res = await response.json()
-		myChannels.set(res)
-	})
+	}).then((response) => response.json())
 }
 
 async function getChannelsByUserId({
@@ -264,64 +250,35 @@ async function getChannelsByUserId({
 	).then((response) => response.json())
 }
 
-async function getFavChannels() {
-	return await fetch(`${env.PUBLIC_API_URL}/channels/me/fav`, {
+async function getFavChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
+	return await fetch(`${env.PUBLIC_API_URL}/channels/me/fav?skip=${skip}&limit=${limit}`, {
 		method: 'GET',
 		headers: getHeaders()
 	}).then((response) => response.json())
 }
 
-async function getMostActiveChannels() {
-	return await fetch(`${env.PUBLIC_API_URL}/channels/most-active`, {
+async function getMostActiveChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
+	return await fetch(`${env.PUBLIC_API_URL}/channels/most-active?skip=${skip}&limit=${limit}`, {
 		method: 'GET',
 		headers: getHeaders()
 	}).then((response) => response.json())
 }
 
-async function getWeeklyChannels() {
-	return await fetch(`${env.PUBLIC_API_URL}/channels/weekly`, {
+async function getWeeklyChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
+	return await fetch(`${env.PUBLIC_API_URL}/channels/weekly?skip=${skip}&limit=${limit}`, {
 		method: 'GET',
 		headers: getHeaders()
 	}).then((response) => response.json())
 }
 
-async function getChannels({ isRefresh = false }: { isRefresh?: boolean } = {}) {
-	if (isRefresh) {
-		resetSkipLimit()
-	}
-
-	const result = await fetch(
+async function getChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
+	return await fetch(
 		`${env.PUBLIC_API_URL}/channels?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`,
 		{
-			method: 'GET'
+			method: 'GET',
+			headers: getHeaders()
 		}
-	)
-
-	if (result.ok) {
-		return await result.json()
-	} else {
-		throw new Error('Error fetching channels')
-	}
-
-	// then(async (response) => {
-	// 	console.log('response', response)
-
-	// 	const res = await response.json()
-	// 	if (res.length) {
-	// 		skip += limit
-	// 		console.log('res', res)
-	//TODO: push res to channels
-	// channels.update(current => [...current, res])
-	// } else {
-	//TODO: show alert
-	// if ((this.searchQuery || this.filterTechList.length) && !this.skip)
-	//     this.snackBar.open('No results with the search criteria', null, {
-	//         duration: 2000
-	//     })
-	// }
-	// console.log(channels)
-	// return channels
-	// })
+	).then((response) => response.json())
 }
 
 async function leaveChannel({

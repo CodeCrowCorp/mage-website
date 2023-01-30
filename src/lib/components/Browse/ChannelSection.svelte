@@ -6,6 +6,8 @@
 
 	export let title: string = '',
 		channels: any = undefined
+	let skip = 0
+	let limit = 5
 
 	let ref: any
 	$: channels = channels && channels.splice(0, 10)
