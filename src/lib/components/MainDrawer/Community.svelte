@@ -1,1 +1,0 @@
-<div>Community Drawer</div>

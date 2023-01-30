@@ -5,9 +5,10 @@
 	import { goto } from '$app/navigation'
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
-	import { currentUser } from '$lib/stores/authStore'
+	import { currentUser, userRole } from '$lib/stores/authStore'
 	import { login_modal } from '$lib/stores/helperStore'
 	import { env } from '$env/dynamic/public'
+	import { isFeatureMintPageEnabled, isFeaturePremiumPageEnabled, isFeatureGroupChatEnabled, isFeatureVideoResponsesEnabled } from '$lib/stores/remoteConfigStore'
 
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
@@ -15,7 +16,6 @@
 	import IconDrawerStreamDuration from '$lib/assets/icons/drawer/IconDrawerStreamDuration.svelte'
 	import IconDrawerHome from '$lib/assets/icons/drawer/IconDrawerHome.svelte'
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
-	import IconDrawerCommunity from '$lib/assets/icons/drawer/IconDrawerCommunity.svelte'
 	import IconDrawerMessages from '$lib/assets/icons/drawer/IconDrawerMessages.svelte'
 	import IconDrawerVideos from '$lib/assets/icons/drawer/IconDrawerVideos.svelte'
 	import IconDrawerCreatorSpace from '$lib/assets/icons/drawer/IconDrawerCreatorSpace.svelte'
@@ -35,7 +35,6 @@
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
 	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
-	import Community from '$lib/components/MainDrawer/Community.svelte'
 	import Messages from '$lib/components/MainDrawer/Messages.svelte'
 	NProgress.configure({
 		minimum: 0.75,
@@ -104,7 +103,6 @@
 	<div class="drawer-side">
 		<label for="my-drawer-2" class="drawer-overlay" />
 		<div class="menu p-4 w-80 bg-base-100 text-base-content flex flex-col">
-			<!-- <Community /> -->
 			<!-- <Messages /> -->
 			<ul>
 				<div class="navbar">
@@ -120,7 +118,7 @@
 											<div
 												class="w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
 												<img
-													src={$currentUser.avatar || 'https://placeimg.com/192/192/people'}
+													src={$currentUser.avatar}
 													alt="" />
 											</div>
 										</div>
@@ -143,7 +141,7 @@
 				{/if}
 				<!-- Sidebar content here -->
 
-				{#if $currentUser}
+				{#if $currentUser && $userRole === 'admin'}
 					<li>
 						<a href="/admin">
 							<IconDrawerAdmin />
@@ -160,20 +158,14 @@
 				{#if $currentUser}
 					<li>
 						<a href="">
-							<IconDrawerCommunity />
-							Community
-							<IconDrawerChevron />
-						</a>
-					</li>
-					<li>
-						<a href="">
 							<IconDrawerMessages />
 							Messages
 							<IconDrawerChevron />
 						</a>
 					</li>
 				{/if}
-				<!-- <li>
+				{#if $currentUser && $isFeatureVideoResponsesEnabled}
+				<li>
 					<a href="/videos">
 						<IconDrawerVideos />
 						Videos
@@ -183,7 +175,9 @@
 					<a href="/creator-space">
 						<IconDrawerCreatorSpace />
 						Creator Space</a>
-				</li> -->
+				</li>
+				{/if}
+				{#if $currentUser && $isFeatureMintPageEnabled}
 				<li>
 					<a
 						href="https://mint.codecrow.io"
@@ -194,7 +188,8 @@
 						Mint <span class="badge">New</span>
 					</a>
 				</li>
-				{#if $currentUser}
+				{/if}
+				{#if $currentUser && $isFeaturePremiumPageEnabled}
 					<li>
 						<a href="/premium" class="text-pink-500">
 							<IconDrawerPremium />

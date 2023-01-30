@@ -30,7 +30,9 @@
 </script>
 
 <div class="flex flex-col my-4">
-	<div class="font-semibold my-3">{title || 'Channel Group'}</div>
+	<div class="font-semibold m-3">
+		<a class="link link-secondary text-lg">{title || 'Channel Group'}</a>
+	</div>
 	{#if channels && channels.length}
 		<div class="flex flex-row">
 			<div class="relative flex items-center">
