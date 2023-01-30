@@ -5,10 +5,10 @@
 	// getTechListJson() method already called from +page.svelte in browse
 	// so $techList has the value
 
-	export let showAddCategory: boolean = true
+	export let showAddCategory: boolean = true,
+		categories: any = []
 
-	let categories: any = [],
-		maxCategory = 4,
+	let maxCategory = 4,
 		tabs = ['Games', 'Web2', 'Web3'],
 		activeTab = 'Games',
 		web2Assets = [],
@@ -50,13 +50,14 @@
 	}
 	$: maxCategoryLabel = categories.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 
-	$: console.log(Object.entries($techList))
 	const addCategory = (name: string, image_url: string) => {
-		if (categories.length < maxCategory) {
+		if (categories.includes(name)) {
+			categories.splice(categories.indexOf(name), 1)
+			categories = categories
+		} else if (categories.length < maxCategory) {
 			categories.push(name)
 			categories = categories
 		}
-		console.log(categories)
 	}
 </script>
 
@@ -89,7 +90,10 @@
 					<label
 						class="cursor-pointer flex items-center gap-2 pb-2"
 						on:click={() => addCategory(name, image_url)}>
-						<input type="checkbox" class="checkbox checkbox-primary" />
+						<input
+							type="checkbox"
+							class="checkbox checkbox-primary"
+							disabled={categories.length == maxCategory && !categories.includes(name)} />
 						<img src={image_url} alt="" class="h-7 w-7 m-1" />
 						<span class="label-text">{name}</span>
 					</label>
