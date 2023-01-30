@@ -51,7 +51,11 @@
 	$: maxCategoryLabel = categories.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 
 	$: console.log(Object.entries($techList))
-	const addCategory = () => {
+	const addCategory = (name: string, image_url: string) => {
+		if (categories.length < maxCategory) {
+			categories.push(name)
+			categories = categories
+		}
 		console.log(categories)
 	}
 </script>
@@ -81,7 +85,10 @@
 		<div class="flex flex-col grow h-80 overflow-y-scroll mt-5">
 			{#if Object.entries($techList).length}
 				{#each Object.entries($techList) as [name, image_url]}
-					<label class="cursor-pointer flex items-center gap-2 pb-2">
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<label
+						class="cursor-pointer flex items-center gap-2 pb-2"
+						on:click={() => addCategory(name, image_url)}>
 						<input type="checkbox" class="checkbox checkbox-primary" />
 						<img src={image_url} alt="" class="h-7 w-7 m-1" />
 						<span class="label-text">{name}</span>
