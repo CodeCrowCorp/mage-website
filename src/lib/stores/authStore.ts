@@ -24,4 +24,6 @@ async function getUserDetails(jwt: string, userId: string) {
     }
 }
 
-export { getUserDetails }
+export {
+    getUserDetails
+}
