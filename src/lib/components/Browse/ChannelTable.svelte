@@ -121,9 +121,9 @@
 							<div class="flex flex-wrap">
 								{#if channel.category && channel.category.length}
 									{#each channel.category as category}
-									<div class="tooltip" data-tip="{category}">										
-										<img src={$techList[category]} alt="" class="h-7 w-7 m-1" />
-									</div>
+										<div class="tooltip" data-tip={category}>
+											<img src={$techList[category]} alt="" class="h-7 w-7 m-1" />
+										</div>
 									{/each}
 								{/if}
 							</div>

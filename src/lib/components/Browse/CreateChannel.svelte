@@ -3,6 +3,7 @@
 	import { tags, getTags, createChannel } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
+	import AddCategory from './AddCategory.svelte'
 
 	export let showDrawer: boolean
 
@@ -19,6 +20,7 @@
 		fileuploader: HTMLInputElement,
 		thumbnailRef: any,
 		showThumbnail = false,
+		showAddCategory = false,
 		maxTag = 3,
 		maxCategory = 4
 
@@ -64,91 +66,96 @@
 	<div class="drawer-side">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
-		<div class="bg-base-200 w-80 md:w-[30rem]">
-			<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
-				Create a new channel
-			</p>
-			<div class="flex flex-col p-3">
-				<p class="text-xs">
-					When you create a channel, you may allow viewer's to observe your desktop as you host your
-					channel
+		{#if showAddCategory}
+			<AddCategory bind:showAddCategory />
+		{:else}
+			<div class="bg-base-200 w-80 md:w-[30rem]">
+				<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
+					Create a new channel
 				</p>
-				<p class="text-lg font-semibold  mt-10">
-					Please hide all sensitive data before going live.
-				</p>
+				<div class="flex flex-col p-3">
+					<p class="text-xs">
+						When you create a channel, you may allow viewer's to observe your desktop as you host
+						your channel
+					</p>
+					<p class="text-lg font-semibold  mt-10">
+						Please hide all sensitive data before going live.
+					</p>
 
-				<div class="flex flex-row justify-center w-full">
-					<div class="card w-40 shadow-xl">
-						<div class="card-body items-center max-h-40 {showThumbnail ? '!p-3' : ''}">
-							{#if showThumbnail}
-								<img bind:this={thumbnailRef} src="" alt="Preview" class="rounded-lg h-full" />
-							{:else}
-								<IconPhoto />
-							{/if}
+					<div class="flex flex-row justify-center w-full">
+						<div class="card w-40 shadow-xl">
+							<div class="card-body items-center max-h-40 {showThumbnail ? '!p-3' : ''}">
+								{#if showThumbnail}
+									<img bind:this={thumbnailRef} src="" alt="Preview" class="rounded-lg h-full" />
+								{:else}
+									<IconPhoto />
+								{/if}
+							</div>
 						</div>
 					</div>
-				</div>
 
-				<input
-					bind:this={fileuploader}
-					on:change={fileupload}
-					type="file"
-					class="file-input file-input-bordered file-input-primary w-full mt-5" />
-
-				<input
-					bind:value={newChannel.title}
-					type="text"
-					placeholder="Title"
-					class="input input-primary input-bordered mt-5 w-full" />
-				<textarea
-					bind:value={newChannel.description}
-					placeholder="Description"
-					class="textarea textarea-primary mt-5 text-base w-full h-28" />
-				<p class="text-base text-gray-500 mt-5">Suggested Tags</p>
-				<div class="flex flex-wrap">
-					{#if $tags && $tags.length > 0}
-						{#each $tags as tag}
-							<!-- svelte-ignore a11y-click-events-have-key-events -->
-							<span
-								class="badge badge-primary mx-1 cursor-pointer"
-								on:click={() => addTag(tag.name)}>{tag.name}</span>
-						{/each}
-					{:else}
-						<div class="flex justify-center w-full">
-							<span class="btn btn-circle btn-outline btn-sm loading" />
-						</div>
-					{/if}
-				</div>
-				<div class="relative">
-					<Tags
-						bind:tags={newChannel.tags}
-						maxTags={maxTag}
-						placeholder={newChannel.tags.length > 0 ? '' : 'Tags'} />
-					<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxTagLabel})</span>
-				</div>
-				<div class="relative">
 					<input
-						bind:value={newChannel.category}
+						bind:this={fileuploader}
+						on:change={fileupload}
+						type="file"
+						class="file-input file-input-bordered file-input-primary w-full mt-5" />
+
+					<input
+						bind:value={newChannel.title}
 						type="text"
-						placeholder="Categories"
-						class="input input-primary input-bordered mt-5 w-full " />
-					<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
-				</div>
-				<div class="flex flex-row mt-5 ">
-					<input
-						bind:checked={newChannel.isPrivate}
-						type="checkbox"
-						class="checkbox checkbox-primary mr-3" /> Private
-				</div>
+						placeholder="Title"
+						class="input input-primary input-bordered mt-5 w-full" />
+					<textarea
+						bind:value={newChannel.description}
+						placeholder="Description"
+						class="textarea textarea-primary mt-5 text-base w-full h-28" />
+					<p class="text-base text-gray-500 mt-5">Suggested Tags</p>
+					<div class="flex flex-wrap">
+						{#if $tags && $tags.length > 0}
+							{#each $tags as tag}
+								<!-- svelte-ignore a11y-click-events-have-key-events -->
+								<span
+									class="badge badge-primary mx-1 cursor-pointer"
+									on:click={() => addTag(tag.name)}>{tag.name}</span>
+							{/each}
+						{:else}
+							<div class="flex justify-center w-full">
+								<span class="btn btn-circle btn-outline btn-sm loading" />
+							</div>
+						{/if}
+					</div>
+					<div class="relative">
+						<Tags
+							bind:tags={newChannel.tags}
+							maxTags={maxTag}
+							placeholder={newChannel.tags.length > 0 ? '' : 'Tags'} />
+						<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxTagLabel})</span>
+					</div>
+					<div class="relative">
+						<input
+							on:focus={() => (showAddCategory = true)}
+							bind:value={newChannel.category}
+							type="text"
+							placeholder="Categories"
+							class="input input-primary input-bordered mt-5 w-full " />
+						<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
+					</div>
+					<div class="flex flex-row mt-5 ">
+						<input
+							bind:checked={newChannel.isPrivate}
+							type="checkbox"
+							class="checkbox checkbox-primary mr-3" /> Private
+					</div>
 
-				<div class="flex flex-row mt-20 md:mt-32 gap-2">
-					<button type="button" class="btn btn-default grow" on:click={() => (showDrawer = false)}
-						>Cancel</button>
-					<button type="button" class="btn btn-primary grow" on:click={() => addChannel()}
-						>Add</button>
+					<div class="flex flex-row mt-20 md:mt-32 gap-2">
+						<button type="button" class="btn btn-default grow" on:click={() => (showDrawer = false)}
+							>Cancel</button>
+						<button type="button" class="btn btn-primary grow" on:click={() => addChannel()}
+							>Add</button>
+					</div>
 				</div>
 			</div>
-		</div>
+		{/if}
 	</div>
 </div>
 
