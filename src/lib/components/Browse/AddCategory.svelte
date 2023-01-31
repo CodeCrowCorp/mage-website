@@ -49,6 +49,7 @@
 
 	const setActiveTab = async (tab: string) => {
 		activeTab = tab
+		// assetIcons = []
 		await loadWeb2()
 		await loadGame()
 		await loadWeb3()
@@ -109,13 +110,19 @@
 						<span class="label-text">{name}</span>
 					</label>
 				{/each}
+			{:else}
+				<div class="flex justify-center w-full">
+					<span class="btn btn-circle btn-outline btn-sm loading" />
+				</div>
 			{/if}
 		</div>
 	</div>
 
 	<div class="flex flex-row mt-auto gap-2 md:mb-4 p-3">
-		<button type="button" class="btn btn-default grow" on:click={() => (showAddCategory = false)}
-			>Cancel</button>
+		<button
+			type="button"
+			class="btn btn-default grow"
+			on:click={() => ((categories = []), (showAddCategory = false))}>Cancel</button>
 		<button type="button" class="btn btn-primary grow" on:click={() => (showAddCategory = false)}
 			>Add</button>
 	</div>
