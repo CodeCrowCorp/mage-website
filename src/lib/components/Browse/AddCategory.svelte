@@ -77,13 +77,15 @@
 
 	const searchCategory = () => {
 		// console.log(searchQuery)
-		searchResult = Object.keys(assetIcons)
-			.filter((key) => key.toLowerCase().includes(searchQuery.toLowerCase()))
-			.reduce((obj, key) => {
-				return Object.assign(obj, {
-					[key]: assetIcons[key]
-				})
-			}, {})
+		if (searchQuery) {
+			searchResult = Object.keys(assetIcons)
+				.filter((key) => key.toLowerCase().includes(searchQuery.toLowerCase()))
+				.reduce((obj, key) => {
+					return Object.assign(obj, {
+						[key]: assetIcons[key]
+					})
+				}, {})
+		}
 	}
 
 	onMount(async () => {
