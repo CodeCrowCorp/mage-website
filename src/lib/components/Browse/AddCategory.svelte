@@ -148,6 +148,8 @@
 						<span class="label-text">{name}</span>
 					</label>
 				{/each}
+			{:else if searchQuery != ''}
+				<p class="flex justify-center">No results for the search query</p>
 			{:else}
 				<div class="flex justify-center w-full">
 					<span class="btn btn-circle btn-outline btn-sm loading" />
