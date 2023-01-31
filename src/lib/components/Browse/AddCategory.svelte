@@ -54,7 +54,7 @@
 	}
 	$: maxCategoryLabel = categories.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 
-	const addCategory = (name: string, image_url: string) => {
+	const toggleCategory = (name: string, image_url: string) => {
 		if (categories.includes(name)) {
 			categories.splice(categories.indexOf(name), 1)
 			categoryIcons.splice(categoryIcons.indexOf(image_url), 1)
@@ -64,6 +64,11 @@
 		}
 		categories = categories
 		categoryIcons = categoryIcons
+	}
+
+	const removeCategory = (image_url: string) => {
+		let key = Object.keys(assetIcons).find((key) => assetIcons[key] === image_url)
+		toggleCategory(key ?? '', image_url)
 	}
 
 	onMount(async () => {
@@ -83,7 +88,11 @@
 			<span class="absolute flex flex-row gap-2 left-0 top-1/2  pl-5">
 				{#if categoryIcons.length}
 					{#each categoryIcons as icon}
-						<img src={icon} alt="" class="h-5 w-5" />
+						<img
+							src={icon}
+							alt=""
+							class="h-5 w-5 cursor-pointer"
+							on:click={() => removeCategory(icon)} />
 					{/each}
 				{/if}
 			</span>
@@ -105,7 +114,7 @@
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<label
 						class="cursor-pointer flex items-center gap-2 pb-2"
-						on:click={() => addCategory(name, image_url)}>
+						on:click={() => toggleCategory(name, image_url)}>
 						<input
 							type="checkbox"
 							checked={categories.includes(name)}
