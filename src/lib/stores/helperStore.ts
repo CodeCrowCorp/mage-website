@@ -15,30 +15,17 @@ export const getHeaders = () => {
 	return headers
 }
 
-export const levelFromExp = (exp: number): number => {
-	let level = 1
-	let totalExp = 0
-	while (exp >= totalExp) {
-		level++
-		totalExp = Math.floor((50 * level * (level + 1)) / 2)
-	}
-	return level - 1
-}
+export const levelAndBarValueFromExp = (
+	currentExp: number
+): { level: number; barValue: number } => {
+	const level = Math.floor(0.5 * Math.sqrt(currentExp)) + 1
+	const currentLevelExp = Math.pow(level - 1, 2) * 100
+	const nextLevelExp = Math.pow(level, 2) * 100
+	const expDifference = nextLevelExp - currentLevelExp
+	const expProgress = (currentExp - currentLevelExp) / expDifference
+	const barValue = Math.round(expProgress * 100)
 
-export const barValueFromExp = (exp: number): number => {
-	let currentXP = 0
-	let targetXP = 0
-
-	for (let i = 1; i < exp; i++) {
-		currentXP += Math.floor(i + 300 * Math.pow(2, i / 7))
-	}
-
-	for (let i = 1; i < exp + 1; i++) {
-		targetXP += Math.floor(i + 300 * Math.pow(2, i / 7))
-	}
-
-	const difference = targetXP - currentXP
-	return (difference / targetXP) * 100
+	return { level, barValue }
 }
 
 export const colorFromLevel = (level: number): string => {

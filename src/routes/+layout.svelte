@@ -6,12 +6,7 @@
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
 	import { currentUser, userRole } from '$lib/stores/authStore'
-	import {
-		login_modal,
-		levelFromExp,
-		barValueFromExp,
-		colorFromLevel
-	} from '$lib/stores/helperStore'
+	import { login_modal, colorFromLevel, levelAndBarValueFromExp } from '$lib/stores/helperStore'
 	import { env } from '$env/dynamic/public'
 	import {
 		isFeatureMintPageEnabled,
@@ -36,12 +31,9 @@
 	import IconDrawerSettings from '$lib/assets/icons/drawer/IconDrawerSettings.svelte'
 	import IconDrawerLogOut from '$lib/assets/icons/drawer/IconDrawerLogOut.svelte'
 	import IconSocialTwitter from '$lib/assets/icons/social/IconSocialTwitter.svelte'
-	import IconSocialDiscord from '$lib/assets/icons/social/IconDiscord.svg'
-	import IconDexlab from '$lib/assets/icons/social/IconDexlab.svg'
-	import IconMagicEden from '$lib/assets/icons/social/IconMagicEden.svg'
-	// import IconSocialDexlab from '$lib/assets/icons/social/IconSocialDexlab.svelte'
-	// import IconSocialMagicEden from '$lib/assets/icons/social/IconSocialMagicEden.svelte'
-	// import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svelte'
+	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svg'
+	import IconSocialDexlab from '$lib/assets/icons/social/IconSocialDexlab.svg'
+	import IconSocialMagicEden from '$lib/assets/icons/social/IconSocialMagicEden.svg'
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
 	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
@@ -83,8 +75,10 @@
 		goto('/logout')
 	}
 
-	let progressBarLevel = levelFromExp(20000) //$currentUser.exp
-	let progressBarValue = barValueFromExp(progressBarLevel) //Math.floor(Math.random() * (100 - 0 + 1) + 0) //$currentUser.exp
+	let exp = 512 //Math.floor(Math.random() * (10000 - 0 + 1) + 0) //$currentUser.exp
+	let levelAndBarValue = levelAndBarValueFromExp(exp)
+	let progressBarLevel = levelAndBarValue.level //levelFromExp(exp) //$currentUser.exp
+	let progressBarValue = levelAndBarValue.barValue //barValueFromExp(exp) //$currentUser.exp
 	let progressBarColor = colorFromLevel(progressBarLevel)
 </script>
 
@@ -269,19 +263,16 @@
 						<IconSocialGitHub />
 					</a>
 					<a href="https://discord.gg/CodeCrow" target="_blank" rel="noreferrer">
-						<!-- <IconSocialDiscord /> -->
 						<img src={IconSocialDiscord} alt="" />
 					</a>
 					<a href="https://twitter.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 						<IconSocialTwitter />
 					</a>
 					<a href="https://magiceden.io" target="_blank" rel="noreferrer">
-						<!-- <IconSocialMagicEden /> -->
-						<img src={IconMagicEden} alt="" />
+						<img src={IconSocialMagicEden} alt="" />
 					</a>
 					<a href="https://www.dexlab.space" target="_blank" rel="noreferrer">
-						<!-- <IconSocialDexlab /> -->
-						<img src={IconDexlab} alt="" />
+						<img src={IconSocialDexlab} alt="" />
 					</a>
 				</div>
 				<p>Code Crow Corp © 2023</p>
