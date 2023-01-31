@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { techList } from '$lib/stores/channelStore'
 
 	// getTechListJson() method already called from +page.svelte in browse
 	// so $techList has the value
@@ -9,11 +8,17 @@
 		categories: any = []
 
 	let maxCategory = 4,
-		tabs = ['Games', 'Web2', 'Web3'],
-		activeTab = 'Games',
-		web2Assets = [],
-		web3Assets = [],
-		gamesAssets = []
+		tabs = ['Game', 'Web2', 'Web3'],
+		activeTab = 'Game',
+		web2Assets: any = [],
+		web3Assets: any = [],
+		gamesAssets: any = [],
+		assetIcons: any = {}
+
+	const setActiveIcons = () => {
+		assetIcons = activeTab == 'Game' ? gamesAssets : activeTab == 'Web2' ? web2Assets : web3Assets
+		console.log(assetIcons)
+	}
 
 	const loadWeb2 = async () => {
 		if (web2Assets.length == 0) {
@@ -34,7 +39,7 @@
 	}
 	const loadGame = async () => {
 		if (gamesAssets.length == 0) {
-			let res = await fetch(`/svg-json/games.json`, {
+			let res = await fetch(`/svg-json/game.json`, {
 				method: 'GET'
 			})
 
@@ -44,9 +49,10 @@
 
 	const setActiveTab = async (tab: string) => {
 		activeTab = tab
-		loadWeb2()
-		loadGame()
-		loadWeb3()
+		await loadWeb2()
+		await loadGame()
+		await loadWeb3()
+		setActiveIcons()
 	}
 	$: maxCategoryLabel = categories.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 
@@ -59,6 +65,10 @@
 			categories = categories
 		}
 	}
+
+	onMount(async () => {
+		await setActiveTab(activeTab)
+	})
 </script>
 
 <div class=" addCategory bg-base-200 w-80 md:w-[30rem] flex flex-col">
@@ -84,8 +94,8 @@
 		</div>
 
 		<div class="flex flex-col grow h-80 overflow-y-scroll mt-5">
-			{#if Object.entries($techList).length}
-				{#each Object.entries($techList) as [name, image_url]}
+			{#if Object.entries(assetIcons).length}
+				{#each Object.entries(assetIcons) as [name, image_url]}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<label
 						class="cursor-pointer flex items-center gap-2 pb-2"
