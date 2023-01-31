@@ -1,9 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 
-	// getTechListJson() method already called from +page.svelte in browse
-	// so $techList has the value
-
 	export let showAddCategory: boolean = true,
 		categories: any = [],
 		categoryIcons: any = []
@@ -18,7 +15,6 @@
 
 	const setActiveIcons = () => {
 		assetIcons = activeTab == 'Game' ? gamesAssets : activeTab == 'Web2' ? web2Assets : web3Assets
-		console.log(assetIcons)
 	}
 
 	const loadWeb2 = async () => {
