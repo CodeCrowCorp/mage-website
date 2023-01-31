@@ -6,9 +6,19 @@
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
 	import { currentUser, userRole } from '$lib/stores/authStore'
-	import { login_modal } from '$lib/stores/helperStore'
+	import {
+		login_modal,
+		levelFromExp,
+		barValueFromExp,
+		colorFromLevel
+	} from '$lib/stores/helperStore'
 	import { env } from '$env/dynamic/public'
-	import { isFeatureMintPageEnabled, isFeaturePremiumPageEnabled, isFeatureGroupChatEnabled, isFeatureVideoResponsesEnabled } from '$lib/stores/remoteConfigStore'
+	import {
+		isFeatureMintPageEnabled,
+		isFeaturePremiumPageEnabled,
+		isFeatureGroupChatEnabled,
+		isFeatureVideoResponsesEnabled
+	} from '$lib/stores/remoteConfigStore'
 
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
@@ -72,6 +82,10 @@
 		}, 500)
 		goto('/logout')
 	}
+
+	let progressBarLevel = levelFromExp(20000) //$currentUser.exp
+	let progressBarValue = barValueFromExp(progressBarLevel) //Math.floor(Math.random() * (100 - 0 + 1) + 0) //$currentUser.exp
+	let progressBarColor = colorFromLevel(progressBarLevel)
 </script>
 
 <svelte:head>
@@ -90,7 +104,7 @@
 		{#if data && data.isBanned}
 			<div class="alert alert-error shadow-lg">
 				<div>
-					<div class="font-bold text-white	">
+					<div class="font-bold text-white">
 						<h3>Your account is banned</h3>
 					</div>
 				</div>
@@ -117,9 +131,7 @@
 										<div class="avatar online">
 											<div
 												class="w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
-												<img
-													src={$currentUser.avatar}
-													alt="" />
+												<img src={$currentUser.avatar} alt="" />
 											</div>
 										</div>
 									</div>
@@ -132,8 +144,12 @@
 										<p class="col-span-2 tooltip text-start" data-tip="300 hours streamed">300 h</p>
 									</div>
 								</div>
-								<div class="tooltip" data-tip="level 1">
-									<progress class="progress progress-accent w-64" value="30" max="100" />
+								<div class="tooltip" data-tip="level {progressBarLevel}">
+									<progress
+										class="progress w-64"
+										style="--progress-bar-color: {progressBarColor}"
+										value={progressBarValue}
+										max="100" />
 								</div>
 							</div>
 						</a>
@@ -165,29 +181,29 @@
 					</li>
 				{/if}
 				{#if $currentUser && $isFeatureVideoResponsesEnabled}
-				<li>
-					<a href="/videos">
-						<IconDrawerVideos />
-						Videos
-					</a>
-				</li>
-				<li>
-					<a href="/creator-space">
-						<IconDrawerCreatorSpace />
-						Creator Space</a>
-				</li>
+					<li>
+						<a href="/videos">
+							<IconDrawerVideos />
+							Videos
+						</a>
+					</li>
+					<li>
+						<a href="/creator-space">
+							<IconDrawerCreatorSpace />
+							Creator Space</a>
+					</li>
 				{/if}
 				{#if $currentUser && $isFeatureMintPageEnabled}
-				<li>
-					<a
-						href="https://mint.codecrow.io"
-						class="text-emerald-600"
-						target="_blank"
-						rel="noreferrer">
-						<IconDrawerMint />
-						Mint <span class="badge">New</span>
-					</a>
-				</li>
+					<li>
+						<a
+							href="https://mint.codecrow.io"
+							class="text-emerald-600"
+							target="_blank"
+							rel="noreferrer">
+							<IconDrawerMint />
+							Mint <span class="badge">New</span>
+						</a>
+					</li>
 				{/if}
 				{#if $currentUser && $isFeaturePremiumPageEnabled}
 					<li>
@@ -274,3 +290,9 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	progress::-webkit-progress-value {
+		background-color: var(--progress-bar-color);
+	}
+</style>
