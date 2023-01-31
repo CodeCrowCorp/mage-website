@@ -17,7 +17,7 @@
 
 	const loadWeb2 = async () => {
 		if (web2Assets.length == 0) {
-			let res = await fetch(`/category/web2/_categoryWeb2.json`, {
+			let res = await fetch(`/svg-json/web2.json`, {
 				method: 'GET'
 			})
 			res.ok ? (web2Assets = await res.json()) : ''
@@ -25,7 +25,7 @@
 	}
 	const loadWeb3 = async () => {
 		if (web3Assets.length == 0) {
-			let res = await fetch(`/category/web3/_categoryWeb3.json`, {
+			let res = await fetch(`/svg-json/web3.json`, {
 				method: 'GET'
 			})
 
@@ -34,7 +34,7 @@
 	}
 	const loadGame = async () => {
 		if (gamesAssets.length == 0) {
-			let res = await fetch(`/category/games/_categoryGames.json`, {
+			let res = await fetch(`/svg-json/games.json`, {
 				method: 'GET'
 			})
 
