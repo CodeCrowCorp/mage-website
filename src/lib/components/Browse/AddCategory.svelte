@@ -10,11 +10,13 @@
 		activeTab = 'Game',
 		web2Assets: any = [],
 		web3Assets: any = [],
-		gamesAssets: any = [],
+		gameAssets: any = [],
 		assetIcons: any = {}
 
+	$: allIcons = { ...web2Assets, ...web3Assets, ...gameAssets }
+
 	const setActiveIcons = () => {
-		assetIcons = activeTab == 'Game' ? gamesAssets : activeTab == 'Web2' ? web2Assets : web3Assets
+		assetIcons = activeTab == 'Game' ? gameAssets : activeTab == 'Web2' ? web2Assets : web3Assets
 	}
 
 	const loadWeb2 = async () => {
@@ -35,12 +37,12 @@
 		}
 	}
 	const loadGame = async () => {
-		if (gamesAssets.length == 0) {
+		if (gameAssets.length == 0) {
 			let res = await fetch(`/svg-json/game.json`, {
 				method: 'GET'
 			})
 
-			res.ok ? (gamesAssets = await res.json()) : ''
+			res.ok ? (gameAssets = await res.json()) : ''
 		}
 	}
 
@@ -67,7 +69,7 @@
 	}
 
 	const removeCategory = (image_url: string) => {
-		let key = Object.keys(assetIcons).find((key) => assetIcons[key] === image_url)
+		let key = Object.keys(allIcons).find((key) => allIcons[key] === image_url)
 		toggleCategory(key ?? '', image_url)
 	}
 
