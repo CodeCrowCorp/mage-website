@@ -12,7 +12,8 @@
 		web3Assets: any = [],
 		gameAssets: any = [],
 		assetIcons: any = {},
-		searchQuery: string = ''
+		searchQuery: string = '',
+		searchResult: any = {}
 
 	$: allIcons = { ...web2Assets, ...web3Assets, ...gameAssets }
 
@@ -76,14 +77,13 @@
 
 	const searchCategory = () => {
 		// console.log(searchQuery)
-		const searchResult = Object.keys(assetIcons)
+		searchResult = Object.keys(assetIcons)
 			.filter((key) => key.toLowerCase().includes(searchQuery.toLowerCase()))
 			.reduce((obj, key) => {
 				return Object.assign(obj, {
 					[key]: assetIcons[key]
 				})
 			}, {})
-		assetIcons = searchResult
 	}
 
 	onMount(async () => {
@@ -131,8 +131,8 @@
 		</div>
 
 		<div class="flex flex-col grow h-80 overflow-y-scroll mt-5">
-			{#if Object.entries(assetIcons).length}
-				{#each Object.entries(assetIcons) as [name, image_url]}
+			{#if Object.entries(searchQuery != '' ? searchResult : assetIcons).length}
+				{#each Object.entries(searchQuery != '' ? searchResult : assetIcons) as [name, image_url]}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<label
 						class="cursor-pointer flex items-center gap-2 pb-2"
