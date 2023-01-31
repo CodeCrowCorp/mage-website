@@ -7,5 +7,6 @@
 	"pluginSearchDirs": ["."],
 	"overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }],
 	"semi": false,
-	"bracketSameLine": true
+	"bracketSameLine": true,
+	"arrow-parens": "always"
 }
