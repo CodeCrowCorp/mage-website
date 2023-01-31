@@ -11,7 +11,8 @@
 		web2Assets: any = [],
 		web3Assets: any = [],
 		gameAssets: any = [],
-		assetIcons: any = {}
+		assetIcons: any = {},
+		searchQuery: string = ''
 
 	$: allIcons = { ...web2Assets, ...web3Assets, ...gameAssets }
 
@@ -73,6 +74,18 @@
 		toggleCategory(key ?? '', image_url)
 	}
 
+	const searchCategory = () => {
+		// console.log(searchQuery)
+		const searchResult = Object.keys(assetIcons)
+			.filter((key) => key.toLowerCase().includes(searchQuery.toLowerCase()))
+			.reduce((obj, key) => {
+				return Object.assign(obj, {
+					[key]: assetIcons[key]
+				})
+			}, {})
+		assetIcons = searchResult
+	}
+
 	onMount(async () => {
 		await setActiveTab(activeTab)
 	})
@@ -97,6 +110,8 @@
 
 				<input
 					type="text"
+					bind:value={searchQuery}
+					on:input={() => searchCategory()}
 					name=""
 					class="grow ml-4 md:mr-12 focus:outline-0"
 					placeholder={categoryIcons.length ? '' : 'Categories'}
