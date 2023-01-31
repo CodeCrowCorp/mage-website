@@ -81,25 +81,6 @@
 <div class="bg-base-200 w-80 md:w-[30rem] flex flex-col">
 	<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">Select category</p>
 	<div class="flex flex-col p-3 h-full">
-		<!-- <div class="relative">
-			<span class="absolute flex flex-row gap-2 left-0 top-1/2  pl-5">
-				{#if categoryIcons.length}
-					{#each categoryIcons as icon}
-						<img
-							src={icon}
-							alt=""
-							class="h-5 w-5 cursor-pointer"
-							on:click={() => removeCategory(icon)} />
-					{/each}
-				{/if}
-			</span>
-			<input
-				type="text"
-				placeholder={categoryIcons.length ? '' : 'Categories'}
-				class="input input-primary input-bordered mt-5 w-full " />
-			<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
-		</div> -->
-
 		<div class="relative">
 			<div class="flex gap-1 input input-primary">
 				<div class="flex flex-row gap-2 items-center left-0">
