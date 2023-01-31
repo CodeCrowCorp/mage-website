@@ -21,6 +21,7 @@
 		thumbnailRef: any,
 		showThumbnail = false,
 		showAddCategory = false,
+		categoryIcons: any = [],
 		maxTag = 3,
 		maxCategory = 4
 
@@ -67,7 +68,7 @@
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
 		{#if showAddCategory}
-			<AddCategory bind:showAddCategory bind:categories={newChannel.category} />
+			<AddCategory bind:showAddCategory bind:categoryIcons bind:categories={newChannel.category} />
 		{:else}
 			<div class="bg-base-200 w-80 md:w-[30rem]">
 				<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
@@ -134,11 +135,17 @@
 					<div class="relative">
 						<input
 							on:focus={() => (showAddCategory = true)}
-							bind:value={newChannel.category}
 							type="text"
-							placeholder="Categories"
+							placeholder={categoryIcons.length ? '' : 'Categories'}
 							class="input input-primary input-bordered mt-5 w-full " />
 						<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
+						<span class="absolute flex flex-row gap-2 left-0 top-1/2  pl-5">
+							{#if categoryIcons.length}
+								{#each categoryIcons as icon}
+									<img src={icon} alt="" class="h-5 w-5" />
+								{/each}
+							{/if}
+						</span>
 					</div>
 					<div class="flex flex-row mt-5 ">
 						<input

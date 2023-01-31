@@ -5,7 +5,8 @@
 	// so $techList has the value
 
 	export let showAddCategory: boolean = true,
-		categories: any = []
+		categories: any = [],
+		categoryIcons: any = []
 
 	let maxCategory = 4,
 		tabs = ['Game', 'Web2', 'Web3'],
@@ -60,11 +61,13 @@
 	const addCategory = (name: string, image_url: string) => {
 		if (categories.includes(name)) {
 			categories.splice(categories.indexOf(name), 1)
-			categories = categories
+			categoryIcons.splice(categoryIcons.indexOf(image_url), 1)
 		} else if (categories.length < maxCategory) {
 			categories.push(name)
-			categories = categories
+			categoryIcons.push(image_url)
 		}
+		categories = categories
+		categoryIcons = categoryIcons
 	}
 
 	onMount(async () => {
@@ -77,11 +80,17 @@
 	<div class="flex flex-col p-3 h-full">
 		<div class="relative">
 			<input
-				bind:value={categories}
 				type="text"
-				placeholder="Categories"
+				placeholder={categoryIcons.length ? '' : 'Categories'}
 				class="input input-primary input-bordered mt-5 w-full " />
 			<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
+			<span class="absolute flex flex-row gap-2 left-0 top-1/2  pl-5">
+				{#if categoryIcons.length}
+					{#each categoryIcons as icon}
+						<img src={icon} alt="" class="h-5 w-5" />
+					{/each}
+				{/if}
+			</span>
 		</div>
 
 		<div class="tabs tabs-boxed mt-5">
