@@ -1,6 +1,6 @@
 <script lang="ts">
+	import IconInfo from '$lib/assets/icons/IconInfo.svelte'
 	import { onMount } from 'svelte'
-
 	export let showAddCategory: boolean = true,
 		categories: any = [],
 		categoryIcons: any = []
@@ -149,7 +149,11 @@
 					</label>
 				{/each}
 			{:else if searchQuery != ''}
-				<p class="flex justify-center">No results for the search query</p>
+				<div class="alert shadow-lg flex justify-center">
+					<IconInfo />
+
+					<p>No results for the search query</p>
+				</div>
 			{:else}
 				<div class="flex justify-center w-full">
 					<span class="btn btn-circle btn-outline btn-sm loading" />
