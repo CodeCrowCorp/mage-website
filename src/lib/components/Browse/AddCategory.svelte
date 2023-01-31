@@ -136,7 +136,8 @@
 		<button
 			type="button"
 			class="btn btn-default grow"
-			on:click={() => ((categories = []), (showAddCategory = false))}>Cancel</button>
+			on:click={() => ((categories = []), (categoryIcons = []), (showAddCategory = false))}
+			>Cancel</button>
 		<button type="button" class="btn btn-primary grow" on:click={() => (showAddCategory = false)}
 			>Add</button>
 	</div>
