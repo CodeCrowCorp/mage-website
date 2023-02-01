@@ -133,22 +133,3 @@ export function handleError({ error }: { error: any }) {
 		message: 'Whoops something wrong!'
 	}
 }
-
-//TODO: fix global handleFetch
-// export const handleFetch: HandleFetch = async ({ request, fetch }) => {
-// 	let headers: any = {}
-// 	if (request.url.startsWith(env.PUBLIC_API_URL)) {
-// 		if (env.PUBLIC_CROSS_ORIGIN === 'false') {
-// 			headers = {
-// 				authorization: request.locals.user.token,
-// 				userId: request.locals.user.userId
-// 			}
-// 		} else {
-// 			headers = {
-// 				'x-api-key': env.PUBLIC_API_KEY,
-// 				userId: request.locals.user.userId
-// 			}
-// 		}
-// 	}
-// 	return fetch(request, headers)
-// }
