@@ -1,16 +1,18 @@
-import { writable, type Writable } from 'svelte/store'
+import { get, writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
 
 export const login_modal: Writable<any> = writable(null)
+export const userId: Writable<string> = writable('')
+export const token: Writable<string> = writable('')
 
 export const getHeaders = () => {
 	const headers: any = {
-		// userId: localStorage.getItem('userId')
+		userId: get(userId)
 	}
 	if (env.PUBLIC_CROSS_ORIGIN === 'false') {
-		// headers['authorization'] = localStorage.getItem('token')
+		headers['authorization'] = get(token)
 	} else {
-		headers['x-api-key'] = env.PUBLIC_API_KEY
+		headers['x-api-key'] = env.PUBLIC_X_API_KEY
 	}
 	return headers
 }
