@@ -49,9 +49,7 @@
 <div class="menu p-4 w-80 bg-base-100 text-base-content flex flex-col">
 	<!-- <Messages /> -->
 	<ul>
-		<div class="navbar">
-			<a href="/browse" class="btn btn-ghost normal-case text-xl">Mage</a>
-		</div>
+		<a href="/browse" class="btn btn-ghost normal-case text-xl">Mage</a>
 		{#if $currentUser}
 			<li>
 				<a href="/profile/me" class="hero rounded-md cursor-pointer">

@@ -6,7 +6,6 @@
 	import { navigating } from '$app/stores'
 	import { currentUser, userRole } from '$lib/stores/authStore'
 	import { isChannelPage } from '$lib/stores/helperStore'
-	import routes from '$lib/authentication/routes'
 
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
