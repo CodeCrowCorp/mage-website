@@ -42,9 +42,7 @@
 <div class="menu p-4 bg-base-100 text-base-content flex flex-col">
 	<!-- <Messages /> -->
 	<ul>
-		<div class="navbar">
-			<a href="/browse" class="btn btn-ghost normal-case text-xl">Mage</a>
-		</div>
+		<a href="/browse" class="btn btn-ghost normal-case text-xl">Mage</a>
 		{#if $currentUser}
 			<li class="w-full">
 				<a href="/profile/me" class="rounded-md cursor-pointer">
@@ -57,12 +55,12 @@
 								</div>
 							</div>
 						</div>
-						<div class="grid grid-cols-1 gap-1">
+						<!-- <div class="grid grid-cols-1 gap-1">
 							<p>{$currentUser.displayName || 'Gagan Suie'}</p>
 							<p class="text-pink-500 w-12 truncate">
 								@{$currentUser.username}
 							</p>
-						</div>
+						</div> -->
 						<div class="tooltip" data-tip="level {progressBarLevel}">
 							<progress
 								class="progress w-12"

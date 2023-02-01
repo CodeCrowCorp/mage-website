@@ -1,7 +1,11 @@
 <script lang="ts">
 	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
 	import ChatDrawer from '$lib/components/Chat/ChatDrawer.svelte'
+	import type { PageData } from './$types'
 
+	export let data: PageData
+
+	$: ({ post } = data)
 	let showDrawer = false
 </script>
 
@@ -17,6 +21,6 @@
 	</div>
 
 	{#if showDrawer}
-		<ChatDrawer bind:showDrawer />
+		<ChatDrawer bind:showDrawer bind:channel={post} />
 	{/if}
 </div>

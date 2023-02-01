@@ -107,14 +107,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 				throw redirect(302, '/maintenance')
 			}
 		} else {
+			console.log('pathname', pathname)
+			if (pathname.includes('/channel')) {
+				isChannelPage.set(false)
+			} else {
+				isChannelPage.set(false)
+			}
 			return await resolve(event)
 		}
-	}
-
-	if (pathname === '/channel') {
-		isChannelPage.set(true)
-	} else {
-		isChannelPage.set(false)
 	}
 	throw redirect(302, '/browse')
 }

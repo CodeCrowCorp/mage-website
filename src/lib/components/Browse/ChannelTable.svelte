@@ -3,6 +3,7 @@
 	import IconLock from '$lib/assets/icons/IconLock.svelte'
 	import VirtualList from '@sveltejs/svelte-virtual-list'
 	import { techList } from '$lib/stores/channelStore'
+	import { goto } from '$app/navigation'
 
 	export let channels: any = undefined
 </script>
@@ -21,7 +22,9 @@
 		<tbody>
 			{#if channels && channels.length}
 				{#each channels as channel}
-					<tr class="cursor-pointer">
+					<tr
+						class="cursor-pointer"
+						on:click|preventDefault={() => goto(`/channel/${channel._id}`)}>
 						<td>
 							<div class="flex items-center space-x-2">
 								<div class="avatar">
