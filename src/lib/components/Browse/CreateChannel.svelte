@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
 	import AddCategory from './AddCategory.svelte'
+	import { goto } from '$app/navigation'
 
 	export let showDrawer: boolean
 
@@ -58,7 +59,7 @@
 	}
 	const addChannel = async () => {
 		let res = await createChannel(newChannel)
-		console.log(res)
+		goto(`/channel/${res._id}`)
 	}
 </script>
 
