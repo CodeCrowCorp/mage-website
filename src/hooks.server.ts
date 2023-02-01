@@ -6,119 +6,126 @@ import { getRemoteConfigs, isMaintenanceModeEnabled } from '$lib/stores/remoteCo
 import { Authenticate } from '$lib/authentication/authentication'
 import type { Handle, HandleFetch } from '@sveltejs/kit'
 import { env } from '$env/dynamic/public'
+import { isChannelPage } from '$lib/stores/helperStore'
 
 export const handle: Handle = async ({ event, resolve }) => {
-    const pathname = event.url.pathname
-    const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
-    let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
-    let user = get(currentUser),
-        role = get(userRole),
-        isBanned = false
+	const pathname = event.url.pathname
+	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
+	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
+	let user = get(currentUser),
+		role = get(userRole),
+		isBanned = false
 
-    await getRemoteConfigs()
-    const maintenance_mode = get(isMaintenanceModeEnabled) || false
+	await getRemoteConfigs()
+	const maintenance_mode = get(isMaintenanceModeEnabled) || false
 
-    if (token && userId) {
-        if (!user) {
-            const response = await getUserDetails(token, userId)
-            if (response) {
-                if (response.freshJwt) {
-                    token = response.freshJwt
-                }
-                user = response
-                currentUser.set(user)
-            }
-        }
+	if (token && userId) {
+		if (!user) {
+			const response = await getUserDetails(token, userId)
+			if (response) {
+				if (response.freshJwt) {
+					token = response.freshJwt
+				}
+				user = response
+				currentUser.set(user)
+			}
+		}
 
-        if (!role) {
-            try {
-                const headers: any = {
-                    userId: userId
-                }
-                if (env.PUBLIC_CROSS_ORIGIN === 'false') {
-                    headers['authorization'] = token
-                } else {
-                    headers['x-api-key'] = env.PUBLIC_API_KEY
-                }
+		if (!role) {
+			try {
+				const headers: any = {
+					userId: userId
+				}
+				if (env.PUBLIC_CROSS_ORIGIN === 'false') {
+					headers['authorization'] = token
+				} else {
+					headers['x-api-key'] = env.PUBLIC_API_KEY
+				}
 
-                const all_roles = await getRoles(true, headers)
-                if (Array.isArray(all_roles)) {
-                    const get_role = await getUserRole(true, headers)
-                    if (get_role && get_role.role) {
-                        role = all_roles.find((item) => {
-                            return item._id == get_role.role
-                        })?.name
+				const all_roles = await getRoles(true, headers)
+				if (Array.isArray(all_roles)) {
+					const get_role = await getUserRole(true, headers)
+					if (get_role && get_role.role) {
+						role = all_roles.find((item) => {
+							return item._id == get_role.role
+						})?.name
 
-                        userRole.set(role)
-                    }
-                }
-            } catch (e) {
-                console.log('something wrong', e)
-            }
-        }
+						userRole.set(role)
+					}
+				}
+			} catch (e) {
+				console.log('something wrong', e)
+			}
+		}
 
-        if (pathname === '/') {
-            event.cookies.set('token', token, {
-                path: '/',
-                maxAge: 60 * 60 * 24 * 30
-            })
-            event.cookies.set('userId', userId, {
-                path: '/',
-                maxAge: 60 * 60 * 24 * 30
-            })
-        }
+		if (pathname === '/') {
+			event.cookies.set('token', token, {
+				path: '/',
+				maxAge: 60 * 60 * 24 * 30
+			})
+			event.cookies.set('userId', userId, {
+				path: '/',
+				maxAge: 60 * 60 * 24 * 30
+			})
+		}
 
-        event.locals = {
-            user: {
-                userId,
-                token,
-                user
-            }
-        }
-    }
+		event.locals = {
+			user: {
+				userId,
+				token,
+				user
+			}
+		}
+	}
 
-    if (user && user.isBanned) {
-        isBanned = true
+	if (user && user.isBanned) {
+		isBanned = true
 
-        const cookieItem = ['token', 'userId']
-        cookieItem.forEach((item) => {
-            event.cookies.set(item, '', {
-                path: '/',
-                expires: new Date(0)
-            })
-        })
+		const cookieItem = ['token', 'userId']
+		cookieItem.forEach((item) => {
+			event.cookies.set(item, '', {
+				path: '/',
+				expires: new Date(0)
+			})
+		})
 
-        currentUser.set(null)
-        userRole.set('user')
+		currentUser.set(null)
+		userRole.set('user')
 
-        event.locals['isBanned'] = isBanned
-    }
+		event.locals['isBanned'] = isBanned
+	}
 
-    if (
-        Authenticate({ pathname, user_role: role || 'user' }) ||
-        pathname === '/browse' ||
-        pathname === '/'
-    ) {
-        if (maintenance_mode && !['/contact', '/legal', '/maintenance'].includes(pathname) && !user) {
-            if (pathname === '/maintenance') {
-                return await resolve(event)
-            } else {
-                throw redirect(302, '/maintenance')
-            }
-        } else {
-            return await resolve(event)
-        }
-    }
-    throw redirect(302, '/browse')
+	if (
+		Authenticate({ pathname, user_role: role || 'user' }) ||
+		pathname === '/browse' ||
+		pathname === '/'
+	) {
+		if (maintenance_mode && !['/contact', '/legal', '/maintenance'].includes(pathname) && !user) {
+			if (pathname === '/maintenance') {
+				return await resolve(event)
+			} else {
+				throw redirect(302, '/maintenance')
+			}
+		} else {
+			return await resolve(event)
+		}
+	}
+
+	if (pathname === '/channel') {
+		isChannelPage.set(true)
+	} else {
+		isChannelPage.set(false)
+	}
+	throw redirect(302, '/browse')
 }
 
 export function handleError({ error }: { error: any }) {
-    console.log('error', error)
-    // example integration with https://sentry.io/
-    // Sentry.captureException(error, { event, errorId });
-    return {
-        message: 'Whoops something wrong!'
-    }
+	console.log('error', error)
+	// example integration with https://sentry.io/
+	// Sentry.captureException(error, { event, errorId });
+	return {
+		message: 'Whoops something wrong!'
+	}
 }
 
 //TODO: fix global handleFetch

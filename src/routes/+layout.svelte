@@ -2,40 +2,18 @@
 	import '$lib/assets/styles/tailwind-output.css'
 	// @ts-ignore
 	import NProgress from 'nprogress'
-	import { goto } from '$app/navigation'
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
 	import { currentUser, userRole } from '$lib/stores/authStore'
-	import { login_modal } from '$lib/stores/helperStore'
-	import { env } from '$env/dynamic/public'
-	import { isFeatureMintPageEnabled, isFeaturePremiumPageEnabled, isFeatureGroupChatEnabled, isFeatureVideoResponsesEnabled } from '$lib/stores/remoteConfigStore'
+	import { isChannelPage } from '$lib/stores/helperStore'
+	import routes from '$lib/authentication/routes'
 
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
-	import IconDrawerStreak from '$lib/assets/icons/drawer/IconDrawerStreak.svelte'
-	import IconDrawerStreamDuration from '$lib/assets/icons/drawer/IconDrawerStreamDuration.svelte'
-	import IconDrawerHome from '$lib/assets/icons/drawer/IconDrawerHome.svelte'
-	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
-	import IconDrawerMessages from '$lib/assets/icons/drawer/IconDrawerMessages.svelte'
-	import IconDrawerVideos from '$lib/assets/icons/drawer/IconDrawerVideos.svelte'
-	import IconDrawerCreatorSpace from '$lib/assets/icons/drawer/IconDrawerCreatorSpace.svelte'
-	import IconDrawerMint from '$lib/assets/icons/drawer/IconDrawerMint.svelte'
-	import IconDrawerPremium from '$lib/assets/icons/drawer/IconDrawerPremium.svelte'
-	import IconDrawerCareers from '$lib/assets/icons/drawer/IconDrawerCareers.svelte'
-	import IconDrawerHelpAndLegal from '$lib/assets/icons/drawer/IconDrawerHelpAndLegal.svelte'
-	import IconDrawerSettings from '$lib/assets/icons/drawer/IconDrawerSettings.svelte'
-	import IconDrawerLogOut from '$lib/assets/icons/drawer/IconDrawerLogOut.svelte'
-	import IconSocialTwitter from '$lib/assets/icons/social/IconSocialTwitter.svelte'
-	import IconSocialDiscord from '$lib/assets/icons/social/IconDiscord.svg'
-	import IconDexlab from '$lib/assets/icons/social/IconDexlab.svg'
-	import IconMagicEden from '$lib/assets/icons/social/IconMagicEden.svg'
-	// import IconSocialDexlab from '$lib/assets/icons/social/IconSocialDexlab.svelte'
-	// import IconSocialMagicEden from '$lib/assets/icons/social/IconSocialMagicEden.svelte'
-	// import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svelte'
-	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
-	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
 	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
 	import Messages from '$lib/components/MainDrawer/Messages.svelte'
+	import MainDrawer from '$lib/components/MainDrawer/MainDrawer.svelte'
+	import SmallDrawer from '$lib/components/MainDrawer/SmallDrawer.svelte'
 	NProgress.configure({
 		minimum: 0.75,
 		showSpinner: false,
@@ -65,13 +43,6 @@
 			}
 		}
 	}
-
-	function logout() {
-		setTimeout(() => {
-			$currentUser = null
-		}, 500)
-		goto('/logout')
-	}
 </script>
 
 <svelte:head>
@@ -90,7 +61,7 @@
 		{#if data && data.isBanned}
 			<div class="alert alert-error shadow-lg">
 				<div>
-					<div class="font-bold text-white	">
+					<div class="font-bold text-white">
 						<h3>Your account is banned</h3>
 					</div>
 				</div>
@@ -102,175 +73,10 @@
 	</div>
 	<div class="drawer-side">
 		<label for="my-drawer-2" class="drawer-overlay" />
-		<div class="menu p-4 w-80 bg-base-100 text-base-content flex flex-col">
-			<!-- <Messages /> -->
-			<ul>
-				<div class="navbar">
-					<a href="/browse" class="btn btn-ghost normal-case text-xl">Mage</a>
-				</div>
-				{#if $currentUser}
-					<li>
-						<a href="/profile/me" class="hero rounded-md cursor-pointer">
-							<div>
-								<div class="hero-content">
-									<div class="max-w-md">
-										<div class="avatar online">
-											<div
-												class="w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
-												<img
-													src={$currentUser.avatar}
-													alt="" />
-											</div>
-										</div>
-									</div>
-									<div class="grid grid-cols-3 gap-1">
-										<p class="col-span-3">{$currentUser.displayName || 'Gagan Suie'}</p>
-										<p class="col-span-3 text-pink-500">@{$currentUser.username || 'GaganSuie'}</p>
-										<IconDrawerStreak />
-										<p class="col-span-2 tooltip text-start" data-tip="62 day streak">62 d</p>
-										<IconDrawerStreamDuration />
-										<p class="col-span-2 tooltip text-start" data-tip="300 hours streamed">300 h</p>
-									</div>
-								</div>
-								<div class="tooltip" data-tip="level 1">
-									<progress class="progress progress-accent w-64" value="30" max="100" />
-								</div>
-							</div>
-						</a>
-					</li>
-				{/if}
-				<!-- Sidebar content here -->
-
-				{#if $currentUser && $userRole === 'admin'}
-					<li>
-						<a href="/admin">
-							<IconDrawerAdmin />
-							Admin
-						</a>
-					</li>
-				{/if}
-				<li>
-					<a href="/browse">
-						<IconDrawerHome />
-						Browse
-					</a>
-				</li>
-				{#if $currentUser}
-					<li>
-						<a href="">
-							<IconDrawerMessages />
-							Messages
-							<IconDrawerChevron />
-						</a>
-					</li>
-				{/if}
-				{#if $currentUser && $isFeatureVideoResponsesEnabled}
-				<li>
-					<a href="/videos">
-						<IconDrawerVideos />
-						Videos
-					</a>
-				</li>
-				<li>
-					<a href="/creator-space">
-						<IconDrawerCreatorSpace />
-						Creator Space</a>
-				</li>
-				{/if}
-				{#if $currentUser && $isFeatureMintPageEnabled}
-				<li>
-					<a
-						href="https://mint.codecrow.io"
-						class="text-emerald-600"
-						target="_blank"
-						rel="noreferrer">
-						<IconDrawerMint />
-						Mint <span class="badge">New</span>
-					</a>
-				</li>
-				{/if}
-				{#if $currentUser && $isFeaturePremiumPageEnabled}
-					<li>
-						<a href="/premium" class="text-pink-500">
-							<IconDrawerPremium />
-							Premium <span class="badge">New</span>
-						</a>
-					</li>
-				{/if}
-				<li>
-					<a href="/careers">
-						<IconDrawerCareers />
-						Careers</a>
-				</li>
-				<li>
-					<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-					<div class="dropdown dropdown-bottom dropdown-end" tabindex="0">
-						<IconDrawerHelpAndLegal />
-						Help & Legal
-						<IconDrawerChevron />
-						<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
-							<li><a href="/contact">Contact</a></li>
-							<li><a href="/legal">Legal</a></li>
-							<li>
-								<a href="https://code-crow.gitbook.io/whitepaper/" target="_blank" rel="noreferrer"
-									>White Paper</a>
-							</li>
-						</ul>
-					</div>
-				</li>
-				{#if $currentUser}
-					<li>
-						<a href="/settings">
-							<IconDrawerSettings />
-							Settings</a>
-					</li>
-				{/if}
-				{#if $currentUser}
-					<li>
-						<button on:click={logout}>
-							<IconDrawerLogOut />
-							Log Out</button>
-					</li>
-				{:else}
-					<li>
-						<button
-							on:click={() => {
-								$login_modal = true
-								if (nav_drawer.checked) {
-									nav_drawer.checked = false
-								}
-							}}>
-							<IconDrawerLogOut />
-							Log In</button>
-					</li>
-				{/if}
-			</ul>
-
-			<footer class="mt-auto p-4">
-				<!-- <RisingStars /> -->
-				<div class="grid grid-flow-col gap-4">
-					<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
-						<IconSocialGitHub />
-					</a>
-					<a href="https://discord.gg/CodeCrow" target="_blank" rel="noreferrer">
-						<!-- <IconSocialDiscord /> -->
-						<img src={IconSocialDiscord} alt="" />
-					</a>
-					<a href="https://twitter.com/CodeCrowCorp" target="_blank" rel="noreferrer">
-						<IconSocialTwitter />
-					</a>
-					<a href="https://magiceden.io" target="_blank" rel="noreferrer">
-						<!-- <IconSocialMagicEden /> -->
-						<img src={IconMagicEden} alt="" />
-					</a>
-					<a href="https://www.dexlab.space" target="_blank" rel="noreferrer">
-						<!-- <IconSocialDexlab /> -->
-						<img src={IconDexlab} alt="" />
-					</a>
-				</div>
-				<p>Code Crow Corp © 2023</p>
-				<p class="text-gray-500">v{__VERSION__} [{env.PUBLIC_ENV}]</p>
-			</footer>
-		</div>
+		{#if !$isChannelPage}
+			<MainDrawer bind:nav_drawer />
+		{:else}
+			<SmallDrawer bind:nav_drawer />
+		{/if}
 	</div>
 </div>
