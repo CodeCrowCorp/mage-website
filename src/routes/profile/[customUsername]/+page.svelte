@@ -2,7 +2,7 @@
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
 	import ChannelList from '$lib/components/Browse/ChannelTable.svelte'
-	import FollowList from '$lib/components/Profile/FollowList.svelte'
+	import SubscribeList from '$lib/components/Profile/SubscribeList.svelte'
 
 	let tabs = ['Stats', 'Channels', 'Follows']
 	let activeTab = 0
@@ -253,7 +253,7 @@
 								<ChannelList />
 							</div>
 							<div class="flex-auto h-full" class:hidden={activeTab != 2}>
-								<FollowList />
+								<SubscribeList />
 							</div>
 						</div>
 					</div>
