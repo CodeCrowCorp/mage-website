@@ -124,11 +124,9 @@
 
 		<div class="tabs tabs-boxed mt-5">
 			{#each tabs as tab}
-				<a
-					class="tab"
-					href="#"
-					class:tab-active={activeTab == tab}
-					on:click={() => setActiveTab(tab)}>{tab}</a>
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<span class="tab" class:tab-active={activeTab == tab} on:click={() => setActiveTab(tab)}
+					>{tab}</span>
 			{/each}
 		</div>
 
