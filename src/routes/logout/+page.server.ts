@@ -1,21 +1,23 @@
 import { redirect } from '@sveltejs/kit'
 import { userRole, currentUser } from '$lib/stores/authStore'
-
+import { userId, token } from '$lib/stores/helperStore'
 import type { PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async ({ cookies }) => {
-    userRole.set(null)
-    currentUser.set(null)
+	userRole.set(null)
+	currentUser.set(null)
+	userId.set('')
+	token.set('')
 
-    // eat the cookie
-    const cookieItem = ['token', 'userId', 'user']
-    cookieItem.forEach((item) => {
-        cookies.set(item, '', {
-            path: '/',
-            expires: new Date(0)
-        })
-    })
+	// eat the cookie
+	const cookieItem = ['token', 'userId', 'user']
+	cookieItem.forEach((item) => {
+		cookies.set(item, '', {
+			path: '/',
+			expires: new Date(0)
+		})
+	})
 
-    // redirect the user
-    throw redirect(302, '/browse')
+	// redirect the user
+	throw redirect(302, '/browse')
 }

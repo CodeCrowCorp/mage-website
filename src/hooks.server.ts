@@ -4,14 +4,20 @@ import { getUserDetails, userRole, currentUser } from '$lib/stores/authStore'
 import { getUserRole, getRoles } from '$lib/stores/adminStore'
 import { getRemoteConfigs, isMaintenanceModeEnabled } from '$lib/stores/remoteConfigStore'
 import { Authenticate } from '$lib/authentication/authentication'
-import type { Handle, HandleFetch } from '@sveltejs/kit'
+import type { Handle } from '@sveltejs/kit'
 import { env } from '$env/dynamic/public'
-import { isChannelPage } from '$lib/stores/helperStore'
+import {
+	isChannelPage,
+	userId as userIdWritable,
+	token as tokenWritable
+} from '$lib/stores/helperStore'
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname
 	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
+	userIdWritable.set(userId)
 	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
+	tokenWritable.set(token)
 	let user = get(currentUser),
 		role = get(userRole),
 		isBanned = false

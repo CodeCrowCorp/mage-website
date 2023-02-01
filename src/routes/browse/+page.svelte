@@ -27,11 +27,11 @@
 		if (!$techList.length) {
 			await getTechListJson()
 		}
-		mostActiveChannels = await getMostActiveChannels({ skip: 0, limit: 10 })
-		weeklyChannels = await getWeeklyChannels({ skip: 0, limit: 10 })
-		highestRankedUsers = await getHighestRankedUsers({ skip: 0, limit: 10 })
-		myChannels = await getMyChannels({ skip: 0, limit: 10 })
-		favChannels = await getFavChannels({ skip: 0, limit: 10 })
+		mostActiveChannels = [] // await getMostActiveChannels({ skip: 0, limit: 10 })
+		weeklyChannels = [] // await getWeeklyChannels({ skip: 0, limit: 10 })
+		highestRankedUsers = [] // await getHighestRankedUsers({ skip: 0, limit: 10 })
+		myChannels = [] // await getMyChannels({ skip: 0, limit: 10 })
+		favChannels = [] // await getFavChannels({ skip: 0, limit: 10 })
 		channels = await getChannels({ skip: 0, limit: 50 })
 	})
 </script>
