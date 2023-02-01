@@ -115,7 +115,7 @@
 					bind:value={searchQuery}
 					on:input={() => searchCategory()}
 					name=""
-					class="grow md:ml-4 md:mr-12 focus:outline-0 max-w-[8rem] md:max-w-xs"
+					class="grow md:ml-4 md:mr-12 focus:outline-0 max-w-[8rem] bg-base-100 md:max-w-xs"
 					placeholder={categoryIcons.length ? '' : 'Categories'}
 					autocomplete="off" />
 			</div>
