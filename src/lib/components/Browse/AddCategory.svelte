@@ -13,9 +13,8 @@
 		gameAssets: any = [],
 		assetIcons: any = {},
 		searchQuery: string = '',
-		searchResult: any = {}
-
-	$: allIcons = { ...web2Assets, ...web3Assets, ...gameAssets }
+		searchResult: any = {},
+		renderingAssets: Array<[string, string]>
 
 	const setActiveIcons = () => {
 		assetIcons = activeTab == 'Game' ? gameAssets : activeTab == 'Web2' ? web2Assets : web3Assets
@@ -56,7 +55,10 @@
 		await loadWeb3()
 		setActiveIcons()
 	}
+
+	$: allIcons = { ...web2Assets, ...web3Assets, ...gameAssets }
 	$: maxCategoryLabel = categories.length == maxCategory ? 'max reached' : 'max ' + maxCategory
+	$: renderingAssets = searchQuery != '' ? Object.entries(searchResult) : Object.entries(assetIcons)
 
 	const toggleCategory = (name: string, image_url: string) => {
 		if (categories.includes(name)) {
@@ -131,8 +133,8 @@
 		</div>
 
 		<div class="flex flex-col grow h-80 overflow-y-scroll mt-5">
-			{#if Object.entries(searchQuery != '' ? searchResult : assetIcons).length}
-				{#each Object.entries(searchQuery != '' ? searchResult : assetIcons) as [name, image_url]}
+			{#if renderingAssets.length}
+				{#each renderingAssets as [name, image_url]}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<label
 						class="cursor-pointer flex items-center gap-2 pb-2"
@@ -141,7 +143,7 @@
 							type="checkbox"
 							checked={categories.includes(name)}
 							class="checkbox checkbox-primary"
-							disabled={categories.length == maxCategory && !categories.includes(name)} />
+							disabled={categories.length === maxCategory && !categories.includes(name)} />
 						<img src={image_url} alt="" class="h-7 w-7 m-1" />
 						<span class="label-text">{name}</span>
 					</label>
