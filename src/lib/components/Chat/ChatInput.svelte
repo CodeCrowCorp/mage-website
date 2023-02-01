@@ -1,11 +1,11 @@
-<script>
+<script lang="ts">
 	import IconChatAttachment from '$lib/assets/icons/chat/IconChatAttachment.svelte'
 	import IconChatEmoji from '$lib/assets/icons/chat/IconChatEmoji.svelte'
 	import IconChatGif from '$lib/assets/icons/chat/IconChatGif.svelte'
 	import IconChatCode from '$lib/assets/icons/chat/IconChatCode.svelte'
 </script>
 
-<form class="rounded-lg bg-base-100 p-2">
+<form class="rounded-lg bg-base-100 p-2 w-80">
 	<label for="chat" class="sr-only">Your message</label>
 	<button
 		type="button"

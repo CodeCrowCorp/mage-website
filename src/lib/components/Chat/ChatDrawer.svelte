@@ -1,12 +1,9 @@
 <script lang="ts">
-	import IconPhoto from '$lib/assets/icons/IconPhoto.svelte'
-	import { tags, getTags, createChannel } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
-	import Tags from 'svelte-tags-input'
 	import ChatInput from '$lib/components/Chat/ChatInput.svelte'
 
 	export let showDrawer: boolean
-	let title = 'Chat'
+	export let channel: any = undefined
 
 	onMount(async () => {
 		// if (!$tags.length) {
@@ -26,7 +23,7 @@
 		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
 		<div class="bg-base-200 flex flex-col">
 			<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
-				{title || 'Chat'}
+				{channel.title || 'Chat'}
 			</p>
 			<div class="flex flex-col p-3" />
 

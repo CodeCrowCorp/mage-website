@@ -4,14 +4,20 @@ import { getUserDetails, userRole, currentUser } from '$lib/stores/authStore'
 import { getUserRole, getRoles } from '$lib/stores/adminStore'
 import { getRemoteConfigs, isMaintenanceModeEnabled } from '$lib/stores/remoteConfigStore'
 import { Authenticate } from '$lib/authentication/authentication'
-import type { Handle, HandleFetch } from '@sveltejs/kit'
+import type { Handle } from '@sveltejs/kit'
 import { env } from '$env/dynamic/public'
-import { isChannelPage } from '$lib/stores/helperStore'
+import {
+	isChannelPage,
+	userId as userIdWritable,
+	token as tokenWritable
+} from '$lib/stores/helperStore'
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname
 	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
+	userIdWritable.set(userId)
 	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
+	tokenWritable.set(token)
 	let user = get(currentUser),
 		role = get(userRole),
 		isBanned = false
@@ -107,14 +113,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 				throw redirect(302, '/maintenance')
 			}
 		} else {
+			console.log('pathname', pathname)
+			if (pathname.includes('/channel')) {
+				isChannelPage.set(false)
+			} else {
+				isChannelPage.set(false)
+			}
 			return await resolve(event)
 		}
-	}
-
-	if (pathname === '/channel') {
-		isChannelPage.set(true)
-	} else {
-		isChannelPage.set(false)
 	}
 	throw redirect(302, '/browse')
 }
@@ -127,22 +133,3 @@ export function handleError({ error }: { error: any }) {
 		message: 'Whoops something wrong!'
 	}
 }
-
-//TODO: fix global handleFetch
-// export const handleFetch: HandleFetch = async ({ request, fetch }) => {
-// 	let headers: any = {}
-// 	if (request.url.startsWith(env.PUBLIC_API_URL)) {
-// 		if (env.PUBLIC_CROSS_ORIGIN === 'false') {
-// 			headers = {
-// 				authorization: request.locals.user.token,
-// 				userId: request.locals.user.userId
-// 			}
-// 		} else {
-// 			headers = {
-// 				'x-api-key': env.PUBLIC_API_KEY,
-// 				userId: request.locals.user.userId
-// 			}
-// 		}
-// 	}
-// 	return fetch(request, headers)
-// }
