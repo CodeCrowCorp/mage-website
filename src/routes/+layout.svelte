@@ -5,7 +5,7 @@
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
 	import { currentUser, userRole } from '$lib/stores/authStore'
-	import { isChannelPage } from '$lib/stores/helperStore'
+	import { getPlatformSocket } from '$lib/stores/socketStore'
 
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
@@ -13,6 +13,8 @@
 	import Messages from '$lib/components/MainDrawer/Messages.svelte'
 	import MainDrawer from '$lib/components/MainDrawer/MainDrawer.svelte'
 	import SmallDrawer from '$lib/components/MainDrawer/SmallDrawer.svelte'
+	import { page } from '$app/stores'
+
 	NProgress.configure({
 		minimum: 0.75,
 		showSpinner: false,
@@ -37,6 +39,7 @@
 		if (browser) {
 			if (data?.user?.user) {
 				$currentUser = data.user.user
+				// getPlatformSocket()
 			} else {
 				$currentUser = null
 			}
@@ -72,7 +75,7 @@
 	</div>
 	<div class="drawer-side">
 		<label for="my-drawer-2" class="drawer-overlay" />
-		{#if !$isChannelPage}
+		{#if !$page.url.pathname.includes('/channel')}
 			<MainDrawer bind:nav_drawer />
 		{:else}
 			<SmallDrawer bind:nav_drawer />

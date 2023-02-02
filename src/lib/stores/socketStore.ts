@@ -2,8 +2,8 @@ import { env } from '$env/dynamic/public'
 import { writable, type Writable } from 'svelte/store'
 import { getHeaders } from '$lib/stores/helperStore'
 
-let platformSocket: WebSocket | undefined
-let channelSocket: WebSocket | undefined
+let platformSocket: WebSocket
+let channelSocket: WebSocket
 
 export const platformConnection: Writable<string> = writable()
 export const channelConnection: Writable<string> = writable()
@@ -120,36 +120,6 @@ function emitChannelAccessResponse({
 			user: userId,
 			isGrantedAccess
 		})
-	)
-}
-
-/************ Recording ****************/
-
-function emitVideoRecordingStarted({ channelId }: { channelId: string }) {
-	platformSocket?.send(JSON.stringify({ eventName: `video-recording-started`, channelId }))
-}
-
-function emitVideoRecordingEnded({
-	channelId,
-	sessionCounter
-}: {
-	channelId: string
-	sessionCounter: number
-}) {
-	platformSocket?.send(
-		JSON.stringify({ eventName: 'video-recording-ended', channelId, sessionCounter })
-	)
-}
-
-function emitCompositionDeleted({
-	channelId,
-	compositionSid
-}: {
-	channelId: string
-	compositionSid: string
-}) {
-	platformSocket?.send(
-		JSON.stringify({ eventName: 'composition-deleted', channelId, compositionSid })
 	)
 }
 
@@ -316,6 +286,36 @@ function emitReactToMessage({
 	)
 }
 
+/************ Recording ****************/
+
+// function emitVideoRecordingStarted({ channelId }: { channelId: string }) {
+// 	platformSocket?.send(JSON.stringify({ eventName: `video-recording-started`, channelId }))
+// }
+
+// function emitVideoRecordingEnded({
+// 	channelId,
+// 	sessionCounter
+// }: {
+// 	channelId: string
+// 	sessionCounter: number
+// }) {
+// 	platformSocket?.send(
+// 		JSON.stringify({ eventName: 'video-recording-ended', channelId, sessionCounter })
+// 	)
+// }
+
+// function emitCompositionDeleted({
+// 	channelId,
+// 	compositionSid
+// }: {
+// 	channelId: string
+// 	compositionSid: string
+// }) {
+// 	platformSocket?.send(
+// 		JSON.stringify({ eventName: 'composition-deleted', channelId, compositionSid })
+// 	)
+// }
+
 //TODO: place these everywhere we are using socket listeners
 
 function listenToUserConnection({ userId }: { userId: string }) {
@@ -458,9 +458,6 @@ export {
 	emitChannelUpdate,
 	emitChannelAccessRequest,
 	emitChannelAccessResponse,
-	emitVideoRecordingStarted,
-	emitVideoRecordingEnded,
-	emitCompositionDeleted,
 	emitChatMessage,
 	emitChatTypingByUser,
 	emitChannelSubscribeByUser,
@@ -472,4 +469,7 @@ export {
 	emitRoomMemberUpdate,
 	emitUserActions,
 	emitReactToMessage
+	// emitVideoRecordingStarted,
+	// emitVideoRecordingEnded,
+	// emitCompositionDeleted
 }

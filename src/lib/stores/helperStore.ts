@@ -34,5 +34,3 @@ export const colorFromLevel = (level: number): string => {
 	const hue = (360 * (level * 0.6180339887498949)) % 360
 	return `hsl(${hue}, 100%, 50%)`
 }
-
-export const isChannelPage: Writable<boolean> = writable(false)

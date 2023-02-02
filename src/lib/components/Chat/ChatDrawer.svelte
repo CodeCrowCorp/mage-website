@@ -8,13 +8,12 @@
 
 	let username = 'Gagan',
 		message =
-			'Hello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello World'
-
-	let sender = { username, message }
-
-	let youSender = { username: 'Singh', message: 'hewrewrwe ehe' }
-	let modSender = { username: 'Moderator', message: 'hewe rew rwe rwhe' }
-	let otherSender = { username: 'Randos', message: 'he wer wer wehe' }
+			'Hello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello World',
+		role = 'Host'
+	let sender = { username, message, role }
+	let youSender = { username: 'Singh', message: 'hewrewrwe ehe', role: 'You' }
+	let modSender = { username: 'Simmi', message: 'hewe rew rwe rwhe', role: 'Mod' }
+	let otherSender = { username: 'Arjan', message: 'he wer wer wehe', role: 'Rando' }
 
 	onMount(async () => {
 		// if (!$tags.length) {

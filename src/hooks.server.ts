@@ -6,11 +6,7 @@ import { getRemoteConfigs, isMaintenanceModeEnabled } from '$lib/stores/remoteCo
 import { Authenticate } from '$lib/authentication/authentication'
 import type { Handle } from '@sveltejs/kit'
 import { env } from '$env/dynamic/public'
-import {
-	isChannelPage,
-	userId as userIdWritable,
-	token as tokenWritable
-} from '$lib/stores/helperStore'
+import { userId as userIdWritable, token as tokenWritable } from '$lib/stores/helperStore'
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname
@@ -113,12 +109,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 				throw redirect(302, '/maintenance')
 			}
 		} else {
-			console.log('pathname', pathname)
-			if (pathname.includes('/channel')) {
-				isChannelPage.set(false)
-			} else {
-				isChannelPage.set(false)
-			}
 			return await resolve(event)
 		}
 	}
