@@ -6,14 +6,11 @@ import { getRemoteConfigs, isMaintenanceModeEnabled } from '$lib/stores/remoteCo
 import { Authenticate } from '$lib/authentication/authentication'
 import type { Handle } from '@sveltejs/kit'
 import { env } from '$env/dynamic/public'
-import { userId as userIdWritable, token as tokenWritable } from '$lib/stores/helperStore'
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname
 	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
-	userIdWritable.set(userId)
 	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
-	tokenWritable.set(token)
 	let user = get(currentUser),
 		role = get(userRole),
 		isBanned = false

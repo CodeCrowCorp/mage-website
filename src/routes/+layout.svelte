@@ -1,4 +1,4 @@
-<script lang="ts">
+<script async script lang="ts">
 	import '$lib/assets/styles/tailwind-output.css'
 	// @ts-ignore
 	import NProgress from 'nprogress'
@@ -14,6 +14,7 @@
 	import MainDrawer from '$lib/components/MainDrawer/MainDrawer.svelte'
 	import SmallDrawer from '$lib/components/MainDrawer/SmallDrawer.svelte'
 	import { page } from '$app/stores'
+	import { onMount } from 'svelte'
 
 	NProgress.configure({
 		minimum: 0.75,
@@ -39,12 +40,15 @@
 		if (browser) {
 			if (data?.user?.user) {
 				$currentUser = data.user.user
-				// getPlatformSocket()
 			} else {
 				$currentUser = null
 			}
 		}
 	}
+
+	onMount(async () => {
+		await getPlatformSocket()
+	})
 </script>
 
 <svelte:head>

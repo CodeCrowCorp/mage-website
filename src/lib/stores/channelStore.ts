@@ -27,6 +27,7 @@ async function createChannel({
 	user: any
 	channelType: string
 }) {
+	console.log('headers', getHeaders())
 	return await fetch(`${env.PUBLIC_API_URL}/channel`, {
 		method: 'POST',
 		body: JSON.stringify({
@@ -272,6 +273,7 @@ async function getWeeklyChannels({ skip = 0, limit = 50 }: { skip: number; limit
 }
 
 async function getChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
+	console.log('headers', getHeaders())
 	return await fetch(
 		`${env.PUBLIC_API_URL}/channels?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`,
 		{
