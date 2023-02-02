@@ -24,7 +24,8 @@
 		showAddCategory = false,
 		categoryIcons: any = [],
 		maxTag = 3,
-		maxCategory = 4
+		maxCategory = 4,
+		creatingChannel = false
 
 	$: maxTagLabel = newChannel.tags.length == maxTag ? 'max reached' : 'max ' + maxTag
 	$: maxCategoryLabel =
@@ -58,8 +59,10 @@
 		newChannel = newChannel
 	}
 	const addChannel = async () => {
+		creatingChannel = true
 		let res = await createChannel(newChannel)
 		goto(`/channel/${res._id}`)
+		creatingChannel = false
 	}
 </script>
 
@@ -75,7 +78,7 @@
 				<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 					Create a new channel
 				</p>
-				<form>
+				<form on:submit={() => addChannel()}>
 					<div class="flex flex-col p-3">
 						<p class="text-xs">
 							When you create a channel, you may allow viewer's to observe your desktop as you host
@@ -170,6 +173,14 @@
 						<button type="submit" class="btn btn-primary grow">Add</button>
 					</div>
 				</form>
+
+				{#if creatingChannel}
+					<div class="absolute h-full w-full flex items-center bg-gray-300 opacity-40">
+						<div class="flex justify-center w-full">
+							<span class="btn btn-circle btn-outline btn-md loading" />
+						</div>
+					</div>
+				{/if}
 			</div>
 		{/if}
 	</div>
