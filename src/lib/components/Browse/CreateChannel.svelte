@@ -135,7 +135,7 @@
 							<Tags
 								bind:tags={newChannel.tags}
 								maxTags={maxTag}
-								required
+								id="tags"
 								placeholder={newChannel.tags.length > 0 ? '' : 'Tags'} />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxTagLabel})</span>
 						</div>
