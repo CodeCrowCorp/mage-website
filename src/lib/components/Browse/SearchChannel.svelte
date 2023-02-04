@@ -2,6 +2,7 @@
 	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
 	import CreateChannelDrawer from './CreateChannelDrawer.svelte'
+	import { current_user } from '$lib/stores/authStore'
 
 	let showDrawer = false
 </script>
@@ -19,15 +20,12 @@
 		</div>
 	</div>
 
-	<div class="form-control">
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<label
-			for="create-channel-drawer"
-			class="btn w-[21rem] btn-primary gap-2 drawer-button"
-			on:click={() => (showDrawer = true)}>
-			<IconCreate />
-			Create a channel</label>
-	</div>
+	<button
+		class="btn w-[21rem] btn-primary gap-2 drawer-button"
+		disabled={!$current_user}
+		on:click={() => (showDrawer = true)}>
+		<IconCreate />
+		Create a channel</button>
 
 	{#if showDrawer}
 		<CreateChannelDrawer bind:showDrawer />

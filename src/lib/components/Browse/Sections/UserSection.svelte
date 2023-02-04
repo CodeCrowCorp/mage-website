@@ -3,6 +3,7 @@
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
 	import IconPlay from '$lib/assets/icons/IconPlay.svelte'
 	import { goto } from '$app/navigation'
+	import LoadingChannelItem from '$lib/components/Browse/Sections/LoadingChannelItem.svelte'
 
 	export let title: string = '',
 		users: any = undefined
@@ -30,11 +31,11 @@
 </script>
 
 {#if !users.error}
-	<div class="flex flex-col my-4">
-		<div class="font-semibold m-3">
-			<a class="link link-secondary text-lg">{title || 'Channel Group'}</a>
-		</div>
+	<div class="flex flex-col my-4 relative">
 		{#if users && users.length}
+			<div class="font-semibold m-3">
+				<a class="link link-secondary text-lg">{title}</a>
+			</div>
 			<div class="flex flex-row">
 				<div class="relative flex items-center">
 					<div
@@ -96,12 +97,13 @@
 				</div>
 			</div>
 		{:else}
-			<div role="status" class="flex flex-row gap-6 animate-pulse">
-				<div class="h-64 bg-gray-200 dark:bg-gray-700 w-[400px] mb-4" />
-				<div class="h-64 bg-gray-200 dark:bg-gray-700 w-[400px] mb-4" />
-				<div class="h-64 bg-gray-200 hidden md:block dark:bg-gray-700 w-[400px] mb-4" />
-				<div class="h-64 bg-gray-200 hidden md:block dark:bg-gray-700 w-[400px] mb-4" />
-
+			<div class="font-semibold m-3">
+				<div class="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4 animate-pulse" />
+			</div>
+			<div role="status" class="flex flex-row gap-1 animate-pulse overflow-clip">
+				{#each Array(6) as _, index (index)}
+					<LoadingChannelItem />
+				{/each}
 				<span class="sr-only">Loading...</span>
 			</div>
 		{/if}

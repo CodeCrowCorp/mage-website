@@ -2,6 +2,7 @@
 	import IconDrawerLeft from '$lib/assets/icons/drawer/IconDrawerLeft.svelte'
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
 	import { goto } from '$app/navigation'
+	import LoadingCarouselItem from '$lib/components/Browse/Sections/LoadingCarouselItem.svelte'
 
 	export let channels: any = []
 
@@ -68,21 +69,10 @@
 				{/each}
 				<div class="shrink-0 blank-width" />
 			{:else}
-				<div
-					role="status"
-					class="w-full max-w-lg h-80 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-					<span class="sr-only">Loading...</span>
-				</div>
-
-				<div
-					role="status"
-					class="w-full max-w-lg h-80 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
-					<span class="sr-only">Loading...</span>
-				</div>
-
-				<div
-					role="status"
-					class="hidden md:block w-full max-w-lg h-80 bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+				<div role="status" class="flex flex-row gap-1 animate-pulse overflow-clip">
+					{#each Array(6) as _, index (index)}
+						<LoadingCarouselItem />
+					{/each}
 					<span class="sr-only">Loading...</span>
 				</div>
 			{/if}
