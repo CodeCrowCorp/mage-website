@@ -11,7 +11,6 @@ import {
 import { env } from '$env/dynamic/public'
 import { currentUser } from './authStore'
 import { currentChannel } from './channelStore'
-import { getHeaders } from '$lib/stores/helperStore'
 
 let lastMessageSendDate: Date = new Date()
 let skip = 0
@@ -44,8 +43,7 @@ async function postFile({ channelId, fileToUpload }: { channelId: string; fileTo
 	formData.append('type', fileToUpload.type)
 	return await fetch(`${env.PUBLIC_API_URL}/attachments/file`, {
 		method: 'POST',
-		body: JSON.stringify(formData),
-		headers: getHeaders()
+		body: JSON.stringify(formData)
 	})
 }
 
@@ -57,15 +55,13 @@ async function deleteFile({ key }: { key: string }) {
 
 async function getTrendingGifs() {
 	return await fetch(`${env.PUBLIC_API_URL}/giphy/trending`, {
-		method: 'GET',
-		headers: getHeaders()
+		method: 'GET'
 	}).then((response) => response.json())
 }
 
 async function searchGifs({ query }: { query: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/giphy/search?${query}`, {
-		method: 'GET',
-		headers: getHeaders()
+		method: 'GET'
 	}).then((response) => response.json())
 }
 
@@ -176,8 +172,7 @@ function emitChannelChatTyping({
 async function createChat({ source1, source2 }: { source1: string; source2: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/chats`, {
 		method: 'PUT',
-		body: JSON.stringify({ source1, source2 }),
-		headers: getHeaders()
+		body: JSON.stringify({ source1, source2 })
 	}).then(async (response) => {
 		const res = await response.json()
 		//TODO: fix array push to writable
@@ -191,8 +186,7 @@ async function createChat({ source1, source2 }: { source1: string; source2: stri
 
 async function getChat({ source1, source2 }: { source1: string; source2: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/chats/me?source1=${source1}&source2=${source2}`, {
-		method: 'GET',
-		headers: getHeaders()
+		method: 'GET'
 	}).then((response) => response.json())
 }
 
@@ -204,8 +198,7 @@ async function getChats(isRefresh = false) {
 	return await fetch(
 		`${env.PUBLIC_API_URL}/chats?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`,
 		{
-			method: 'GET',
-			headers: getHeaders()
+			method: 'GET'
 		}
 	).then(async (response) => {
 		const res = await response.json()
@@ -239,8 +232,7 @@ async function deleteChat({ chat }: { chat: any }) {
 	// dialogRef.afterClosed().subscribe(async (result: any) => {
 	//     if (result) {
 	await fetch(`${env.PUBLIC_API_URL}/chats?chatId=${chat._id}`, {
-		method: 'DELETE',
-		headers: getHeaders()
+		method: 'DELETE'
 	}).then(async (response) => {
 		await response.json()
 		//TODO: fix array filter to writable
@@ -259,22 +251,19 @@ async function updateChatProperties({
 }) {
 	return await fetch(`${env.PUBLIC_API_URL}/chats?chatId=${chatId}`, {
 		method: 'PATCH',
-		body: JSON.stringify(updatedProperties),
-		headers: getHeaders()
+		body: JSON.stringify(updatedProperties)
 	}).then((response) => response.json())
 }
 
 async function incrementUnreadMessageCount({ chatId }: { chatId: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/chats?unread/chatId=${chatId}`, {
-		method: 'PATCH',
-		headers: getHeaders()
+		method: 'PATCH'
 	})
 }
 
 async function clearUnreadMessageCount({ chatId }: { chatId: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/chats?unread/chatId=${chatId}`, {
-		method: 'DELETE',
-		headers: getHeaders()
+		method: 'DELETE'
 	})
 }
 

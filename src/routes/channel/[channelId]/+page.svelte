@@ -11,7 +11,7 @@
 	let showDrawer = false
 
 	onMount(async () => {
-		await getChannelSocket({ channelId: post._id })
+		// await getChannelSocket({ channelId: post._id })
 	})
 </script>
 

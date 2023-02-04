@@ -4,7 +4,7 @@
 	import NProgress from 'nprogress'
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
-	import { currentUser, userRole } from '$lib/stores/authStore'
+	import { current_user, user_role } from '$lib/stores/authStore'
 	import { getPlatformSocket } from '$lib/stores/socketStore'
 
 	// NProgress Loading bar
@@ -39,15 +39,15 @@
 	function storeUserData() {
 		if (browser) {
 			if (data?.user?.user) {
-				$currentUser = data.user.user
+				$current_user = data.user.user
 			} else {
-				$currentUser = null
+				$current_user = null
 			}
 		}
 	}
 
 	onMount(async () => {
-		await getPlatformSocket()
+		// await getPlatformSocket()
 	})
 </script>
 

@@ -1,6 +1,5 @@
 import { env } from '$env/dynamic/public'
 import { writable, type Writable } from 'svelte/store'
-import { getHeaders } from '$lib/stores/helperStore'
 
 let platformSocket: WebSocket
 let channelSocket: WebSocket
@@ -12,8 +11,7 @@ export const channelMessage: Writable<MessageEvent> = writable()
 
 async function getPlatformSocket() {
 	return await fetch(`${env.PUBLIC_API_URL}/wsinit/wsid`, {
-		method: 'GET',
-		headers: getHeaders()
+		method: 'GET'
 	}).then(async (response) => {
 		const data = await response.text()
 		await setupWebsocketConnection({ websocketId: data, isChannelConnection: false })
@@ -22,8 +20,7 @@ async function getPlatformSocket() {
 
 async function getChannelSocket({ channelId }: { channelId: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/wsinit/channelid?channelId=${channelId}`, {
-		method: 'GET',
-		headers: getHeaders()
+		method: 'GET'
 	}).then(async (response) => {
 		const data = await response.text()
 		await setupWebsocketConnection({ websocketId: data, isChannelConnection: true })

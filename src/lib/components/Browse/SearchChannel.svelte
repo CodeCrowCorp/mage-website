@@ -1,7 +1,7 @@
 <script lang="ts">
 	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
-	import CreateChannel from './CreateChannel.svelte'
+	import CreateChannelDrawer from './CreateChannelDrawer.svelte'
 
 	let showDrawer = false
 </script>
@@ -30,6 +30,6 @@
 	</div>
 
 	{#if showDrawer}
-		<CreateChannel bind:showDrawer />
+		<CreateChannelDrawer bind:showDrawer />
 	{/if}
 </div>

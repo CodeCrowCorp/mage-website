@@ -1,11 +1,9 @@
 import { env } from '$env/dynamic/public'
-import { getHeaders } from '$lib/stores/helperStore'
 
 async function createFollow({ source1, source2 }: { source1: string; source2: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/subscribe`, {
 		method: 'PUT',
-		body: JSON.stringify({ source1, source2 }),
-		headers: getHeaders()
+		body: JSON.stringify({ source1, source2 })
 	}).then((response) => response.json())
 }
 
@@ -25,8 +23,7 @@ async function getFollows({
 	return await fetch(
 		`${env.PUBLIC_API_URL}/subscribe?source=${source}&sourceType=${sourceType}&searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`,
 		{
-			method: 'GET',
-			headers: getHeaders()
+			method: 'GET'
 		}
 	).then((response) => response.json())
 }
@@ -35,23 +32,20 @@ async function getFollowCount({ source, sourceType }: { source: string; sourceTy
 	return await fetch(
 		`${env.PUBLIC_API_URL}/subscribe/count?source=${source}&sourceType=${sourceType}`,
 		{
-			method: 'GET',
-			headers: getHeaders()
+			method: 'GET'
 		}
 	).then((response) => response.json())
 }
 
 async function deleteFollow({ source1, source2 }: { source1: string; source2: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/subscribe?source1=${source1}&source2=${source2}`, {
-		method: 'DELETE',
-		headers: getHeaders()
+		method: 'DELETE'
 	}).then((response) => response.json())
 }
 
 async function getFollowRelationship({ source }: { source: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/subscribe/relationship?source=${source}`, {
-		method: 'GET',
-		headers: getHeaders()
+		method: 'GET'
 	}).then((response) => response.json())
 }
 

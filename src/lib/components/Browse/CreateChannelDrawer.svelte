@@ -1,10 +1,11 @@
 <script lang="ts">
 	import IconPhoto from '$lib/assets/icons/IconPhoto.svelte'
-	import { tags, getTags, createChannel } from '$lib/stores/channelStore'
+	import { tags, getTags } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
-	import AddCategory from './AddCategory.svelte'
+	import AddCategoryDrawer from './AddCategoryDrawer.svelte'
 	import { goto } from '$app/navigation'
+	import { post, put } from '$lib/api'
 
 	export let showDrawer: boolean
 
@@ -58,10 +59,13 @@
 		tagName && newChannel.tags.length < maxTag ? newChannel.tags.push(tagName) : ''
 		newChannel = newChannel
 	}
+
 	const addChannel = async () => {
 		creatingChannel = true
-		let res = await createChannel(newChannel)
-		goto(`/channel/${res._id}`)
+		const channel = await post('/channel', newChannel)
+		await put(`/users/host-channels?hostChannelId=${channel._id}`)
+		//TODO: set currentChannel
+		goto(`/channel/${channel._id}`)
 		creatingChannel = false
 	}
 </script>
@@ -72,7 +76,10 @@
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
 		{#if showAddCategory}
-			<AddCategory bind:showAddCategory bind:categoryIcons bind:categories={newChannel.category} />
+			<AddCategoryDrawer
+				bind:showAddCategory
+				bind:categoryIcons
+				bind:categories={newChannel.category} />
 		{:else}
 			<div class="bg-base-200 w-80 md:w-[30rem] flex flex-col">
 				<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">

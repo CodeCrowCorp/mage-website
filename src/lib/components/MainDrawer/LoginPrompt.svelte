@@ -3,7 +3,7 @@
 	import IconSocialGoogle from '$lib/assets/icons/social/IconSocialGoogle.svelte'
 	import IconSocialGitHubInverse from '$lib/assets/icons/social/IconSocialGitHubInverse.svelte'
 	import { env } from '$env/dynamic/public'
-	import { login_modal } from '$lib/stores/helperStore'
+	import { is_login_modal_open } from '$lib/stores/helperStore'
 
 	async function getHref(provider: string) {
 		const response = await fetch(`${env.PUBLIC_API_URL}/auth/${provider}`, {
@@ -19,9 +19,9 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
-	class="modal cursor-pointer {$login_modal ? 'modal-open' : ''}"
+	class="modal cursor-pointer {$is_login_modal_open ? 'modal-open' : ''}"
 	on:click={() => {
-		$login_modal = false
+		$is_login_modal_open = false
 	}}>
 	<div
 		class="modal-box relative"
