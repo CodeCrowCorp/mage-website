@@ -7,12 +7,12 @@
 </script>
 
 <div class="flex flex-col md:flex-row gap-4 py-5 pl-5">
-	<div class="form-control">
+	<div class="form-control flex-1">
 		<div class="input-group">
 			<input
 				type="text"
 				placeholder="Search channels"
-				class="input input-bordered input-primary w-72" />
+				class="input input-bordered input-primary w-full" />
 			<button class="btn btn-square">
 				<IconSearch />
 			</button>
@@ -23,7 +23,7 @@
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<label
 			for="create-channel-drawer"
-			class="btn w-[21rem] btn-primary gap-2 drawer-button"
+			class="btn w-[16rem] btn-primary gap-2 drawer-button"
 			on:click={() => (showDrawer = true)}>
 			<IconCreate />
 			Create a channel</label>
