@@ -6,7 +6,7 @@
 	let showDrawer = false
 </script>
 
-<div class="flex flex-col md:flex-row gap-4 py-5 pl-5">
+<div class="flex flex-col md:flex-row gap-4 py-5 px-24">
 	<div class="form-control flex-1">
 		<div class="input-group">
 			<input
