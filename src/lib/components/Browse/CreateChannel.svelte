@@ -24,8 +24,7 @@
 		showAddCategory = false,
 		categoryIcons: any = [],
 		maxTag = 3,
-		maxCategory = 4,
-		creatingChannel = false
+		maxCategory = 4
 
 	$: maxTagLabel = newChannel.tags.length == maxTag ? 'max reached' : 'max ' + maxTag
 	$: maxCategoryLabel =
@@ -59,10 +58,8 @@
 		newChannel = newChannel
 	}
 	const addChannel = async () => {
-		creatingChannel = true
 		let res = await createChannel(newChannel)
 		goto(`/channel/${res._id}`)
-		creatingChannel = false
 	}
 </script>
 
@@ -173,14 +170,6 @@
 						<button type="submit" class="btn btn-primary grow">Add</button>
 					</div>
 				</form>
-
-				{#if creatingChannel}
-					<div class="absolute h-full w-full flex items-center bg-gray-300 opacity-40">
-						<div class="flex justify-center w-full">
-							<span class="btn btn-circle btn-outline btn-md loading" />
-						</div>
-					</div>
-				{/if}
 			</div>
 		{/if}
 	</div>
