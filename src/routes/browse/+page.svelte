@@ -1,6 +1,8 @@
 <script lang="ts">
+	import LastItemInViewport from '$lib/actions/LastItemInViewport'
 	import Carousel from '$lib/components/Browse/Carousel.svelte'
 	import ChannelSearch from '$lib/components/Browse/ChannelSearch.svelte'
+	import SearchSection from '$lib/components/Browse/SearchSection.svelte'
 	import ChannelTable from '$lib/components/Browse/ChannelTable.svelte'
 	import ChannelSection from '$lib/components/Browse/ChannelSection.svelte'
 	import UseSection from '$lib/components/Browse/UserSection.svelte'
@@ -34,6 +36,10 @@
 		favChannels = [] // await getFavChannels({ skip: 0, limit: 10 })
 		channels = await getChannels({ skip: 0, limit: 50 })
 	})
+
+	function load() {
+		console.log('hello')
+	}
 </script>
 
 {#if mostActiveChannels && mostActiveChannels.length > 0}
@@ -42,198 +48,7 @@
 
 <ChannelSearch />
 
-<div class="flex flex-col gap-4 px-24 justify-around">
-	<div class="flex flex-row gap-4">
-		<div class="w-[28rem] bg-gray-200">
-			<img
-				src="http://source.unsplash.com/800x800/?tree"
-				class="w-full max-h-64 border-none rounded shadow"
-				alt="" />
-		</div>
-
-		<div class="flex-auto flex flex-col gap-2">
-			<div>
-				<div class="badge badge-primary">primary</div>
-			</div>
-
-			<h2 class="text-xl font-semibold dark:text-white">
-				Envato Elements Ad - The Creators Key - 30s - Subtitles Burned
-			</h2>
-
-			<p class="text-sm font-light">16k Views - 10 hours ago</p>
-
-			<div class="flex items-center">
-				<div class="avatar">
-					<div class="w-8 rounded-full">
-						<img src="https://via.placeholder.com/300/09f/fff.png" alt="" />
-					</div>
-				</div>
-				<p class="ml-2 text-sm font-light text-center">channel 1</p>
-			</div>
-
-			<p class="text-sm font-light">
-				This channel is to discuss everything regarding SQA subject. This channel is to discuss
-				everything regarding SQA subject.
-			</p>
-
-			<div>
-				<div class="badge">neutral</div>
-			</div>
-		</div>
-	</div>
-	<div class="flex flex-row gap-4">
-		<div class="w-[28rem] bg-gray-200">
-			<img
-				src="http://source.unsplash.com/800x800/?tree"
-				class="w-full max-h-64 border-none rounded shadow"
-				alt="" />
-		</div>
-
-		<div class="flex-auto flex flex-col gap-2">
-			<div>
-				<div class="badge badge-primary">primary</div>
-			</div>
-
-			<h2 class="text-xl font-semibold dark:text-white">
-				Envato Elements Ad - The Creators Key - 30s - Subtitles Burned
-			</h2>
-
-			<p class="text-sm font-light">16k Views - 10 hours ago</p>
-
-			<div class="flex items-center">
-				<div class="avatar">
-					<div class="w-8 rounded-full">
-						<img src="https://via.placeholder.com/300/09f/fff.png" alt="" />
-					</div>
-				</div>
-				<p class="ml-2 text-sm font-light text-center">channel 1</p>
-			</div>
-
-			<p class="text-sm font-light">
-				This channel is to discuss everything regarding SQA subject. This channel is to discuss
-				everything regarding SQA subject.
-			</p>
-
-			<div>
-				<div class="badge">neutral</div>
-			</div>
-		</div>
-	</div>
-	<div class="flex flex-row gap-4">
-		<div class="w-[28rem] bg-gray-200">
-			<img
-				src="http://source.unsplash.com/800x800/?tree"
-				class="w-full max-h-64 border-none rounded shadow"
-				alt="" />
-		</div>
-
-		<div class="flex-auto flex flex-col gap-2">
-			<div>
-				<div class="badge badge-primary">primary</div>
-			</div>
-
-			<h2 class="text-xl font-semibold dark:text-white">
-				Envato Elements Ad - The Creators Key - 30s - Subtitles Burned
-			</h2>
-
-			<p class="text-sm font-light">16k Views - 10 hours ago</p>
-
-			<div class="flex items-center">
-				<div class="avatar">
-					<div class="w-8 rounded-full">
-						<img src="https://via.placeholder.com/300/09f/fff.png" alt="" />
-					</div>
-				</div>
-				<p class="ml-2 text-sm font-light text-center">channel 1</p>
-			</div>
-
-			<p class="text-sm font-light">
-				This channel is to discuss everything regarding SQA subject. This channel is to discuss
-				everything regarding SQA subject.
-			</p>
-
-			<div>
-				<div class="badge">neutral</div>
-			</div>
-		</div>
-	</div>
-	<div class="flex flex-row gap-4">
-		<div class="w-96 bg-gray-200">
-			<img
-				src="http://source.unsplash.com/800x800/?tree"
-				class="w-full max-h-72 border-none rounded shadow"
-				alt="" />
-		</div>
-
-		<div class="flex-auto flex flex-col gap-2">
-			<div>
-				<div class="badge badge-primary">primary</div>
-			</div>
-
-			<h2 class="text-xl font-semibold dark:text-white">
-				Envato Elements Ad - The Creators Key - 30s - Subtitles Burned
-			</h2>
-
-			<p class="text-sm font-light">16k Views - 10 hours ago</p>
-
-			<div class="flex items-center">
-				<div class="avatar">
-					<div class="w-8 rounded-full">
-						<img src="https://via.placeholder.com/300/09f/fff.png" alt="" />
-					</div>
-				</div>
-				<p class="ml-2 text-sm font-light text-center">channel 1</p>
-			</div>
-
-			<p class="text-sm font-light">
-				This channel is to discuss everything regarding SQA subject. This channel is to discuss
-				everything regarding SQA subject.
-			</p>
-
-			<div>
-				<div class="badge">neutral</div>
-			</div>
-		</div>
-	</div>
-	<div class="flex flex-row gap-4">
-		<div class="w-96 bg-gray-200">
-			<img
-				src="http://source.unsplash.com/800x800/?tree"
-				class="w-full max-h-72 border-none rounded shadow"
-				alt="" />
-		</div>
-
-		<div class="flex-auto flex flex-col gap-2">
-			<div>
-				<div class="badge badge-primary">primary</div>
-			</div>
-
-			<h2 class="text-xl font-semibold dark:text-white">
-				Envato Elements Ad - The Creators Key - 30s - Subtitles Burned
-			</h2>
-
-			<p class="text-sm font-light">16k Views - 10 hours ago</p>
-
-			<div class="flex items-center">
-				<div class="avatar">
-					<div class="w-8 rounded-full">
-						<img src="https://via.placeholder.com/300/09f/fff.png" alt="" />
-					</div>
-				</div>
-				<p class="ml-2 text-sm font-light text-center">channel 1</p>
-			</div>
-
-			<p class="text-sm font-light">
-				This channel is to discuss everything regarding SQA subject. This channel is to discuss
-				everything regarding SQA subject.
-			</p>
-
-			<div>
-				<div class="badge">neutral</div>
-			</div>
-		</div>
-	</div>
-</div>
+<SearchSection />
 
 {#if weeklyChannels && weeklyChannels.length > 0}
 	<ChannelSection
