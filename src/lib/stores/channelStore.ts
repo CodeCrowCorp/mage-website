@@ -1,7 +1,5 @@
 import { get, writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
-import { currentUser } from '$lib/stores/authStore'
-import { getHeaders } from '$lib/stores/helperStore'
 
 export const searchQuery: Writable<string> = writable('')
 export const currentChannel: Writable<any> = writable(null)
@@ -46,8 +44,7 @@ async function createChannel({
 			avatar: user.avatar,
 			isHostActive: true,
 			channelType
-		}),
-		headers: getHeaders()
+		})
 	}).then(async (response) => {
 		const res = await response.json()
 		if (channelType === 'channel') {
@@ -66,15 +63,13 @@ async function deleteChannel({ channelId }: { channelId: string }) {
 
 async function getChannel({ channelId }: { channelId: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/channel?channelId=${channelId}`, {
-		method: 'GET',
-		headers: getHeaders()
+		method: 'GET'
 	}).then((response) => response.json())
 }
 
 async function addChannelToUser({ channelId }: { channelId: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/users/channels?channelId=${channelId}`, {
-		method: 'GET',
-		headers: getHeaders()
+		method: 'GET'
 	}).then(async (response) => {
 		const res = await response.json()
 		//TODO: update user in authStore
@@ -83,8 +78,7 @@ async function addChannelToUser({ channelId }: { channelId: string }) {
 
 async function removeChannelFromUser({ channelId, userId }: { channelId: string; userId: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/users/channels?channelId=${channelId}`, {
-		method: 'DELETE',
-		headers: getHeaders()
+		method: 'DELETE'
 	}).then(async (response) => {
 		const res = await response.json()
 		//TODO: update user in authStore
@@ -94,8 +88,7 @@ async function removeChannelFromUser({ channelId, userId }: { channelId: string;
 
 async function addHostChannelToUser({ hostChannelId }: { hostChannelId: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/users/host-channels?hostChannelId=${hostChannelId}`, {
-		method: 'PUT',
-		headers: getHeaders()
+		method: 'PUT'
 	}).then(async (response) => {
 		const res = await response.json()
 		//TODO: update user in authStore
@@ -104,8 +97,7 @@ async function addHostChannelToUser({ hostChannelId }: { hostChannelId: string }
 
 async function removeHostChannelFromUser({ hostChannelId }: { hostChannelId: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/users/host-channels?hostChannelId=${hostChannelId}`, {
-		method: 'DELETE',
-		headers: getHeaders()
+		method: 'DELETE'
 	}).then(async (response) => {
 		const res = await response.json()
 		//TODO: update user in authStore
@@ -230,8 +222,7 @@ async function deleteMembers({ channelId }: { channelId: string }) {
 
 async function getMyChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
 	return await fetch(`${env.PUBLIC_API_URL}/channels/me/hosted?skip=${skip}&limit=${limit}`, {
-		method: 'GET',
-		headers: getHeaders()
+		method: 'GET'
 	}).then((response) => response.json())
 }
 
@@ -249,30 +240,26 @@ async function getChannelsByUserId({
 	return await fetch(
 		`${env.PUBLIC_API_URL}/channels/user?userId=${userId}&searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`,
 		{
-			method: 'GET',
-			headers: getHeaders()
+			method: 'GET'
 		}
 	).then((response) => response.json())
 }
 
 async function getFavChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
 	return await fetch(`${env.PUBLIC_API_URL}/channels/me/fav?skip=${skip}&limit=${limit}`, {
-		method: 'GET',
-		headers: getHeaders()
+		method: 'GET'
 	}).then((response) => response.json())
 }
 
 async function getMostActiveChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
 	return await fetch(`${env.PUBLIC_API_URL}/channels/most-active?skip=${skip}&limit=${limit}`, {
-		method: 'GET',
-		headers: getHeaders()
+		method: 'GET'
 	}).then((response) => response.json())
 }
 
 async function getWeeklyChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
 	return await fetch(`${env.PUBLIC_API_URL}/channels/weekly?skip=${skip}&limit=${limit}`, {
-		method: 'GET',
-		headers: getHeaders()
+		method: 'GET'
 	}).then((response) => response.json())
 }
 
@@ -280,8 +267,7 @@ async function getChannels({ skip = 0, limit = 50 }: { skip: number; limit: numb
 	return await fetch(
 		`${env.PUBLIC_API_URL}/channels?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`,
 		{
-			method: 'GET',
-			headers: getHeaders()
+			method: 'GET'
 		}
 	).then((response) => response.json())
 }
@@ -370,8 +356,7 @@ async function getTechListJson() {
 
 async function getTags() {
 	return await fetch(`${env.PUBLIC_API_URL}/tags`, {
-		method: 'GET',
-		headers: getHeaders()
+		method: 'GET'
 	}).then(async (response) => {
 		const res = await response.json()
 		tags.set(res)

@@ -1,11 +1,11 @@
-<script lang="ts">
+<script async script lang="ts">
 	import '$lib/assets/styles/tailwind-output.css'
 	// @ts-ignore
 	import NProgress from 'nprogress'
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
-	import { currentUser, userRole } from '$lib/stores/authStore'
-	import { isChannelPage } from '$lib/stores/helperStore'
+	import { current_user, user_role } from '$lib/stores/authStore'
+	import { getPlatformSocket } from '$lib/stores/socketStore'
 
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
@@ -13,6 +13,9 @@
 	import Messages from '$lib/components/MainDrawer/Messages.svelte'
 	import MainDrawer from '$lib/components/MainDrawer/MainDrawer.svelte'
 	import SmallDrawer from '$lib/components/MainDrawer/SmallDrawer.svelte'
+	import { page } from '$app/stores'
+	import { onMount } from 'svelte'
+
 	NProgress.configure({
 		minimum: 0.75,
 		showSpinner: false,
@@ -36,12 +39,16 @@
 	function storeUserData() {
 		if (browser) {
 			if (data?.user?.user) {
-				$currentUser = data.user.user
+				$current_user = data.user.user
 			} else {
-				$currentUser = null
+				$current_user = null
 			}
 		}
 	}
+
+	onMount(async () => {
+		// await getPlatformSocket()
+	})
 </script>
 
 <svelte:head>
@@ -72,7 +79,7 @@
 	</div>
 	<div class="drawer-side">
 		<label for="my-drawer-2" class="drawer-overlay" />
-		{#if !$isChannelPage}
+		{#if !$page.url.pathname.includes('/channel')}
 			<MainDrawer bind:nav_drawer />
 		{:else}
 			<SmallDrawer bind:nav_drawer />

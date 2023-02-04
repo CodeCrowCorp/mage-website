@@ -13,7 +13,7 @@
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
 	import { goto } from '$app/navigation'
 	import { env } from '$env/dynamic/public'
-	import { currentUser, userRole } from '$lib/stores/authStore'
+	import { current_user, user_role } from '$lib/stores/authStore'
 	import {
 		isFeatureMintPageEnabled,
 		isFeaturePremiumPageEnabled,
@@ -21,21 +21,22 @@
 		isFeatureVideoResponsesEnabled
 	} from '$lib/stores/remoteConfigStore'
 
-	import { login_modal, colorFromLevel, levelAndBarValueFromExp } from '$lib/stores/helperStore'
+	import { is_login_modal_open } from '$lib/stores/helperStore'
+	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
 
 	export let nav_drawer: HTMLInputElement
 
 	function logout() {
 		setTimeout(() => {
-			$currentUser = null
+			$current_user = null
 		}, 500)
 		goto('/logout')
 	}
 
-	let exp = 512 //Math.floor(Math.random() * (10000 - 0 + 1) + 0) //$currentUser.exp
+	let exp = 512 //Math.floor(Math.random() * (10000 - 0 + 1) + 0) //$current_user.exp
 	let levelAndBarValue = levelAndBarValueFromExp(exp)
-	let progressBarLevel = levelAndBarValue.level //levelFromExp(exp) //$currentUser.exp
-	let progressBarValue = levelAndBarValue.barValue //barValueFromExp(exp) //$currentUser.exp
+	let progressBarLevel = levelAndBarValue.level //levelFromExp(exp) //$current_user.exp
+	let progressBarValue = levelAndBarValue.barValue //barValueFromExp(exp) //$current_user.exp
 	let progressBarColor = colorFromLevel(progressBarLevel)
 </script>
 
@@ -43,7 +44,7 @@
 	<!-- <Messages /> -->
 	<ul>
 		<a href="/browse" class="btn btn-ghost normal-case text-xl">Mage</a>
-		{#if $currentUser}
+		{#if $current_user}
 			<li class="w-full">
 				<a href="/profile/me" class="rounded-md cursor-pointer">
 					<div>
@@ -51,14 +52,14 @@
 							<div class="avatar online">
 								<div
 									class="w-12 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
-									<img src={$currentUser.avatar} alt="" />
+									<img src={$current_user.avatar} alt="" />
 								</div>
 							</div>
 						</div>
 						<!-- <div class="grid grid-cols-1 gap-1">
-							<p>{$currentUser.displayName || 'Gagan Suie'}</p>
+							<p>{$current_user.displayName || 'Gagan Suie'}</p>
 							<p class="text-pink-500 w-12 truncate">
-								@{$currentUser.username}
+								@{$current_user.username}
 							</p>
 						</div> -->
 						<div class="tooltip" data-tip="level {progressBarLevel}">
@@ -75,7 +76,7 @@
 
 		<!-- Sidebar content here -->
 
-		{#if $currentUser && $userRole === 'admin'}
+		{#if $current_user && $user_role === 'admin'}
 			<li>
 				<a href="/admin">
 					<IconDrawerAdmin />
@@ -87,7 +88,7 @@
 				<IconDrawerHome />
 			</a>
 		</li>
-		{#if $currentUser}
+		{#if $current_user}
 			<li>
 				<a href="">
 					<IconDrawerMessages />
@@ -95,7 +96,7 @@
 				</a>
 			</li>
 		{/if}
-		{#if $currentUser && $isFeatureVideoResponsesEnabled}
+		{#if $current_user && $isFeatureVideoResponsesEnabled}
 			<li>
 				<a href="/videos">
 					<IconDrawerVideos />
@@ -105,7 +106,7 @@
 				<a href="/creator-space"> <IconDrawerCreatorSpace /></a>
 			</li>
 		{/if}
-		{#if $currentUser && $isFeatureMintPageEnabled}
+		{#if $current_user && $isFeatureMintPageEnabled}
 			<li>
 				<a
 					href="https://mint.codecrow.io"
@@ -116,7 +117,7 @@
 				</a>
 			</li>
 		{/if}
-		{#if $currentUser && $isFeaturePremiumPageEnabled}
+		{#if $current_user && $isFeaturePremiumPageEnabled}
 			<li>
 				<a href="/premium" class="text-pink-500">
 					<IconDrawerPremium />
@@ -141,14 +142,14 @@
 				</ul>
 			</div>
 		</li>
-		{#if $currentUser}
+		{#if $current_user}
 			<li>
 				<a href="/settings">
 					<IconDrawerSettings />
 				</a>
 			</li>
 		{/if}
-		{#if $currentUser}
+		{#if $current_user}
 			<li>
 				<button on:click={logout}>
 					<IconDrawerLogOut />
@@ -158,7 +159,7 @@
 			<li>
 				<button
 					on:click={() => {
-						$login_modal = true
+						$is_login_modal_open = true
 						if (nav_drawer.checked) {
 							nav_drawer.checked = false
 						}

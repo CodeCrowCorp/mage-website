@@ -1,5 +1,4 @@
 import { env } from '$env/dynamic/public'
-import { getHeaders } from '$lib/stores/helperStore'
 
 async function createTransaction({
 	url,
@@ -34,16 +33,14 @@ async function createTransaction({
 	}
 	return await fetch(`${env.PUBLIC_API_URL}/transactions`, {
 		method: 'POST',
-		body: JSON.stringify(data),
-		headers: getHeaders()
+		body: JSON.stringify(data)
 	}).then((response) => response.json())
 }
 
 //TODO: send userId through header
 async function getTransactions() {
 	return await fetch(`${env.PUBLIC_API_URL}/transactions`, {
-		method: 'GET',
-		headers: getHeaders()
+		method: 'GET'
 	}).then((response) => response.json())
 }
 

@@ -1,67 +1,42 @@
 <script lang="ts">
-	import Carousel from '$lib/components/Browse/Carousel.svelte'
-	import ChannelSearch from '$lib/components/Browse/ChannelSearch.svelte'
-	import ChannelTable from '$lib/components/Browse/ChannelTable.svelte'
-	import ChannelSection from '$lib/components/Browse/ChannelSection.svelte'
-	import UseSection from '$lib/components/Browse/UserSection.svelte'
 	import { onMount } from 'svelte'
-	import {
-		getMostActiveChannels,
-		getWeeklyChannels,
-		getMyChannels,
-		getFavChannels,
-		getChannels,
-		getTechListJson,
-		techList
-	} from '$lib/stores/channelStore'
-	import { getHighestRankedUsers } from '$lib/stores/userStore'
-	import { currentUser } from '$lib/stores/authStore'
+	import { getTechListJson, techList } from '$lib/stores/channelStore'
+	import CarouselSection from '$lib/components/Browse/Sections/CarouselSection.svelte'
+	import ChannelSection from '$lib/components/Browse/Sections/ChannelSection.svelte'
+	import SearchChannel from '$lib/components/Browse/SearchChannel.svelte'
+	import UserSection from '$lib/components/Browse/Sections/UserSection.svelte'
+	import TableSection from '$lib/components/Browse/Sections/TableSection.svelte'
+	import type { PageData } from './$types'
 
-	let mostActiveChannels: any
-	let weeklyChannels: any
-	let highestRankedUsers: any
-	let myChannels: any
-	let favChannels: any
-	let channels: any
+	export let data: PageData
+
+	let weeklyTitle = 'Weekly topics'
+	let weeklyChannels: any = []
+	if (!data.post.weeklyChannels.error) {
+		weeklyTitle = `Wk${data.post.weeklyChannels.weekly.weekNumber} ${data.post.weeklyChannels.weekly.topic}`
+		weeklyChannels = data.post.weeklyChannels.channels
+	} else {
+		weeklyChannels = data.post.weeklyChannels.error
+	}
+
 	onMount(async () => {
 		if (!$techList.length) {
 			await getTechListJson()
 		}
-		mostActiveChannels = [] // await getMostActiveChannels({ skip: 0, limit: 10 })
-		weeklyChannels = [] // await getWeeklyChannels({ skip: 0, limit: 10 })
-		highestRankedUsers = [] // await getHighestRankedUsers({ skip: 0, limit: 10 })
-		myChannels = [] // await getMyChannels({ skip: 0, limit: 10 })
-		favChannels = [] // await getFavChannels({ skip: 0, limit: 10 })
-		channels = await getChannels({ skip: 0, limit: 50 })
 	})
 </script>
 
-{#if mostActiveChannels && mostActiveChannels.length > 0}
-	<Carousel bind:channels={mostActiveChannels} />
-{/if}
+<CarouselSection bind:channels={data.post.mostActiveChannels} />
+<SearchChannel />
 
-<ChannelSearch />
+<ChannelSection title={weeklyTitle} bind:channels={weeklyChannels} />
 
-{#if weeklyChannels && weeklyChannels.length > 0}
-	<ChannelSection
-		title="Wk${weeklyChannels.weekly.weekNumber} ${weeklyChannels.weekly.topic}"
-		bind:channels={weeklyChannels.channels} />
-{/if}
+<UserSection title="Highest ranked" bind:users={data.post.highestRankedUsers} />
 
-{#if highestRankedUsers && highestRankedUsers.length > 0}
-	<UseSection title="Highest ranked" bind:users={highestRankedUsers} />
-{/if}
+<UserSection title="Rising stars" bind:users={data.post.risingStarUsers} />
 
-<!-- <UseSection title="Rising stars" bind:channels /> -->
+<ChannelSection title="My channels" bind:channels={data.post.myChannels} />
 
-{#if $currentUser && myChannels && myChannels.length > 0}
-	<ChannelSection title="My channels" bind:channels={myChannels} />
-{/if}
+<ChannelSection title="Fav channels" bind:channels={data.post.favChannels} />
 
-{#if $currentUser && favChannels && favChannels.length > 0}
-	<ChannelSection title="Fav channels" bind:channels={favChannels} />
-{/if}
-
-{#if channels && channels.length > 0}
-	<ChannelTable bind:channels />
-{/if}
+<TableSection bind:channels={data.post.tableChannels} />

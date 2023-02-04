@@ -2,11 +2,17 @@
 	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
 	import ChatDrawer from '$lib/components/Chat/ChatDrawer.svelte'
 	import type { PageData } from './$types'
+	import { getChannelSocket } from '$lib/stores/socketStore'
+	import { onMount } from 'svelte'
 
 	export let data: PageData
 
 	$: ({ post } = data)
 	let showDrawer = false
+
+	onMount(async () => {
+		// await getChannelSocket({ channelId: post._id })
+	})
 </script>
 
 <div class="flex flex-col md:flex-row gap-4 py-5 pl-5">
