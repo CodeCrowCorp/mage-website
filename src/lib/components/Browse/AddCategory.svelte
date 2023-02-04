@@ -1,6 +1,8 @@
 <script lang="ts">
 	import IconInfo from '$lib/assets/icons/IconInfo.svelte'
 	import { onMount } from 'svelte'
+	import { categoryAssets } from '$lib/stores/channelStore'
+
 	export let showAddCategory: boolean = true,
 		categories: any = [],
 		categoryIcons: any = []
@@ -8,42 +10,46 @@
 	let maxCategory = 4,
 		tabs = ['Game', 'Web2', 'Web3'],
 		activeTab = 'Game',
-		web2Assets: any = [],
-		web3Assets: any = [],
-		gameAssets: any = [],
 		assetIcons: any = {},
+		allIcons: any = {},
 		searchQuery: string = '',
 		searchResult: any = {},
 		renderingAssets: Array<[string, string]>
 
 	const setActiveIcons = () => {
-		assetIcons = activeTab == 'Game' ? gameAssets : activeTab == 'Web2' ? web2Assets : web3Assets
+		assetIcons =
+			activeTab == 'Game'
+				? $categoryAssets.game
+				: activeTab == 'Web2'
+				? $categoryAssets.web2
+				: $categoryAssets.web3
 	}
 
 	const loadWeb2 = async () => {
-		if (web2Assets.length == 0) {
+		if (!Object.keys($categoryAssets.web2).length) {
 			let res = await fetch(`/svg-json/web2.json`, {
 				method: 'GET'
 			})
-			res.ok ? (web2Assets = await res.json()) : ''
+			console.log(res.headers)
+			res.ok ? ($categoryAssets.web2 = await res.json()) : ''
 		}
 	}
 	const loadWeb3 = async () => {
-		if (web3Assets.length == 0) {
+		if (!Object.keys($categoryAssets.web3).length) {
 			let res = await fetch(`/svg-json/web3.json`, {
 				method: 'GET'
 			})
 
-			res.ok ? (web3Assets = await res.json()) : ''
+			res.ok ? ($categoryAssets.web3 = await res.json()) : ''
 		}
 	}
 	const loadGame = async () => {
-		if (gameAssets.length == 0) {
+		if (!Object.keys($categoryAssets.game).length) {
 			let res = await fetch(`/svg-json/game.json`, {
 				method: 'GET'
 			})
 
-			res.ok ? (gameAssets = await res.json()) : ''
+			res.ok ? ($categoryAssets.game = await res.json()) : ''
 		}
 	}
 
@@ -56,7 +62,7 @@
 		setActiveIcons()
 	}
 
-	$: allIcons = { ...web2Assets, ...web3Assets, ...gameAssets }
+	$: allIcons = { ...$categoryAssets.web2, ...$categoryAssets.web3, ...$categoryAssets.game }
 	$: maxCategoryLabel = categories.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 	$: renderingAssets = searchQuery != '' ? Object.entries(searchResult) : Object.entries(assetIcons)
 
