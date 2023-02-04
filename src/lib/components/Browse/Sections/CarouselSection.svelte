@@ -69,7 +69,7 @@
 				{/each}
 				<div class="shrink-0 blank-width" />
 			{:else}
-				<div role="status" class="flex flex-row gap-1 animate-pulse overflow-clip">
+				<div role="status" class="flex flex-row gap-1 animate-pulse">
 					{#each Array(6) as _, index (index)}
 						<LoadingCarouselItem />
 					{/each}

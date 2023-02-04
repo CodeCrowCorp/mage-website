@@ -100,7 +100,7 @@
 			<div class="font-semibold m-3">
 				<div class="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4 animate-pulse" />
 			</div>
-			<div role="status" class="flex flex-row gap-1 animate-pulse overflow-clip">
+			<div role="status" class="flex flex-row gap-1 animate-pulse ">
 				{#each Array(6) as _, index (index)}
 					<LoadingChannelItem />
 				{/each}
