@@ -76,12 +76,14 @@
 					</tr>
 				{/each}
 			{:else}
-				<div role="status" class="flex flex-row gap-1 animate-pulse">
-					{#each Array(6) as _, index (index)}
+				<!-- <div role="status" class="flex flex-row gap-1 animate-pulse"> -->
+				{#each Array(5) as _, index (index)}
+					<tr>
 						<LoadingTableItem />
-					{/each}
-					<span class="sr-only">Loading...</span>
-				</div>
+					</tr>
+				{/each}
+				<span class="sr-only">Loading...</span>
+				<!-- </div> -->
 			{/if}
 		</tbody>
 		<tfoot>

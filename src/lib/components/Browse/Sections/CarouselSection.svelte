@@ -9,7 +9,7 @@
 	let ref: any,
 		showback = false
 
-	$: channels = channels
+	$: channels = channels.splice(0, 5)
 
 	const prev = () => {
 		if (ref) {
@@ -46,7 +46,6 @@
 			bind:this={ref}
 			class="carousel-content relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto pt-14 flex-grow">
 			{#if channels && channels.length}
-				<div class="shrink-0 blank-width" />
 				{#each channels as channel}
 					<div class="snap-center shrink-0 first:pl-8 last:pr-8 w-[400px] md:w-[600px] rounded-md">
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -67,7 +66,6 @@
 						</div>
 					</div>
 				{/each}
-				<div class="shrink-0 blank-width" />
 			{:else}
 				<div role="status" class="flex flex-row gap-1 animate-pulse">
 					{#each Array(6) as _, index (index)}
