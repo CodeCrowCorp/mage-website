@@ -30,8 +30,8 @@
 	}
 </script>
 
-{#if !users.error}
-	<div class="flex flex-col my-4 relative">
+{#if users && !users.error}
+	<div class="flex flex-col my-4 relative" class:hidden={users != undefined && users.length == 0}>
 		{#if users && users.length}
 			<div class="font-semibold m-3">
 				<a class="link link-secondary text-lg">{title}</a>
