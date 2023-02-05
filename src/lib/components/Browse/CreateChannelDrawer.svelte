@@ -78,11 +78,11 @@
 				bind:categoryIcons
 				bind:categories={newChannel.category} />
 		{:else}
-			<div class="bg-base-200 w-80 md:w-[30rem] flex flex-col">
-				<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
-					Create a new channel
-				</p>
-				<form on:submit={() => addChannel()}>
+			<form on:submit={() => addChannel()}>
+				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col">
+					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
+						Create a new channel
+					</p>
 					<div class="flex flex-col p-3">
 						<p class="text-xs">
 							When you create a channel, you may allow viewer's to observe your desktop as you host
@@ -176,8 +176,8 @@
 							>Cancel</button>
 						<button type="submit" class="btn btn-primary grow">Add</button>
 					</div>
-				</form>
-			</div>
+				</div>
+			</form>
 		{/if}
 	</div>
 </div>
