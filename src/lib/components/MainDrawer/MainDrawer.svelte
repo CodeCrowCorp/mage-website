@@ -27,6 +27,7 @@
 		isFeatureGroupChatEnabled,
 		isFeatureVideoResponsesEnabled
 	} from '$lib/stores/remoteConfigStore'
+	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svg'
 
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
@@ -50,7 +51,9 @@
 <div class="menu p-4 w-80 bg-base-100 text-base-content flex flex-col">
 	<!-- <Messages /> -->
 	<ul>
-		<a href="/browse" class="btn btn-ghost normal-case text-xl">Mage</a>
+		<a href="/browse" class="btn btn-ghost normal-case text-xl">
+			<img class="w-10" src={IconMageLogo} alt="" />
+			Mage</a>
 		{#if $current_user}
 			<li>
 				<a href="/profile/me" class="hero rounded-md cursor-pointer">
@@ -65,8 +68,12 @@
 								</div>
 							</div>
 							<div class="grid grid-cols-3 gap-1">
-								<p class="col-span-3">{$current_user.displayName}</p>
-								<p class="col-span-3 text-pink-500 truncate">@{$current_user.username}</p>
+								<div class="col-span-3 tooltip flex" data-tip={$current_user.displayName}>
+									<p class="truncate">{$current_user.displayName}</p>
+								</div>
+								<div class="col-span-3 tooltip flex" data-tip="@{$current_user.username}">
+									<p class=" text-pink-500 truncate">@{$current_user.username}</p>
+								</div>
 								<IconDrawerStreak />
 								<p class="col-span-2 tooltip text-start" data-tip="62 day streak">62 d</p>
 								<IconDrawerStreamDuration />
@@ -100,7 +107,7 @@
 				Browse
 			</a>
 		</li>
-		{#if $current_user}
+		<!-- {#if $current_user}
 			<li>
 				<a href="">
 					<IconDrawerMessages />
@@ -108,7 +115,7 @@
 					<IconDrawerChevron />
 				</a>
 			</li>
-		{/if}
+		{/if} -->
 		<!-- {#if $current_user && $isFeatureVideoResponsesEnabled}
 			<li>
 				<a href="/videos">

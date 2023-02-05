@@ -4,6 +4,7 @@
 	import IconSocialGitHubInverse from '$lib/assets/icons/social/IconSocialGitHubInverse.svelte'
 	import { env } from '$env/dynamic/public'
 	import { is_login_modal_open } from '$lib/stores/helperStore'
+	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svg'
 
 	async function getHref(provider: string) {
 		const response = await fetch(`${env.PUBLIC_API_URL}/auth/${provider}`, {
@@ -28,7 +29,10 @@
 		on:click={(e) => {
 			e.stopPropagation()
 		}}>
-		<div class="py-4 space-y-5 px-4 md:px-10">
+		<div class="py-4 space-y-5 px-4 md:px-10 ">
+			<div class="flex justify-center">
+				<img class="w-20" src={IconMageLogo} alt="" />
+			</div>
 			{#if env.PUBLIC_CROSS_ORIGIN === 'false'}
 				<a class="btn w-full btn-primary gap-4" href="{env.PUBLIC_API_URL}/auth/discord">
 					<IconSocialDiscordInverse />

@@ -20,6 +20,7 @@
 		isFeatureGroupChatEnabled,
 		isFeatureVideoResponsesEnabled
 	} from '$lib/stores/remoteConfigStore'
+	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svg'
 
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
@@ -43,7 +44,7 @@
 <div class="menu p-4 bg-base-100 text-base-content flex flex-col">
 	<!-- <Messages /> -->
 	<ul>
-		<a href="/browse" class="btn btn-ghost normal-case text-xl">Mage</a>
+		<a href="/browse" class="btn btn-ghost"> <img class="w-10" src={IconMageLogo} alt="" /></a>
 		{#if $current_user}
 			<li class="w-full">
 				<a href="/profile/me" class="rounded-md cursor-pointer">
