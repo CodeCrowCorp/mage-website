@@ -20,11 +20,13 @@
 		</div>
 	</div>
 
-	<div class="form-control">
+	<div class="form-control" class:cursor-not-allowed={!$current_user}>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<label
 			for="create-channel-drawer"
 			class="btn w-[21rem] btn-primary gap-2 drawer-button"
+			class:opacity-50={!$current_user}
+			class:pointer-events-none={!$current_user}
 			on:click={() => (showDrawer = true)}>
 			<IconCreate />
 			Create a channel</label>
