@@ -50,7 +50,7 @@
 </script>
 
 <div class="menu p-4 w-80 bg-base-100 text-base-content flex flex-col">
-	<!-- <Messages /> -->
+	<!-- <MessagesDrawer /> -->
 	<ul>
 		<a href="/browse" class="btn btn-ghost normal-case text-xl">
 			<img class="w-10" src={IconMageLogo} alt="" />
@@ -203,7 +203,7 @@
 
 	<footer class="mt-auto p-4">
 		<!-- <RisingStars /> -->
-		<div class="grid grid-flow-col gap-4">
+		<div class="flex gap-4">
 			<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 				<IconSocialGitHub />
 			</a>
@@ -213,12 +213,12 @@
 			<a href="https://twitter.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 				<IconSocialTwitter />
 			</a>
-			<a href="https://magiceden.io" target="_blank" rel="noreferrer">
+			<!-- <a href="https://magiceden.io" target="_blank" rel="noreferrer">
 				<img src={IconSocialMagicEden} alt="" />
 			</a>
 			<a href="https://www.dexlab.space" target="_blank" rel="noreferrer">
 				<img src={IconSocialDexlab} alt="" />
-			</a>
+			</a> -->
 		</div>
 		<p>Code Crow Corp © 2023</p>
 		<p class="text-gray-500">v{__VERSION__} [{env.PUBLIC_ENV}]</p>

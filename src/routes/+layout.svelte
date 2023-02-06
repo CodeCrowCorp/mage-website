@@ -9,7 +9,6 @@
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
 	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
-	import Messages from '$lib/components/MainDrawer/Messages.svelte'
 	import MainDrawer from '$lib/components/MainDrawer/MainDrawer.svelte'
 	import SmallDrawer from '$lib/components/MainDrawer/SmallDrawer.svelte'
 	import { page } from '$app/stores'

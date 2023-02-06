@@ -43,7 +43,7 @@
 </script>
 
 <div class="menu p-4 bg-base-100 text-base-content flex flex-col">
-	<!-- <Messages /> -->
+	<!-- <MessagesDrawer /> -->
 	<ul>
 		<a href="/browse" class="btn btn-ghost"> <img class="w-10" src={IconMageLogo} alt="" /></a>
 		{#if $current_user}
