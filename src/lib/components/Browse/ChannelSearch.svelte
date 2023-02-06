@@ -3,15 +3,13 @@
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
 	import CreateChannel from './CreateChannel.svelte'
 	import { searchQuery, searchingChannel } from '$lib/stores/channelStore'
+	import { createEventDispatcher } from 'svelte'
 
+	let dispatch = createEventDispatcher()
 	let showDrawer = false
 
 	function submit() {
-		$searchingChannel = true
-
-		setTimeout(() => {
-			$searchingChannel = false
-		}, 10000)
+		dispatch('search')
 	}
 </script>
 

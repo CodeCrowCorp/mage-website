@@ -55,7 +55,7 @@
 		</h2>
 
 		<p class="text-sm font-light">
-			{channel.memberCount} Views - {timeSince(channel.createdAt)}
+			{channel.memberCount || 0} Views - {timeSince(channel.createdAt)}
 		</p>
 
 		<div class="flex items-center">

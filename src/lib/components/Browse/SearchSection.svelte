@@ -2,7 +2,7 @@
 	import LastItemInViewport from '$lib/actions/LastItemInViewport'
 	import SearchItem from '$lib/components/Browse/SearchItem.svelte'
 	import SearchSkeleton from '$lib/components/Skeleton/SearchSkeleton.svelte'
-	import { searchingChannel } from '$lib/stores/channelStore'
+	import { searchingChannel, loadMoreChannel } from '$lib/stores/channelStore'
 
 	export let channels: []
 </script>
@@ -18,6 +18,12 @@
 				<SearchItem {channel} />
 			{/if}
 		{/each}
+		{#if $loadMoreChannel}
+			<div class="flex justify-center items-center pb-8">
+				<div
+					class="w-12 h-12 rounded-full animate-spin border border-solid border-black border-t-transparent" />
+			</div>
+		{/if}
 		<span use:LastItemInViewport on:load_more />
 	{/if}
 </div>

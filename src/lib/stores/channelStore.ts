@@ -9,6 +9,7 @@ export const techList: Writable<[]> = writable([])
 export const tags: Writable<any> = writable([])
 
 export const searchingChannel = writable(false)
+export const loadMoreChannel = writable(false)
 
 async function createChannel({
 	title,
@@ -274,8 +275,9 @@ async function getWeeklyChannels({ skip = 0, limit = 50 }: { skip: number; limit
 }
 
 async function getChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
+	let q = get(searchQuery)
 	return await fetch(
-		`${env.PUBLIC_API_URL}/channels?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`,
+		`${env.PUBLIC_API_URL}/channels?searchQuery=${q}&skip=${skip}&limit=${limit}`,
 		{
 			method: 'GET',
 			headers: getHeaders()
