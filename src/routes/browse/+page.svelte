@@ -13,8 +13,10 @@
 	let weeklyTitle = 'Weekly topics'
 	let weeklyChannels: any = []
 	if (!data.post.weeklyChannels.error) {
-		weeklyTitle = `Wk${data.post.weeklyChannels.weekly.weekNumber} ${data.post.weeklyChannels.weekly.topic}`
+		// weeklyTitle = `Wk${data.post.weeklyChannels.weekly.weekNumber} ${data.post.weeklyChannels.weekly.topic}`
+		weeklyTitle = 'Week'
 		weeklyChannels = data.post.weeklyChannels.channels
+		console.log(weeklyChannels)
 	} else {
 		weeklyChannels = data.post.weeklyChannels.error
 	}
@@ -26,7 +28,7 @@
 	})
 </script>
 
-<CarouselSection bind:channels={data.post.mostActiveChannels} />
+<CarouselSection channels={data.post.tableChannels} />
 <SearchChannel />
 
 <ChannelSection title={weeklyTitle} bind:channels={weeklyChannels} />
