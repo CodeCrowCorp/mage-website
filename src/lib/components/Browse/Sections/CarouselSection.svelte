@@ -119,14 +119,9 @@
 {/if}
 
 <style>
-	.carousel-content::-webkit-scrollbar {
-		display: none;
-	}
-
 	.swiper-slide {
 		background: #fff;
 		display: flex;
-		/* align-items: end; */
 	}
 	:global(.swiper-slide) {
 		height: 20rem !important;
