@@ -8,7 +8,7 @@
 
 	import 'swiper/css'
 
-	export let channels: any = []
+	export let channels: any = undefined
 
 	let swiper: Swiper
 
@@ -40,7 +40,7 @@
 </script>
 
 {#if !channels.error}
-	<div class="relative">
+	<div class="relative" class:hidden={channels != undefined && channels.length == 0}>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div class="bg-base-200 rounded-full p-3 btn-prev absolute top-2/4 left-1 z-10 cursor-pointer">
 			<IconDrawerLeft />
@@ -80,8 +80,8 @@
 			{/if}
 		</div> -->
 
-		<div class="swiper carousel mt-10">
-			{#if channels && channels.length}
+		{#if channels && channels.length}
+			<div class="swiper carousel mt-10">
 				<div class="swiper-wrapper">
 					{#each channels as channel}
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -102,16 +102,15 @@
 						</div>
 					{/each}
 				</div>
-			{:else}
-				<div role="status" class="flex flex-row gap-1 animate-pulse">
-					{#each Array(5) as _, index (index)}
-						<LoadingCarouselItem />
-					{/each}
-					<span class="sr-only">Loading...</span>
-				</div>
-			{/if}
-		</div>
-
+			</div>
+		{:else}
+			<div role="status" class="flex flex-row gap-1 animate-pulse">
+				{#each Array(5) as _, index (index)}
+					<LoadingCarouselItem />
+				{/each}
+				<span class="sr-only">Loading...</span>
+			</div>
+		{/if}
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div class="bg-base-200 z-10 rounded-full p-3 btn-next absolute top-2/4 right-1 cursor-pointer">
 			<IconDrawerChevron />
