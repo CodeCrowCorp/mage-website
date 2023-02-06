@@ -14,7 +14,8 @@
 		getFavChannels,
 		getChannels,
 		getTechListJson,
-		techList
+		techList,
+		searchingChannel
 	} from '$lib/stores/channelStore'
 	import { getHighestRankedUsers } from '$lib/stores/userStore'
 	import { currentUser } from '$lib/stores/authStore'
@@ -24,7 +25,7 @@
 	let highestRankedUsers: any
 	let myChannels: any
 	let favChannels: any
-	let channels: any
+	let channels: any = []
 	onMount(async () => {
 		if (!$techList.length) {
 			await getTechListJson()
@@ -34,12 +35,8 @@
 		highestRankedUsers = [] // await getHighestRankedUsers({ skip: 0, limit: 10 })
 		myChannels = [] // await getMyChannels({ skip: 0, limit: 10 })
 		favChannels = [] // await getFavChannels({ skip: 0, limit: 10 })
-		channels = await getChannels({ skip: 0, limit: 50 })
+		channels = await getChannels({ skip: 0, limit: 100 })
 	})
-
-	function load() {
-		console.log('hello')
-	}
 </script>
 
 {#if mostActiveChannels && mostActiveChannels.length > 0}
@@ -48,7 +45,9 @@
 
 <ChannelSearch />
 
-<SearchSection />
+<!-- {#if $searchingChannel} -->
+<SearchSection {channels} />
+<!-- {/if} -->
 
 {#if weeklyChannels && weeklyChannels.length > 0}
 	<ChannelSection

@@ -8,6 +8,8 @@ export const currentChannel: Writable<any> = writable(null)
 export const techList: Writable<[]> = writable([])
 export const tags: Writable<any> = writable([])
 
+export const searchingChannel = writable(false)
+
 async function createChannel({
 	title,
 	description,

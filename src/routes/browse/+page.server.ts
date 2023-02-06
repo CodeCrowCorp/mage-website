@@ -9,3 +9,8 @@ export const load = (async ({ params }) => {
 	// }
 	// throw error(404, 'Not found')
 }) satisfies PageServerLoad
+
+/** @type {import('./$types').Actions} */
+export const actions = {
+	search: async (event) => {}
+}
