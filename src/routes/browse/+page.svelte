@@ -28,7 +28,7 @@
 	})
 </script>
 
-<CarouselSection bind:channels={data.post.tableChannels} />
+<CarouselSection channels={data.post.tableChannels} />
 <SearchChannel />
 
 <ChannelSection title={weeklyTitle} bind:channels={weeklyChannels} />
