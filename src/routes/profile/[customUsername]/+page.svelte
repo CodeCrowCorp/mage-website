@@ -1,10 +1,10 @@
 <script lang="ts">
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
-	import ChannelList from '$lib/components/Browse/ChannelTable.svelte'
-	import FollowList from '$lib/components/Profile/FollowList.svelte'
+	import TableSection from '$lib/components/Browse/Sections/TableSection.svelte'
+	import SubscribeList from '$lib/components/Profile/SubscribeList.svelte'
 
-	let tabs = ['Stats', 'Channels', 'Follows']
+	let tabs = ['Stats', 'Channels', 'Subscribers']
 	let activeTab = 0
 </script>
 
@@ -134,7 +134,7 @@
 							<button class="btn btn-secondary">Follow</button>
 							<button class="btn btn-primary">Send Tip</button>
 
-							<div class="dropdown dropdown-hover dropdown-end">
+							<div class="dropdown dropdown-end">
 								<button class="btn btn-circle" tabindex="0">
 									<IconMore />
 								</button>
@@ -151,13 +151,13 @@
 					</div>
 					<div class="w-full lg:w-4/12 px-4 lg:order-1">
 						<div class="flex justify-center py-4 lg:pt-4 pt-8">
-							<div class="mr-4 p-3 text-center tooltip" data-tip="22 following">
+							<div class="mr-4 p-3 text-center tooltip" data-tip="22 subscribers">
 								<span class="text-xl font-bold block uppercase tracking-wide">22</span><span
-									class="text-sm">Following</span>
+									class="text-sm">Subscribers</span>
 							</div>
-							<div class="mr-4 p-3 text-center tooltip" data-tip="10 followers">
+							<div class="mr-4 p-3 text-center tooltip" data-tip="10 interests">
 								<span class="text-xl font-bold block uppercase tracking-wide">10</span><span
-									class="text-sm">Followers</span>
+									class="text-sm">Interests</span>
 							</div>
 							<div class="lg:mr-4 p-3 text-center tooltip" data-tip="2045 unique profile views">
 								<span class="text-xl font-bold block uppercase tracking-wide">2045</span><span
@@ -250,10 +250,10 @@
 								</div>
 							</div>
 							<div class="flex-auto h-full" class:hidden={activeTab != 1}>
-								<ChannelList />
+								<TableSection />
 							</div>
 							<div class="flex-auto h-full" class:hidden={activeTab != 2}>
-								<FollowList />
+								<SubscribeList />
 							</div>
 						</div>
 					</div>

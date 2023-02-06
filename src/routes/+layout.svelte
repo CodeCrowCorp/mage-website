@@ -1,42 +1,23 @@
-<script lang="ts">
+<script async script lang="ts">
 	import '$lib/assets/styles/tailwind-output.css'
 	// @ts-ignore
 	import NProgress from 'nprogress'
-	import { goto } from '$app/navigation'
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
-	import { currentUser } from '$lib/stores/authStore'
-	import { login_modal } from '$lib/stores/helperStore'
-	import { env } from '$env/dynamic/public'
+	import { current_user, user_role } from '$lib/stores/authStore'
 
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
-	import IconDrawerStreak from '$lib/assets/icons/drawer/IconDrawerStreak.svelte'
-	import IconDrawerStreamDuration from '$lib/assets/icons/drawer/IconDrawerStreamDuration.svelte'
-	import IconDrawerHome from '$lib/assets/icons/drawer/IconDrawerHome.svelte'
-	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
-	import IconDrawerCommunity from '$lib/assets/icons/drawer/IconDrawerCommunity.svelte'
-	import IconDrawerMessages from '$lib/assets/icons/drawer/IconDrawerMessages.svelte'
-	import IconDrawerVideos from '$lib/assets/icons/drawer/IconDrawerVideos.svelte'
-	import IconDrawerCreatorSpace from '$lib/assets/icons/drawer/IconDrawerCreatorSpace.svelte'
-	import IconDrawerMint from '$lib/assets/icons/drawer/IconDrawerMint.svelte'
-	import IconDrawerPremium from '$lib/assets/icons/drawer/IconDrawerPremium.svelte'
-	import IconDrawerCareers from '$lib/assets/icons/drawer/IconDrawerCareers.svelte'
-	import IconDrawerHelpAndLegal from '$lib/assets/icons/drawer/IconDrawerHelpAndLegal.svelte'
-	import IconDrawerSettings from '$lib/assets/icons/drawer/IconDrawerSettings.svelte'
-	import IconDrawerLogOut from '$lib/assets/icons/drawer/IconDrawerLogOut.svelte'
-	import IconSocialTwitter from '$lib/assets/icons/social/IconSocialTwitter.svelte'
-	import IconSocialDiscord from '$lib/assets/icons/social/IconDiscord.svg'
-	import IconDexlab from '$lib/assets/icons/social/IconDexlab.svg'
-	import IconMagicEden from '$lib/assets/icons/social/IconMagicEden.svg'
-	// import IconSocialDexlab from '$lib/assets/icons/social/IconSocialDexlab.svelte'
-	// import IconSocialMagicEden from '$lib/assets/icons/social/IconSocialMagicEden.svelte'
-	// import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svelte'
-	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
-	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
 	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
-	import Community from '$lib/components/MainDrawer/Community.svelte'
 	import Messages from '$lib/components/MainDrawer/Messages.svelte'
+	import MainDrawer from '$lib/components/MainDrawer/MainDrawer.svelte'
+	import SmallDrawer from '$lib/components/MainDrawer/SmallDrawer.svelte'
+	import { page } from '$app/stores'
+	import { onMount } from 'svelte'
+	import { get } from '$lib/api'
+	import { env } from '$env/dynamic/public'
+	import { platformConnection, platformMessage } from '$lib/stores/socketStore'
+
 	NProgress.configure({
 		minimum: 0.75,
 		showSpinner: false,
@@ -48,6 +29,7 @@
 			NProgress.start()
 		}
 		if (!$navigating) {
+			storeUserData()
 			NProgress.done()
 		}
 	}
@@ -56,22 +38,41 @@
 
 	let nav_drawer: HTMLInputElement
 
-	$: data.user, storeUserData()
-
 	function storeUserData() {
 		if (browser) {
 			if (data?.user?.user) {
-				$currentUser = data.user.user
+				$current_user = data.user.user
+			} else {
+				$current_user = null
 			}
 		}
 	}
 
-	function logout() {
-		setTimeout(() => {
-			$currentUser = null
-		}, 500)
-		goto('/logout')
-	}
+	onMount(async () => {
+		const platformSocketId = await get(`wsinit/wsid`)
+		const platformSocket = new WebSocket(
+			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/wsid/${platformSocketId}/connect`
+		)
+		platformSocket?.addEventListener('open', (data) => {
+			console.log('socket connection open')
+			console.log(data)
+			platformConnection.set('open')
+		})
+		platformSocket?.addEventListener('message', (data) => {
+			console.log('listening to messages')
+			console.log(data)
+			platformMessage.set(data)
+		})
+		platformSocket?.addEventListener('error', (data) => {
+			console.log('socket connection error')
+			console.log(data)
+		})
+		platformSocket?.addEventListener('close', (data) => {
+			console.log('socket connection close')
+			console.log(data)
+			platformConnection.set('close')
+		})
+	})
 </script>
 
 <svelte:head>
@@ -86,184 +87,26 @@
 		<!-- Page content here -->
 		<label for="my-drawer-2" class="btn btn-ghost normal-case text-xl drawer-button lg:hidden"
 			>Mage</label>
+
+		{#if data && data.isBanned}
+			<div class="alert alert-error shadow-lg">
+				<div>
+					<div class="font-bold text-white">
+						<h3>Your account is banned</h3>
+					</div>
+				</div>
+			</div>
+		{/if}
+
 		<slot />
 		<LoginPrompt />
 	</div>
 	<div class="drawer-side">
 		<label for="my-drawer-2" class="drawer-overlay" />
-		<div class="menu p-4 w-80 bg-base-100 text-base-content flex flex-col">
-			<!-- <Community /> -->
-			<!-- <Messages /> -->
-			<ul>
-				<div class="navbar">
-					<a href="/browse" class="btn btn-ghost normal-case text-xl">Mage</a>
-				</div>
-				{#if $currentUser}
-					<li>
-						<a href="/profile/me" class="hero rounded-md cursor-pointer">
-							<div>
-								<div class="hero-content">
-									<div class="max-w-md">
-										<div class="avatar online">
-											<div
-												class="w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
-												<img
-													src={$currentUser.avatar || 'https://placeimg.com/192/192/people'}
-													alt="" />
-											</div>
-										</div>
-									</div>
-									<div class="grid grid-cols-3 gap-1">
-										<p class="col-span-3">{$currentUser.displayName || 'Gagan Suie'}</p>
-										<p class="col-span-3 text-pink-500">@{$currentUser.username || 'GaganSuie'}</p>
-										<IconDrawerStreak />
-										<p class="col-span-2 tooltip text-start" data-tip="62 day streak">62 d</p>
-										<IconDrawerStreamDuration />
-										<p class="col-span-2 tooltip text-start" data-tip="300 hours streamed">300 h</p>
-									</div>
-								</div>
-								<div class="tooltip" data-tip="level 1">
-									<progress class="progress progress-accent w-64" value="30" max="100" />
-								</div>
-							</div>
-						</a>
-					</li>
-				{/if}
-				<!-- Sidebar content here -->
-
-				{#if $currentUser}
-					<li>
-						<a href="/admin">
-							<IconDrawerAdmin />
-							Admin
-						</a>
-					</li>
-				{/if}
-				<li>
-					<a href="/browse">
-						<IconDrawerHome />
-						Browse
-					</a>
-				</li>
-				{#if $currentUser}
-					<li>
-						<a href="">
-							<IconDrawerCommunity />
-							Community
-							<IconDrawerChevron />
-						</a>
-					</li>
-					<li>
-						<a href="">
-							<IconDrawerMessages />
-							Messages
-							<IconDrawerChevron />
-						</a>
-					</li>
-				{/if}
-				<!-- <li>
-					<a href="/videos">
-						<IconDrawerVideos />
-						Videos
-					</a>
-				</li>
-				<li>
-					<a href="/creator-space">
-						<IconDrawerCreatorSpace />
-						Creator Space</a>
-				</li> -->
-				<li>
-					<a
-						href="https://mint.codecrow.io"
-						class="text-emerald-600"
-						target="_blank"
-						rel="noreferrer">
-						<IconDrawerMint />
-						Mint <span class="badge">New</span>
-					</a>
-				</li>
-				{#if $currentUser}
-					<li>
-						<a href="/premium" class="text-pink-500">
-							<IconDrawerPremium />
-							Premium <span class="badge">New</span>
-						</a>
-					</li>
-				{/if}
-				<li>
-					<a href="/careers">
-						<IconDrawerCareers />
-						Careers</a>
-				</li>
-				<li>
-					<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-					<div class="dropdown dropdown-bottom dropdown-end" tabindex="0">
-						<IconDrawerHelpAndLegal />
-						Help & Legal
-						<IconDrawerChevron />
-						<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
-							<li><a href="/contact">Contact</a></li>
-							<li><a href="/legal">Legal</a></li>
-							<li>
-								<a href="https://code-crow.gitbook.io/whitepaper/" target="_blank" rel="noreferrer"
-									>White Paper</a>
-							</li>
-						</ul>
-					</div>
-				</li>
-				{#if $currentUser}
-					<li>
-						<a href="/settings">
-							<IconDrawerSettings />
-							Settings</a>
-					</li>
-				{/if}
-				{#if $currentUser}
-					<li>
-						<button on:click={logout}>
-							<IconDrawerLogOut />
-							Log Out</button>
-					</li>
-				{:else}
-					<li>
-						<button
-							on:click={() => {
-								$login_modal = true
-								if (nav_drawer.checked) {
-									nav_drawer.checked = false
-								}
-							}}>
-							<IconDrawerLogOut />
-							Log In</button>
-					</li>
-				{/if}
-			</ul>
-
-			<footer class="mt-auto p-4">
-				<!-- <RisingStars /> -->
-				<div class="grid grid-flow-col gap-4">
-					<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
-						<IconSocialGitHub />
-					</a>
-					<a href="https://discord.gg/CodeCrow" target="_blank" rel="noreferrer">
-						<!-- <IconSocialDiscord /> -->
-						<img src={IconSocialDiscord} alt="" />
-					</a>
-					<a href="https://twitter.com/CodeCrowCorp" target="_blank" rel="noreferrer">
-						<IconSocialTwitter />
-					</a>
-					<a href="https://magiceden.io" target="_blank" rel="noreferrer">
-						<!-- <IconSocialMagicEden /> -->
-						<img src={IconMagicEden} alt="" />
-					</a>
-					<a href="https://www.dexlab.space" target="_blank" rel="noreferrer">
-						<!-- <IconSocialDexlab /> -->
-						<img src={IconDexlab} alt="" />
-					</a>
-				</div>
-				<p>Code Crow Corp © 2023</p>
-				<p class="text-gray-500">v{__VERSION__} [{env.PUBLIC_ENV}]</p>
-			</footer>
-		</div>
+		{#if !$page.url.pathname.includes('/channel')}
+			<MainDrawer bind:nav_drawer />
+		{:else}
+			<SmallDrawer bind:nav_drawer />
+		{/if}
 	</div>
 </div>

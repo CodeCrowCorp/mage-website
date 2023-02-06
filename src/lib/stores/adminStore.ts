@@ -29,8 +29,7 @@ async function getUserRole(hooks_call = false, headers = {}) {
 async function getRoles(hooks_call = false, headers = {}) {
 	if (hooks_call) {
 		return await fetch(`${env.PUBLIC_API_URL}/roles`, {
-			method: 'GET',
-			headers
+			method: 'GET'
 		}).then((response) => response.json())
 	} else {
 		return await fetch(`${env.PUBLIC_API_URL}/roles`, {

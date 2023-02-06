@@ -42,7 +42,7 @@
 						checked />
 				</label>
 			</div>
-			<div class="divider">1v1 chat</div>
+			<!-- <div class="divider">1v1 chat</div>
 			<div class="form-control w-96">
 				<label class="cursor-pointer label">
 					<span class="label-text">Do Not Disturb - prevents chat window popup</span>
@@ -79,7 +79,7 @@
 					<span class="label-text">Mute sent and received message sfx</span>
 					<input type="checkbox" class="toggle toggle-accent" checked />
 				</label>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </div>

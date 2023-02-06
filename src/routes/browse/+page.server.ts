@@ -1,13 +1,28 @@
-import { error } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
-import { getMyChannels, getChannels } from '$lib/stores/channelStore'
+import { get } from '$lib/api'
 
-export const load = (async ({ params }) => {
-    // const post = await getChannels()
+export const load = (async ({ locals }) => {
+	const mostActiveChannels = await get(`channels/most-active?skip=${0}&limit=${5}`)
+	const weeklyChannels = await get(`channels/weekly?skip=${0}&limit=${10}`)
+	const highestRankedUsers = await get(`users/highest-ranked?skip=${0}&limit=${10}`)
+	const risingStarUsers = await get(`users/rising-stars?skip=${0}&limit=${10}`)
+	let myChannels = []
+	let favChannels = []
+	if (locals.user) {
+		myChannels = await get(`channels/me/hosted?skip=${0}&limit=${10}`)
+		favChannels = await get(`channels/me/fav?skip=${0}&limit=${10}`)
+	}
+	const tableChannels = await get(`channels?searchQuery=&skip=${0}&limit=${50}`)
 
-    // if (post) {
-    //     return post
-    // }
-
-    // throw error(404, 'Not found')
+	return {
+		post: {
+			mostActiveChannels,
+			weeklyChannels,
+			highestRankedUsers,
+			risingStarUsers,
+			myChannels,
+			favChannels,
+			tableChannels
+		}
+	}
 }) satisfies PageServerLoad

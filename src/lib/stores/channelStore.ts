@@ -1,16 +1,15 @@
 import { get, writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
-import { currentUser } from '$lib/stores/authStore'
-
-let skip = 0
-let limit = 100
 
 export const searchQuery: Writable<string> = writable('')
 export const currentChannel: Writable<any> = writable(null)
-export const myChannels: Writable<[]> = writable([])
-export const channels: Writable<[]> = writable([])
-export const searchedchannels: Writable<[]> = writable([])
 export const techList: Writable<[]> = writable([])
+export const tags: Writable<any> = writable([])
+export const categoryAssets: Writable<{
+	web2: object
+	web3: object
+	game: object
+}> = writable({ web2: {}, web3: {}, game: {} })
 
 async function createChannel({
 	title,
@@ -221,18 +220,10 @@ async function deleteMembers({ channelId }: { channelId: string }) {
 	})
 }
 
-function resetSkipLimit() {
-	skip = 0
-	limit = 100
-}
-
-async function getMyChannels() {
-	return await fetch(`${env.PUBLIC_API_URL}/channels/me/hosted`, {
+async function getMyChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
+	return await fetch(`${env.PUBLIC_API_URL}/channels/me/hosted?skip=${skip}&limit=${limit}`, {
 		method: 'GET'
-	}).then(async (response) => {
-		const res = await response.json()
-		myChannels.set(res)
-	})
+	}).then((response) => response.json())
 }
 
 async function getChannelsByUserId({
@@ -254,43 +245,31 @@ async function getChannelsByUserId({
 	).then((response) => response.json())
 }
 
-async function getChannels({ isRefresh = false }: { isRefresh?: boolean } = {}) {
-	if (isRefresh) {
-		resetSkipLimit()
-	}
+async function getFavChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
+	return await fetch(`${env.PUBLIC_API_URL}/channels/me/fav?skip=${skip}&limit=${limit}`, {
+		method: 'GET'
+	}).then((response) => response.json())
+}
 
-	const result = await fetch(
+async function getMostActiveChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
+	return await fetch(`${env.PUBLIC_API_URL}/channels/most-active?skip=${skip}&limit=${limit}`, {
+		method: 'GET'
+	}).then((response) => response.json())
+}
+
+async function getWeeklyChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
+	return await fetch(`${env.PUBLIC_API_URL}/channels/weekly?skip=${skip}&limit=${limit}`, {
+		method: 'GET'
+	}).then((response) => response.json())
+}
+
+async function getChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
+	return await fetch(
 		`${env.PUBLIC_API_URL}/channels?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`,
 		{
 			method: 'GET'
 		}
-	)
-
-	if (result.ok) {
-		return await result.json()
-	} else {
-		throw new Error('Error fetching channels')
-	}
-
-	// then(async (response) => {
-	// 	console.log('response', response)
-
-	// 	const res = await response.json()
-	// 	if (res.length) {
-	// 		skip += limit
-	// 		console.log('res', res)
-	//TODO: push res to channels
-	// channels.update(current => [...current, res])
-	// } else {
-	//TODO: show alert
-	// if ((this.searchQuery || this.filterTechList.length) && !this.skip)
-	//     this.snackBar.open('No results with the search criteria', null, {
-	//         duration: 2000
-	//     })
-	// }
-	// console.log(channels)
-	// return channels
-	// })
+	).then((response) => response.json())
 }
 
 async function leaveChannel({
@@ -362,86 +341,6 @@ async function toggleNotifications({ channel, userId }: { channel: any; userId: 
 //         })
 // }
 
-// async getTechList() {
-//     if (this.techList.length < 1) {
-//         const web2Assets: any = await lastValueFrom(this.http
-//             .get(`${environment.hostUrl}/assets/images/web2/_categoryWeb2.json`))
-//         const web3Assets: any = await lastValueFrom(this.http
-//             .get(`${environment.hostUrl}/assets/images/web3/_categoryWeb3.json`))
-//         const gameAssets: any = await lastValueFrom(this.http
-//             .get(`${environment.hostUrl}/assets/images/games/_categoryGames.json`))
-//         web3Assets.forEach((file) => {
-//             let fileName = file.item_image.substring(file.item_image.lastIndexOf('/') + 1)
-//             fileName = fileName.substring(0, fileName.indexOf('.'))
-//             const nameAndTickerList = fileName.split('-')
-//             const ticker = nameAndTickerList.pop().toUpperCase()
-//             const fullName = nameAndTickerList
-//                 .map((name) => name.charAt(0).toUpperCase() + name.slice(1))
-//                 .join(' ')
-//             file.item_text = `${fullName} (${ticker})`
-//         })
-//         web2Assets.push(...web3Assets)
-//         gameAssets.forEach((file) => {
-//             let fileName = file.item_image.substring(file.item_image.lastIndexOf('/') + 1)
-//             fileName = fileName.substring(0, fileName.indexOf('.'))
-//             const nameSplitList = fileName.split('-')
-//             const fullName = nameSplitList
-//                 .map((name) => name.charAt(0).toUpperCase() + name.slice(1))
-//                 .join(' ')
-//             file.item_text = fullName
-//         })
-//         web2Assets.push(...gameAssets)
-//         this.techList = web2Assets
-//         this.techList.sort((a, b) => a.item_text.localeCompare(b.item_text))
-//     }
-// }
-
-async function getTechList() {
-	if (get(techList).length < 1) {
-		let web2Assets: any = await fetch(`/category/web2/_categoryWeb2.json`, {
-			method: 'GET'
-		})
-		let web3Assets: any = await fetch(`/category/web3/_categoryWeb3.json`, {
-			method: 'GET'
-		})
-		let gameAssets: any = await fetch(`/category/games/_categoryGames.json`, {
-			method: 'GET'
-		})
-		if (web2Assets.ok) {
-			web2Assets = await web2Assets.json()
-		}
-		if (web3Assets.ok) {
-			web3Assets = await web3Assets.json()
-		}
-		if (gameAssets.ok) {
-			gameAssets = await gameAssets.json()
-		}
-
-		web3Assets.forEach((file: any) => {
-			let fileName = file.item_image.substring(file.item_image.lastIndexOf('/') + 1)
-			fileName = fileName.substring(0, fileName.indexOf('.'))
-			const nameAndTickerList = fileName.split('-')
-			const ticker = nameAndTickerList.pop().toUpperCase()
-			const fullName = nameAndTickerList
-				.map((name: any) => name.charAt(0).toUpperCase() + name.slice(1))
-				.join(' ')
-			file.item_text = `${fullName} (${ticker})`
-		})
-		web2Assets.push(...web3Assets)
-		gameAssets.forEach((file: any) => {
-			let fileName = file.item_image.substring(file.item_image.lastIndexOf('/') + 1)
-			fileName = fileName.substring(0, fileName.indexOf('.'))
-			const nameSplitList = fileName.split('-')
-			const fullName = nameSplitList
-				.map((name: any) => name.charAt(0).toUpperCase() + name.slice(1))
-				.join(' ')
-			file.item_text = fullName
-		})
-		web2Assets.push(...gameAssets)
-		techList.set(web2Assets)
-	}
-}
-
 async function getTechListJson() {
 	if (get(techList).length < 1) {
 		let gameAssets: any = await fetch(`svg-json/image_urls.json`, {
@@ -454,6 +353,16 @@ async function getTechListJson() {
 		return gameAssets
 	}
 }
+
+async function getTags() {
+	return await fetch(`${env.PUBLIC_API_URL}/tags`, {
+		method: 'GET'
+	}).then(async (response) => {
+		const res = await response.json()
+		tags.set(res)
+	})
+}
+
 export {
 	createChannel,
 	deleteChannel,
@@ -472,9 +381,13 @@ export {
 	deleteMembers,
 	getMyChannels,
 	getChannelsByUserId,
+	getFavChannels,
+	getMostActiveChannels,
+	getWeeklyChannels,
 	getChannels,
 	leaveChannel,
 	enterChannel,
 	toggleNotifications,
-	getTechListJson
+	getTechListJson,
+	getTags
 }

@@ -1,3 +1,3 @@
 import { writable, type Writable } from 'svelte/store'
 
-export const login_modal: Writable<any> = writable(null)
+export const is_login_modal_open: Writable<any> = writable(null)
