@@ -23,6 +23,17 @@
 			navigation: {
 				nextEl: '.btn-next',
 				prevEl: '.btn-prev'
+			},
+			breakpoints: {
+				320: {
+					slidesPerView: 1
+				},
+				480: {
+					slidesPerView: 2
+				},
+				800: {
+					slidesPerView: 3
+				}
 			}
 		})
 	})
