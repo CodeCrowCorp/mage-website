@@ -10,48 +10,14 @@
 
 	export let channels: any = []
 
-	let ref: any,
-		showback = false
+	let swiper: Swiper
 
 	$: channels = channels.splice(0, 6)
 
-	const prev = () => {
-		if (swiper) {
-			swiper.slidePrev()
-		}
-		return
-
-		if (ref) {
-			showback = ref.scrollLeft > 500
-			ref.scrollTo({
-				left: ref.scrollLeft - 500,
-				behavior: 'smooth'
-			})
-		}
-	}
-	$: console.log(channels)
-	const next = () => {
-		if (swiper) {
-			swiper.slideNext()
-		}
-		return
-
-		if (ref) {
-			showback = true
-			ref.scrollTo({
-				left: ref.scrollLeft + 500,
-				behavior: 'smooth'
-			})
-			channels.push(channels[0])
-			channels.shift()
-			channels = channels
-		}
-	}
-	let swiper: Swiper
-
 	onMount(() => {
-		swiper = new Swiper('.mySwiper', {
+		swiper = new Swiper('.carousel', {
 			slidesPerView: 3,
+			spaceBetween: 15,
 			loop: true,
 			modules: [Navigation],
 			navigation: {
@@ -64,15 +30,11 @@
 
 {#if !channels.error}
 	<div class="relative">
-		<!-- {#if showback} -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div
-			class="bg-base-200 rounded-full p-3 btn-prev absolute top-2/4 left-1 z-10 cursor-pointer"
-			on:click={() => prev()}>
+		<div class="bg-base-200 rounded-full p-3 btn-prev absolute top-2/4 left-1 z-10 cursor-pointer">
 			<IconDrawerLeft />
 		</div>
-		<!-- {/if} -->
-		<div
+		<!-- <div
 			bind:this={ref}
 			class="carousel-content relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto pt-14 flex-grow swiper mySwiper">
 			{#if channels && channels.length}
@@ -105,6 +67,38 @@
 					<span class="sr-only">Loading...</span>
 				</div>
 			{/if}
+		</div> -->
+
+		<div class="swiper carousel mt-10">
+			{#if channels && channels.length}
+				<div class="swiper-wrapper">
+					{#each channels as channel}
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
+						<div
+							class="swiper-slide flex cursor-pointer rounded-md"
+							on:click|preventDefault={() => goto(`/channel/${channel._id}`)}>
+							<div class="flex flex-row items-end">
+								<div class="avatar my-3 ml-2">
+									<div class="w-14 rounded-full">
+										<img src={channel.avatar} alt="" />
+									</div>
+								</div>
+								<div class="mb-2 ml-2 w-80">
+									<p class="text-2xl font-semibold">{channel.title}</p>
+									<p class="truncate">{channel.description}</p>
+								</div>
+							</div>
+						</div>
+					{/each}
+				</div>
+			{:else}
+				<div role="status" class="flex flex-row gap-1 animate-pulse">
+					{#each Array(5) as _, index (index)}
+						<LoadingCarouselItem />
+					{/each}
+					<span class="sr-only">Loading...</span>
+				</div>
+			{/if}
 		</div>
 
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -115,15 +109,16 @@
 {/if}
 
 <style>
-	.video-thumbnail {
-		@apply bg-slate-400 w-full h-80 flex items-end text-white rounded-md cursor-pointer;
-	}
-
-	.blank-width {
-		width: calc((100% - 600px) / 2);
-	}
-
 	.carousel-content::-webkit-scrollbar {
 		display: none;
+	}
+
+	.swiper-slide {
+		background: #fff;
+		display: flex;
+		/* align-items: end; */
+	}
+	:global(.swiper-slide) {
+		height: 20rem !important;
 	}
 </style>
