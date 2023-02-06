@@ -7,6 +7,7 @@
 	import UserSection from '$lib/components/Browse/Sections/UserSection.svelte'
 	import TableSection from '$lib/components/Browse/Sections/TableSection.svelte'
 	import type { PageData } from './$types'
+	import { current_user } from '$lib/stores/authStore'
 
 	export let data: PageData
 
@@ -37,8 +38,10 @@
 
 <UserSection title="Rising stars" bind:users={data.post.risingStarUsers} />
 
-<ChannelSection title="My channels" bind:channels={data.post.myChannels} />
+{#if current_user}
+	<ChannelSection title="My channels" bind:channels={data.post.myChannels} />
 
-<ChannelSection title="Fav channels" bind:channels={data.post.favChannels} />
+	<ChannelSection title="Fav channels" bind:channels={data.post.favChannels} />
+{/if}
 
 <TableSection bind:channels={data.post.tableChannels} />

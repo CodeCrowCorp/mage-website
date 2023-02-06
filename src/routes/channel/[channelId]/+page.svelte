@@ -2,8 +2,10 @@
 	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
 	import ChatDrawer from '$lib/components/Chat/ChatDrawer.svelte'
 	import type { PageData } from './$types'
-	import { getChannelSocket } from '$lib/stores/socketStore'
 	import { onMount } from 'svelte'
+	import { get } from '$lib/api'
+	import { env } from '$env/dynamic/public'
+	import { channelConnection, channelMessage } from '$lib/stores/socketStore'
 
 	export let data: PageData
 
@@ -11,7 +13,29 @@
 	let showDrawer = false
 
 	onMount(async () => {
-		// await getChannelSocket({ channelId: post._id })
+		const channelSocketId = get(`wsinit/wsid`)
+		const channelSocket = new WebSocket(
+			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${channelSocketId}/connect`
+		)
+		channelSocket?.addEventListener('open', (data) => {
+			console.log('channel socket connection open')
+			console.log(data)
+			channelConnection.set('open')
+		})
+		channelSocket?.addEventListener('message', (data) => {
+			console.log('listening to messages')
+			console.log(data)
+			channelMessage.set(data)
+		})
+		channelSocket?.addEventListener('error', (data) => {
+			console.log('socket connection error')
+			console.log(data)
+		})
+		channelSocket?.addEventListener('close', (data) => {
+			console.log('socket connection close')
+			console.log(data)
+			channelConnection.set('close')
+		})
 	})
 </script>
 
