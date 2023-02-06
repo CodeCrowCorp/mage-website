@@ -68,11 +68,7 @@
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
-	<input
-		id="create-channel-drawer"
-		type="checkbox"
-		class="drawer-toggle"
-		bind:checked={showDrawer} />
+	<input id="create-channel-drawer" type="checkbox" class="drawer-toggle" />
 	<div class="drawer-side">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
