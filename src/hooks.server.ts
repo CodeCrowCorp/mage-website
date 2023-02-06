@@ -113,7 +113,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 				throw redirect(302, '/maintenance')
 			}
 		} else {
-			console.log('pathname', pathname)
 			if (pathname.includes('/channel')) {
 				isChannelPage.set(false)
 			} else {
