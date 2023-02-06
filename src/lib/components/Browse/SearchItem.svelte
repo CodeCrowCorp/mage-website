@@ -32,8 +32,8 @@
 	}
 </script>
 
-<div class="flex flex-row gap-4">
-	<div class="w-96 bg-gray-200">
+<div class="flex flex-col md:flex-row gap-4">
+	<div class=" md:w-96 bg-gray-200">
 		<img
 			loading="lazy"
 			src={channel.thumbnail || 'https://via.placeholder.com/300/09f/fff.png'}
@@ -41,7 +41,7 @@
 			alt="" />
 	</div>
 
-	<div class="basis-96 flex-auto flex flex-col gap-2">
+	<div class="md:basis-96 flex-auto flex flex-col gap-2">
 		{#if Array.isArray(channel.category)}
 			<div class="flex flex-wrap gap-2">
 				{#each channel.category as cat}

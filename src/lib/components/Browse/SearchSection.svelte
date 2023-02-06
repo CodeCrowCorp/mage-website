@@ -7,7 +7,7 @@
 	export let channels: []
 </script>
 
-<div class="flex flex-col gap-4 px-24 justify-around">
+<div class="flex flex-col gap-4 px-4 md:px-24 justify-around">
 	{#if $searchingChannel}
 		<SearchSkeleton />
 		<SearchSkeleton />

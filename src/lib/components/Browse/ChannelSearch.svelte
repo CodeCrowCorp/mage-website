@@ -13,7 +13,7 @@
 	}
 </script>
 
-<div class="flex flex-col md:flex-row gap-4 py-5 px-24">
+<div class="flex flex-col md:flex-row gap-4 py-5 px-4 md:px-24">
 	<form class="flex-1" method="GET" action="?/search" on:submit={submit}>
 		<div class="form-control">
 			<div class="input-group">
@@ -34,7 +34,7 @@
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<label
 			for="create-channel-drawer"
-			class="btn w-[16rem] btn-primary gap-2 drawer-button"
+			class="btn w-full md:w-[16rem] btn-primary gap-2 drawer-button"
 			on:click={() => (showDrawer = true)}>
 			<IconCreate />
 			Create a channel</label>
