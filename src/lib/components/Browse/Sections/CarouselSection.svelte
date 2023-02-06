@@ -88,13 +88,13 @@
 						<div
 							class="swiper-slide flex cursor-pointer rounded-md"
 							on:click|preventDefault={() => goto(`/channel/${channel._id}`)}>
-							<div class="flex flex-row items-end">
+							<div class="flex flex-row items-end w-3/4">
 								<div class="avatar my-3 ml-2">
 									<div class="w-14 rounded-full">
 										<img src={channel.avatar} alt="" />
 									</div>
 								</div>
-								<div class="mb-2 ml-2 w-80">
+								<div class="mb-2 ml-2 w-full">
 									<p class="text-2xl font-semibold">{channel.title}</p>
 									<p class="truncate">{channel.description}</p>
 								</div>
