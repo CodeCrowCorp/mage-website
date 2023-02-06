@@ -95,7 +95,7 @@
 									</div>
 								</div>
 								<div class="mb-2 ml-2 w-full">
-									<p class="text-2xl font-semibold">{channel.title}</p>
+									<p class="text-2xl truncate font-semibold">{channel.title}</p>
 									<p class="truncate">{channel.description}</p>
 								</div>
 							</div>
