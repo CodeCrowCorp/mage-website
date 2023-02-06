@@ -27,6 +27,10 @@
 		if (data.search_channels) {
 			search_channels = data.search_channels
 		}
+
+		if (data.query === null) {
+			search_channels = []
+		}
 	}
 
 	let mostActiveChannels: any

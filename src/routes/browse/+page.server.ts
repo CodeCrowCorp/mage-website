@@ -9,7 +9,12 @@ export const load = (async ({ params, url }) => {
 		const search_channels = await getChannels({ skip: 0, limit: 20 })
 
 		return {
-			search_channels
+			search_channels,
+			query: q
+		}
+	} else {
+		return {
+			query: q
 		}
 	}
 	// if (channels) {
