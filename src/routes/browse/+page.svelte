@@ -21,6 +21,14 @@
 	import { getHighestRankedUsers } from '$lib/stores/userStore'
 	import { currentUser } from '$lib/stores/authStore'
 
+	export let data
+
+	$: {
+		if (data.search_channels) {
+			search_channels = data.search_channels
+		}
+	}
+
 	let mostActiveChannels: any
 	let weeklyChannels: any
 	let highestRankedUsers: any
@@ -48,8 +56,8 @@
 	}
 	async function loadMore() {
 		$loadMoreChannel = true
-		let new_channels = await getChannels({ skip: 0 + load, limit: 20 })
 		load += 20
+		let new_channels = await getChannels({ skip: 0 + load, limit: 20 })
 		search_channels = [...search_channels, ...new_channels]
 		$loadMoreChannel = false
 	}
