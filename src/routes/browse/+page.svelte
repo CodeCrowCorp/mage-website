@@ -50,7 +50,7 @@
 		highestRankedUsers = [] // await getHighestRankedUsers({ skip: 0, limit: 10 })
 		myChannels = [] // await getMyChannels({ skip: 0, limit: 10 })
 		favChannels = [] // await getFavChannels({ skip: 0, limit: 10 })
-		channels = await getChannels({ skip: 0, limit: 100 })
+		channels = await getChannels({ skip: 0, limit: 50 })
 	})
 
 	async function search() {
