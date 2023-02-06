@@ -15,6 +15,7 @@
 	import { env } from '$env/dynamic/public'
 	import { current_user, user_role } from '$lib/stores/authStore'
 	import {
+		isMaintenanceModeEnabled,
 		isFeatureMintPageEnabled,
 		isFeaturePremiumPageEnabled,
 		isFeatureGroupChatEnabled,
@@ -150,24 +151,26 @@
 				</a>
 			</li>
 		{/if}
-		{#if $current_user}
-			<li>
-				<button on:click={logout}>
-					<IconDrawerLogOut />
-				</button>
-			</li>
-		{:else}
-			<li>
-				<button
-					on:click={() => {
-						$is_login_modal_open = true
-						if (nav_drawer.checked) {
-							nav_drawer.checked = false
-						}
-					}}>
-					<IconDrawerLogOut />
-				</button>
-			</li>
+		{#if !$isMaintenanceModeEnabled}
+			{#if $current_user}
+				<li>
+					<button on:click={logout}>
+						<IconDrawerLogOut />
+					</button>
+				</li>
+			{:else}
+				<li>
+					<button
+						on:click={() => {
+							$is_login_modal_open = true
+							if (nav_drawer.checked) {
+								nav_drawer.checked = false
+							}
+						}}>
+						<IconDrawerLogOut />
+					</button>
+				</li>
+			{/if}
 		{/if}
 	</ul>
 </div>
