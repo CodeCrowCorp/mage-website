@@ -5,7 +5,6 @@
 	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
 	import { current_user, user_role } from '$lib/stores/authStore'
-	import { getPlatformSocket } from '$lib/stores/socketStore'
 
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
@@ -15,6 +14,9 @@
 	import SmallDrawer from '$lib/components/MainDrawer/SmallDrawer.svelte'
 	import { page } from '$app/stores'
 	import { onMount } from 'svelte'
+	import { get } from '$lib/api'
+	import { env } from '$env/dynamic/public'
+	import { platformConnection, platformMessage } from '$lib/stores/socketStore'
 
 	NProgress.configure({
 		minimum: 0.75,
@@ -47,7 +49,29 @@
 	}
 
 	onMount(async () => {
-		// await getPlatformSocket()
+		const platformSocketId = await get(`wsinit/wsid`)
+		const platformSocket = new WebSocket(
+			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/wsid/${platformSocketId}/connect`
+		)
+		platformSocket?.addEventListener('open', (data) => {
+			console.log('socket connection open')
+			console.log(data)
+			platformConnection.set('open')
+		})
+		platformSocket?.addEventListener('message', (data) => {
+			console.log('listening to messages')
+			console.log(data)
+			platformMessage.set(data)
+		})
+		platformSocket?.addEventListener('error', (data) => {
+			console.log('socket connection error')
+			console.log(data)
+		})
+		platformSocket?.addEventListener('close', (data) => {
+			console.log('socket connection close')
+			console.log(data)
+			platformConnection.set('close')
+		})
 	})
 </script>
 

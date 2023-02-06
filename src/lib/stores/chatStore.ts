@@ -9,7 +9,7 @@ import {
 	emitChannelChatTypingByUser
 } from '$lib/stores/socketStore'
 import { env } from '$env/dynamic/public'
-import { currentUser } from './authStore'
+import { current_user } from './authStore'
 import { currentChannel } from './channelStore'
 
 let lastMessageSendDate: Date = new Date()

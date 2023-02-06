@@ -22,21 +22,24 @@ export const handle: Handle = async ({ event, resolve }) => {
 		isBanned = false
 	const role = getWritableVal(user_role)
 
-	const remoteConfigs = await get('/remote-configs', { userId, token })
-	remoteConfigs.map((config: { flagKey: string; flagValue: boolean }) => {
-		if (config.flagKey === 'maintenance-mode') isMaintenanceModeEnabled.set(config.flagValue)
-		if (config.flagKey === 'feature-video-responses')
-			isFeatureVideoResponsesEnabled.set(config.flagValue)
-		if (config.flagKey === 'feature-group-chat') isFeatureGroupChatEnabled.set(config.flagValue)
-		if (config.flagKey === 'feature-mint-page') isFeatureMintPageEnabled.set(config.flagValue)
-		if (config.flagKey === 'feature-premium-page') isFeaturePremiumPageEnabled.set(config.flagValue)
-	})
+	const remoteConfigs = await get('remote-configs', { userId, token })
+	if (remoteConfigs && remoteConfigs.length) {
+		remoteConfigs.map((config: { flagKey: string; flagValue: boolean }) => {
+			if (config.flagKey === 'maintenance-mode') isMaintenanceModeEnabled.set(config.flagValue)
+			if (config.flagKey === 'feature-video-responses')
+				isFeatureVideoResponsesEnabled.set(config.flagValue)
+			if (config.flagKey === 'feature-group-chat') isFeatureGroupChatEnabled.set(config.flagValue)
+			if (config.flagKey === 'feature-mint-page') isFeatureMintPageEnabled.set(config.flagValue)
+			if (config.flagKey === 'feature-premium-page')
+				isFeaturePremiumPageEnabled.set(config.flagValue)
+		})
+	}
 
 	const maintenance_mode = getWritableVal(isMaintenanceModeEnabled) || false
 
 	if (token && userId) {
 		if (!user) {
-			const response = await get('/auth/me', { userId, token })
+			const response = await get('auth/me', { userId, token })
 			if (response) {
 				if (response.freshJwt) {
 					token = response.freshJwt
@@ -57,9 +60,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 					headers['x-api-key'] = env.PUBLIC_API_KEY
 				}
 
-				const allRoles = await get('/roles', headers)
+				const allRoles = await get('roles', headers)
 				if (Array.isArray(allRoles)) {
-					const userRole = await get('/roles/role-mapping', headers)
+					const userRole = await get('roles/role-mapping', headers)
 					if (userRole && userRole.role) {
 						const usersRoleName = allRoles.find((item) => {
 							return item._id == userRole.role

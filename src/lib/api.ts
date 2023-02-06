@@ -27,7 +27,9 @@ async function send({
 	}
 
 	if (env.PUBLIC_CROSS_ORIGIN === 'false') {
-		opts.headers['authorization'] = headers.token
+		if (headers && headers.token) {
+			opts.headers['authorization'] = headers.token
+		}
 	} else {
 		opts.headers['x-api-key'] = env.PUBLIC_X_API_KEY
 	}
@@ -35,6 +37,7 @@ async function send({
 	const res = await fetch(`${base}/${path}`, opts)
 	if (res.ok || res.status === 422) {
 		const text = await res.text()
+		if (path === 'wsinit/wsid') return text
 		return text ? JSON.parse(text) : {}
 	}
 
