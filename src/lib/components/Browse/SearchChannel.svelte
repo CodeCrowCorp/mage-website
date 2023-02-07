@@ -29,7 +29,7 @@
 					type="text"
 					placeholder="Search channels"
 					class="input input-bordered input-primary {searchingItems ? 'w-full' : 'w-72'}" />
-				{#if q.length}
+				{#if $searchQuery.length}
 					<button
 						class="btn btn-ghost absolute right-10"
 						on:click={async (e) => {

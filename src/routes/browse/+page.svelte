@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { getTechListJson, techList, getChannels } from '$lib/stores/channelStore'
+	import { getTechListJson, techList, getChannels, searchQuery } from '$lib/stores/channelStore'
 	import CarouselSection from '$lib/components/Browse/Sections/CarouselSection.svelte'
 	import SearchSection from '$lib/components/Browse/Search/SearchSection.svelte'
 	import ChannelSection from '$lib/components/Browse/Sections/ChannelSection.svelte'
@@ -22,12 +22,17 @@
 
 	let weeklyTitle = 'Weekly topics'
 	let weeklyChannels: any = []
-	// if (!data.post.weeklyChannels.error) {
-	// 	weeklyTitle = `Wk${data.post.weeklyChannels.weekly.weekNumber} ${data.post.weeklyChannels.weekly.topic}`
-	// 	weeklyChannels = data.post.weeklyChannels.channels
-	// } else {
-	// 	weeklyChannels = data.post.weeklyChannels.error
-	// }
+	if (!data.post.weeklyChannels.error) {
+		weeklyTitle = `Wk${data.post.weeklyChannels.weekly.weekNumber} ${data.post.weeklyChannels.weekly.topic}`
+		weeklyChannels = data.post.weeklyChannels.channels
+	} else {
+		weeklyChannels = data.post.weeklyChannels.error
+	}
+
+	if (data.query) {
+		$searchQuery = data.query
+		searchingItems = true
+	}
 
 	onMount(async () => {
 		if (!$techList.length) {
