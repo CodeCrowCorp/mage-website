@@ -8,6 +8,8 @@
 
 	export let searchingItems = false
 	export let q = ''
+	export let isDisabled = !current_user
+
 	let showDrawer = false
 
 	let dispatch = createEventDispatcher()
@@ -60,7 +62,8 @@
 		<label
 			for="create-channel-drawer"
 			class="btn w-[21rem] btn-primary gap-2 drawer-button"
-			on:click={() => (showDrawer = true)}>
+			on:click={() => (showDrawer = true)}
+			{...isDisabled ? { disabled: '' } : {}}>
 			<IconCreate />
 			Create a channel</label>
 	</div>
