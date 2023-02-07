@@ -28,7 +28,7 @@ async function send({
 
 	if (env.PUBLIC_CROSS_ORIGIN === 'false') {
 		if (headers && headers.token) {
-			opts.headers['authorization'] = headers.token
+			opts.headers['Authorization'] = headers.token
 		}
 	} else {
 		opts.headers['x-api-key'] = env.PUBLIC_X_API_KEY
@@ -54,6 +54,10 @@ export function del(path: string) {
 
 export function post(path: string, data: any) {
 	return send({ method: 'POST', path, data })
+}
+
+export function patch(path: string, data: any) {
+	return send({ method: 'PATCH', path, data })
 }
 
 export function put(path: string, data: any = {}) {
