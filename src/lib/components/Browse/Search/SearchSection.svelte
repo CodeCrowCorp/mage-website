@@ -2,6 +2,7 @@
 	import LastItemInViewport from '$lib/actions/LastItemInViewport'
 	import SearchItem from '$lib/components/Browse/Search/SearchItem.svelte'
 	import LoadingSearchChannel from '$lib/components/Browse/Search/LoadingSearchChannel.svelte'
+	import { each } from 'svelte/internal'
 	export let channels: any = []
 	export let loadingSearchItems: boolean = false
 	export let loadingMoreChannels: boolean = false
@@ -17,11 +18,13 @@
 			{#if channel.isPrivate !== true}
 				<SearchItem {channel} />
 			{/if}
+		{:else}
+			<h2>No records found</h2>
 		{/each}
 		{#if loadingMoreChannels}
 			<div class="flex justify-center items-center pb-8">
 				<div
-					class="w-12 h-12 rounded-full animate-spin border border-solid border-black border-t-transparent" />
+					class="w-12 h-12 rounded-full animate-spin border border-solid border-black dark:border-white border-t-transparent" />
 			</div>
 		{/if}
 		<span use:LastItemInViewport on:load_more />
