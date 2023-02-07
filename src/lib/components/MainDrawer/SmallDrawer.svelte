@@ -147,10 +147,6 @@
 				<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li><a href="/contact">Contact</a></li>
 					<li><a href="/legal">Legal</a></li>
-					<li>
-						<a href="https://code-crow.gitbook.io/whitepaper/" target="_blank" rel="noreferrer"
-							>White Paper</a>
-					</li>
 				</ul>
 			</div>
 		</li>

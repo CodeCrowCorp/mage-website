@@ -1,7 +1,15 @@
-<script>
+<script lang="ts">
 	import { browser } from '$app/environment'
 	import { onMount } from 'svelte'
 	import { themeChange } from 'theme-change'
+	import { current_user } from '$lib/stores/authStore'
+	import type { ActionData } from './$types'
+	import Toast from '$lib/components/Global/Toast.svelte'
+	import { enhance } from '$app/forms'
+	export let form: ActionData
+
+	$: email = $current_user.email
+
 	let isDarkTheme = true
 	if (browser) {
 		isDarkTheme = localStorage.getItem('theme') === 'dark'
@@ -15,21 +23,36 @@
 	<div class="text-center w-fit">
 		<h1 class="text-5xl font-bold">Settings</h1>
 		<div class="py-6">
-			<div class="form-control">
-				<label class="label">
-					<span class="label-text">Enter your email to receive the latest news</span>
-				</label>
-				<label class="input-group">
-					<span>Email</span>
-					<input
-						id="email"
-						name="email"
-						type="email"
-						placeholder="nerf-this@gamer.com"
-						class="input input-bordered input-primary w-72" />
-					<button class="btn btn-primary">Save</button>
-				</label>
-			</div>
+			<form
+				method="POST"
+				action="?/update-email"
+				use:enhance={() => {
+					return async ({ update }) => {
+						await update({ reset: false })
+					}
+				}}>
+				<div class="form-control">
+					<label class="label">
+						<span class="label-text">Enter your email to receive the latest news</span>
+					</label>
+					<label class="input-group">
+						<span>Email</span>
+						<input
+							id="email"
+							name="email"
+							type="email"
+							placeholder="nerf-this@gamer.com"
+							class="input input-bordered input-primary w-72"
+							value={email || ''} />
+						<button class="btn btn-primary">Save</button>
+					</label>
+					{#if form?.success}
+						<Toast message="Email updated successfully" type="success" />
+						<!-- {:else if form?.error}
+						<Toast message="Error updating email" type="error" /> -->
+					{/if}
+				</div>
+			</form>
 		</div>
 
 		<div class="flex flex-col border-opacity-50">

@@ -3,30 +3,28 @@
 	import IconDrawerStreamDuration from '$lib/assets/icons/drawer/IconDrawerStreamDuration.svelte'
 	import IconDrawerHome from '$lib/assets/icons/drawer/IconDrawerHome.svelte'
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
-	import IconDrawerMessages from '$lib/assets/icons/drawer/IconDrawerMessages.svelte'
-	import IconDrawerVideos from '$lib/assets/icons/drawer/IconDrawerVideos.svelte'
-	import IconDrawerCreatorSpace from '$lib/assets/icons/drawer/IconDrawerCreatorSpace.svelte'
-	import IconDrawerMint from '$lib/assets/icons/drawer/IconDrawerMint.svelte'
-	import IconDrawerPremium from '$lib/assets/icons/drawer/IconDrawerPremium.svelte'
+	// import IconDrawerMessages from '$lib/assets/icons/drawer/IconDrawerMessages.svelte'
+	// import IconDrawerVideos from '$lib/assets/icons/drawer/IconDrawerVideos.svelte'
+	// import IconDrawerCreatorSpace from '$lib/assets/icons/drawer/IconDrawerCreatorSpace.svelte'
+	// import IconDrawerMint from '$lib/assets/icons/drawer/IconDrawerMint.svelte'
+	// import IconDrawerPremium from '$lib/assets/icons/drawer/IconDrawerPremium.svelte'
 	import IconDrawerCareers from '$lib/assets/icons/drawer/IconDrawerCareers.svelte'
 	import IconDrawerHelpAndLegal from '$lib/assets/icons/drawer/IconDrawerHelpAndLegal.svelte'
 	import IconDrawerSettings from '$lib/assets/icons/drawer/IconDrawerSettings.svelte'
 	import IconDrawerLogOut from '$lib/assets/icons/drawer/IconDrawerLogOut.svelte'
 	import IconSocialTwitter from '$lib/assets/icons/social/IconSocialTwitter.svelte'
 	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svg'
-	import IconSocialDexlab from '$lib/assets/icons/social/IconSocialDexlab.svg'
-	import IconSocialMagicEden from '$lib/assets/icons/social/IconSocialMagicEden.svg'
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
 	import { goto } from '$app/navigation'
 	import { env } from '$env/dynamic/public'
 	import { current_user, user_role } from '$lib/stores/authStore'
 	import {
-		isMaintenanceModeEnabled,
-		isFeatureMintPageEnabled,
-		isFeaturePremiumPageEnabled,
-		isFeatureGroupChatEnabled,
-		isFeatureVideoResponsesEnabled
+		isMaintenanceModeEnabled
+		// isFeatureMintPageEnabled,
+		// isFeaturePremiumPageEnabled,
+		// isFeatureGroupChatEnabled,
+		// isFeatureVideoResponsesEnabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svg'
 	import IconMageTextDark from '$lib/assets/icons/IconMageTextDark.svg'
@@ -172,10 +170,6 @@
 				<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li><a href="/contact">Contact</a></li>
 					<li><a href="/legal">Legal</a></li>
-					<li>
-						<a href="https://code-crow.gitbook.io/whitepaper/" target="_blank" rel="noreferrer"
-							>White Paper</a>
-					</li>
 				</ul>
 			</div>
 		</li>
