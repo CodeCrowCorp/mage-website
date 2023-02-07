@@ -28,7 +28,8 @@
 		isFeatureGroupChatEnabled,
 		isFeatureVideoResponsesEnabled
 	} from '$lib/stores/remoteConfigStore'
-	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svg'
+	import IconMageText from '$lib/assets/icons/IconMageText.svg'
+	import IconMageTextDark from '$lib/assets/icons/IconMageTextDark.svg'
 
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
@@ -52,9 +53,16 @@
 <div class="menu p-4 w-80 bg-base-100 text-base-content flex flex-col">
 	<!-- <MessagesDrawer /> -->
 	<ul>
-		<a href="/browse" class="btn btn-ghost normal-case text-xl">
-			<img class="w-10" src={IconMageLogo} alt="" />
-			Mage</a>
+		<div class="menu w-fit">
+			<ul>
+				<li>
+					<a href="/browse">
+						<img class="w-20 mage-text" src={IconMageText} alt="" />
+						<img class="w-20 mage-text-dark" src={IconMageTextDark} alt="" />
+					</a>
+				</li>
+			</ul>
+		</div>
 		{#if $current_user}
 			<li>
 				<a href="/profile/me" class="hero rounded-md cursor-pointer">
@@ -228,5 +236,13 @@
 <style>
 	progress::-webkit-progress-value {
 		background-color: var(--progress-bar-color);
+	}
+
+	:global(html[data-theme='dark'] .mage-text) {
+		display: none;
+	}
+
+	:global(html[data-theme='light'] .mage-text-dark) {
+		display: none;
 	}
 </style>
