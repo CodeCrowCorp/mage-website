@@ -37,7 +37,7 @@ async function send({
 	const res = await fetch(`${base}/${path}`, opts)
 	if (res.ok || res.status === 422) {
 		const text = await res.text()
-		if (path === 'wsinit/wsid') return text
+		if (path === 'wsinit/wsid'|| path.includes('wsinit/channelid')) return text
 		return text ? JSON.parse(text) : {}
 	}
 
