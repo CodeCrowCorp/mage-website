@@ -9,7 +9,6 @@
 		channels: any = undefined
 
 	let ref: any
-	$: channels = channels
 
 	const prev = () => {
 		if (ref) {

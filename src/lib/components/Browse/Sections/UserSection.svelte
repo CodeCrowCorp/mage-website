@@ -9,7 +9,6 @@
 		users: any = undefined
 
 	let ref: any
-	$: users = users
 
 	const prev = () => {
 		if (ref) {
