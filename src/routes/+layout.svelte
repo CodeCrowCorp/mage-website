@@ -1,5 +1,6 @@
 <script async script lang="ts">
 	import '$lib/assets/styles/tailwind-output.css'
+
 	// @ts-ignore
 	import NProgress from 'nprogress'
 	import { browser } from '$app/environment'
@@ -9,7 +10,6 @@
 	// NProgress Loading bar
 	import 'nprogress/nprogress.css'
 	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
-	import Messages from '$lib/components/MainDrawer/Messages.svelte'
 	import MainDrawer from '$lib/components/MainDrawer/MainDrawer.svelte'
 	import SmallDrawer from '$lib/components/MainDrawer/SmallDrawer.svelte'
 	import { page } from '$app/stores'
@@ -76,9 +76,11 @@
 </script>
 
 <svelte:head>
-	<link
-		href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
-		rel="stylesheet" />
+	<link rel="stylesheet" href="fonts/montserrat.css" />
+	{@html `<script> 
+          const theme = localStorage.getItem('theme') || 'dark';
+          document.querySelector('html').dataset.theme = theme;
+        </script>`}
 </svelte:head>
 
 <div class="drawer drawer-mobile">

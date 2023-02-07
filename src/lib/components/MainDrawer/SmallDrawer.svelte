@@ -15,12 +15,14 @@
 	import { env } from '$env/dynamic/public'
 	import { current_user, user_role } from '$lib/stores/authStore'
 	import {
+		isMaintenanceModeEnabled,
 		isFeatureMintPageEnabled,
 		isFeaturePremiumPageEnabled,
 		isFeatureGroupChatEnabled,
 		isFeatureVideoResponsesEnabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svg'
+	import IconMageLogoDark from '$lib/assets/icons/IconMageLogoDark.svg'
 
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
@@ -42,12 +44,21 @@
 </script>
 
 <div class="menu p-4 bg-base-100 text-base-content flex flex-col">
-	<!-- <Messages /> -->
+	<!-- <MessagesDrawer /> -->
 	<ul>
-		<a href="/browse" class="btn btn-ghost"> <img class="w-10" src={IconMageLogo} alt="" /></a>
+		<div class="menu">
+			<ul>
+				<li>
+					<a href="/browse" class="justify-center">
+						<img class="w-10 mage-logo" src={IconMageLogo} alt="" />
+						<img class="w-10 mage-logo-dark" src={IconMageLogoDark} alt="" />
+					</a>
+				</li>
+			</ul>
+		</div>
 		{#if $current_user}
 			<li class="w-full">
-				<a href="/profile/me" class="rounded-md cursor-pointer">
+				<a href="/profile/me" class="rounded-md justify-center">
 					<div>
 						<div>
 							<div class="avatar online">
@@ -89,14 +100,14 @@
 				<IconDrawerHome />
 			</a>
 		</li>
-		{#if $current_user}
+		<!-- {#if $current_user}
 			<li>
 				<a href="">
 					<IconDrawerMessages />
 					<IconDrawerChevron />
 				</a>
 			</li>
-		{/if}
+		{/if} -->
 		{#if $current_user && $isFeatureVideoResponsesEnabled}
 			<li>
 				<a href="/videos">
@@ -136,10 +147,6 @@
 				<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li><a href="/contact">Contact</a></li>
 					<li><a href="/legal">Legal</a></li>
-					<li>
-						<a href="https://code-crow.gitbook.io/whitepaper/" target="_blank" rel="noreferrer"
-							>White Paper</a>
-					</li>
 				</ul>
 			</div>
 		</li>
@@ -150,24 +157,26 @@
 				</a>
 			</li>
 		{/if}
-		{#if $current_user}
-			<li>
-				<button on:click={logout}>
-					<IconDrawerLogOut />
-				</button>
-			</li>
-		{:else}
-			<li>
-				<button
-					on:click={() => {
-						$is_login_modal_open = true
-						if (nav_drawer.checked) {
-							nav_drawer.checked = false
-						}
-					}}>
-					<IconDrawerLogOut />
-				</button>
-			</li>
+		{#if !$isMaintenanceModeEnabled}
+			{#if $current_user}
+				<li>
+					<button on:click={logout}>
+						<IconDrawerLogOut />
+					</button>
+				</li>
+			{:else}
+				<li>
+					<button
+						on:click={() => {
+							$is_login_modal_open = true
+							if (nav_drawer.checked) {
+								nav_drawer.checked = false
+							}
+						}}>
+						<IconDrawerLogOut />
+					</button>
+				</li>
+			{/if}
 		{/if}
 	</ul>
 </div>
@@ -175,5 +184,13 @@
 <style>
 	progress::-webkit-progress-value {
 		background-color: var(--progress-bar-color);
+	}
+
+	:global(html[data-theme='dark'] .mage-logo) {
+		display: none;
+	}
+
+	:global(html[data-theme='light'] .mage-logo-dark) {
+		display: none;
 	}
 </style>

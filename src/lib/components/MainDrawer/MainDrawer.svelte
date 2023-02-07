@@ -3,31 +3,31 @@
 	import IconDrawerStreamDuration from '$lib/assets/icons/drawer/IconDrawerStreamDuration.svelte'
 	import IconDrawerHome from '$lib/assets/icons/drawer/IconDrawerHome.svelte'
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
-	import IconDrawerMessages from '$lib/assets/icons/drawer/IconDrawerMessages.svelte'
-	import IconDrawerVideos from '$lib/assets/icons/drawer/IconDrawerVideos.svelte'
-	import IconDrawerCreatorSpace from '$lib/assets/icons/drawer/IconDrawerCreatorSpace.svelte'
-	import IconDrawerMint from '$lib/assets/icons/drawer/IconDrawerMint.svelte'
-	import IconDrawerPremium from '$lib/assets/icons/drawer/IconDrawerPremium.svelte'
+	// import IconDrawerMessages from '$lib/assets/icons/drawer/IconDrawerMessages.svelte'
+	// import IconDrawerVideos from '$lib/assets/icons/drawer/IconDrawerVideos.svelte'
+	// import IconDrawerCreatorSpace from '$lib/assets/icons/drawer/IconDrawerCreatorSpace.svelte'
+	// import IconDrawerMint from '$lib/assets/icons/drawer/IconDrawerMint.svelte'
+	// import IconDrawerPremium from '$lib/assets/icons/drawer/IconDrawerPremium.svelte'
 	import IconDrawerCareers from '$lib/assets/icons/drawer/IconDrawerCareers.svelte'
 	import IconDrawerHelpAndLegal from '$lib/assets/icons/drawer/IconDrawerHelpAndLegal.svelte'
 	import IconDrawerSettings from '$lib/assets/icons/drawer/IconDrawerSettings.svelte'
 	import IconDrawerLogOut from '$lib/assets/icons/drawer/IconDrawerLogOut.svelte'
 	import IconSocialTwitter from '$lib/assets/icons/social/IconSocialTwitter.svelte'
 	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svg'
-	import IconSocialDexlab from '$lib/assets/icons/social/IconSocialDexlab.svg'
-	import IconSocialMagicEden from '$lib/assets/icons/social/IconSocialMagicEden.svg'
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
 	import { goto } from '$app/navigation'
 	import { env } from '$env/dynamic/public'
 	import { current_user, user_role } from '$lib/stores/authStore'
 	import {
-		isFeatureMintPageEnabled,
-		isFeaturePremiumPageEnabled,
-		isFeatureGroupChatEnabled,
-		isFeatureVideoResponsesEnabled
+		isMaintenanceModeEnabled
+		// isFeatureMintPageEnabled,
+		// isFeaturePremiumPageEnabled,
+		// isFeatureGroupChatEnabled,
+		// isFeatureVideoResponsesEnabled
 	} from '$lib/stores/remoteConfigStore'
-	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svg'
+	import IconMageText from '$lib/assets/icons/IconMageText.svg'
+	import IconMageTextDark from '$lib/assets/icons/IconMageTextDark.svg'
 
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
@@ -49,11 +49,18 @@
 </script>
 
 <div class="menu p-4 w-80 bg-base-100 text-base-content flex flex-col">
-	<!-- <Messages /> -->
+	<!-- <MessagesDrawer /> -->
 	<ul>
-		<a href="/browse" class="btn btn-ghost normal-case text-xl">
-			<img class="w-10" src={IconMageLogo} alt="" />
-			Mage</a>
+		<div class="menu w-fit">
+			<ul>
+				<li>
+					<a href="/browse">
+						<img class="w-20 mage-text" src={IconMageText} alt="" />
+						<img class="w-20 mage-text-dark" src={IconMageTextDark} alt="" />
+					</a>
+				</li>
+			</ul>
+		</div>
 		{#if $current_user}
 			<li>
 				<a href="/profile/me" class="hero rounded-md cursor-pointer">
@@ -163,10 +170,6 @@
 				<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li><a href="/contact">Contact</a></li>
 					<li><a href="/legal">Legal</a></li>
-					<li>
-						<a href="https://code-crow.gitbook.io/whitepaper/" target="_blank" rel="noreferrer"
-							>White Paper</a>
-					</li>
 				</ul>
 			</div>
 		</li>
@@ -177,30 +180,32 @@
 					Settings</a>
 			</li>
 		{/if}
-		{#if $current_user}
-			<li>
-				<button on:click={logout}>
-					<IconDrawerLogOut />
-					Log Out</button>
-			</li>
-		{:else}
-			<li>
-				<button
-					on:click={() => {
-						$is_login_modal_open = true
-						if (nav_drawer.checked) {
-							nav_drawer.checked = false
-						}
-					}}>
-					<IconDrawerLogOut />
-					Log In</button>
-			</li>
+		{#if !$isMaintenanceModeEnabled}
+			{#if $current_user}
+				<li>
+					<button on:click={logout}>
+						<IconDrawerLogOut />
+						Log Out</button>
+				</li>
+			{:else}
+				<li>
+					<button
+						on:click={() => {
+							$is_login_modal_open = true
+							if (nav_drawer.checked) {
+								nav_drawer.checked = false
+							}
+						}}>
+						<IconDrawerLogOut />
+						Log In</button>
+				</li>
+			{/if}
 		{/if}
 	</ul>
 
 	<footer class="mt-auto p-4">
 		<!-- <RisingStars /> -->
-		<div class="grid grid-flow-col gap-4">
+		<div class="flex gap-4">
 			<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 				<IconSocialGitHub />
 			</a>
@@ -210,12 +215,12 @@
 			<a href="https://twitter.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 				<IconSocialTwitter />
 			</a>
-			<a href="https://magiceden.io" target="_blank" rel="noreferrer">
+			<!-- <a href="https://magiceden.io" target="_blank" rel="noreferrer">
 				<img src={IconSocialMagicEden} alt="" />
 			</a>
 			<a href="https://www.dexlab.space" target="_blank" rel="noreferrer">
 				<img src={IconSocialDexlab} alt="" />
-			</a>
+			</a> -->
 		</div>
 		<p>Code Crow Corp © 2023</p>
 		<p class="text-gray-500">v{__VERSION__} [{env.PUBLIC_ENV}]</p>
@@ -225,5 +230,13 @@
 <style>
 	progress::-webkit-progress-value {
 		background-color: var(--progress-bar-color);
+	}
+
+	:global(html[data-theme='dark'] .mage-text) {
+		display: none;
+	}
+
+	:global(html[data-theme='light'] .mage-text-dark) {
+		display: none;
 	}
 </style>

@@ -4,6 +4,8 @@
 	import CreateChannelDrawer from './CreateChannelDrawer.svelte'
 	import { current_user } from '$lib/stores/authStore'
 
+	export let isDisabled = !current_user
+
 	let showDrawer = false
 </script>
 
@@ -20,12 +22,16 @@
 		</div>
 	</div>
 
-	<button
-		class="btn w-[21rem] btn-primary gap-2 drawer-button"
-		disabled={!$current_user}
-		on:click={() => (showDrawer = true)}>
-		<IconCreate />
-		Create a channel</button>
+	<div class="form-control">
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<label
+			for="create-channel-drawer"
+			class="btn w-[21rem] btn-primary gap-2 drawer-button"
+			on:click={() => (showDrawer = true)}
+			{...isDisabled ? { disabled: '' } : {}}>
+			<IconCreate />
+			Create a channel</label>
+	</div>
 
 	{#if showDrawer}
 		<CreateChannelDrawer bind:showDrawer />

@@ -31,7 +31,7 @@ async function getHighestRankedUsers({ skip = 0, limit = 50 }: { skip: number; l
 	}).then((response) => response.json())
 }
 
-async function updateUser(body: any) {
+async function updateUserProperties(body: any) {
 	return await fetch(`${env.PUBLIC_API_URL}/users/current`, {
 		method: 'PATCH',
 		body: JSON.stringify(body)
@@ -78,7 +78,7 @@ export {
 	getUsersByName,
 	getUserByUsername,
 	getHighestRankedUsers,
-	updateUser,
+	updateUserProperties,
 	updateAvatar,
 	updateUsername
 }

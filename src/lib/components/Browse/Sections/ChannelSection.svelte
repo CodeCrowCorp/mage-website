@@ -30,8 +30,10 @@
 	}
 </script>
 
-{#if !channels.error}
-	<div class="flex flex-col my-4 relative">
+{#if channels && !channels.error}
+	<div
+		class="flex flex-col my-4 relative"
+		class:hidden={channels != undefined && channels.length == 0}>
 		{#if channels && channels.length}
 			<div class="font-semibold m-3">
 				<a class="link link-secondary text-lg">{title}</a>
