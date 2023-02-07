@@ -1,7 +1,11 @@
 <script>
+	import { browser } from '$app/environment'
 	import { onMount } from 'svelte'
 	import { themeChange } from 'theme-change'
-
+	let isDarkTheme = true
+	if (browser) {
+		isDarkTheme = localStorage.getItem('theme') === 'dark'
+	}
 	onMount(() => {
 		themeChange(false)
 	})
@@ -39,7 +43,7 @@
 						id="theme-toggle"
 						data-toggle-theme="light,dark"
 						data-act-class="ACTIVECLASS"
-						checked />
+						checked={isDarkTheme} />
 				</label>
 			</div>
 			<!-- <div class="divider">1v1 chat</div>
