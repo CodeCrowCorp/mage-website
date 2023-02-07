@@ -32,7 +32,7 @@
 
 {#if channels && !channels.error}
 	<div
-		class="flex flex-col my-4 relative"
+		class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide"
 		class:hidden={channels != undefined && channels.length == 0}>
 		{#if channels && channels.length}
 			<div class="font-semibold m-3">
@@ -49,7 +49,7 @@
 
 				<div
 					bind:this={ref}
-					class="item-content relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto flex-grow">
+					class="relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto flex-grow">
 					{#each channels as channel}
 						<div
 							class="flex flex-col shrink-0 first:pl-8 last:pr-8 w-[300px] md:w-[400px] rounded-md">
@@ -116,7 +116,14 @@
 	.video-thumbnail {
 		@apply bg-slate-400 w-full h-64 flex items-center justify-center text-white rounded-md cursor-pointer;
 	}
-	.item-content::-webkit-scrollbar {
+
+	.scrollbar-hide::-webkit-scrollbar {
 		display: none;
+	}
+
+	/* For IE, Edge and Firefox */
+	.scrollbar-hide {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
 	}
 </style>
