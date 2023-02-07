@@ -1,4 +1,4 @@
-import { redirect, type HandleFetch } from '@sveltejs/kit'
+import { redirect, type HandleFetch, type Handle } from '@sveltejs/kit'
 import { get as getWritableVal } from 'svelte/store'
 import {
 	isMaintenanceModeEnabled,
@@ -8,7 +8,6 @@ import {
 	isFeaturePremiumPageEnabled
 } from '$lib/stores/remoteConfigStore'
 import { Authenticate } from '$lib/authentication/authentication'
-import type { Handle } from '@sveltejs/kit'
 import { env } from '$env/dynamic/public'
 import { get } from '$lib/api'
 import { current_user, user_role } from '$lib/stores/authStore'
@@ -51,18 +50,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 		if (!role) {
 			try {
-				const headers: any = {
-					userId: userId
-				}
-				if (env.PUBLIC_CROSS_ORIGIN === 'false') {
-					headers['authorization'] = token
-				} else {
-					headers['x-api-key'] = env.PUBLIC_API_KEY
-				}
-
-				const allRoles = await get('roles', headers)
+				const allRoles = await get('roles', { userId, token })
 				if (Array.isArray(allRoles)) {
-					const userRole = await get('roles/role-mapping', headers)
+					const userRole = await get('roles/role-mapping', { userId, token })
 					if (userRole && userRole.role) {
 						const usersRoleName = allRoles.find((item) => {
 							return item._id == userRole.role
@@ -136,7 +126,7 @@ export const handleError = ({ error }: { error: any }) => {
 	}
 }
 
-export const handleFetch = (async ({
+export const handleFetch = (({
 	event,
 	request,
 	fetch
@@ -148,7 +138,7 @@ export const handleFetch = (async ({
 	if (request.url.startsWith(env.PUBLIC_API_URL)) {
 		request.headers['userId'] = event.locals.user.userId
 		if (env.PUBLIC_CROSS_ORIGIN === 'false') {
-			request.headers['authorization'] = event.locals.user.token
+			request.headers['Authorization'] = event.locals.user.token
 		} else {
 			request.headers['x-api-key'] = env.PUBLIC_X_API_KEY
 		}
