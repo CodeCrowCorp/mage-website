@@ -9,6 +9,7 @@
 
 	export let data: PageData
 
+	$: chatHistory = []
 	$: ({ post } = data)
 	let showDrawer = false
 	let channelSocket: WebSocket
@@ -38,7 +39,7 @@
 		})
 	})
 
-	onDestroy(() => channelSocket.close())
+	onDestroy(() => channelSocket?.close())
 </script>
 
 <div class="flex flex-col md:flex-row gap-4 py-5 pl-5">
@@ -53,6 +54,6 @@
 	</div>
 
 	{#if showDrawer}
-		<ChatDrawer bind:showDrawer bind:channel={post} />
+		<ChatDrawer bind:showDrawer bind:channel={post} bind:chatHistory />
 	{/if}
 </div>
