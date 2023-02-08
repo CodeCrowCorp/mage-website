@@ -14,11 +14,12 @@
 	let weeklyTitle = 'Weekly topics'
 	let weeklyChannels: any = []
 	if (!data.post.weeklyChannels.error) {
+		// NOTICE: weekNumber is missing here
 		// weeklyTitle = `Wk${data.post.weeklyChannels.weekly.weekNumber} ${data.post.weeklyChannels.weekly.topic}`
 		weeklyTitle = 'Weekly topics'
 		weeklyChannels = data.post.weeklyChannels.channels
 	} else {
-		weeklyChannels = data.post.weeklyChannels.error
+		weeklyChannels = data.post.weeklyChannels
 	}
 
 	onMount(async () => {
