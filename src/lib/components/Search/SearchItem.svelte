@@ -1,8 +1,8 @@
 <script lang="ts">
 	export let channel: any
 	function timeSince(date: string) {
-		let created = new Date(date)
-		let currentDate = new Date(Date.now())
+		let created: any = new Date(date)
+		let currentDate: any = new Date(Date.now())
 		var seconds = Math.floor((currentDate - created) / 1000)
 		var interval = seconds / 31536000
 		if (interval > 1) {
@@ -29,13 +29,13 @@
 </script>
 
 <div class="flex flex-col md:flex-row gap-4">
-	<div class=" md:w-96 bg-gray-200">
+	<a href={`/channel/${channel._id}`} class=" md:w-96 bg-gray-200">
 		<img
 			loading="lazy"
 			src={channel.thumbnail || 'https://via.placeholder.com/300/09f/fff.png'}
 			class="w-full max-h-64 border-none rounded shadow"
 			alt="" />
-	</div>
+	</a>
 
 	<div class="md:basis-96 flex-auto flex flex-col gap-2">
 		{#if Array.isArray(channel.category)}
@@ -46,15 +46,17 @@
 			</div>
 		{/if}
 
-		<h2 class="text-xl font-semibold dark:text-white">
-			{channel.title || ''}
-		</h2>
+		<a href={`/channel/${channel._id}`}>
+			<h2 class="text-xl font-semibold dark:text-white">
+				{channel.title || ''}
+			</h2>
+		</a>
 
 		<p class="text-sm font-light">
 			{channel.memberCount || 0} Views - {timeSince(channel.createdAt)}
 		</p>
 
-		<div class="flex items-center">
+		<a href={`/channel/${channel._id}`} class="flex items-center">
 			<div class="avatar">
 				<div class="w-8 rounded-full">
 					<img
@@ -64,7 +66,7 @@
 				</div>
 			</div>
 			<p class="ml-2 text-sm font-light text-center">{channel.createdBy || ''}</p>
-		</div>
+		</a>
 
 		<p class="text-sm font-light">
 			{channel.description ? channel.description.slice(0, 100) : ''}

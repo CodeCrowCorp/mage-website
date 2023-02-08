@@ -21,6 +21,6 @@
 	}
 </script>
 
-<SearchChannel searchPage={true} q={data.query} />
+<SearchChannel searchPage={true} search_query={data.query} />
 
 <SearchSection channels={data.post.searchList} {loadingMoreChannels} on:loadMore={loadMore} />

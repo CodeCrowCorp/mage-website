@@ -5,7 +5,7 @@
 	import { current_user } from '$lib/stores/authStore'
 
 	export let searchPage = false
-	export let q = ''
+	export let search_query = ''
 	export let isDisabled = !current_user
 
 	let showDrawer = false
@@ -16,17 +16,17 @@
 		<div class="form-control">
 			<div class="input-group relative">
 				<input
-					name="q"
-					bind:value={q}
+					name="search_query"
+					bind:value={search_query}
 					type="text"
 					placeholder="Search channels"
 					class="input input-bordered input-primary {searchPage ? 'w-full' : 'w-72'}" />
-				{#if q && q.length}
+				{#if search_query && search_query.length}
 					<button
 						class="btn btn-ghost absolute right-10"
 						on:click={async (e) => {
 							e.preventDefault()
-							q = ''
+							search_query = ''
 						}}>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
