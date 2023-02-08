@@ -83,11 +83,11 @@
 						Create a new channel
 					</p>
 					<div class="flex flex-col p-3">
-						<p class="text-xs">
-							When you create a channel, you may allow viewer's to observe your desktop as you host
-							your channel
+						<p class="text-s">
+							When you create a channel, you may share your screen, webcam, and chat with the
+							community
 						</p>
-						<p class="text-lg font-semibold  mt-10">
+						<p class="text-lg font-semibold mt-10">
 							Please hide all sensitive data before going live.
 						</p>
 
@@ -121,7 +121,7 @@
 							name="description"
 							required
 							class="textarea textarea-primary mt-5 text-base w-full h-28" />
-						<p class="text-base text-gray-500 mt-5">Suggested Tags</p>
+						<p class="text-base text-gray-500 mt-5 mb-2">Suggested Tags</p>
 						<div class="flex flex-wrap">
 							{#if $tags && $tags.length > 0}
 								{#each $tags as tag}
