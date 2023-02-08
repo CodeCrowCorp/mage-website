@@ -50,8 +50,8 @@
 			<ul>
 				<li>
 					<a href="/browse" class="justify-center">
-						<img class="w-10 mage-logo" src={IconMageLogo} alt="" />
-						<img class="w-10 mage-logo-dark" src={IconMageLogoDark} alt="" />
+						<img class="w-7 mage-logo" src={IconMageLogo} alt="" />
+						<img class="w-7 mage-logo-dark" src={IconMageLogoDark} alt="" />
 					</a>
 				</li>
 			</ul>
