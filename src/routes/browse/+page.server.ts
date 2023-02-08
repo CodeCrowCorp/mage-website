@@ -12,7 +12,7 @@ export const load = (async ({ locals }) => {
 		myChannels = await get(`channels/me/hosted?skip=${0}&limit=${10}`)
 		favChannels = await get(`channels/me/fav?skip=${0}&limit=${10}`)
 	}
-	const tableChannels = await get(`channels?searchQuery=&skip=${0}&limit=${50}`)
+	const tableChannels = await get(`channels?skip=${0}&limit=${50}`)
 
 	return {
 		post: {

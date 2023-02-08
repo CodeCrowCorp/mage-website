@@ -76,7 +76,7 @@
 </script>
 
 <svelte:head>
-	<link rel="stylesheet" href="fonts/montserrat.css" />
+	<link rel="stylesheet" href="/fonts/montserrat.css" />
 	{@html `<script> 
           const theme = localStorage.getItem('theme') || 'dark';
           document.querySelector('html').dataset.theme = theme;

@@ -2,19 +2,20 @@
 	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
 	import ChatDrawer from '$lib/components/Chat/ChatDrawer.svelte'
 	import type { PageData } from './$types'
-	import { onMount } from 'svelte'
+	import { onDestroy, onMount } from 'svelte'
 	import { get } from '$lib/api'
 	import { env } from '$env/dynamic/public'
 	import { channelConnection, channelMessage } from '$lib/stores/socketStore'
 
 	export let data: PageData
 
+	$: chatHistory = []
 	$: ({ post } = data)
 	let showDrawer = false
-
+	let channelSocket: WebSocket
 	onMount(async () => {
-		const channelSocketId = get(`wsinit/wsid`)
-		const channelSocket = new WebSocket(
+		const channelSocketId = get(`wsinit/channelid?channelId=${post._id}`)
+		channelSocket = new WebSocket(
 			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${channelSocketId}/connect`
 		)
 		channelSocket?.addEventListener('open', (data) => {
@@ -37,6 +38,8 @@
 			channelConnection.set('close')
 		})
 	})
+
+	onDestroy(() => channelSocket?.close())
 </script>
 
 <div class="flex flex-col md:flex-row gap-4 py-5 pl-5">
@@ -51,6 +54,6 @@
 	</div>
 
 	{#if showDrawer}
-		<ChatDrawer bind:showDrawer bind:channel={post} />
+		<ChatDrawer bind:showDrawer bind:channel={post} bind:chatHistory />
 	{/if}
 </div>
