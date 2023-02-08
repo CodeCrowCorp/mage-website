@@ -1,11 +1,11 @@
 import { redirect, type HandleFetch, type Handle } from '@sveltejs/kit'
 import { get as getWritableVal } from 'svelte/store'
 import {
-	isMaintenanceModeEnabled,
-	isFeatureVideoResponsesEnabled,
-	isFeatureGroupChatEnabled,
-	isFeatureMintPageEnabled,
-	isFeaturePremiumPageEnabled
+	is_maintenance_mode_enabled,
+	is_feature_video_responses_enabled,
+	is_feature_group_chat_enabled,
+	is_feature_mint_page_enabled,
+	is_feature_premium_page_enabled
 } from '$lib/stores/remoteConfigStore'
 import { Authenticate } from '$lib/authentication/authentication'
 import { env } from '$env/dynamic/public'
@@ -20,21 +20,23 @@ export const handle: Handle = async ({ event, resolve }) => {
 	let user: any = event.locals.user?.user || '',
 		isBanned = false
 	const role = getWritableVal(user_role)
-
+	let maintenance_mode
 	const remoteConfigs = await get('remote-configs', { userId, token })
 	if (remoteConfigs && remoteConfigs.length) {
 		remoteConfigs.map((config: { flagKey: string; flagValue: boolean }) => {
-			if (config.flagKey === 'maintenance-mode') isMaintenanceModeEnabled.set(config.flagValue)
+			if (config.flagKey === 'maintenance-mode') {
+				is_maintenance_mode_enabled.set(config.flagValue)
+				maintenance_mode = config.flagValue
+			}
 			if (config.flagKey === 'feature-video-responses')
-				isFeatureVideoResponsesEnabled.set(config.flagValue)
-			if (config.flagKey === 'feature-group-chat') isFeatureGroupChatEnabled.set(config.flagValue)
-			if (config.flagKey === 'feature-mint-page') isFeatureMintPageEnabled.set(config.flagValue)
+				is_feature_video_responses_enabled.set(config.flagValue)
+			if (config.flagKey === 'feature-group-chat')
+				is_feature_group_chat_enabled.set(config.flagValue)
+			if (config.flagKey === 'feature-mint-page') is_feature_mint_page_enabled.set(config.flagValue)
 			if (config.flagKey === 'feature-premium-page')
-				isFeaturePremiumPageEnabled.set(config.flagValue)
+				is_feature_premium_page_enabled.set(config.flagValue)
 		})
 	}
-
-	const maintenance_mode = getWritableVal(isMaintenanceModeEnabled) || false
 
 	if (token && userId) {
 		if (!user) {

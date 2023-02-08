@@ -62,7 +62,6 @@
 	const addChannel = async () => {
 		const channel = await post('/channel', newChannel)
 		await put(`/users/host-channels?hostChannelId=${channel._id}`)
-		//TODO: set currentChannel
 		goto(`/channel/${channel._id}`)
 	}
 </script>
@@ -84,15 +83,15 @@
 						Create a new channel
 					</p>
 					<div class="flex flex-col p-3">
-						<p class="text-xs">
-							When you create a channel, you may allow viewer's to observe your desktop as you host
-							your channel
+						<p class="text-s">
+							When you create a channel, you may share your screen, webcam, and chat with the
+							community
 						</p>
-						<p class="text-lg font-semibold  mt-10">
+						<p class="text-lg font-semibold mt-10">
 							Please hide all sensitive data before going live.
 						</p>
 
-						<div class="flex flex-row justify-center w-full">
+						<!-- <div class="flex flex-row justify-center w-full">
 							<div class="card w-40 shadow-xl">
 								<div class="card-body items-center max-h-40 {showThumbnail ? '!p-3' : ''}">
 									{#if showThumbnail}
@@ -108,8 +107,7 @@
 							bind:this={fileuploader}
 							on:change={fileupload}
 							type="file"
-							class="file-input file-input-bordered file-input-primary w-full mt-5" />
-
+							class="file-input file-input-bordered file-input-primary w-full mt-5" /> -->
 						<input
 							bind:value={newChannel.title}
 							type="text"
@@ -123,7 +121,7 @@
 							name="description"
 							required
 							class="textarea textarea-primary mt-5 text-base w-full h-28" />
-						<p class="text-base text-gray-500 mt-5">Suggested Tags</p>
+						<p class="text-base text-gray-500 mt-5 mb-2">Suggested Tags</p>
 						<div class="flex flex-wrap">
 							{#if $tags && $tags.length > 0}
 								{#each $tags as tag}
