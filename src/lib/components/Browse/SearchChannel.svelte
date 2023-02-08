@@ -3,39 +3,30 @@
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
 	import CreateChannelDrawer from './CreateChannelDrawer.svelte'
 	import { current_user } from '$lib/stores/authStore'
-	import { searchQuery } from '$lib/stores/channelStore'
-	import { createEventDispatcher } from 'svelte'
 
-	export let searchingItems = false
+	export let searchPage = false
 	export let q = ''
 	export let isDisabled = !current_user
 
 	let showDrawer = false
-
-	let dispatch = createEventDispatcher()
-	function submit() {
-		searchingItems = true
-		dispatch('search')
-	}
 </script>
 
-<div class="flex flex-col md:flex-row gap-4 py-5 pl-5 {searchingItems ? 'px-4 md:px-24' : ''}">
-	<form class={searchingItems ? 'flex-1' : ''} method="GET" action="?/search" on:submit={submit}>
+<div class="flex flex-col md:flex-row gap-4 py-5 pl-5 {searchPage ? 'px-4 md:px-24' : ''}">
+	<form class={searchPage ? 'flex-1' : ''} method="GET" action={`/search`}>
 		<div class="form-control">
 			<div class="input-group relative">
 				<input
 					name="q"
-					bind:value={$searchQuery}
+					bind:value={q}
 					type="text"
 					placeholder="Search channels"
-					class="input input-bordered input-primary {searchingItems ? 'w-full' : 'w-72'}" />
-				{#if $searchQuery.length}
+					class="input input-bordered input-primary {searchPage ? 'w-full' : 'w-72'}" />
+				{#if q && q.length}
 					<button
 						class="btn btn-ghost absolute right-10"
 						on:click={async (e) => {
 							e.preventDefault()
-							searchingItems = false
-							$searchQuery = ''
+							q = ''
 						}}>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

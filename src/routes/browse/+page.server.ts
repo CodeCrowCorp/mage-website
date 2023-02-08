@@ -1,5 +1,4 @@
 import type { PageServerLoad } from './$types'
-import { searchQuery, getChannels } from '$lib/stores/channelStore'
 import { get } from '$lib/api'
 
 export const load = (async ({ locals, url }) => {
@@ -16,11 +15,6 @@ export const load = (async ({ locals, url }) => {
 	}
 	const tableChannels = await get(`channels?skip=${0}&limit=${50}`)
 
-	let searchList = []
-	if (query !== null) {
-		searchList = await get(`channels?searchQuery=${query}&skip=${0}&limit=${50}`)
-	}
-
 	return {
 		post: {
 			mostActiveChannels,
@@ -29,9 +23,7 @@ export const load = (async ({ locals, url }) => {
 			risingStarUsers,
 			myChannels,
 			favChannels,
-			tableChannels,
-			searchList
-		},
-		query
+			tableChannels
+		}
 	}
 }) satisfies PageServerLoad
