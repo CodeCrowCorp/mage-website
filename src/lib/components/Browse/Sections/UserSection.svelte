@@ -9,6 +9,7 @@
 		users: any = undefined
 
 	let ref: any
+	$: hidden = (users != undefined && users.length == 0) || Object.keys(users).length == 0
 
 	const prev = () => {
 		if (ref) {
@@ -30,9 +31,7 @@
 </script>
 
 {#if users && !users.error}
-	<div
-		class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide"
-		class:hidden={users != undefined && users.length == 0}>
+	<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide" class:hidden>
 		{#if users && users.length}
 			<div class="font-semibold m-3">
 				<a class="link link-secondary text-lg">{title}</a>

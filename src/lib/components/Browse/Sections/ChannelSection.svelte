@@ -9,6 +9,7 @@
 		channels: any = undefined
 
 	let ref: any
+	$: hidden = (channels != undefined && channels.length == 0) || Object.keys(channels).length == 0
 
 	const prev = () => {
 		if (ref) {
@@ -30,9 +31,7 @@
 </script>
 
 {#if channels && !channels.error}
-	<div
-		class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide"
-		class:hidden={channels != undefined && channels.length == 0}>
+	<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide" class:hidden>
 		{#if channels && channels.length}
 			<div class="font-semibold m-3">
 				<a class="link link-secondary text-lg">{title}</a>
