@@ -180,7 +180,7 @@
 					Settings</a>
 			</li>
 		{/if}
-		{#if !$current_user}
+		{#if $current_user}
 			<li>
 				<button on:click={logout}>
 					<IconDrawerLogOut />
