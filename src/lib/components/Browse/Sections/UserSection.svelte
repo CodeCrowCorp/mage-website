@@ -47,7 +47,7 @@
 
 				<div
 					bind:this={ref}
-					class="relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto flex-grow">
+					class="relative w-full flex gap-6 scrollbar-hide snap-x snap-mandatory overflow-x-auto flex-grow">
 					{#each users as user}
 						<div
 							class="flex flex-col shrink-0 first:pl-8 last:pr-8 w-[300px] md:w-[400px] rounded-md">
