@@ -40,45 +40,11 @@
 </script>
 
 {#if !channels.error}
-	<div class="relative" class:hidden={channels != undefined && channels.length == 0}>
+	<div class="relative p-1" class:hidden={channels != undefined && channels.length == 0}>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div class="bg-base-200 rounded-full p-3 btn-prev absolute top-2/4 left-1 z-10 cursor-pointer">
 			<IconDrawerLeft />
 		</div>
-		<!-- <div
-			bind:this={ref}
-			class="carousel-content relative w-full flex gap-6 snap-x snap-mandatory overflow-x-auto pt-14 flex-grow swiper mySwiper">
-			{#if channels && channels.length}
-				<div class="swiper-wrapper flex w-full gap-6 snap-x snap-mandatory pt-14 ">
-					{#each channels as channel}
-						<div class="swiper-slide snap-center shrink-0 w-[400px] md:w-[600px] rounded-md">
-							<div
-								class="video-thumbnail"
-								on:click|preventDefault={() => goto(`/channel/${channel._id}`)}>
-								<div class="flex flex-row">
-									<div class="avatar my-3 ml-2">
-										<div class="w-14 rounded-full">
-											<img src={channel.avatar} alt="" />
-										</div>
-									</div>
-									<div class="mt-2 ml-2 w-80">
-										<p class="text-2xl font-semibold">{channel.title}</p>
-										<p class="truncate">{channel.description}</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					{/each}
-				</div>
-			{:else}
-				<div role="status" class="flex flex-row gap-1 animate-pulse">
-					{#each Array(6) as _, index (index)}
-						<LoadingCarouselItem />
-					{/each}
-					<span class="sr-only">Loading...</span>
-				</div>
-			{/if}
-		</div> -->
 
 		{#if channels && channels.length}
 			<div class="swiper carousel mt-10">

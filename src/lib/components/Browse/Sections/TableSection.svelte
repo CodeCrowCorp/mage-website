@@ -9,11 +9,11 @@
 	export let channels: any = []
 </script>
 
-<div class="w-full">
-	<table class="table table-auto table-zebra w-full">
+<div class="flex flex-col w-full">
+	<table class="w-full">
 		<thead>
 			<tr>
-				<th>Host</th>
+				<th class="pl-4">Host</th>
 				<th>Title</th>
 				<th>Viewers</th>
 				<th>Tag</th>
@@ -27,7 +27,7 @@
 						class="cursor-pointer"
 						on:click|preventDefault={() => goto(`/channel/${channel._id}`)}>
 						<td>
-							<div class="flex items-center space-x-2">
+							<div class="flex items-center space-x-2 my-3 pl-3">
 								<div class="avatar">
 									<div class="w-12 rounded-full">
 										<img src={channel.avatar} alt="" />
@@ -40,12 +40,14 @@
 							</div>
 						</td>
 						<td>
-							{channel.title}
-							<br />
-							<span class="text-sm">{channel.description}</span>
+							<div class="my-3">
+								{channel.title}
+								<br />
+								<span class="text-sm">{channel.description}</span>
+							</div>
 						</td>
 						<td>
-							<div class="flex gap-2">
+							<div class="flex gap-2 my-3">
 								{#if channel.isPrivate}
 									<IconLock />
 								{/if}
@@ -54,7 +56,7 @@
 							</div>
 						</td>
 						<td>
-							<div class="flex flex-wrap gap-2">
+							<div class="flex flex-wrap gap-2 my-3">
 								{#if channel.tags && channel.tags.length}
 									{#each channel.tags as tag}
 										<div><span class="badge badge-primary badge-md">{tag}</span></div>
@@ -63,7 +65,7 @@
 							</div>
 						</td>
 						<td>
-							<div class="flex flex-wrap">
+							<div class="flex flex-wrap my-3">
 								{#if channel.category && channel.category.length}
 									{#each channel.category as category}
 										<div class="tooltip" data-tip={category}>
@@ -76,19 +78,17 @@
 					</tr>
 				{/each}
 			{:else}
-				<!-- <div role="status" class="flex flex-row gap-1 animate-pulse"> -->
 				{#each Array(5) as _, index (index)}
 					<tr>
 						<LoadingTableItem />
 					</tr>
 				{/each}
 				<span class="sr-only">Loading...</span>
-				<!-- </div> -->
 			{/if}
 		</tbody>
 		<tfoot>
 			<tr>
-				<th>Host</th>
+				<th class="pl-4">Host</th>
 				<th>Title</th>
 				<th>Viewers</th>
 				<th>Tags</th>
