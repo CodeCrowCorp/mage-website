@@ -37,7 +37,7 @@ async function send({
 	const res = await fetch(`${base}/${path}`, opts)
 	if (res.ok || res.status === 422) {
 		const text = await res.text()
-		if (path === 'wsinit/wsid'|| path.includes('wsinit/channelid')) return text
+		if (path === 'wsinit/wsid' || path.includes('wsinit/channelid')) return text
 		return text ? JSON.parse(text) : {}
 	}
 
@@ -48,18 +48,18 @@ export function get(path: string, headers?: any) {
 	return send({ method: 'GET', path, headers })
 }
 
-export function del(path: string) {
-	return send({ method: 'DELETE', path })
+export function del(path: string, headers?: any) {
+	return send({ method: 'DELETE', path, headers })
 }
 
-export function post(path: string, data: any) {
-	return send({ method: 'POST', path, data })
+export function post(path: string, data: any, headers?: any) {
+	return send({ method: 'POST', path, data, headers })
 }
 
-export function patch(path: string, data: any) {
-	return send({ method: 'PATCH', path, data })
+export function patch(path: string, data: any, headers?: any) {
+	return send({ method: 'PATCH', path, data, headers })
 }
 
-export function put(path: string, data: any = {}) {
-	return send({ method: 'PUT', path, data })
+export function put(path: string, data: any = {}, headers?: any) {
+	return send({ method: 'PUT', path, data, headers })
 }

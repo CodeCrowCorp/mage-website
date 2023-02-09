@@ -1,4 +1,4 @@
-import { redirect, type HandleFetch, type Handle } from '@sveltejs/kit'
+import { redirect, type Handle } from '@sveltejs/kit'
 import { get as getWritableVal } from 'svelte/store'
 import {
 	is_maintenance_mode_enabled,
@@ -8,7 +8,6 @@ import {
 	is_feature_premium_page_enabled
 } from '$lib/stores/remoteConfigStore'
 import { Authenticate } from '$lib/authentication/authentication'
-import { env } from '$env/dynamic/public'
 import { get } from '$lib/api'
 import { current_user, user_role } from '$lib/stores/authStore'
 
@@ -127,24 +126,3 @@ export const handleError = ({ error }: { error: any }) => {
 		message: 'Whoops something went wrong!'
 	}
 }
-
-export const handleFetch = (({
-	event,
-	request,
-	fetch
-}: {
-	event: any
-	request: any
-	fetch: any
-}) => {
-	if (request.url.startsWith(env.PUBLIC_API_URL)) {
-		request.headers['userId'] = event.locals.user.userId
-		if (env.PUBLIC_CROSS_ORIGIN === 'false') {
-			request.headers['Authorization'] = event.locals.user.token
-		} else {
-			request.headers['x-api-key'] = env.PUBLIC_X_API_KEY
-		}
-	}
-
-	return fetch(request)
-}) satisfies HandleFetch

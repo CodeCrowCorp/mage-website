@@ -3,7 +3,7 @@
 	import { getTechListJson, techList } from '$lib/stores/channelStore'
 	import CarouselSection from '$lib/components/Browse/Sections/CarouselSection.svelte'
 	import ChannelSection from '$lib/components/Browse/Sections/ChannelSection.svelte'
-	import SearchChannel from '$lib/components/Browse/SearchChannel.svelte'
+	import SearchBar from '$lib/components/Browse/SearchBar.svelte'
 	import UserSection from '$lib/components/Browse/Sections/UserSection.svelte'
 	import TableSection from '$lib/components/Browse/Sections/TableSection.svelte'
 	import type { PageData } from './$types'
@@ -30,7 +30,7 @@
 </script>
 
 <CarouselSection channels={data.post.tableChannels} />
-<SearchChannel />
+<SearchBar />
 
 <ChannelSection title={weeklyTitle} bind:channels={weeklyChannels} />
 

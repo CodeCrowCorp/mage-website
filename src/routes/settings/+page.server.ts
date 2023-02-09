@@ -4,9 +4,10 @@ import { current_user } from '$lib/stores/authStore'
 
 export const actions = {
 	'update-email': async ({ request, locals }: { request: any; locals: any }) => {
+		const { userId, token } = locals.user
 		const data = await request.formData()
 		const email = data.get('email')
-		await patch('users/current', { email })
+		await patch('users/current', { email }, { userId, token })
 		locals.user.user.email = email
 		current_user.update((user) => {
 			user.email = email

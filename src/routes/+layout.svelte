@@ -1,4 +1,4 @@
-<script async script lang="ts">
+<script lang="ts">
 	import '$lib/assets/styles/tailwind-output.css'
 
 	// @ts-ignore
@@ -8,7 +8,7 @@
 	import { current_user, user_role } from '$lib/stores/authStore'
 
 	// NProgress Loading bar
-	import 'nprogress/nprogress.css'
+	import '$lib/assets/styles/nprogress.css'
 	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
 	import MainDrawer from '$lib/components/MainDrawer/MainDrawer.svelte'
 	import SmallDrawer from '$lib/components/MainDrawer/SmallDrawer.svelte'
