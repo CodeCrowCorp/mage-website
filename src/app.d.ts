@@ -16,6 +16,13 @@ declare namespace App {
 	// interface Platform {}
 }
 
+declare namespace svelteHTML {
+	// enhance elements
+	interface HTMLAttributes {
+		'on:loadMore'?: (event: any) => any
+	}
+}
+
 declare const __VERSION__: string
 
 declare module 'svelte-tags-input'
