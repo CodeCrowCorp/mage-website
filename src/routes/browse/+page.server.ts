@@ -1,7 +1,8 @@
 import type { PageServerLoad } from './$types'
 import { get } from '$lib/api'
 
-export const load = (async ({ locals }) => {
+export const load = (async ({ locals, url }) => {
+	const query = url.searchParams.get('q')
 	const mostActiveChannels = await get(`channels/most-active?skip=${0}&limit=${5}`)
 	const weeklyChannels = await get(`channels/weekly?skip=${0}&limit=${10}`)
 	const highestRankedUsers = await get(`users/highest-ranked?skip=${0}&limit=${10}`)

@@ -15,11 +15,11 @@
 	import { env } from '$env/dynamic/public'
 	import { current_user, user_role } from '$lib/stores/authStore'
 	import {
-		isMaintenanceModeEnabled,
-		isFeatureMintPageEnabled,
-		isFeaturePremiumPageEnabled,
-		isFeatureGroupChatEnabled,
-		isFeatureVideoResponsesEnabled
+		is_maintenance_mode_enabled,
+		is_feature_mint_page_enabled,
+		is_feature_premium_page_enabled,
+		is_feature_group_chat_enabled,
+		is_feature_video_responses_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svg'
 	import IconMageLogoDark from '$lib/assets/icons/IconMageLogoDark.svg'
@@ -50,8 +50,8 @@
 			<ul>
 				<li>
 					<a href="/browse" class="justify-center">
-						<img class="w-10 mage-logo" src={IconMageLogo} alt="" />
-						<img class="w-10 mage-logo-dark" src={IconMageLogoDark} alt="" />
+						<img class="w-7 mage-logo" src={IconMageLogo} alt="" />
+						<img class="w-7 mage-logo-dark" src={IconMageLogoDark} alt="" />
 					</a>
 				</li>
 			</ul>
@@ -108,7 +108,7 @@
 				</a>
 			</li>
 		{/if} -->
-		{#if $current_user && $isFeatureVideoResponsesEnabled}
+		{#if $current_user && $is_feature_video_responses_enabled}
 			<li>
 				<a href="/videos">
 					<IconDrawerVideos />
@@ -118,7 +118,7 @@
 				<a href="/creator-space"> <IconDrawerCreatorSpace /></a>
 			</li>
 		{/if}
-		{#if $current_user && $isFeatureMintPageEnabled}
+		{#if $current_user && $is_feature_mint_page_enabled}
 			<li>
 				<a
 					href="https://mint.codecrow.io"
@@ -129,7 +129,7 @@
 				</a>
 			</li>
 		{/if}
-		{#if $current_user && $isFeaturePremiumPageEnabled}
+		{#if $current_user && $is_feature_premium_page_enabled}
 			<li>
 				<a href="/premium" class="text-pink-500">
 					<IconDrawerPremium />
@@ -157,26 +157,24 @@
 				</a>
 			</li>
 		{/if}
-		{#if !$isMaintenanceModeEnabled}
-			{#if $current_user}
-				<li>
-					<button on:click={logout}>
-						<IconDrawerLogOut />
-					</button>
-				</li>
-			{:else}
-				<li>
-					<button
-						on:click={() => {
-							$is_login_modal_open = true
-							if (nav_drawer.checked) {
-								nav_drawer.checked = false
-							}
-						}}>
-						<IconDrawerLogOut />
-					</button>
-				</li>
-			{/if}
+		{#if $current_user}
+			<li>
+				<button on:click={logout}>
+					<IconDrawerLogOut />
+				</button>
+			</li>
+		{:else}
+			<li>
+				<button
+					on:click={() => {
+						$is_login_modal_open = true
+						if (nav_drawer.checked) {
+							nav_drawer.checked = false
+						}
+					}}>
+					<IconDrawerLogOut />
+				</button>
+			</li>
 		{/if}
 	</ul>
 </div>

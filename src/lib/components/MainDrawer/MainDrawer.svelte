@@ -20,11 +20,11 @@
 	import { env } from '$env/dynamic/public'
 	import { current_user, user_role } from '$lib/stores/authStore'
 	import {
-		isMaintenanceModeEnabled
-		// isFeatureMintPageEnabled,
-		// isFeaturePremiumPageEnabled,
-		// isFeatureGroupChatEnabled,
-		// isFeatureVideoResponsesEnabled
+		is_maintenance_mode_enabled
+		// is_feature_mint_page_enabled,
+		// is_feature_premium_page_enabled,
+		// is_feature_group_chat_enabled,
+		// is_feature_video_responses_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svg'
 	import IconMageTextDark from '$lib/assets/icons/IconMageTextDark.svg'
@@ -180,26 +180,24 @@
 					Settings</a>
 			</li>
 		{/if}
-		{#if !$isMaintenanceModeEnabled}
-			{#if $current_user}
-				<li>
-					<button on:click={logout}>
-						<IconDrawerLogOut />
-						Log Out</button>
-				</li>
-			{:else}
-				<li>
-					<button
-						on:click={() => {
-							$is_login_modal_open = true
-							if (nav_drawer.checked) {
-								nav_drawer.checked = false
-							}
-						}}>
-						<IconDrawerLogOut />
-						Log In</button>
-				</li>
-			{/if}
+		{#if $current_user}
+			<li>
+				<button on:click={logout}>
+					<IconDrawerLogOut />
+					Log Out</button>
+			</li>
+		{:else}
+			<li>
+				<button
+					on:click={() => {
+						$is_login_modal_open = true
+						if (nav_drawer.checked) {
+							nav_drawer.checked = false
+						}
+					}}>
+					<IconDrawerLogOut />
+					Log In</button>
+			</li>
 		{/if}
 	</ul>
 
