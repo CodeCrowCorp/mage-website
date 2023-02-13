@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { get } from '$lib/api'
 	import { onMount } from 'svelte'
-	import SearchChannel from '$lib/components/Browse/SearchChannel.svelte'
+	import SearchBar from '$lib/components/Browse/SearchBar.svelte'
 	import SearchSection from '$lib/components/Search/SearchSection.svelte'
 	import type { PageData } from './$types'
 
@@ -21,6 +21,6 @@
 	}
 </script>
 
-<SearchChannel searchPage={true} search_query={data.query} />
+<SearchBar searchPage={true} search_query={data.query} />
 
 <SearchSection channels={data.post.searchList} {loadingMoreChannels} on:loadMore={loadMore} />

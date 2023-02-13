@@ -1,7 +1,7 @@
 import { writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
 // import { currentChannel } from '$lib/stores/channelStore'
-import { emitRoomMemberUpdate, emitUserActions } from '$lib/stores/socketStore'
+import { emitRoomMemberUpdate, emitUserActions } from '$lib/websocket'
 
 let videoStreamId = ''
 let hasActiveTracks = false

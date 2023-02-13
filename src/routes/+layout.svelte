@@ -1,4 +1,4 @@
-<script async script lang="ts">
+<script lang="ts">
 	import '$lib/assets/styles/tailwind-output.css'
 
 	// @ts-ignore
@@ -8,7 +8,7 @@
 	import { current_user, user_role } from '$lib/stores/authStore'
 
 	// NProgress Loading bar
-	import 'nprogress/nprogress.css'
+	import '$lib/assets/styles/nprogress.css'
 	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
 	import MainDrawer from '$lib/components/MainDrawer/MainDrawer.svelte'
 	import SmallDrawer from '$lib/components/MainDrawer/SmallDrawer.svelte'
@@ -16,7 +16,8 @@
 	import { onMount } from 'svelte'
 	import { get } from '$lib/api'
 	import { env } from '$env/dynamic/public'
-	import { platformConnection, platformMessage } from '$lib/stores/socketStore'
+	import { platformSocket, initPlatformSocket } from '$lib/websocket'
+	import { platformConnection, platformMessage } from '$lib/stores/websocketStore'
 
 	NProgress.configure({
 		minimum: 0.75,
@@ -50,9 +51,8 @@
 
 	onMount(async () => {
 		const platformSocketId = await get(`wsinit/wsid`)
-		const platformSocket = new WebSocket(
-			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/wsid/${platformSocketId}/connect`
-		)
+		initPlatformSocket(platformSocketId)
+		console.log('platformSocketId', platformSocketId)
 		platformSocket?.addEventListener('open', (data) => {
 			console.log('socket connection open')
 			console.log(data)

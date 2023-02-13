@@ -1,8 +1,6 @@
 <script lang="ts">
 	import LastItemInViewport from '$lib/actions/LastItemInViewport'
 	import SearchItem from '$lib/components/Search/SearchItem.svelte'
-	import LoadingSearchChannel from '$lib/components/Search/LoadingSearchChannel.svelte'
-	import { each } from 'svelte/internal'
 	export let channels: any = []
 	export let loadingMoreChannels: boolean = false
 </script>

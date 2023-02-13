@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ChatProfileCard from '$lib/components/Chat/ChatProfileCard.svelte'
-	export let sender: any
+	import ChatProfileCard from '$lib/components/Channel/Chat/ChatProfileCard.svelte'
+	export let sender: any, channelSocket: WebSocket
 	let coloredRoles: { tagColor?: any; textColor?: string }
 
 	switch (sender.role) {
@@ -26,6 +26,60 @@
 				textColor: 'text-info'
 			}
 			break
+	}
+
+	function emitReactToMessage({
+		channelId,
+		message,
+		user,
+		reaction
+	}: {
+		channelId: string
+		message: any
+		user: any
+		reaction: string
+	}) {
+		channelSocket?.send(
+			JSON.stringify({
+				eventName: `react-to-message`,
+				channel: channelId,
+				message,
+				user,
+				reaction
+			})
+		)
+	}
+
+	function emitChannelSubscribeByUser({
+		channelId,
+		userId
+	}: {
+		channelId: string
+		userId: string
+	}) {
+		channelSocket?.send(
+			JSON.stringify({
+				eventName: `channel-subscribe`,
+				channel: channelId,
+				userId: userId
+			})
+		)
+	}
+
+	function emitDeleteMessageToChannel({
+		channelId,
+		message
+	}: {
+		channelId: string
+		message: string
+	}) {
+		channelSocket?.send(
+			JSON.stringify({
+				eventName: `delete-channel-message`,
+				channel: channelId,
+				message
+			})
+		)
 	}
 </script>
 

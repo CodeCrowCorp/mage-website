@@ -4,10 +4,10 @@
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
 	import CreateChannelDrawer from './CreateChannelDrawer.svelte'
 	import { current_user } from '$lib/stores/authStore'
+	import { is_login_modal_open } from '$lib/stores/helperStore'
 
 	export let searchPage = false
 	export let search_query: string | null = ''
-	export let isDisabled = !current_user
 
 	let showDrawer = false
 </script>
@@ -19,19 +19,9 @@
 				<input
 					name="search_query"
 					bind:value={search_query}
-					type="text"
+					type="search"
 					placeholder="Search channels"
-					class="input input-bordered input-primary {searchPage ? 'w-full' : 'w-72'}" />
-				{#if search_query && search_query.length}
-					<button
-						class="btn btn-ghost absolute right-10"
-						on:click={async (e) => {
-							e.preventDefault()
-							search_query = ''
-						}}>
-						<IconCross />
-					</button>
-				{/if}
+					class="input input-bordered input-primary w-96" />
 				<button class="btn btn-square">
 					<IconSearch />
 				</button>
@@ -39,18 +29,25 @@
 		</div>
 	</form>
 
-	<div class="form-control">
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<label
-			for="create-channel-drawer"
-			class="btn w-[21rem] btn-primary gap-2 drawer-button"
-			on:click={() => (showDrawer = true)}
-			{...isDisabled ? { disabled: '' } : {}}>
-			<IconCreate />
-			Create a channel</label>
-	</div>
+	{#if !searchPage}
+		<div class="form-control">
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<label
+				for="create-channel-drawer"
+				class="btn w-[21rem] btn-primary gap-2 drawer-button"
+				on:click={() => {
+					if ($current_user) {
+						showDrawer = true
+					} else {
+						$is_login_modal_open = true
+					}
+				}}>
+				<IconCreate />
+				Create a channel</label>
+		</div>
+	{/if}
 
-	{#if showDrawer}
+	{#if showDrawer && !searchPage}
 		<CreateChannelDrawer bind:showDrawer />
 	{/if}
 </div>
