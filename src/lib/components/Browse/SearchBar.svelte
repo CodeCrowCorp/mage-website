@@ -4,10 +4,10 @@
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
 	import CreateChannelDrawer from './CreateChannelDrawer.svelte'
 	import { current_user } from '$lib/stores/authStore'
+	import { is_login_modal_open } from '$lib/stores/helperStore'
 
 	export let searchPage = false
 	export let search_query: string | null = ''
-	export let isDisabled = !current_user
 
 	let showDrawer = false
 </script>
@@ -35,8 +35,13 @@
 			<label
 				for="create-channel-drawer"
 				class="btn w-[21rem] btn-primary gap-2 drawer-button"
-				on:click={() => (showDrawer = true)}
-				{...isDisabled ? { disabled: '' } : {}}>
+				on:click={() => {
+					if ($current_user) {
+						showDrawer = true
+					} else {
+						$is_login_modal_open = true
+					}
+				}}>
 				<IconCreate />
 				Create a channel</label>
 		</div>

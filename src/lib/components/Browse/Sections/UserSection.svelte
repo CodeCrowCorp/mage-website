@@ -6,10 +6,11 @@
 	import LoadingChannelItem from '$lib/components/Browse/Sections/LoadingChannelItem.svelte'
 
 	export let title: string = '',
-		users: any = undefined
+		users: any = undefined,
+		isLoading: boolean = false
 
 	let ref: any
-	$: hidden = (users != undefined && users.length == 0) || Object.keys(users).length == 0
+	$: hidden = ((users != undefined && users.length == 0) || users.error) && !isLoading
 
 	const prev = () => {
 		if (ref) {

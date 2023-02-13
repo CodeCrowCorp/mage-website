@@ -16,7 +16,8 @@
 	import { onMount } from 'svelte'
 	import { get } from '$lib/api'
 	import { env } from '$env/dynamic/public'
-	import { platformConnection, platformMessage } from '$lib/stores/socketStore'
+	import { platformSocket, initPlatformSocket } from '$lib/websocket'
+	import { platformConnection, platformMessage } from '$lib/stores/websocketStore'
 
 	NProgress.configure({
 		minimum: 0.75,
@@ -50,9 +51,8 @@
 
 	onMount(async () => {
 		const platformSocketId = await get(`wsinit/wsid`)
-		const platformSocket = new WebSocket(
-			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/wsid/${platformSocketId}/connect`
-		)
+		initPlatformSocket(platformSocketId)
+		console.log('platformSocketId', platformSocketId)
 		platformSocket?.addEventListener('open', (data) => {
 			console.log('socket connection open')
 			console.log(data)

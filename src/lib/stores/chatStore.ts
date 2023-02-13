@@ -1,13 +1,4 @@
 import { writable, type Writable } from 'svelte/store'
-import {
-	emitDeleteMessageToChannel,
-	emitDeleteAllMessagesToChannel,
-	emitHistoryToChannel,
-	emitMessageToChannel,
-	emitChatMessage,
-	emitChatTypingByUser,
-	emitChannelChatTypingByUser
-} from '$lib/stores/socketStore'
 import { env } from '$env/dynamic/public'
 import { current_user } from './authStore'
 import { currentChannel } from './channelStore'
@@ -27,13 +18,13 @@ function resetSkipLimit() {
 	limit = 100
 }
 
-function deleteMessage({ message, channelId }: { message: any; channelId: string }) {
-	emitDeleteMessageToChannel({ channelId, message: JSON.stringify(message) })
-}
+// function deleteMessage({ message, channelId }: { message: any; channelId: string }) {
+// 	emitDeleteMessageToChannel({ channelId, message: JSON.stringify(message) })
+// }
 
-function deleteAllMessages({ channelId }: { channelId: string }) {
-	emitDeleteAllMessagesToChannel({ channelId })
-}
+// function deleteAllMessages({ channelId }: { channelId: string }) {
+// 	emitDeleteAllMessagesToChannel({ channelId })
+// }
 
 async function postFile({ channelId, fileToUpload }: { channelId: string; fileToUpload: File }) {
 	const formData: FormData = new FormData()
@@ -70,7 +61,7 @@ async function getMessages({ chat, chatType }: { chat: any; chatType: string }) 
 	if (chatType == 'channelChat') {
 		skip = skip + limit
 		data.skip = skip
-		emitHistoryToChannel({ channelId: chat.channel, skip: data.skip })
+		// emitHistoryToChannel({ channelId: chat.channel, skip: data.skip })
 	} else if (chatType == 'oneToOneChat') {
 		data.skip = chat.skip
 	}
@@ -96,7 +87,7 @@ async function sendChannelMessage({ channel, attributes }: { channel: any; attri
 			user: user,
 			author: user.displayName
 		}
-		emitMessageToChannel({ channelId: channel._id, message: completeMessage })
+		// emitMessageToChannel({ channelId: channel._id, message: completeMessage })
 		lastMessageSendDate = new Date()
 		// sendEmailAndWebNotifications({ channel: channel._id, user, attributes })
 	}
@@ -114,7 +105,7 @@ async function sendChatMessage({ chat, attributes }: { chat: any; attributes: an
 		user: user,
 		author: user.displayName
 	}
-	emitChatMessage({ source1: chat.source1, source2: chat.source2, message: completeMessage })
+	// emitChatMessage({ source1: chat.source1, source2: chat.source2, message: completeMessage })
 	lastMessageSendDate = new Date()
 	// sendEmailAndWebNotifications({ channel: chat._id, user, attributes })
 }
@@ -163,9 +154,9 @@ function emitChannelChatTyping({
 	channelId: string
 }) {
 	if (!channelId) {
-		emitChatTypingByUser(typingUser)
+		// emitChatTypingByUser(typingUser)
 	} else {
-		emitChannelChatTypingByUser({ channelId, typingUser })
+		// emitChannelChatTypingByUser({ channelId, typingUser })
 	}
 }
 
@@ -415,8 +406,8 @@ async function commitDeleteMessage({ oneVone, message }: { oneVone: boolean; mes
 }
 
 export {
-	deleteMessage,
-	deleteAllMessages,
+	// deleteMessage,
+	// deleteAllMessages,
 	postFile,
 	deleteFile,
 	getTrendingGifs,
@@ -424,7 +415,7 @@ export {
 	getMessages,
 	sendChannelMessage,
 	sendChatMessage,
-	emitChannelChatTypingByUser,
+	// emitChannelChatTypingByUser,
 	createChat,
 	getChat,
 	getChats,

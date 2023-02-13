@@ -1,23 +1,21 @@
 <script lang="ts">
 	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
-	import ChatDrawer from '$lib/components/Chat/ChatDrawer.svelte'
+	import ChatDrawer from '$lib/components/Channel/Chat/ChatDrawer.svelte'
 	import type { PageData } from './$types'
 	import { onDestroy, onMount } from 'svelte'
 	import { get } from '$lib/api'
-	import { env } from '$env/dynamic/public'
-	import { channelConnection, channelMessage } from '$lib/stores/socketStore'
+	import { channelSocket, initChannelSocket } from '$lib/websocket'
+	import { channelConnection, channelMessage } from '$lib/stores/websocketStore'
 
 	export let data: PageData
 
 	$: chatHistory = []
 	$: ({ post } = data)
 	let showDrawer = false
-	let channelSocket: WebSocket
+
 	onMount(async () => {
-		const channelSocketId = get(`wsinit/channelid?channelId=${post._id}`)
-		channelSocket = new WebSocket(
-			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${channelSocketId}/connect`
-		)
+		const channelSocketId = await get(`wsinit/channelid?channelId=${post._id}`)
+		initChannelSocket(channelSocketId)
 		channelSocket?.addEventListener('open', (data) => {
 			console.log('channel socket connection open')
 			console.log(data)

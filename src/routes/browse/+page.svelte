@@ -8,40 +8,66 @@
 	import TableSection from '$lib/components/Browse/Sections/TableSection.svelte'
 	import type { PageData } from './$types'
 	import { current_user } from '$lib/stores/authStore'
+	import { get } from '$lib/api'
 
 	export let data: PageData
+	$: ({ user } = data)
 
-	let weeklyTitle = 'Weekly topics'
+	let mostActiveChannels: any = []
 	let weeklyChannels: any = []
-	if (!data.post.weeklyChannels.error) {
-		// NOTICE: weekNumber is missing here
-		// weeklyTitle = `Wk${data.post.weeklyChannels.weekly.weekNumber} ${data.post.weeklyChannels.weekly.topic}`
-		weeklyTitle = 'Weekly topics'
-		weeklyChannels = data.post.weeklyChannels.channels
-	} else {
-		weeklyChannels = data.post.weeklyChannels
-	}
+	let weeklyTitle: string = ''
+	let highestRankedUsers: any = []
+	let risingStarUsers: any = []
+	let myChannels: any = []
+	let favChannels: any = []
+	let tableChannels: any = []
+	let isLoading: boolean = false
 
 	onMount(async () => {
+		isLoading = true
 		if (!$techList.length) {
 			await getTechListJson()
 		}
+		mostActiveChannels = await get(`channels/most-active?skip=${0}&limit=${5}`)
+		weeklyChannels = await get(`channels/weekly?skip=${0}&limit=${10}`)
+		if (!weeklyChannels.error) {
+			weeklyTitle = `Wk${weeklyChannels.weekly.weekNumber} ${weeklyChannels.weekly.topic}`
+			weeklyChannels = weeklyChannels.channels
+		} else {
+			weeklyChannels = weeklyChannels
+		}
+
+		highestRankedUsers = await get(`users/highest-ranked?skip=${0}&limit=${10}`)
+		risingStarUsers = await get(`users/rising-stars?skip=${0}&limit=${10}`)
+
+		if (user) {
+			myChannels = await get(`channels/me/hosted?skip=${0}&limit=${10}`, {
+				userId: user.userId,
+				token: user.token
+			})
+			favChannels = await get(`channels/me/fav?skip=${0}&limit=${10}`, {
+				userId: user.userId,
+				token: user.token
+			})
+		}
+		tableChannels = await get(`channels?skip=${0}&limit=${50}`)
+		isLoading = false
 	})
 </script>
 
-<CarouselSection channels={data.post.tableChannels} />
+<CarouselSection bind:channels={mostActiveChannels} bind:isLoading />
 <SearchBar />
 
-<ChannelSection title={weeklyTitle} bind:channels={weeklyChannels} />
+<ChannelSection title={weeklyTitle} bind:channels={weeklyChannels} bind:isLoading />
 
-<UserSection title="Highest ranked" bind:users={data.post.highestRankedUsers} />
+<UserSection title="Highest ranked" bind:users={highestRankedUsers} bind:isLoading />
 
-<UserSection title="Rising stars" bind:users={data.post.risingStarUsers} />
+<UserSection title="Rising stars" bind:users={risingStarUsers} bind:isLoading />
 
 {#if current_user}
-	<ChannelSection title="My channels" bind:channels={data.post.myChannels} />
+	<ChannelSection title="My channels" bind:channels={myChannels} bind:isLoading />
 
-	<ChannelSection title="Fav channels" bind:channels={data.post.favChannels} />
+	<ChannelSection title="Fav channels" bind:channels={favChannels} bind:isLoading />
 {/if}
 
-<TableSection bind:channels={data.post.tableChannels} />
+<TableSection bind:channels={tableChannels} bind:isLoading />

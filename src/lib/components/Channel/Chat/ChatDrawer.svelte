@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ChatInput from '$lib/components/Chat/ChatInput.svelte'
-	import ChatMessage from '$lib/components/Chat/ChatMessage.svelte'
+	import ChatInput from '$lib/components/Channel/Chat/ChatInput.svelte'
+	import ChatMessage from '$lib/components/Channel/Chat/ChatMessage.svelte'
 
 	export let showDrawer: boolean,
 		channel: any = undefined,

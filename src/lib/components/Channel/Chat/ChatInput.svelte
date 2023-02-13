@@ -4,10 +4,6 @@
 	// import IconChatGif from '$lib/assets/icons/chat/IconChatGif.svelte'
 	// import IconChatCode from '$lib/assets/icons/chat/IconChatCode.svelte'
 	import IconChatSendMessage from '$lib/assets/icons/chat/IconChatSendMessage.svelte'
-
-	const sendMessage = async () => {
-		// await createChannel(newChannel)
-	}
 </script>
 
 <form class="rounded-lg bg-base-100 p-2 w-96">
