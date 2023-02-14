@@ -52,7 +52,6 @@
 	onMount(async () => {
 		const platformSocketId = await get(`wsinit/wsid`)
 		initPlatformSocket(platformSocketId)
-		console.log('platformSocketId', platformSocketId)
 		platformSocket?.addEventListener('open', (data) => {
 			console.log('socket connection open')
 			console.log(data)

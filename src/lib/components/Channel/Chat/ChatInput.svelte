@@ -4,9 +4,16 @@
 	// import IconChatGif from '$lib/assets/icons/chat/IconChatGif.svelte'
 	// import IconChatCode from '$lib/assets/icons/chat/IconChatCode.svelte'
 	import IconChatSendMessage from '$lib/assets/icons/chat/IconChatSendMessage.svelte'
+	import { enhance } from '$app/forms'
+	let form: HTMLFormElement
 </script>
 
-<form class="rounded-lg bg-base-100 p-2 w-96">
+<form
+	bind:this={form}
+	class="rounded-lg bg-base-200 p-2 w-96"
+	method="POST"
+	action="?/send-message"
+	use:enhance>
 	<!-- <button
 		type="button"
 		class="inline-flex justify-center p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
@@ -33,12 +40,17 @@
 	</button> -->
 	<div class="flex items-center py-2 rounded-lg">
 		<textarea
+			on:keydown={(e) => {
+				if (e.key === 'Enter') {
+					form.requestSubmit()
+					e.preventDefault()
+				}
+			}}
 			id="chat"
 			rows="1"
 			class="block mx-2 p-2.5 w-full text-sm textarea textarea-bordered textarea-secondary"
 			placeholder="Your message..." /><!--focus:h-32 -->
 		<button
-			type="submit"
 			class="inline-flex justify-center p-2 text-secondary rounded-full cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:text-white dark:hover:bg-gray-600">
 			<IconChatSendMessage />
 			<span class="sr-only">Send message</span>

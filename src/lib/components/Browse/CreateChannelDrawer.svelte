@@ -161,12 +161,12 @@
 								{/if}
 							</span>
 						</div>
-						<div class="flex flex-row mt-5 ">
+						<!-- <div class="flex flex-row mt-5 ">
 							<input
 								bind:checked={newChannel.isPrivate}
 								type="checkbox"
 								class="checkbox checkbox-primary mr-3" /> Private
-						</div>
+						</div> -->
 					</div>
 
 					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
