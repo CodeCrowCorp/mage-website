@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
+	import IconChatDrawer from '$lib/assets/icons/channel/IconChatDrawer.svelte'
 	import ChatDrawer from '$lib/components/Channel/Chat/ChatDrawer.svelte'
 	import type { PageData } from './$types'
 	import { onDestroy, onMount } from 'svelte'
@@ -10,8 +10,8 @@
 	export let data: PageData
 
 	$: chatHistory = []
-	$: ({ post } = data)
-	let showDrawer = false
+	$: ({ post, userId } = data)
+	let showDrawer = true
 
 	onMount(async () => {
 		const channelSocketId = await get(`wsinit/channelid?channelId=${post._id}`)
@@ -40,18 +40,17 @@
 	onDestroy(() => channelSocket?.close())
 </script>
 
-<div class="flex flex-col md:flex-row gap-4 py-5 pl-5">
-	<div class="form-control">
+<div class="flex flex-col md:flex-row gap-4 justify-end">
+	<div class="form-control p-5">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<label
-			for="create-channel-drawer"
-			class="btn w-[21rem] btn-primary gap-2 drawer-button"
-			on:click={() => (showDrawer = true)}>
-			<IconCreate />
-			Show Chat</label>
+			for="chat-drawer"
+			class="btn gap-2 drawer-button"
+			on:click={() => (showDrawer = !showDrawer)}>
+			<IconChatDrawer /></label>
 	</div>
 
 	{#if showDrawer}
-		<ChatDrawer bind:showDrawer bind:channel={post} bind:chatHistory />
+		<ChatDrawer bind:showDrawer bind:channel={post} bind:chatHistory bind:userId />
 	{/if}
 </div>
