@@ -4,16 +4,25 @@
 	// import IconChatGif from '$lib/assets/icons/chat/IconChatGif.svelte'
 	// import IconChatCode from '$lib/assets/icons/chat/IconChatCode.svelte'
 	import IconChatSendMessage from '$lib/assets/icons/chat/IconChatSendMessage.svelte'
-	import { enhance } from '$app/forms'
-	let form: HTMLFormElement
+	import { emitMessageToChannel } from '$lib/websocket'
+
+	export let channelId: string, userId: string, username: string
+
+	$: chatMessage = ''
+
+	function sendMessage() {
+		if (chatMessage === '') return
+		const completeMessage = {
+			body: chatMessage,
+			state: { timestamp: new Date().toISOString() },
+			user: { userId: userId || '', username: username || '' }
+		}
+		emitMessageToChannel({ channelId, message: JSON.stringify(completeMessage) })
+		chatMessage = ''
+	}
 </script>
 
-<form
-	bind:this={form}
-	class="rounded-lg bg-base-200 p-2 w-96"
-	method="POST"
-	action="?/send-message"
-	use:enhance>
+<form class="rounded-lg bg-base-200 p-2 w-96">
 	<!-- <button
 		type="button"
 		class="inline-flex justify-center p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
@@ -42,15 +51,16 @@
 		<textarea
 			on:keydown={(e) => {
 				if (e.key === 'Enter') {
-					form.requestSubmit()
+					sendMessage()
 					e.preventDefault()
 				}
 			}}
-			id="chat"
+			bind:value={chatMessage}
 			rows="1"
 			class="block mx-2 p-2.5 w-full text-sm textarea textarea-bordered textarea-secondary"
 			placeholder="Your message..." /><!--focus:h-32 -->
 		<button
+			on:click={() => sendMessage()}
 			class="inline-flex justify-center p-2 text-secondary rounded-full cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:text-white dark:hover:bg-gray-600">
 			<IconChatSendMessage />
 			<span class="sr-only">Send message</span>

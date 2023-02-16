@@ -4,33 +4,40 @@
 	import type { PageData } from './$types'
 	import { onDestroy, onMount } from 'svelte'
 	import { get } from '$lib/api'
-	import { channelSocket, initChannelSocket } from '$lib/websocket'
+	import {
+		emitHistoryToChannel,
+		initChannelSocket,
+		channelSocket,
+		emitChannelSubscribeByUser
+	} from '$lib/websocket'
 	import { channelConnection, channelMessage } from '$lib/stores/websocketStore'
-
+	import { isJsonString } from '$lib/utils'
 	export let data: PageData
 
 	$: chatHistory = []
-	$: ({ post, userId } = data)
+	$: ({ post, userId, username } = data)
 	let showDrawer = true
 
 	onMount(async () => {
 		const channelSocketId = await get(`wsinit/channelid?channelId=${post._id}`)
 		initChannelSocket(channelSocketId)
-		channelSocket?.addEventListener('open', (data) => {
+		channelSocket.addEventListener('open', (data) => {
 			console.log('channel socket connection open')
 			console.log(data)
 			channelConnection.set('open')
+			emitChannelSubscribeByUser({ channelId: post._id, userId })
+			emitHistoryToChannel({ channelId: post._id, skip: 100 })
 		})
-		channelSocket?.addEventListener('message', (data) => {
+		channelSocket.addEventListener('message', (data) => {
 			console.log('listening to messages')
-			console.log(data)
-			channelMessage.set(data)
+			console.log(data.data)
+			if (isJsonString(data.data)) channelMessage.set(data.data)
 		})
-		channelSocket?.addEventListener('error', (data) => {
+		channelSocket.addEventListener('error', (data) => {
 			console.log('socket connection error')
 			console.log(data)
 		})
-		channelSocket?.addEventListener('close', (data) => {
+		channelSocket.addEventListener('close', (data) => {
 			console.log('socket connection close')
 			console.log(data)
 			channelConnection.set('close')
@@ -51,6 +58,6 @@
 	</div>
 
 	{#if showDrawer}
-		<ChatDrawer bind:showDrawer bind:channel={post} bind:chatHistory bind:userId />
+		<ChatDrawer bind:showDrawer bind:channel={post} bind:chatHistory bind:userId bind:username />
 	{/if}
 </div>

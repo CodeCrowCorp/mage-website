@@ -2,29 +2,26 @@
 	import ChatInput from '$lib/components/Channel/Chat/ChatInput.svelte'
 	import ChatMessage from '$lib/components/Channel/Chat/ChatMessage.svelte'
 	import { channelMessage } from '$lib/stores/websocketStore'
+	import { isJsonString } from '$lib/utils'
 
 	export let showDrawer: boolean,
 		channel: any = undefined,
 		chatHistory: any = [],
-		userId: string = ''
+		userId: string = '',
+		username: string = ''
 
 	$: chatHistory = chatHistory
 
 	channelMessage.subscribe((value) => {
-		if (!value) return
-		try {
-			const parsedData = JSON.parse(value.data)
-			console.log('parsedData', parsedData)
-			if (parsedData.eventName === `channel-message-${channel._id}`) {
-				var msg = parsedData.data
-				if (msg.user._id === channel.user) msg.role = 'Host'
-				else if (channel.mods?.includes(msg.user._id)) msg.role = 'Mod'
-				else if (msg.user._id === userId) msg.role = 'You'
-				else msg.role = 'Rando'
-				chatHistory.push(parsedData.data)
-			}
-		} catch (err) {
-			console.log(err)
+		if (!value || !isJsonString(value)) return
+		const parsedData = JSON.parse(value)
+		if (parsedData.eventName === `channel-message-${channel._id}`) {
+			var msg = parsedData
+			if (msg.userData.userId === channel.user) msg.role = 'Host'
+			else if (channel.mods?.includes(msg.userData._id)) msg.role = 'Mod'
+			else if (msg.userData.userId === userId) msg.role = 'You'
+			else msg.role = 'Rando'
+			chatHistory.push(msg)
 		}
 	})
 </script>
@@ -43,7 +40,7 @@
 				{/each}
 			</div>
 			<div class="flex flex-row mt-auto p-3 w-full">
-				<ChatInput />
+				<ChatInput bind:channelId={channel._id} bind:userId bind:username />
 			</div>
 		</div>
 	</div>
