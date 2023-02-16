@@ -27,60 +27,6 @@
 			}
 			break
 	}
-
-	function emitReactToMessage({
-		channelId,
-		message,
-		user,
-		reaction
-	}: {
-		channelId: string
-		message: any
-		user: any
-		reaction: string
-	}) {
-		channelSocket?.send(
-			JSON.stringify({
-				eventName: `react-to-message`,
-				channel: channelId,
-				message,
-				user,
-				reaction
-			})
-		)
-	}
-
-	function emitChannelSubscribeByUser({
-		channelId,
-		userId
-	}: {
-		channelId: string
-		userId: string
-	}) {
-		channelSocket?.send(
-			JSON.stringify({
-				eventName: `channel-subscribe`,
-				channel: channelId,
-				userId: userId
-			})
-		)
-	}
-
-	function emitDeleteMessageToChannel({
-		channelId,
-		message
-	}: {
-		channelId: string
-		message: string
-	}) {
-		channelSocket?.send(
-			JSON.stringify({
-				eventName: `delete-channel-message`,
-				channel: channelId,
-				message
-			})
-		)
-	}
 </script>
 
 <!-- <ChatProfileCard /> -->

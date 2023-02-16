@@ -15,9 +15,9 @@
 	import { page } from '$app/stores'
 	import { onMount } from 'svelte'
 	import { get } from '$lib/api'
-	import { env } from '$env/dynamic/public'
-	import { platformSocket, initPlatformSocket } from '$lib/websocket'
+	import { initPlatformSocket, platformSocket } from '$lib/websocket'
 	import { platformConnection, platformMessage } from '$lib/stores/websocketStore'
+	import { isJsonString } from '$lib/utils'
 
 	NProgress.configure({
 		minimum: 0.75,
@@ -52,21 +52,21 @@
 	onMount(async () => {
 		const platformSocketId = await get(`wsinit/wsid`)
 		initPlatformSocket(platformSocketId)
-		platformSocket?.addEventListener('open', (data) => {
+		platformSocket.addEventListener('open', (data) => {
 			console.log('socket connection open')
 			console.log(data)
 			platformConnection.set('open')
 		})
-		platformSocket?.addEventListener('message', (data) => {
+		platformSocket.addEventListener('message', (data) => {
 			console.log('listening to messages')
-			console.log(data)
-			platformMessage.set(data)
+			console.log(data.data)
+			if (isJsonString(data.data)) platformMessage.set(data.data)
 		})
-		platformSocket?.addEventListener('error', (data) => {
+		platformSocket.addEventListener('error', (data) => {
 			console.log('socket connection error')
 			console.log(data)
 		})
-		platformSocket?.addEventListener('close', (data) => {
+		platformSocket.addEventListener('close', (data) => {
 			console.log('socket connection close')
 			console.log(data)
 			platformConnection.set('close')

@@ -14,13 +14,13 @@ function initChannelSocket(websocketId: string) {
 }
 
 function emitUserConnection({ userId, isOnline }: { userId: string; isOnline: boolean }) {
-	platformSocket?.send(
+	platformSocket.send(
 		JSON.stringify({ eventName: isOnline ? 'user-connect' : 'user-disconnect', userId: userId })
 	)
 }
 
 function emitChannelAccessRequest({ channelId, userId }: { channelId: string; userId: string }) {
-	platformSocket?.send(
+	platformSocket.send(
 		JSON.stringify({ eventName: `channel-access-request`, channel: channelId, user: userId })
 	)
 }
@@ -34,7 +34,7 @@ function emitChannelAccessResponse({
 	userId: string
 	isGrantedAccess: boolean
 }) {
-	platformSocket?.send(
+	platformSocket.send(
 		JSON.stringify({
 			eventName: `channel-access-response`,
 			channel: channelId,
@@ -55,11 +55,11 @@ function emitChatMessage({
 	source2: string
 	message: any
 }) {
-	platformSocket?.send(JSON.stringify({ eventName: `message-sent`, source1, source2, message }))
+	platformSocket.send(JSON.stringify({ eventName: `message-sent`, source1, source2, message }))
 }
 
 function emitChatTypingByUser({ userId }: { userId: string }) {
-	platformSocket?.send(
+	platformSocket.send(
 		JSON.stringify({
 			eventName: `chat-typing`,
 			user: userId,
@@ -71,15 +71,15 @@ function emitChatTypingByUser({ userId }: { userId: string }) {
 /************ Channel chat ****************/
 
 function emitRemovedUser({ channelId, userId }: { channelId: string; userId: string }) {
-	channelSocket?.send(JSON.stringify({ eventName: `user-removed`, channelId, userId }))
+	channelSocket.send(JSON.stringify({ eventName: `user-removed`, channelId, userId }))
 }
 
 function emitChannelUpdate({ channelId }: { channelId: string }) {
-	channelSocket?.send(JSON.stringify({ eventName: `channel-update`, channelId }))
+	channelSocket.send(JSON.stringify({ eventName: `channel-update`, channelId }))
 }
 
 function emitChannelSubscribeByUser({ channelId, userId }: { channelId: string; userId: string }) {
-	channelSocket?.send(
+	channelSocket.send(
 		JSON.stringify({
 			eventName: `channel-subscribe`,
 			channel: channelId,
@@ -89,7 +89,7 @@ function emitChannelSubscribeByUser({ channelId, userId }: { channelId: string; 
 }
 
 function emitMessageToChannel({ channelId, message }: { channelId: string; message: any }) {
-	channelSocket?.send(JSON.stringify({ eventName: `channel-message`, channel: channelId, message }))
+	channelSocket.send(JSON.stringify({ eventName: `channel-message`, channel: channelId, message }))
 }
 
 function emitDeleteMessageToChannel({
@@ -99,7 +99,7 @@ function emitDeleteMessageToChannel({
 	channelId: string
 	message: string
 }) {
-	channelSocket?.send(
+	channelSocket.send(
 		JSON.stringify({
 			eventName: `delete-channel-message`,
 			channel: channelId,
@@ -109,13 +109,13 @@ function emitDeleteMessageToChannel({
 }
 
 function emitDeleteAllMessagesToChannel({ channelId }: { channelId: string }) {
-	channelSocket?.send(
+	channelSocket.send(
 		JSON.stringify({ eventName: `delete-all-channel-messages`, channel: channelId })
 	)
 }
 
 function emitHistoryToChannel({ channelId, skip }: { channelId: string; skip: number }) {
-	channelSocket?.send(
+	channelSocket.send(
 		JSON.stringify({
 			eventName: `channel-message-history`,
 			channel: channelId,
@@ -131,7 +131,7 @@ function emitChannelChatTypingByUser({
 	channelId: string
 	typingUser: string
 }) {
-	channelSocket?.send(
+	channelSocket.send(
 		JSON.stringify({
 			eventName: `channel-chat-typing`,
 			channel: channelId,
@@ -151,7 +151,7 @@ function emitReactToMessage({
 	user: any
 	reaction: string
 }) {
-	channelSocket?.send(
+	channelSocket.send(
 		JSON.stringify({
 			eventName: `react-to-message`,
 			channel: channelId,
@@ -173,7 +173,7 @@ function emitRoomMemberUpdate({
 	userData: any
 	isNewUser: boolean
 }) {
-	channelSocket?.send(
+	channelSocket.send(
 		JSON.stringify({
 			eventName: 'channel-streaming-room-member-update',
 			channel: channelId,
@@ -192,7 +192,7 @@ function emitUserActions({
 	userData: any
 	message: string
 }) {
-	channelSocket?.send(
+	channelSocket.send(
 		JSON.stringify({
 			eventName: `channel-streaming-user-actions`,
 			channel: channelId,

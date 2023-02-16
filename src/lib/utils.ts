@@ -15,3 +15,12 @@ export const colorFromLevel = (level: number): string => {
 	const hue = (360 * (level * 0.6180339887498949)) % 360
 	return `hsl(${hue}, 100%, 50%)`
 }
+
+export const isJsonString = (str: string): boolean => {
+	try {
+		JSON.parse(str)
+	} catch (err) {
+		return false
+	}
+	return true
+}

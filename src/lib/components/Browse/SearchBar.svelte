@@ -7,7 +7,7 @@
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 
 	export let searchPage = false
-	export let search_query: string | null = ''
+	export let searchQuery: string | null = ''
 
 	let showDrawer = false
 </script>
@@ -17,8 +17,8 @@
 		<div class="form-control">
 			<div class="input-group relative">
 				<input
-					name="search_query"
-					bind:value={search_query}
+					name="searchQuery"
+					bind:value={searchQuery}
 					type="search"
 					placeholder="Search channels"
 					class="input input-bordered input-primary w-96" />
