@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { getTechListJson, techList } from '$lib/stores/channelStore'
-	import CarouselSection from '$lib/components/Browse/Sections/CarouselSection.svelte'
-	import ChannelSection from '$lib/components/Browse/Sections/ChannelSection.svelte'
+	import SectionCarousel from '$lib/components/Browse/Sections/SectionCarousel.svelte'
+	import SectionChannel from '$lib/components/Browse/Sections/SectionChannel.svelte'
 	import SearchBar from '$lib/components/Browse/SearchBar.svelte'
-	import UserSection from '$lib/components/Browse/Sections/UserSection.svelte'
-	import TableSection from '$lib/components/Browse/Sections/TableSection.svelte'
+	import SectionUser from '$lib/components/Browse/Sections/SectionUser.svelte'
+	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	import type { PageData } from './$types'
 	import { current_user } from '$lib/stores/authStore'
 	import { get } from '$lib/api'
@@ -55,19 +55,35 @@
 	})
 </script>
 
-<CarouselSection bind:channels={mostActiveChannels} bind:isLoading />
+<SectionCarousel bind:channels={mostActiveChannels} bind:isLoading />
 <SearchBar />
 
-<ChannelSection title={weeklyTitle} bind:channels={weeklyChannels} bind:isLoading />
+<SectionChannel
+	sectionId={'weekly'}
+	title={weeklyTitle}
+	bind:channels={weeklyChannels}
+	bind:isLoading />
 
-<UserSection title="Highest ranked" bind:users={highestRankedUsers} bind:isLoading />
+<SectionUser
+	sectionId={'highest-ranked'}
+	title="Highest ranked"
+	bind:users={highestRankedUsers}
+	bind:isLoading />
 
-<UserSection title="Rising stars" bind:users={risingStarUsers} bind:isLoading />
+<SectionUser
+	sectionId={'rising-stars'}
+	title="Rising stars"
+	bind:users={risingStarUsers}
+	bind:isLoading />
 
 {#if current_user}
-	<ChannelSection title="My channels" bind:channels={myChannels} bind:isLoading />
+	<SectionChannel sectionId={'my'} title="My channels" bind:channels={myChannels} bind:isLoading />
 
-	<ChannelSection title="Fav channels" bind:channels={favChannels} bind:isLoading />
+	<SectionChannel
+		sectionId={'fav'}
+		title="Fav channels"
+		bind:channels={favChannels}
+		bind:isLoading />
 {/if}
 
-<TableSection bind:channels={tableChannels} bind:isLoading />
+<SectionTable bind:channels={tableChannels} bind:isLoading />

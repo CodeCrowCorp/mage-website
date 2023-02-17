@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ChatInput from '$lib/components/Channel/Chat/ChatInput.svelte'
-	import ChatMessage from '$lib/components/Channel/Chat/ChatMessage.svelte'
+	import Message from '$lib/components/Channel/Chat/Message.svelte'
 	import { channelMessage } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
 
@@ -9,8 +9,6 @@
 		chatHistory: any = [],
 		userId: string = '',
 		username: string = ''
-
-	$: chatHistory = chatHistory
 
 	channelMessage.subscribe((value) => {
 		if (!value || !isJsonString(value)) return
@@ -36,7 +34,7 @@
 			</p>
 			<div class="flex flex-col-reverse p-3 grow h-80 overflow-y-auto">
 				{#each chatHistory as sender}
-					<ChatMessage bind:sender />
+					<Message bind:sender />
 				{/each}
 			</div>
 			<div class="flex flex-row mt-auto p-3 w-full">

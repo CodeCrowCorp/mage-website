@@ -2,7 +2,7 @@
 	import IconDrawerLeft from '$lib/assets/icons/drawer/IconDrawerLeft.svelte'
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
 	import { goto } from '$app/navigation'
-	import LoadingCarouselItem from '$lib/components/Browse/Sections/LoadingCarouselItem.svelte'
+	import LoadingItemCarousel from '$lib/components/Browse/Sections/LoadingItemCarousel.svelte'
 	import { onMount } from 'svelte'
 	import Swiper, { Navigation } from 'swiper'
 
@@ -71,7 +71,7 @@
 	{:else}
 		<div role="status" class="flex flex-row gap-1 animate-pulse">
 			{#each Array(5) as _, index (index)}
-				<LoadingCarouselItem />
+				<LoadingItemCarousel />
 			{/each}
 			<span class="sr-only">Loading...</span>
 		</div>

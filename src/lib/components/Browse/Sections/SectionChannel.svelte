@@ -3,11 +3,12 @@
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
 	import IconPlay from '$lib/assets/icons/IconPlay.svelte'
 	import { goto } from '$app/navigation'
-	import LoadingChannelItem from '$lib/components/Browse/Sections/LoadingChannelItem.svelte'
+	import LoadingItemChannel from '$lib/components/Browse/Sections/LoadingItemChannel.svelte'
 
 	export let title: string = '',
 		channels: any = undefined,
-		isLoading: boolean = false
+		isLoading: boolean = false,
+		sectionId: string = ''
 
 	let ref: any
 	$: hidden = ((channels != undefined && channels.length == 0) || channels.error) && !isLoading
@@ -34,7 +35,7 @@
 <div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide" class:hidden>
 	{#if channels && channels.length}
 		<div class="font-semibold m-3">
-			<a class="link link-secondary text-lg">{title}</a>
+			<a class="link link-secondary text-lg" href="/browse/{sectionId}">{title}</a>
 		</div>
 		<div class="flex flex-row">
 			<div class="relative flex items-center">
@@ -100,7 +101,7 @@
 		</div>
 		<div role="status" class="flex flex-row gap-1 animate-pulse ">
 			{#each Array(6) as _, index (index)}
-				<LoadingChannelItem />
+				<LoadingItemChannel />
 			{/each}
 			<span class="sr-only">Loading...</span>
 		</div>

@@ -2,7 +2,7 @@
 	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
 	import IconCross from '$lib/assets/icons/IconCross.svelte'
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
-	import CreateChannelDrawer from './CreateChannelDrawer.svelte'
+	import DrawerCreateChannel from './DrawerCreateChannel.svelte'
 	import { current_user } from '$lib/stores/authStore'
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 
@@ -48,6 +48,6 @@
 	{/if}
 
 	{#if showDrawer && !searchPage}
-		<CreateChannelDrawer bind:showDrawer />
+		<DrawerCreateChannel bind:showDrawer />
 	{/if}
 </div>

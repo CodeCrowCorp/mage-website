@@ -2,7 +2,7 @@
 	import { get } from '$lib/api'
 	import { onMount } from 'svelte'
 	import SearchBar from '$lib/components/Browse/SearchBar.svelte'
-	import SearchSection from '$lib/components/Search/SearchSection.svelte'
+	import ListSearch from '$lib/components/Search/ListSearch.svelte'
 	import { page } from '$app/stores'
 
 	let loadingMoreChannels = false
@@ -26,4 +26,8 @@
 
 <SearchBar searchPage={true} searchQuery={query} />
 
-<SearchSection channels={searchList} {loadingMoreChannels} on:loadMore={loadMore} />
+<ListSearch
+	channels={searchList}
+	{loadingMoreChannels}
+	on:loadMore={loadMore}
+	isSearchPage={true} />

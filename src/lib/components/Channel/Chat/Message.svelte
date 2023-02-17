@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ChatProfileCard from '$lib/components/Channel/Chat/ChatProfileCard.svelte'
-	export let sender: any, channelSocket: WebSocket
+	import ProfileCard from '$lib/components/Channel/Chat/ProfileCard.svelte'
+	export let sender: any
 	let coloredRoles: { tagColor?: any; textColor?: string }
 
 	switch (sender.role) {
@@ -29,7 +29,7 @@
 	}
 </script>
 
-<!-- <ChatProfileCard /> -->
+<!-- <ProfileCard /> -->
 
 <div class="menu">
 	<ul>
@@ -39,7 +39,7 @@
 				<div class="p-1 border border-transparent rounded-lg flex flex-row-reverse gap-2 w-96">
 					<span>
 						<span>{sender.message}</span>
-						<span class="font-medium">@{sender.username}</span>
+						<span class="font-medium">@{sender.userData.username}</span>
 						<span class="{coloredRoles.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
 							>{sender.role}</span>
 					</span>
@@ -54,7 +54,7 @@
 						{/if}
 						<span
 							data-popover-target="popover-user-profile"
-							class="{coloredRoles.textColor} font-medium">@{sender.username}</span>
+							class="{coloredRoles.textColor} font-medium">@{sender.userData.username}</span>
 						<span>{sender.message}</span>
 					</span>
 				</div>

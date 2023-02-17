@@ -4,7 +4,7 @@
 	import VirtualList from '@sveltejs/svelte-virtual-list'
 	import { techList } from '$lib/stores/channelStore'
 	import { goto } from '$app/navigation'
-	import LoadingTableItem from '$lib/components/Browse/Sections/LoadingTableItem.svelte'
+	import LoadingItemTable from '$lib/components/Browse/Sections/LoadingItemTable.svelte'
 
 	export let channels: any = [],
 		isLoading: boolean = false
@@ -83,7 +83,7 @@
 			{:else}
 				<!-- {#each Array(5) as _, index (index)} -->
 				<tr>
-					<LoadingTableItem />
+					<LoadingItemTable />
 				</tr>
 				<!-- {/each} -->
 				<span class="sr-only">Loading...</span>
