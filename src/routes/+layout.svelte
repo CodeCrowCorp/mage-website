@@ -10,8 +10,8 @@
 	// NProgress Loading bar
 	import '$lib/assets/styles/nprogress.css'
 	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
-	import MainDrawer from '$lib/components/MainDrawer/MainDrawer.svelte'
-	import SmallDrawer from '$lib/components/MainDrawer/SmallDrawer.svelte'
+	import DrawerMain from '$lib/components/MainDrawer/DrawerMain.svelte'
+	import DrawerSmall from '$lib/components/MainDrawer/DrawerSmall.svelte'
 	import { page } from '$app/stores'
 	import { onMount } from 'svelte'
 	import { get } from '$lib/api'
@@ -105,9 +105,9 @@
 	<div class="drawer-side">
 		<label for="my-drawer-2" class="drawer-overlay" />
 		{#if !$page.url.pathname.includes('/channel')}
-			<MainDrawer bind:nav_drawer />
+			<DrawerMain bind:nav_drawer />
 		{:else}
-			<SmallDrawer bind:nav_drawer />
+			<DrawerSmall bind:nav_drawer />
 		{/if}
 	</div>
 </div>

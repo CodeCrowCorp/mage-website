@@ -1,6 +1,6 @@
 <script lang="ts">
 	import IconChatDrawer from '$lib/assets/icons/channel/IconChatDrawer.svelte'
-	import ChatDrawer from '$lib/components/Channel/Chat/ChatDrawer.svelte'
+	import DrawerChat from '$lib/components/Channel/Chat/DrawerChat.svelte'
 	import type { PageData } from './$types'
 	import { onDestroy, onMount } from 'svelte'
 	import { get } from '$lib/api'
@@ -58,6 +58,6 @@
 	</div>
 
 	{#if showDrawer}
-		<ChatDrawer bind:showDrawer bind:channel={post} bind:chatHistory bind:userId bind:username />
+		<DrawerChat bind:showDrawer bind:channel={post} bind:chatHistory bind:userId bind:username />
 	{/if}
 </div>

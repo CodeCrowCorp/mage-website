@@ -3,7 +3,7 @@
 	import { tags, getTags } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
-	import AddCategoryDrawer from './AddCategoryDrawer.svelte'
+	import DrawerAddCategory from './DrawerAddCategory.svelte'
 	import { goto } from '$app/navigation'
 	import { post, put } from '$lib/api'
 
@@ -72,7 +72,7 @@
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
 		{#if showAddCategory}
-			<AddCategoryDrawer
+			<DrawerAddCategory
 				bind:showAddCategory
 				bind:categoryIcons
 				bind:categories={newChannel.category} />
