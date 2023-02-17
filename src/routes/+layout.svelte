@@ -18,6 +18,8 @@
 	import { initPlatformSocket, platformSocket } from '$lib/websocket'
 	import { platformConnection, platformMessage } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
+	import IconMageText from '$lib/assets/icons/IconMageText.svg'
+	import IconMageTextDark from '$lib/assets/icons/IconMageTextDark.svg'
 
 	NProgress.configure({
 		minimum: 0.75,
@@ -83,11 +85,19 @@
 </svelte:head>
 
 <div class="drawer drawer-mobile">
-	<input id="my-drawer-2" bind:this={nav_drawer} type="checkbox" class="drawer-toggle" />
+	<input id="main-drawer" bind:this={nav_drawer} type="checkbox" class="drawer-toggle" />
 	<div class="drawer-content bg-base-200">
 		<!-- Page content here -->
-		<label for="my-drawer-2" class="btn btn-ghost normal-case text-xl drawer-button lg:hidden"
-			>Mage</label>
+		<div class="menu w-fit">
+			<ul>
+				<li>
+					<label for="main-drawer" class="lg:hidden rounded-lg">
+						<img class="w-20 mage-text" src={IconMageText} alt="" />
+						<img class="w-20 mage-text-dark" src={IconMageTextDark} alt="" />
+					</label>
+				</li>
+			</ul>
+		</div>
 
 		{#if data && data.isBanned}
 			<div class="alert alert-error shadow-lg">
@@ -103,7 +113,7 @@
 		<LoginPrompt />
 	</div>
 	<div class="drawer-side">
-		<label for="my-drawer-2" class="drawer-overlay" />
+		<label for="main-drawer" class="drawer-overlay" />
 		{#if !$page.url.pathname.includes('/channel')}
 			<DrawerMain bind:nav_drawer />
 		{:else}
