@@ -62,7 +62,10 @@
 							<div class="flex flex-wrap gap-2 my-3">
 								{#if channel.tags && channel.tags.length}
 									{#each channel.tags as tag}
-										<div><span class="badge badge-primary badge-md">{tag}</span></div>
+										<div>
+											<span class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold"
+												>{tag}</span>
+										</div>
 									{/each}
 								{/if}
 							</div>

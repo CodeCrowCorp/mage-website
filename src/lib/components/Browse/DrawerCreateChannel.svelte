@@ -127,7 +127,7 @@
 								{#each $tags as tag}
 									<!-- svelte-ignore a11y-click-events-have-key-events -->
 									<span
-										class="badge badge-primary mx-1 cursor-pointer"
+										class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold mx-1 cursor-pointer"
 										on:click={() => addTag(tag.name)}>{tag.name}</span>
 								{/each}
 							{:else}
