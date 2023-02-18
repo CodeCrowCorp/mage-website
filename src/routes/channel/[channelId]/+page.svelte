@@ -12,6 +12,7 @@
 	} from '$lib/websocket'
 	import { channelConnection, channelMessage } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
+    import VideoGrid from '$lib/components/Channel/VideoGrid.svelte'
 	export let data: PageData
 
 	$: chatHistory = []
@@ -47,7 +48,10 @@
 	onDestroy(() => channelSocket?.close())
 </script>
 
-<div class="flex flex-col md:flex-row gap-4 justify-end">
+<div class="flex flex-auto gap-4 justify-end">
+	<div class="flex-auto">
+    	<VideoGrid/>				
+	</div>
 	<div class="form-control p-5">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<label

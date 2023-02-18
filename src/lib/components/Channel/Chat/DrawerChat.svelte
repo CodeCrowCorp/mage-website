@@ -3,6 +3,7 @@
 	import Message from '$lib/components/Channel/Chat/Message.svelte'
 	import { channelMessage } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
+	import CollapseViewChannel from '$lib/components/Channel/Chat/CollapseViewChannel.svelte'
 
 	export let showDrawer: boolean,
 		channel: any = undefined,
@@ -26,13 +27,11 @@
 
 <div class="drawer drawer-end w-fit z-20 top-0 right-0">
 	<input id="chat-drawer" type="checkbox" class="drawer-toggle" />
-	<div class="drawer-side justify-end">
+	<div class="drawer-side justify-end m-5 rounded-lg">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div class="bg-base-100 flex flex-col ">
-			<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
-				{channel.title || 'Chat'}
-			</p>
-			<div class="flex flex-col-reverse p-3 grow h-80 overflow-y-auto">
+			<CollapseViewChannel bind:channel/>
+			<div class="flex flex-col-reverse p-3 grow overflow-y-auto">
 				{#each chatHistory as sender}
 					<Message bind:sender />
 				{/each}
