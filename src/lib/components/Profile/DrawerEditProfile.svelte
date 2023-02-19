@@ -78,7 +78,7 @@
 				<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
 					<button type="button" class="btn btn-default grow" on:click={() => (showDrawer = false)}
 						>Cancel</button>
-					<button type="submit" class="btn btn-primary grow">Add</button>
+					<button type="submit" class="btn btn-primary grow">Save</button>
 				</div>
 			</div>
 		</form>
