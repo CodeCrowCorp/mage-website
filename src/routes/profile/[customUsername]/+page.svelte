@@ -3,20 +3,18 @@
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	import ListSubscribe from '$lib/components/Profile/ListSubscribe.svelte'
+	// import type { PageData } from './$types' // THIS ONE making issue
 	import { current_user } from '$lib/stores/authStore'
+	import { get } from '$lib/api'
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
-	import { getUserByUsername } from '$lib/stores/userStore'
-	import type { PageData } from './$types'
-	import { get } from '$lib/api'
 
-	export let data: PageData
+	export let data
+	$: ({ user } = data)
 
 	let tabs = ['Stats', 'Channels', 'Subscribers']
 	let activeTab = 0
-	let profileData: any = []
-
-	$: ({ user } = data)
+	let profileData = null
 
 	onMount(async () => {
 		if (user) {
@@ -24,10 +22,8 @@
 				userId: user.userId,
 				token: user.token
 			})
+			console.log(profileData)
 		}
-		// data = await getUserByUsername({ username: $page.params.customUsername }
-
-		console.log(profileData)
 	})
 </script>
 
