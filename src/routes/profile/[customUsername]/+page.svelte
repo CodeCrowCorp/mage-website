@@ -10,15 +10,17 @@
 	import { page } from '$app/stores'
 
 	export let data
-	$: ({ user } = data)
 
 	let tabs = ['Stats', 'Channels', 'Subscribers']
 	let activeTab = 0
 	let profileData = null
 
+	$: ({ user } = data)
+
 	onMount(async () => {
 		if (user) {
-			profileData = await get(`users/search/username?username=${$page.params.customUsername}`, {
+			// profileData = await get(`users/search/username?username=${$page.params.customUsername}`, {
+			profileData = await get(`users/search/username?username=gagan_suie`, {
 				userId: user.userId,
 				token: user.token
 			})
@@ -152,20 +154,21 @@
 						<div class="py-6 px-3 mt-32 sm:mt-0 flex justify-end gap-4">
 							<button class="btn btn-secondary">Subscribe</button>
 							<button class="btn btn-primary" disabled>Sponsor</button>
-
-							<div class="dropdown dropdown-end">
-								<button class="btn btn-circle" tabindex="0">
-									<IconMore />
-								</button>
-								<ul
-									tabindex="0"
-									class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
-									<li><a href="#my-modal-2">Edit</a></li>
-									<!-- <li><a>Message</a></li>
+							{#if $current_user.username !== $page.params.customUsername}
+								<div class="dropdown dropdown-end">
+									<button class="btn btn-circle" tabindex="0">
+										<IconMore />
+									</button>
+									<ul
+										tabindex="-1"
+										class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+										<li><a href="#my-modal-2">Edit</a></li>
+										<!-- <li><a>Message</a></li>
 									<li><a>Block</a></li>
 									<li><a>Report</a></li> -->
-								</ul>
-							</div>
+									</ul>
+								</div>
+							{/if}
 						</div>
 					</div>
 					<div class="w-full lg:w-4/12 px-4 lg:order-1">
