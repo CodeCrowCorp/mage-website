@@ -1,12 +1,29 @@
 <script lang="ts">
 	export let showDrawer: boolean
+
+	let refToggle: any
+	const toggleDrawer = () => {
+		if (refToggle) {
+			refToggle.checked = false
+		}
+		setTimeout(() => {
+			showDrawer = false
+		}, 200)
+	}
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
-	<input id="edit-profile-drawer" type="checkbox" class="drawer-toggle" />
+	<input id="edit-profile-drawer" bind:this={refToggle} type="checkbox" class="drawer-toggle" />
 	<div class="drawer-side">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
+		<label
+			for="edit-profile-drawer"
+			class="drawer-overlay"
+			on:click={() => {
+				setTimeout(() => {
+					showDrawer = false
+				}, 200)
+			}} />
 
 		<form action="#">
 			<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col">
@@ -76,7 +93,7 @@
 					</div>
 				</div>
 				<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
-					<button type="button" class="btn btn-default grow" on:click={() => (showDrawer = false)}
+					<button type="button" class="btn btn-default grow" on:click={() => toggleDrawer()}
 						>Cancel</button>
 					<button type="submit" class="btn btn-primary grow">Save</button>
 				</div>
