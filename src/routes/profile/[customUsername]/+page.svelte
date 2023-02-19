@@ -3,9 +3,32 @@
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	import ListSubscribe from '$lib/components/Profile/ListSubscribe.svelte'
+	import { current_user } from '$lib/stores/authStore'
+	import { onMount } from 'svelte'
+	import { page } from '$app/stores'
+	import { getUserByUsername } from '$lib/stores/userStore'
+	import type { PageData } from './$types'
+	import { get } from '$lib/api'
+
+	export let data: PageData
 
 	let tabs = ['Stats', 'Channels', 'Subscribers']
 	let activeTab = 0
+	let profileData: any = []
+
+	$: ({ user } = data)
+
+	onMount(async () => {
+		if (user) {
+			profileData = await get(`users/search/username?username=${$page.params.customUsername}`, {
+				userId: user.userId,
+				token: user.token
+			})
+		}
+		// data = await getUserByUsername({ username: $page.params.customUsername }
+
+		console.log(profileData)
+	})
 </script>
 
 <div class="modal" id="my-modal-2">
