@@ -8,12 +8,14 @@
 	import { get } from '$lib/api'
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
+	import DrawerEditProfile from '$lib/components/Profile/DrawerEditProfile.svelte'
 
 	export let data
 
 	let tabs = ['Stats', 'Channels', 'Subscribers']
 	let activeTab = 0
 	let profileData = null
+	let showDrawer = false
 
 	$: ({ user } = data)
 
@@ -29,7 +31,7 @@
 	})
 </script>
 
-<div class="modal" id="my-modal-2">
+<!-- <div class="modal" id="my-modal-2">
 	<div class="modal-box">
 		<a href="#" class="btn btn-sm btn-circle absolute right-2 top-2">✕</a>
 
@@ -109,7 +111,7 @@
 			<a href="#" class="btn btn-primary" type="submit">Confirm</a>
 		</div>
 	</div>
-</div>
+</div> -->
 
 <div class="relative block h-[31rem]">
 	<div
@@ -162,7 +164,10 @@
 									<ul
 										tabindex="-1"
 										class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
-										<li><a href="#my-modal-2">Edit</a></li>
+										<li>
+											<label for="edit-profile-drawer" on:click={() => (showDrawer = true)}>
+												Edit</label>
+										</li>
 										<!-- <li><a>Message</a></li>
 									<li><a>Block</a></li>
 									<li><a>Report</a></li> -->
@@ -284,3 +289,7 @@
 		</div>
 	</div>
 </div>
+
+{#if showDrawer}
+	<DrawerEditProfile bind:showDrawer />
+{/if}
