@@ -21,8 +21,8 @@
 
 	onMount(async () => {
 		if (user) {
-			// profileData = await get(`users/search/username?username=${$page.params.customUsername}`, {
-			profileData = await get(`users/search/username?username=gagan_suie`, {
+			profileData = await get(`users/search/username?${$page.params.customUsername}`, {
+				// profileData = await get(`users/search/username?username=gagan_suie`, {
 				userId: user.userId,
 				token: user.token
 			})
@@ -30,88 +30,6 @@
 		}
 	})
 </script>
-
-<!-- <div class="modal" id="my-modal-2">
-	<div class="modal-box">
-		<a href="#" class="btn btn-sm btn-circle absolute right-2 top-2">✕</a>
-
-		<h3 class="font-bold text-lg">Edit Profile</h3>
-		<section>
-			<div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
-				<form action="#">
-					<div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
-						<div class="sm:col-span-2">
-							<label for="name" class="block mb-2 text-sm font-medium ">Display Name</label>
-							<input
-								type="text"
-								name="name"
-								id="name"
-								class="input input-bordered input-info"
-								placeholder="Super Mario" />
-						</div>
-						<div class="w-full">
-							<label for="brand" class="block mb-2 text-sm font-medium ">Tag Name</label>
-							<input
-								type="text"
-								name="brand"
-								id="brand"
-								class="input input-bordered input-info"
-								placeholder="Product brand" />
-						</div>
-						<div class="w-full">
-							<label for="url" class="block mb-2 text-sm font-medium ">URL</label>
-							<input
-								type="url"
-								name="url"
-								id="url"
-								class="input input-bordered input-info"
-								placeholder="https://github.com" />
-						</div>
-						<div class="w-full">
-							<label for="category" class="block mb-2 text-sm font-medium ">Category</label>
-							<select id="category" class="input input-bordered input-info">
-								<option>Select category</option>
-								<option value="TV">TV/Monitors</option>
-								<option value="PC">PC</option>
-								<option value="GA">Gaming/Console</option>
-								<option value="PH">Phones</option>
-							</select>
-						</div>
-						<div class="w-full">Add categories here</div>
-						<div class="w-full">
-							<label for="item-weight" class="block mb-2 text-sm font-medium ">Avatar</label>
-							<input
-								type="file"
-								name="item-weight"
-								id="item-weight"
-								class="input input-bordered input-info" />
-						</div>
-						<div class="w-full">
-							<label for="item-weight" class="block mb-2 text-sm font-medium ">Banner</label>
-							<input
-								type="file"
-								name="item-weight"
-								id="item-weight"
-								class="input input-bordered input-info" />
-						</div>
-						<div class="sm:col-span-2">
-							<label for="description" class="block mb-2 text-sm font-medium ">Description</label>
-							<textarea
-								id="description"
-								rows="8"
-								class="block p-2.5 w-full textarea textarea-info"
-								placeholder="Your description here" />
-						</div>
-					</div>
-				</form>
-			</div>
-		</section>
-		<div class="modal-action">
-			<a href="#" class="btn">Cancel</a>
-			<a href="#" class="btn btn-primary" type="submit">Confirm</a>
-		</div>
-	</div>
-</div> -->
 
 <div class="relative block h-[31rem]">
 	<div
@@ -156,7 +74,7 @@
 						<div class="py-6 px-3 mt-32 sm:mt-0 flex justify-end gap-4">
 							<button class="btn btn-secondary">Subscribe</button>
 							<button class="btn btn-primary" disabled>Sponsor</button>
-							{#if $current_user.username !== $page.params.customUsername}
+							{#if $current_user.username === $page.params.customUsername}
 								<div class="dropdown dropdown-end">
 									<button class="btn btn-circle" tabindex="0">
 										<IconMore />
