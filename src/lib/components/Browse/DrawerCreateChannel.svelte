@@ -64,13 +64,29 @@
 		await put(`/users/host-channels?hostChannelId=${channel._id}`)
 		goto(`/channel/${channel._id}`)
 	}
+
+	let refToggle: any
+	const toggleDrawer = () => {
+		if (refToggle) {
+			refToggle.checked = false
+		}
+		setTimeout(() => {
+			showDrawer = false
+		}, 200)
+	}
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
-	<input id="create-channel-drawer" type="checkbox" class="drawer-toggle" />
+	<input id="create-channel-drawer" bind:this={refToggle} type="checkbox" class="drawer-toggle" />
 	<div class="drawer-side">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
+		<label
+			for="create-channel-drawer"
+			on:click={() =>
+				setTimeout(() => {
+					showDrawer = false
+				}, 200)}
+			class="drawer-overlay" />
 		{#if showAddCategory}
 			<DrawerAddCategory
 				bind:showAddCategory
@@ -170,7 +186,7 @@
 					</div>
 
 					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
-						<button type="button" class="btn btn-default grow" on:click={() => (showDrawer = false)}
+						<button type="button" class="btn btn-default grow" on:click={() => toggleDrawer()}
 							>Cancel</button>
 						<button type="submit" class="btn btn-primary grow">Add</button>
 					</div>
