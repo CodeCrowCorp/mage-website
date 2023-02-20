@@ -4,9 +4,9 @@
 	import { channelMessage } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
 	import CollapseViewChannel from '$lib/components/Channel/Chat/CollapseViewChannel.svelte'
+	import VideoGrid from '$lib/components/Channel/VideoGrid.svelte'
 
-	export let showDrawer: boolean,
-		channel: any = undefined,
+	export let channel: any = undefined,
 		chatHistory: any = [],
 		userId: string = '',
 		username: string = ''
@@ -16,21 +16,26 @@
 		const parsedData = JSON.parse(value)
 		if (parsedData.eventName === `channel-message-${channel._id}`) {
 			var msg = parsedData
-			if (msg.userData.userId === channel.user) msg.role = 'Host'
+			if (msg.userData?.userId === channel.user) msg.role = 'Host'
 			else if (channel.mods?.includes(msg.userData._id)) msg.role = 'Mod'
-			else if (msg.userData.userId === userId) msg.role = 'You'
+			else if (msg.userData?.userId === userId) msg.role = 'You'
 			else msg.role = 'Rando'
 			chatHistory.push(msg)
 		}
 	})
 </script>
 
-<div class="drawer drawer-end w-fit z-20 top-0 right-0">
+<div class="drawer drawer-end">
 	<input id="chat-drawer" type="checkbox" class="drawer-toggle" />
-	<div class="drawer-side justify-end m-5 rounded-lg">
+	<div class="drawer-content">
+		<VideoGrid />
+	</div>
+	<div class="drawer-side m-5 rounded-lg md:w-fit">
+		<label for="chat-drawer" class="drawer-overlay" />
+
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div class="bg-base-100 flex flex-col ">
-			<CollapseViewChannel bind:channel/>
+			<CollapseViewChannel bind:channel />
 			<div class="flex flex-col-reverse p-3 grow overflow-y-auto">
 				{#each chatHistory as sender}
 					<Message bind:sender />
