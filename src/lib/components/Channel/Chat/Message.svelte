@@ -1,5 +1,7 @@
 <script lang="ts">
+	import IconChatHorizontalMore from '$lib/assets/icons/chat/IconChatHorizontalMore.svelte'
 	import ProfileCard from '$lib/components/Channel/Chat/ProfileCard.svelte'
+
 	export let sender: any
 	let coloredRoles: { tagColor?: any; textColor?: string }
 
@@ -39,10 +41,13 @@
 				<div class="p-1 border border-transparent rounded-lg flex flex-row-reverse gap-2 w-96">
 					<span>
 						<span>{sender.message}</span>
-						<span class="font-medium">@{sender.userData.username}</span>
+						<span class="font-medium">@{sender.userData?.username}</span>
 						<span class="{coloredRoles.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
 							>{sender.role}</span>
 					</span>
+					<div class="hover:visible">
+						<IconChatHorizontalMore />
+					</div>
 				</div>
 			{:else}
 				<!--Host, Mod, or Rando-->
@@ -54,9 +59,12 @@
 						{/if}
 						<span
 							data-popover-target="popover-user-profile"
-							class="{coloredRoles.textColor} font-medium">@{sender.userData.username}</span>
+							class="{coloredRoles.textColor} font-medium">@{sender.userData?.username}</span>
 						<span>{sender.message}</span>
 					</span>
+					<div class="hover:visible">
+						<IconChatHorizontalMore />
+					</div>
 				</div>
 			{/if}
 		</li>
