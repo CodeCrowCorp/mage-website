@@ -61,7 +61,7 @@
 
 	const addChannel = async () => {
 		const channel = await post('/channel', newChannel)
-		await put(`/users/host-channels?hostChannelId=${channel._id}`)
+		await put(`users/host-channels?hostChannelId=${channel._id}`)
 		goto(`/channel/${channel._id}`)
 	}
 </script>

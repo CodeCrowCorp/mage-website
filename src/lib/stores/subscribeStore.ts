@@ -1,13 +1,13 @@
 import { env } from '$env/dynamic/public'
 
-async function createFollow({ source1, source2 }: { source1: string; source2: string }) {
+async function createSubscribe({ source1, source2 }: { source1: string; source2: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/subscribe`, {
 		method: 'PUT',
 		body: JSON.stringify({ source1, source2 })
 	}).then((response) => response.json())
 }
 
-async function getFollows({
+async function getSubscribes({
 	source,
 	sourceType,
 	searchQuery,
@@ -28,7 +28,7 @@ async function getFollows({
 	).then((response) => response.json())
 }
 
-async function getFollowCount({ source, sourceType }: { source: string; sourceType: string }) {
+async function getSubscribeCount({ source, sourceType }: { source: string; sourceType: string }) {
 	return await fetch(
 		`${env.PUBLIC_API_URL}/subscribe/count?source=${source}&sourceType=${sourceType}`,
 		{
@@ -37,19 +37,19 @@ async function getFollowCount({ source, sourceType }: { source: string; sourceTy
 	).then((response) => response.json())
 }
 
-async function deleteFollow({ source1, source2 }: { source1: string; source2: string }) {
+async function deleteSubscribe({ source1, source2 }: { source1: string; source2: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/subscribe?source1=${source1}&source2=${source2}`, {
 		method: 'DELETE'
 	}).then((response) => response.json())
 }
 
-async function getFollowRelationship({ source }: { source: string }) {
+async function getSubscribeRelationship({ source }: { source: string }) {
 	return await fetch(`${env.PUBLIC_API_URL}/subscribe/relationship?source=${source}`, {
 		method: 'GET'
 	}).then((response) => response.json())
 }
 
-async function toggleFollow({
+async function toggleSubscribe({
 	subscribe,
 	senderId,
 	userId
@@ -59,27 +59,27 @@ async function toggleFollow({
 	userId: string
 }) {
 	if (subscribe) {
-		if (!subscribe.isFollowing) {
-			await createFollow({
+		if (!subscribe.isSubscribing) {
+			await createSubscribe({
 				source1: senderId,
 				source2: userId
 			})
-			subscribe.isFollowing = true
+			subscribe.isSubscribing = true
 		} else {
-			await deleteFollow({
+			await deleteSubscribe({
 				source1: senderId,
 				source2: userId
 			})
-			subscribe.isFollowing = false
+			subscribe.isSubscribing = false
 		}
 	}
 }
 
 export {
-	createFollow,
-	getFollows,
-	getFollowCount,
-	deleteFollow,
-	getFollowRelationship,
-	toggleFollow
+	createSubscribe,
+	getSubscribes,
+	getSubscribeCount,
+	deleteSubscribe,
+	getSubscribeRelationship,
+	toggleSubscribe
 }
