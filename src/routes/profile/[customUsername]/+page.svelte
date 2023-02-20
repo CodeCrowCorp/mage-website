@@ -14,7 +14,7 @@
 
 	let tabs = ['Stats', 'Channels', 'Subscribers']
 	let activeTab = 0
-	let profileData = null
+	let profileData = {}
 	let showDrawer = false
 
 	$: ({ user } = data)
@@ -64,9 +64,7 @@
 						<div class="relative">
 							<div
 								class="mask mask-squircle h-auto align-middle absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px">
-								<img
-									alt="..."
-									src="https://demos.creative-tim.com/notus-js/assets/img/team-2-800x800.jpg" />
+								<img alt="..." src={profileData?.avatar_url} />
 							</div>
 						</div>
 					</div>
@@ -112,19 +110,21 @@
 					</div>
 				</div>
 				<div class="text-center mt-12">
-					<h3 class="text-4xl font-semibold leading-normal mb-2">Gagan Suie</h3>
-					<div class="text-lg leading-normal mt-0 mb-2 font-bold text-pink-500">@GaganSuie</div>
-					<div class="text-lg leading-normal mt-0 mb-2">Likes long walks in the multiverse</div>
+					<h3 class="text-4xl font-semibold leading-normal mb-2">{profileData?.name}</h3>
+					<div class="text-lg leading-normal mt-0 mb-2 font-bold text-pink-500">
+						@{profileData?.login}
+					</div>
+					<div class="text-lg leading-normal mt-0 mb-2">{profileData?.bio}</div>
 					<div class="pt-4">
 						<div class="flex gap-2 justify-center p-4">
 							<IconLink />
-							<a class="link link-info">https://codecrow.io</a>
+							<a class="link link-info">{profileData?.html_url}</a>
 						</div>
 						<div class="flex gap-2 justify-center">
-							<img src="/category/games/call-of-duty-black-ops-4.svg" />
-							<img src="/category/games/fortnite.svg" />
-							<img src="/category/games/overwatch.svg" />
-							<img src="/category/games/valorant.svg" />
+							<img src="/category-optimized/games/call-of-duty-black-ops-4.svg" />
+							<img src="/category-optimized/games/fortnite.svg" />
+							<img src="/category-optimized/games/overwatch.svg" />
+							<img src="/category-optimized/games/valorant.svg" />
 						</div>
 					</div>
 				</div>
