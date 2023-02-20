@@ -21,7 +21,7 @@
 
 	onMount(async () => {
 		if (user) {
-			profileData = await get(`users/search/username?${$page.params.customUsername}`, {
+			profileData = await get(`users/search/username?username=${$page.params.customUsername}`, {
 				// profileData = await get(`users/search/username?username=gagan_suie`, {
 				userId: user.userId,
 				token: user.token
@@ -64,7 +64,7 @@
 						<div class="relative">
 							<div
 								class="mask mask-squircle h-auto align-middle absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px">
-								<img alt="..." src={profileData?.avatar_url} />
+								<img alt="..." src={profileData?.avatar} />
 							</div>
 						</div>
 					</div>
@@ -110,15 +110,15 @@
 					</div>
 				</div>
 				<div class="text-center mt-12">
-					<h3 class="text-4xl font-semibold leading-normal mb-2">{profileData?.name}</h3>
+					<h3 class="text-4xl font-semibold leading-normal mb-2">{profileData?.displayName}</h3>
 					<div class="text-lg leading-normal mt-0 mb-2 font-bold text-pink-500">
-						@{profileData?.login}
+						@{profileData?.username || ''}
 					</div>
-					<div class="text-lg leading-normal mt-0 mb-2">{profileData?.bio}</div>
+					<div class="text-lg leading-normal mt-0 mb-2">{profileData?.bio || ''}</div>
 					<div class="pt-4">
 						<div class="flex gap-2 justify-center p-4">
 							<IconLink />
-							<a class="link link-info">{profileData?.html_url}</a>
+							<a class="link link-info">{profileData?.html_url || ''}</a>
 						</div>
 						<div class="flex gap-2 justify-center">
 							<img src="/category-optimized/games/call-of-duty-black-ops-4.svg" />
