@@ -81,6 +81,7 @@
 										tabindex="-1"
 										class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 										<li>
+											<!-- svelte-ignore a11y-click-events-have-key-events -->
 											<label for="edit-profile-drawer" on:click={() => (showDrawer = true)}>
 												Edit</label>
 										</li>
@@ -110,7 +111,9 @@
 					</div>
 				</div>
 				<div class="text-center mt-12">
-					<h3 class="text-4xl font-semibold leading-normal mb-2">{profileData?.displayName}</h3>
+					<h3 class="text-4xl font-semibold leading-normal mb-2">
+						{profileData?.displayName || ''}
+					</h3>
 					<div class="text-lg leading-normal mt-0 mb-2 font-bold text-pink-500">
 						@{profileData?.username || ''}
 					</div>
@@ -121,10 +124,10 @@
 							<a class="link link-info">{profileData?.html_url || ''}</a>
 						</div>
 						<div class="flex gap-2 justify-center">
-							<img src="/category-optimized/games/call-of-duty-black-ops-4.svg" />
-							<img src="/category-optimized/games/fortnite.svg" />
-							<img src="/category-optimized/games/overwatch.svg" />
-							<img src="/category-optimized/games/valorant.svg" />
+							<img src="/category-optimized/games/call-of-duty-black-ops-4.svg" alt="" />
+							<img src="/category-optimized/games/fortnite.svg" alt="" />
+							<img src="/category-optimized/games/overwatch.svg" alt="" />
+							<img src="/category-optimized/games/valorant.svg" alt="" />
 						</div>
 					</div>
 				</div>
