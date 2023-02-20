@@ -17,6 +17,8 @@
 	let profileData = {}
 	let showDrawer = false
 
+	let myChannels
+
 	$: ({ user } = data)
 
 	onMount(async () => {
@@ -26,9 +28,25 @@
 				userId: user.userId,
 				token: user.token
 			})
-			console.log(profileData)
+
+			myChannels = await get(`channels/me/hosted?skip=${0}&limit=${10}`, {
+				userId: user.userId,
+				token: user.token
+			})
+
+			console.log(myChannels)
 		}
 	})
+
+	// const setActiveTab = async (index: number) => {
+	// 	activeTab = index
+	// 	if (index == 1 && user) {
+	// 		myChannels = await get(`channels/me/hosted?skip=${0}&limit=${10}`, {
+	// 			userId: user.userId,
+	// 			token: user.token
+	// 		})
+	// 	}
+	// }
 </script>
 
 <div class="relative block h-[31rem]">
@@ -198,7 +216,7 @@
 								</div>
 							</div>
 							<div class="flex-auto h-full" class:hidden={activeTab != 1}>
-								<SectionTable />
+								<SectionTable bind:channels={myChannels} />
 							</div>
 							<div class="flex-auto h-full" class:hidden={activeTab != 2}>
 								<ListSubscribe />
