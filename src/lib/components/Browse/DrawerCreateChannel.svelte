@@ -6,6 +6,7 @@
 	import DrawerAddCategory from './DrawerAddCategory.svelte'
 	import { goto } from '$app/navigation'
 	import { post, put } from '$lib/api'
+	import { current_user } from '$lib/stores/authStore'
 
 	export let showDrawer: boolean
 
@@ -61,7 +62,13 @@
 
 	const addChannel = async () => {
 		const channel = await post('/channel', newChannel)
-		await put(`/users/host-channels?hostChannelId=${channel._id}`)
+		// await put(`/users/host-channels?hostChannelId=${channel._id}`)
+
+		const updatedUser = await put(`users/host-channels?hostChannelId=${channel._id}`)
+		if (!updatedUser.error) {
+			current_user.set(updatedUser)
+			console.log(updatedUser)
+		}
 		goto(`/channel/${channel._id}`)
 	}
 
