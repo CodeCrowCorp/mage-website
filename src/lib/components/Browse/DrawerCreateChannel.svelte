@@ -3,7 +3,7 @@
 	import { tags, getTags } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
-	import AddCategoryDrawer from './AddCategoryDrawer.svelte'
+	import DrawerAddCategory from './DrawerAddCategory.svelte'
 	import { goto } from '$app/navigation'
 	import { post, put } from '$lib/api'
 
@@ -61,7 +61,7 @@
 
 	const addChannel = async () => {
 		const channel = await post('/channel', newChannel)
-		await put(`/users/host-channels?hostChannelId=${channel._id}`)
+		await put(`users/host-channels?hostChannelId=${channel._id}`)
 		goto(`/channel/${channel._id}`)
 	}
 </script>
@@ -72,7 +72,7 @@
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
 		{#if showAddCategory}
-			<AddCategoryDrawer
+			<DrawerAddCategory
 				bind:showAddCategory
 				bind:categoryIcons
 				bind:categories={newChannel.category} />
@@ -127,7 +127,7 @@
 								{#each $tags as tag}
 									<!-- svelte-ignore a11y-click-events-have-key-events -->
 									<span
-										class="badge badge-primary mx-1 cursor-pointer"
+										class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold mx-1 cursor-pointer"
 										on:click={() => addTag(tag.name)}>{tag.name}</span>
 								{/each}
 							{:else}
@@ -161,12 +161,12 @@
 								{/if}
 							</span>
 						</div>
-						<div class="flex flex-row mt-5 ">
+						<!-- <div class="flex flex-row mt-5 ">
 							<input
 								bind:checked={newChannel.isPrivate}
 								type="checkbox"
 								class="checkbox checkbox-primary mr-3" /> Private
-						</div>
+						</div> -->
 					</div>
 
 					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">

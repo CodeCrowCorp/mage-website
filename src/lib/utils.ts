@@ -15,3 +15,39 @@ export const colorFromLevel = (level: number): string => {
 	const hue = (360 * (level * 0.6180339887498949)) % 360
 	return `hsl(${hue}, 100%, 50%)`
 }
+
+export const isJsonString = (str: string): boolean => {
+	try {
+		JSON.parse(str)
+	} catch (err) {
+		return false
+	}
+	return true
+}
+
+export const getSectionUrl = ({
+	sectionId,
+	query,
+	skip,
+	limit
+}: {
+	sectionId: string
+	query: string
+	skip: number
+	limit: number
+}): string => {
+	switch (sectionId) {
+		case 'weekly':
+			return `channels/weekly?searchQuery=${query}&skip=${skip}&limit=${limit}`
+		case 'highest-ranked':
+			return `users/highest-ranked?searchQuery=${query}&skip=${skip}&limit=${limit}`
+		case 'rising-stars':
+			return `users/rising-stars?searchQuery=${query}&skip=${skip}&limit=${limit}`
+		case 'my':
+			return `channels/me/hosted?searchQuery=${query}&skip=${skip}&limit=${limit}`
+		case 'fav':
+			return `channels/me/fav?searchQuery=${query}&skip=${skip}&limit=${limit}`
+		default:
+			return `channels?searchQuery=${query}&skip=${skip}&limit=${limit}`
+	}
+}

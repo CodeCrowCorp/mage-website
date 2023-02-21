@@ -35,9 +35,6 @@
 	export var nav_drawer: HTMLInputElement
 
 	function logout() {
-		setTimeout(() => {
-			$current_user = null
-		}, 500)
 		goto('/logout')
 	}
 

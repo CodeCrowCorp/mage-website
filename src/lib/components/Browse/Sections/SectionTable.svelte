@@ -4,12 +4,15 @@
 	import VirtualList from '@sveltejs/svelte-virtual-list'
 	import { techList } from '$lib/stores/channelStore'
 	import { goto } from '$app/navigation'
-	import LoadingTableItem from '$lib/components/Browse/Sections/LoadingTableItem.svelte'
+	import LoadingItemTable from '$lib/components/Browse/Sections/LoadingItemTable.svelte'
 
-	export let channels: any = []
+	export let channels: any = [],
+		isLoading: boolean = false
 </script>
 
-<div class="flex flex-col w-full">
+<div
+	class="flex flex-col w-full"
+	class:hidden={channels != undefined && channels.length == 0 && !isLoading}>
 	<table class="w-full">
 		<thead>
 			<tr>
@@ -29,7 +32,7 @@
 						<td>
 							<div class="flex items-center space-x-2 my-3 pl-3">
 								<div class="avatar">
-									<div class="w-12 rounded-full">
+									<div class="w-12 mask mask-squircle">
 										<img src={channel.avatar} alt="" />
 									</div>
 								</div>
@@ -59,7 +62,10 @@
 							<div class="flex flex-wrap gap-2 my-3">
 								{#if channel.tags && channel.tags.length}
 									{#each channel.tags as tag}
-										<div><span class="badge badge-primary badge-md">{tag}</span></div>
+										<div>
+											<span class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold"
+												>{tag}</span>
+										</div>
 									{/each}
 								{/if}
 							</div>
@@ -78,11 +84,11 @@
 					</tr>
 				{/each}
 			{:else}
-				{#each Array(5) as _, index (index)}
-					<tr>
-						<LoadingTableItem />
-					</tr>
-				{/each}
+				<!-- {#each Array(5) as _, index (index)} -->
+				<tr>
+					<LoadingItemTable />
+				</tr>
+				<!-- {/each} -->
 				<span class="sr-only">Loading...</span>
 			{/if}
 		</tbody>

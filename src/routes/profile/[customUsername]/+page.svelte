@@ -1,8 +1,8 @@
 <script lang="ts">
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
-	import TableSection from '$lib/components/Browse/Sections/TableSection.svelte'
-	import SubscribeList from '$lib/components/Profile/SubscribeList.svelte'
+	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
+	import ListSubscribe from '$lib/components/Profile/ListSubscribe.svelte'
 
 	let tabs = ['Stats', 'Channels', 'Subscribers']
 	let activeTab = 0
@@ -131,8 +131,8 @@
 					</div>
 					<div class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
 						<div class="py-6 px-3 mt-32 sm:mt-0 flex justify-end gap-4">
-							<button class="btn btn-secondary">Follow</button>
-							<button class="btn btn-primary">Send Tip</button>
+							<button class="btn btn-secondary">Subscribe</button>
+							<button class="btn btn-primary" disabled>Sponsor</button>
 
 							<div class="dropdown dropdown-end">
 								<button class="btn btn-circle" tabindex="0">
@@ -142,9 +142,9 @@
 									tabindex="0"
 									class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 									<li><a href="#my-modal-2">Edit</a></li>
-									<li><a>Message</a></li>
+									<!-- <li><a>Message</a></li>
 									<li><a>Block</a></li>
-									<li><a>Report</a></li>
+									<li><a>Report</a></li> -->
 								</ul>
 							</div>
 						</div>
@@ -250,10 +250,10 @@
 								</div>
 							</div>
 							<div class="flex-auto h-full" class:hidden={activeTab != 1}>
-								<TableSection />
+								<SectionTable />
 							</div>
 							<div class="flex-auto h-full" class:hidden={activeTab != 2}>
-								<SubscribeList />
+								<ListSubscribe />
 							</div>
 						</div>
 					</div>

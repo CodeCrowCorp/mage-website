@@ -1,16 +1,20 @@
 <script lang="ts">
 	import LastItemInViewport from '$lib/actions/LastItemInViewport'
-	import SearchItem from '$lib/components/Search/SearchItem.svelte'
-	import LoadingSearchChannel from '$lib/components/Search/LoadingSearchChannel.svelte'
-	import { each } from 'svelte/internal'
-	export let channels: any = []
-	export let loadingMoreChannels: boolean = false
+	import ItemSearch from '$lib/components/Search/ItemSearch.svelte'
+	import ItemSection from '$lib/components/Search/ItemSection.svelte'
+	export let channels: any = [],
+		loadingMoreChannels: boolean = false,
+		isSearchPage: boolean = false
 </script>
 
 <div class="flex flex-col gap-4 px-4 md:px-24 justify-around">
 	{#each channels as channel}
 		{#if channel.isPrivate !== true}
-			<SearchItem {channel} />
+			{#if isSearchPage}
+				<ItemSearch {channel} />
+			{:else}
+				<ItemSection {channel} />
+			{/if}
 		{/if}
 	{:else}
 		<h2>No records found</h2>

@@ -7,7 +7,7 @@ declare namespace App {
 		user: {
 			token?: string
 			userId?: string
-			user?: object
+			user?: any
 		}
 		isBanned?: boolean
 	}

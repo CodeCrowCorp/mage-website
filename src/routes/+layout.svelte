@@ -1,4 +1,4 @@
-<script async script lang="ts">
+<script lang="ts">
 	import '$lib/assets/styles/tailwind-output.css'
 
 	// @ts-ignore
@@ -8,15 +8,18 @@
 	import { current_user, user_role } from '$lib/stores/authStore'
 
 	// NProgress Loading bar
-	import 'nprogress/nprogress.css'
+	import '$lib/assets/styles/nprogress.css'
 	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
-	import MainDrawer from '$lib/components/MainDrawer/MainDrawer.svelte'
-	import SmallDrawer from '$lib/components/MainDrawer/SmallDrawer.svelte'
+	import DrawerMain from '$lib/components/MainDrawer/DrawerMain.svelte'
+	import DrawerSmall from '$lib/components/MainDrawer/DrawerSmall.svelte'
 	import { page } from '$app/stores'
 	import { onMount } from 'svelte'
 	import { get } from '$lib/api'
-	import { env } from '$env/dynamic/public'
-	import { platformConnection, platformMessage } from '$lib/stores/socketStore'
+	import { initPlatformSocket, platformSocket } from '$lib/websocket'
+	import { platformConnection, platformMessage } from '$lib/stores/websocketStore'
+	import { isJsonString } from '$lib/utils'
+	import IconMageText from '$lib/assets/icons/IconMageText.svg'
+	import IconMageTextDark from '$lib/assets/icons/IconMageTextDark.svg'
 
 	NProgress.configure({
 		minimum: 0.75,
@@ -50,24 +53,22 @@
 
 	onMount(async () => {
 		const platformSocketId = await get(`wsinit/wsid`)
-		const platformSocket = new WebSocket(
-			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/wsid/${platformSocketId}/connect`
-		)
-		platformSocket?.addEventListener('open', (data) => {
+		initPlatformSocket(platformSocketId)
+		platformSocket.addEventListener('open', (data) => {
 			console.log('socket connection open')
 			console.log(data)
 			platformConnection.set('open')
 		})
-		platformSocket?.addEventListener('message', (data) => {
+		platformSocket.addEventListener('message', (data) => {
 			console.log('listening to messages')
-			console.log(data)
-			platformMessage.set(data)
+			console.log(data.data)
+			if (isJsonString(data.data)) platformMessage.set(data.data)
 		})
-		platformSocket?.addEventListener('error', (data) => {
+		platformSocket.addEventListener('error', (data) => {
 			console.log('socket connection error')
 			console.log(data)
 		})
-		platformSocket?.addEventListener('close', (data) => {
+		platformSocket.addEventListener('close', (data) => {
 			console.log('socket connection close')
 			console.log(data)
 			platformConnection.set('close')
@@ -84,11 +85,19 @@
 </svelte:head>
 
 <div class="drawer drawer-mobile">
-	<input id="my-drawer-2" bind:this={nav_drawer} type="checkbox" class="drawer-toggle" />
+	<input id="main-drawer" bind:this={nav_drawer} type="checkbox" class="drawer-toggle" />
 	<div class="drawer-content bg-base-200">
 		<!-- Page content here -->
-		<label for="my-drawer-2" class="btn btn-ghost normal-case text-xl drawer-button lg:hidden"
-			>Mage</label>
+		<div class="menu w-fit">
+			<ul>
+				<li>
+					<label for="main-drawer" class="lg:hidden rounded-lg">
+						<img class="w-20 mage-text" src={IconMageText} alt="" />
+						<img class="w-20 mage-text-dark" src={IconMageTextDark} alt="" />
+					</label>
+				</li>
+			</ul>
+		</div>
 
 		{#if data && data.isBanned}
 			<div class="alert alert-error shadow-lg">
@@ -104,11 +113,11 @@
 		<LoginPrompt />
 	</div>
 	<div class="drawer-side">
-		<label for="my-drawer-2" class="drawer-overlay" />
+		<label for="main-drawer" class="drawer-overlay" />
 		{#if !$page.url.pathname.includes('/channel')}
-			<MainDrawer bind:nav_drawer />
+			<DrawerMain bind:nav_drawer />
 		{:else}
-			<SmallDrawer bind:nav_drawer />
+			<DrawerSmall bind:nav_drawer />
 		{/if}
 	</div>
 </div>
