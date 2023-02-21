@@ -1,5 +1,6 @@
 <script lang="ts">
 	export let showDrawer: boolean
+	export let profileData: any
 
 	let refToggle: any
 	const toggleDrawer = () => {
@@ -31,6 +32,7 @@
 					<div class="sm:col-span-2">
 						<label for="name" class="block mb-2 text-sm font-medium ">Display Name</label>
 						<input
+							bind:value={profileData.displayName}
 							type="text"
 							name="name"
 							id="name"
@@ -49,6 +51,7 @@
 					<div class="w-full">
 						<label for="url" class="block mb-2 text-sm font-medium ">URL</label>
 						<input
+							bind:value={profileData.html_url}
 							type="url"
 							name="url"
 							id="url"
@@ -67,25 +70,26 @@
 					</div>
 					<!-- <div class="w-full">Add categories here</div> -->
 					<div class="w-full">
-						<label for="item-weight" class="block mb-2 text-sm font-medium ">Avatar</label>
+						<label for="avatar" class="block mb-2 text-sm font-medium ">Avatar</label>
 
 						<input
 							type="file"
-							name="item-weight"
-							id="item-weight"
+							name="avatar"
+							id="avatar"
 							class="file-input file-input-bordered mb-2 file-input-primary w-full" />
 					</div>
 					<div class="w-full">
-						<label for="item-weight" class="block mb-2 text-sm font-medium ">Banner</label>
+						<label for="banner" class="block mb-2 text-sm font-medium ">Banner</label>
 						<input
 							type="file"
-							name="item-weight"
-							id="item-weight"
+							name="banner"
+							id="banner"
 							class="file-input file-input-bordered mb-2 file-input-primary w-full" />
 					</div>
 					<div class="sm:col-span-2">
 						<label for="description" class="block mb-2 text-sm font-medium ">Description</label>
 						<textarea
+							bind:value={profileData.bio}
 							id="description"
 							rows="4"
 							class="block p-2.5 w-full textarea textarea-info"

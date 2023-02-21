@@ -230,5 +230,5 @@
 </div>
 
 {#if showDrawer}
-	<DrawerEditProfile bind:showDrawer />
+	<DrawerEditProfile bind:profileData bind:showDrawer />
 {/if}
