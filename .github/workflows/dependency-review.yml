@@ -15,4 +15,5 @@ jobs:
       - name: Dependency Review
         uses: actions/dependency-review-action@main
         with:
-          ref: main
+          base-ref: main
+          head-ref: main
