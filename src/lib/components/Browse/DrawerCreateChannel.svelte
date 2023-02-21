@@ -18,7 +18,7 @@
 			category: [],
 			tags: [],
 			isPrivate: false,
-			user: user?.user,
+			user: user?.user._id,
 			channelType: ''
 		},
 		fileuploader: HTMLInputElement,
