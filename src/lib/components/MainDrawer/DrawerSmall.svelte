@@ -58,7 +58,7 @@
 		</div>
 		{#if $current_user}
 			<li class="w-full">
-				<a href="/profile/me" class="rounded-md justify-center">
+				<a href="/profile/{$current_user.username}" class="rounded-md justify-center">
 					<div>
 						<div>
 							<div class="avatar online">
