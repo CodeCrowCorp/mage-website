@@ -56,7 +56,7 @@
 </script>
 
 <SectionCarousel bind:channels={mostActiveChannels} bind:isLoading />
-<SearchBar />
+<SearchBar {user} />
 
 <SectionChannel
 	sectionId={'weekly'}

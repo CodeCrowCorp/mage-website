@@ -9,6 +9,7 @@
 	import { current_user } from '$lib/stores/authStore'
 
 	export let showDrawer: boolean
+	export let user: any = undefined
 
 	let newChannel: any = {
 			title: '',
@@ -17,7 +18,7 @@
 			category: [],
 			tags: [],
 			isPrivate: false,
-			user: '',
+			user: user?.user,
 			channelType: ''
 		},
 		fileuploader: HTMLInputElement,
@@ -63,13 +64,22 @@
 	const addChannel = async () => {
 		const channel = await post('/channel', newChannel)
 		// await put(`/users/host-channels?hostChannelId=${channel._id}`)
+		if (user) {
+			const updatedUser = await put(
+				`users/host-channels?hostChannelId=${channel._id}`,
+				{},
+				{
+					userId: user.userId,
+					token: user.token
+				}
+			)
+			if (!updatedUser.error) {
+				current_user.set(updatedUser)
+				console.log(updatedUser)
 
-		const updatedUser = await put(`users/host-channels?hostChannelId=${channel._id}`)
-		if (!updatedUser.error) {
-			current_user.set(updatedUser)
-			console.log(updatedUser)
+				goto(`/channel/${channel._id}`)
+			}
 		}
-		goto(`/channel/${channel._id}`)
 	}
 
 	let refToggle: any
