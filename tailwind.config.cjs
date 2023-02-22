@@ -10,5 +10,8 @@ module.exports = {
 		require('daisyui'),
 		require('tailwind-scrollbar')({ nocompatible: true }),
 		require('tailwind-clip-path')
-	]
+	],
+	variants: {
+		display: ['group-hover']
+	}
 }
