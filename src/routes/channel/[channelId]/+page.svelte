@@ -13,7 +13,6 @@
 	import { isJsonString } from '$lib/utils'
 	export let data: PageData
 
-	$: chatHistory = []
 	$: ({ post, userId, username } = data)
 
 	onMount(async () => {
@@ -27,16 +26,18 @@
 			emitHistoryToChannel({ channelId: post._id, skip: 100 })
 		})
 		channelSocket.addEventListener('message', (data) => {
-			console.log('listening to messages')
-			console.log(data.data)
-			if (isJsonString(data.data)) channelMessage.set(data.data)
+			console.log('channel listening to messages')
+			if (isJsonString(data.data)) {
+				console.log('data', data.data)
+				channelMessage.set(data.data)
+			}
 		})
 		channelSocket.addEventListener('error', (data) => {
-			console.log('socket connection error')
+			console.log('channel socket connection error')
 			console.log(data)
 		})
 		channelSocket.addEventListener('close', (data) => {
-			console.log('socket connection close')
+			console.log('channel socket connection close')
 			console.log(data)
 			channelConnection.set('close')
 		})
@@ -46,5 +47,5 @@
 </script>
 
 <div class="flex flex-auto">
-	<DrawerChat bind:channel={post} bind:chatHistory bind:userId bind:username />
+	<DrawerChat bind:channel={post} bind:userId bind:username />
 </div>
