@@ -26,7 +26,7 @@
 				}, 200)
 			}} />
 
-		<form action="#">
+		<form action="/profile/{profileData.username}?/updateProfile" method="post">
 			<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col">
 				<div class="p-3">
 					<div class="sm:col-span-2">
@@ -91,6 +91,7 @@
 						<textarea
 							bind:value={profileData.bio}
 							id="description"
+							name="description"
 							rows="4"
 							class="block p-2.5 w-full textarea textarea-info"
 							placeholder="Your description here" />

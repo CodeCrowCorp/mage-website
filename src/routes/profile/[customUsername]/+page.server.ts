@@ -1,4 +1,4 @@
-import type { PageServerLoad } from './$types'
+import type { Actions, PageServerLoad } from './$types'
 
 export const load = (async ({ locals }) => {
 	locals.user
@@ -6,3 +6,12 @@ export const load = (async ({ locals }) => {
 		user: locals.user
 	}
 }) satisfies PageServerLoad
+
+export const actions = {
+	updateProfile: async ({ request }) => {
+		const data = await request.formData()
+		console.log(data)
+
+		return { success: true }
+	}
+} satisfies Actions
