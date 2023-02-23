@@ -9,7 +9,7 @@
 	import { current_user } from '$lib/stores/authStore'
 
 	export let showDrawer: boolean
-	export let user: any = undefined
+	export let user: any
 
 	let newChannel: any = {
 			title: '',
