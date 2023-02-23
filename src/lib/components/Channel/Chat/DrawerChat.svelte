@@ -1,8 +1,7 @@
 <script lang="ts">
 	import ChatInput from '$lib/components/Channel/Chat/ChatInput.svelte'
 	import Message from '$lib/components/Channel/Chat/Message.svelte'
-	import { channelMessage, chatHistory } from '$lib/stores/websocketStore'
-	import { isJsonString } from '$lib/utils'
+	import { channelMessage } from '$lib/stores/websocketStore'
 	import CollapseViewChannel from '$lib/components/Channel/Chat/CollapseViewChannel.svelte'
 	import VideoGrid from '$lib/components/Channel/VideoGrid.svelte'
 
@@ -10,20 +9,26 @@
 		userId: string = '',
 		username: string = ''
 
-	$: channelMessage.subscribe((value) => {
-		if (!value || !isJsonString(value)) return
+	let chatHistory: any[] = []
+	channelMessage.subscribe((value) => {
+		if (!value) return
 		var parsedMsg = JSON.parse(value)
 		if (parsedMsg.eventName === `channel-message-${channel._id}`) {
 			if (parsedMsg.isMessageHistory) {
-				parsedMsg.data.forEach((message: any) => {
-					const updatedMsgWithRole = setRole(message)
-					$chatHistory.push(updatedMsgWithRole)
-				})
+				if (Array.isArray(parsedMsg.data)) {
+					parsedMsg.data.forEach((message: any) => {
+						const updatedMsgWithRole = setRole(message)
+						chatHistory.push(updatedMsgWithRole)
+					})
+				} else {
+					parsedMsg = setRole(JSON.parse(parsedMsg.data))
+					chatHistory.push(parsedMsg)
+				}
 			} else {
 				parsedMsg = setRole(parsedMsg)
-				$chatHistory.push(parsedMsg)
+				chatHistory.push(parsedMsg)
 			}
-			console.log('chatHistory', chatHistory)
+			chatHistory = chatHistory.reverse()
 		}
 	})
 
@@ -48,7 +53,7 @@
 		<div class="bg-base-100 flex flex-col overflow-y-hidden">
 			<CollapseViewChannel bind:channel />
 			<div class="flex flex-col-reverse p-3 grow overflow-y-auto">
-				{#each $chatHistory as sender}
+				{#each chatHistory as sender}
 					<Message bind:sender />
 				{/each}
 			</div>
