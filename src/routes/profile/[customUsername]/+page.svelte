@@ -4,22 +4,21 @@
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	import ListSubscribe from '$lib/components/Profile/ListSubscribe.svelte'
 	// import type { PageData } from './$types' // THIS ONE making issue
-	import { current_user } from '$lib/stores/authStore'
-	import { get } from '$lib/api'
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
 	import DrawerEditProfile from '$lib/components/Profile/DrawerEditProfile.svelte'
+	import { current_user } from '$lib/stores/authStore'
+	import { get } from '$lib/api'
 
 	export let data
+	$: ({ user } = data)
 
 	let tabs = ['Stats', 'Channels', 'Subscribers']
 	let activeTab = 0
 	let profileData = {}
 	let showDrawer = false
 
-	let myChannels
-
-	$: ({ user } = data)
+	let myChannels = []
 
 	onMount(async () => {
 		if (user) {
