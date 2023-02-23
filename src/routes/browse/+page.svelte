@@ -29,13 +29,14 @@
 			await getTechListJson()
 		}
 		mostActiveChannels = await get(`channels/most-active?skip=${0}&limit=${5}`)
-		weeklyChannels = await get(`channels/weekly?skip=${0}&limit=${10}`)
-		if (!weeklyChannels.error) {
-			weeklyTitle = `Wk${weeklyChannels.weekly.weekNumber} ${weeklyChannels.weekly.topic}`
-			weeklyChannels = weeklyChannels.channels
-		} else {
-			weeklyChannels = weeklyChannels
-		}
+		weeklyChannels = []
+		// await get(`channels/weekly?skip=${0}&limit=${10}`)
+		// if (!weeklyChannels.error) {
+		// 	weeklyTitle = `Wk${weeklyChannels.weekly.weekNumber} ${weeklyChannels.weekly.topic}`
+		// 	weeklyChannels = weeklyChannels.channels
+		// } else {
+		// 	weeklyChannels = weeklyChannels
+		// }
 
 		highestRankedUsers = await get(`users/highest-ranked?skip=${0}&limit=${10}`)
 		risingStarUsers = await get(`users/rising-stars?skip=${0}&limit=${10}`)
