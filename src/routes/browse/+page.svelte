@@ -77,7 +77,7 @@
 	bind:users={risingStarUsers}
 	bind:isLoading />
 
-{#if current_user}
+{#if $current_user}
 	<SectionChannel sectionId={'my'} title="My channels" bind:channels={myChannels} bind:isLoading />
 
 	<SectionChannel

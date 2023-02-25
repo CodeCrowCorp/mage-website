@@ -9,6 +9,7 @@
 	import DrawerEditProfile from '$lib/components/Profile/DrawerEditProfile.svelte'
 	import { current_user } from '$lib/stores/authStore'
 	import { get } from '$lib/api'
+	import AvatarLoader from '$lib/components/Profile/Elements/AvatarLoader.svelte'
 
 	export let data
 	$: ({ user } = data)
@@ -79,10 +80,14 @@
 				<div class="flex flex-wrap justify-center">
 					<div class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
 						<div class="relative">
-							<div
-								class="mask mask-squircle h-auto align-middle absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px">
-								<img alt="..." src={profileData?.avatar} />
-							</div>
+							{#if profileData?.avatar}
+								<div
+									class="mask mask-squircle h-auto align-middle absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px">
+									<img src={profileData?.avatar} alt="" />
+								</div>
+							{:else}
+								<AvatarLoader />
+							{/if}
 						</div>
 					</div>
 					<div class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
@@ -127,10 +132,16 @@
 						</div>
 					</div>
 				</div>
-				<div class="text-center mt-12">
-					<h3 class="text-4xl font-semibold leading-normal mb-2">
-						{profileData?.displayName || ''}
-					</h3>
+				<div class="text-center mt-12 flex flex-col items-center">
+					{#if profileData?.displayName}
+						<h3 class="text-4xl font-semibold leading-normal mb-2">
+							{profileData?.displayName || ''}
+						</h3>
+					{:else}
+						<div role="status" class="flex w-40 h-12 bg-gray-300 rounded-lg dark:bg-gray-700">
+							<span class="sr-only">Loading...</span>
+						</div>
+					{/if}
 					<div class="text-lg leading-normal mt-0 mb-2 font-bold text-pink-500">
 						@{profileData?.username || ''}
 					</div>
