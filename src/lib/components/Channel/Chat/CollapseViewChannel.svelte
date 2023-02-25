@@ -14,6 +14,15 @@
 		host = await get(`users/search/id?userId=${channel.user}`)
 		isHost = channel.user !== $current_user?._id
 	})
+
+	const copyToClipboard = async (text: string) => {
+		try {
+			await navigator.clipboard.writeText(text)
+			console.log('Text copied to clipboard')
+		} catch (err) {
+			console.error('Error copying text to clipboard:', err)
+		}
+	}
 </script>
 
 <div class="menu dropdown dropdown-bottom">
@@ -30,8 +39,10 @@
 		</li>
 	</ul>
 	<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-96 m-3">
-		<li><a class="text-sm max-w-md">{channel.description || 'No description'}</a></li>
-		<li>
+		<li on:click={() => copyToClipboard(channel.description)}>
+			<a class="text-sm max-w-md">{channel.description || 'No description'}</a>
+		</li>
+		<li on:click={() => copyToClipboard(channel.category)}>
 			<a
 				><div class="flex flex-wrap">
 					{#if channel.category && channel.category.length}
@@ -43,7 +54,7 @@
 					{/if}
 				</div></a>
 		</li>
-		<li>
+		<li on:click={() => copyToClipboard(channel.tags)}>
 			<a>
 				<div class="flex flex-wrap gap-2">
 					{#if channel.tags && channel.tags.length}
