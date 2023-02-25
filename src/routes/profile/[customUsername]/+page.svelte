@@ -24,7 +24,6 @@
 	onMount(async () => {
 		if (user) {
 			profileData = await get(`users/search/username?username=${$page.params.customUsername}`, {
-				// profileData = await get(`users/search/username?username=gagan_suie`, {
 				userId: user.userId,
 				token: user.token
 			})
