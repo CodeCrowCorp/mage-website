@@ -11,41 +11,33 @@
 	import { get } from '$lib/api'
 	import AvatarLoader from '$lib/components/Profile/Elements/AvatarLoader.svelte'
 
-	export let data
-	$: ({ user } = data)
-
 	let tabs = ['Stats', 'Channels', 'Subscribers']
 	let activeTab = 0
-	let profileData = {}
+	let profile = {}
 	let showDrawer = false
+	let isLoading = false
 
 	let myChannels = []
 
 	onMount(async () => {
-		if (user) {
-			profileData = await get(`users/search/username?username=${$page.params.customUsername}`, {
-				userId: user.userId,
-				token: user.token
-			})
+		isLoading = true
 
+		profile = await get(`users/search/username?username=${$page.params.customUsername}`)
+		const user = await get(`users/search/id?userId=611cf27122e7602c4d898759`) // userId of "aabi13119"
+		// const user = await get(`users/search/id?userId=${profile._id}`)
+		console.log(user)
+
+		console.log(profile)
+		if (user) {
 			myChannels = await get(`channels/me/hosted?skip=${0}&limit=${10}`, {
-				userId: user.userId,
+				userId: user._id,
 				token: user.token
 			})
 
 			console.log(myChannels)
 		}
+		isLoading = false
 	})
-
-	// const setActiveTab = async (index: number) => {
-	// 	activeTab = index
-	// 	if (index == 1 && user) {
-	// 		myChannels = await get(`channels/me/hosted?skip=${0}&limit=${10}`, {
-	// 			userId: user.userId,
-	// 			token: user.token
-	// 		})
-	// 	}
-	// }
 </script>
 
 <div class="relative block h-[31rem]">
@@ -79,10 +71,10 @@
 				<div class="flex flex-wrap justify-center">
 					<div class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
 						<div class="relative">
-							{#if profileData?.avatar}
+							{#if profile?.avatar}
 								<div
 									class="mask mask-squircle h-auto align-middle absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px">
-									<img src={profileData?.avatar} alt="" />
+									<img src={profile?.avatar} alt="" />
 								</div>
 							{:else}
 								<AvatarLoader />
@@ -132,9 +124,9 @@
 					</div>
 				</div>
 				<div class="text-center mt-12 flex flex-col items-center">
-					{#if profileData?.displayName}
+					{#if profile?.displayName}
 						<h3 class="text-4xl font-semibold leading-normal mb-2">
-							{profileData?.displayName || ''}
+							{profile?.displayName || ''}
 						</h3>
 					{:else}
 						<div role="status" class="flex w-40 h-12 bg-gray-300 rounded-lg dark:bg-gray-700">
@@ -142,13 +134,15 @@
 						</div>
 					{/if}
 					<div class="text-lg leading-normal mt-0 mb-2 font-bold text-pink-500">
-						@{profileData?.username || ''}
+						@{profile?.username || ''}
 					</div>
-					<div class="text-lg leading-normal mt-0 mb-2">{profileData?.bio || ''}</div>
+					<div class="text-lg leading-normal mt-0 mb-2">
+						{profile?.bio || profile?.description || ''}
+					</div>
 					<div class="pt-4">
 						<div class="flex gap-2 justify-center p-4">
 							<IconLink />
-							<a class="link link-info">{profileData?.html_url || ''}</a>
+							<a class="link link-info">{profile?.html_url || ''}</a>
 						</div>
 						<div class="flex gap-2 justify-center">
 							<img src="/category-optimized/games/call-of-duty-black-ops-4.svg" alt="" />
@@ -160,7 +154,7 @@
 				</div>
 				<div class="mt-10 py-10 border-t border-blueGray-200 text-center">
 					<div class="flex flex-wrap justify-center">
-						<div class="w-full lg:w-9/12 px-4">
+						<div class="w-full px-4">
 							<div class="tabs tabs-boxed flex justify-center bg-base-100">
 								{#each tabs as tab, index}
 									<button
@@ -225,7 +219,7 @@
 								</div>
 							</div>
 							<div class="flex-auto h-full" class:hidden={activeTab != 1}>
-								<SectionTable bind:channels={myChannels} />
+								<SectionTable bind:channels={myChannels} bind:isLoading />
 							</div>
 							<div class="flex-auto h-full" class:hidden={activeTab != 2}>
 								<ListSubscribe />
@@ -239,5 +233,5 @@
 </div>
 
 {#if showDrawer}
-	<DrawerEditProfile bind:profileData bind:showDrawer />
+	<DrawerEditProfile bind:profile bind:showDrawer />
 {/if}

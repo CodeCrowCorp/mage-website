@@ -344,7 +344,7 @@ async function toggleNotifications({ channel, userId }: { channel: any; userId: 
 
 async function getTechListJson() {
 	if (get(techList).length < 1) {
-		let gameAssets: any = await fetch(`svg-json/image_urls.json`, {
+		let gameAssets: any = await fetch(`/svg-json/image_urls.json`, {
 			method: 'GET'
 		})
 		if (gameAssets.ok) {

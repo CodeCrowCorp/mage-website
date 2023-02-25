@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { getTechListJson, techList } from '$lib/stores/channelStore'
 	import SectionCarousel from '$lib/components/Browse/Sections/SectionCarousel.svelte'
 	import SectionChannel from '$lib/components/Browse/Sections/SectionChannel.svelte'
 	import SearchBar from '$lib/components/Browse/SearchBar.svelte'
@@ -25,9 +24,6 @@
 
 	onMount(async () => {
 		isLoading = true
-		if (!$techList.length) {
-			await getTechListJson()
-		}
 		mostActiveChannels = await get(`channels/most-active?skip=${0}&limit=${5}`)
 		weeklyChannels = []
 		// await get(`channels/weekly?skip=${0}&limit=${10}`)

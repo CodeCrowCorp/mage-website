@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let showDrawer: boolean
-	export let profileData: any
+	export let profile: any
 
 	let refToggle: any
 	const toggleDrawer = () => {
@@ -26,13 +26,13 @@
 				}, 200)
 			}} />
 
-		<form action="/profile/{profileData.username}?/updateProfile" method="post">
+		<form action="/profile/{profile.username}?/updateProfile" method="post">
 			<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col">
 				<div class="p-3">
 					<div class="sm:col-span-2">
 						<label for="name" class="block mb-2 text-sm font-medium ">Display Name</label>
 						<input
-							bind:value={profileData.displayName}
+							bind:value={profile.displayName}
 							type="text"
 							name="name"
 							id="name"
@@ -51,7 +51,7 @@
 					<div class="w-full">
 						<label for="url" class="block mb-2 text-sm font-medium ">URL</label>
 						<input
-							bind:value={profileData.html_url}
+							bind:value={profile.html_url}
 							type="url"
 							name="url"
 							id="url"
@@ -89,7 +89,7 @@
 					<div class="sm:col-span-2">
 						<label for="description" class="block mb-2 text-sm font-medium ">Description</label>
 						<textarea
-							bind:value={profileData.bio}
+							bind:value={profile.bio}
 							id="description"
 							name="description"
 							rows="4"
