@@ -10,7 +10,7 @@
 
 	$: chatMessage = ''
 
-	function sendMessage() {
+	const sendMessage = () => {
 		if (chatMessage === '') return
 		const completeMessage = {
 			body: chatMessage,
