@@ -23,6 +23,8 @@
 					parsedMsg = setRole(JSON.parse(parsedMsg.data))
 					chatHistory.push(parsedMsg)
 				}
+			} else if (parsedMsg.isMessageDeleted) {
+				chatHistory = chatHistory.filter((item) => item.timestamp !== parsedMsg.data.timestamp)
 			} else {
 				parsedMsg = setRole(parsedMsg)
 				chatHistory.push(parsedMsg)
