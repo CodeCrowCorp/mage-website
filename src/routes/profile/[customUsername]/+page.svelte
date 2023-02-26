@@ -3,7 +3,6 @@
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	import ListSubscribe from '$lib/components/Profile/ListSubscribe.svelte'
-	// import type { PageData } from './$types' // THIS ONE making issue
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
 	import DrawerEditProfile from '$lib/components/Profile/DrawerEditProfile.svelte'
@@ -17,17 +16,16 @@
 	let showDrawer = false
 	let isLoading = false
 
-	let myChannels = []
+	let myChannels
 
 	onMount(async () => {
 		isLoading = true
 
 		profile = await get(`users/search/username?username=${$page.params.customUsername}`)
-		const user = await get(`users/search/id?userId=611cf27122e7602c4d898759`) // userId of "aabi13119"
-		// const user = await get(`users/search/id?userId=${profile._id}`)
-		console.log(user)
+		// profile = await get(`users/search/username?username=gagan_suie`)
+		const user = await get(`users/search/id?userId=${profile._id}`)
 
-		console.log(profile)
+		console.log(profile, user)
 		if (user) {
 			myChannels = await get(`channels/me/hosted?skip=${0}&limit=${10}`, {
 				userId: user._id,
@@ -218,7 +216,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="flex-auto h-full" class:hidden={activeTab != 1}>
+							<div class="flex-auto h-full text-left" class:hidden={activeTab != 1}>
 								<SectionTable bind:channels={myChannels} bind:isLoading />
 							</div>
 							<div class="flex-auto h-full" class:hidden={activeTab != 2}>
