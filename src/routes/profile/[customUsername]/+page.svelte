@@ -12,11 +12,28 @@
 
 	let tabs = ['Stats', 'Channels', 'Subscribers']
 	let activeTab = 0
-	let profile = {}
 	let showDrawer = false
 	let isLoading = false
+	let myChannels = []
+	let profile = {}
 
-	let myChannels
+	// let profile: {
+	// 	_id: string
+	// 	username: string
+	// 	avatar: string
+	// 	displayName: string
+	// 	bio: string
+	// 	description: string
+	// 	html_url: string
+	// } = {
+	// 	_id: '',
+	// 	username: '',
+	// 	avatar: '',
+	// 	displayName: '',
+	// 	bio: '',
+	// 	description: '',
+	// 	html_url: ''
+	// }
 
 	onMount(async () => {
 		isLoading = true
