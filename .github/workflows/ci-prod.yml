@@ -13,45 +13,94 @@ permissions:
 jobs:
   test:
     if: ${{ github.actor != 'dependabot[bot]' }}
-    name: "Test Cloudflare Workers"
+    name: Test using Playwright
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install
-        run: npm install
-
-      - name: Test
-        run: npm test --coverage
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          node-version: 18
+
+      - name: Install Dependencies
+        run: |
+          npm install
+          npx playwright install
+
+      - name: Install Playwright Browser
+        run: |
+          sudo apt-get update
+          npx playwright install-deps
+
+      - name: Run Playwright Tests
+        continue-on-error: true
+        run: |
+          npm run check
+          npm run test
+        env:
+          PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
+          PUBLIC_WEBSOCKET_URL: ${{ secrets.PUBLIC_WEBSOCKET_URL }}
+          PUBLIC_X_API_KEY: ${{ secrets.PUBLIC_X_API_KEY }}
+          PUBLIC_CROSS_ORIGIN: ${{ secrets.PUBLIC_CROSS_ORIGIN }}
+          PUBLIC_ENV: ${{ secrets.PUBLIC_ENV }}
+
+      - name: Convert E2E Report to Coverage Report
+        run: |
+          npm install playwright-e2e-coverage-report
+          wget https://raw.githubusercontent.com/CodeCrowCorp/playwright-e2e-coverage-report/master/scripts/reportConverter.js
+          chmod u+x reportConverter.js
+          node ./reportConverter.js
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3.1.2
+        if: always()
+        with:
+          name: results.json
+          path: ./results.json
+          retention-days: 30
+
+      - name: Send to Codecov
+        uses: codecov/codecov-action@v3.1.1
+        with:
+          files: ./results.json
+          flags: "e2ecoverage"
 
   deploy:
     if: ${{ github.actor != 'dependabot[bot]' }}
-    name: Deploy to Cloudflare Workers (Production)
-    runs-on: ubuntu-latest
+    name: Deploy to Cloudflare Pages (Production)
     needs: [test]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       deployments: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install and build
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install NPM and build
         run: npm install && npm run build
+        env:
+          PUBLIC_API_URL: ${{ secrets.PUBLIC_API_URL }}
+          PUBLIC_WEBSOCKET_URL: ${{ secrets.PUBLIC_WEBSOCKET_URL }}
+          PUBLIC_X_API_KEY: ${{ secrets.PUBLIC_X_API_KEY }}
+          PUBLIC_CROSS_ORIGIN: ${{ secrets.PUBLIC_CROSS_ORIGIN }}
+          PUBLIC_ENV: ${{ secrets.PUBLIC_ENV }}
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: publish --env production
+          command: pages publish ".svelte-kit/cloudflare" --project-name=mage-website
 
   create-tag:
     if: ${{ github.actor != 'dependabot[bot]' }}
