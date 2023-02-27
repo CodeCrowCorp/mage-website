@@ -2,6 +2,9 @@
 	import IconInfo from '$lib/assets/icons/IconInfo.svelte'
 	import { onMount } from 'svelte'
 	import { categoryAssets } from '$lib/stores/channelStore'
+	import web2UrlsJson from '$lib/assets/svg-json/web2.json'
+	import web3UrlsJson from '$lib/assets/svg-json/web3.json'
+	import gameUrlsJson from '$lib/assets/svg-json/game.json'
 
 	export let showAddCategory: boolean = true,
 		categories: any = [],
@@ -25,40 +28,28 @@
 				: $categoryAssets.web3
 	}
 
-	const loadWeb2 = async () => {
+	const loadWeb2 = () => {
 		if (!Object.keys($categoryAssets.web2).length) {
-			let res = await fetch(`/svg-json/web2.json`, {
-				method: 'GET'
-			})
-			console.log(res.headers)
-			res.ok ? ($categoryAssets.web2 = await res.json()) : ''
+			$categoryAssets.web2 = web2UrlsJson
 		}
 	}
-	const loadWeb3 = async () => {
+	const loadWeb3 = () => {
 		if (!Object.keys($categoryAssets.web3).length) {
-			let res = await fetch(`/svg-json/web3.json`, {
-				method: 'GET'
-			})
-
-			res.ok ? ($categoryAssets.web3 = await res.json()) : ''
+			$categoryAssets.web3 = web3UrlsJson
 		}
 	}
-	const loadGame = async () => {
+	const loadGame = () => {
 		if (!Object.keys($categoryAssets.game).length) {
-			let res = await fetch(`/svg-json/game.json`, {
-				method: 'GET'
-			})
-
-			res.ok ? ($categoryAssets.game = await res.json()) : ''
+			$categoryAssets.game = gameUrlsJson
 		}
 	}
 
 	const setActiveTab = async (tab: string) => {
 		activeTab = tab
 		// assetIcons = []
-		await loadWeb2()
-		await loadGame()
-		await loadWeb3()
+		loadWeb2()
+		loadGame()
+		loadWeb3()
 		setActiveIcons()
 	}
 

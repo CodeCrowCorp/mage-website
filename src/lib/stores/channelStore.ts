@@ -3,7 +3,7 @@ import { env } from '$env/dynamic/public'
 
 export const searchQuery: Writable<string> = writable('')
 export const currentChannel: Writable<any> = writable(null)
-export const techList: Writable<[]> = writable([])
+export const techList: Writable<any> = writable({})
 export const tags: Writable<any> = writable([])
 export const categoryAssets: Writable<{
 	web2: object
