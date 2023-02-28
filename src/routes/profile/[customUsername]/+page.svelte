@@ -156,8 +156,11 @@
 					</div>
 					<div class="pt-4">
 						<div class="flex gap-2 justify-center p-4">
-							<IconLink />
-							<a class="link link-info">{profile?.html_url || ''}</a>
+							{#if profile?.html_url}
+								<IconLink />
+								<a class="link link-info" href={profile?.html_url} target="_blank" rel="noreferrer"
+									>{profile?.html_url || ''}</a>
+							{/if}
 						</div>
 						<div class="flex gap-2 justify-center">
 							<img src="/category-optimized/games/call-of-duty-black-ops-4.svg" alt="" />
