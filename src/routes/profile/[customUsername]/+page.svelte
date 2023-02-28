@@ -103,7 +103,7 @@
 							<button class="btn btn-primary" disabled>Sponsor</button>
 							{#if $current_user.username === $page.params.customUsername}
 								<div class="dropdown dropdown-end">
-									<button class="btn btn-circle" tabindex="0">
+									<button class="btn btn-circle btn-primary" tabindex="0">
 										<IconMore />
 									</button>
 									<ul
