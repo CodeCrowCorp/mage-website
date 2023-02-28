@@ -36,10 +36,11 @@
 							type="text"
 							name="name"
 							id="name"
+							required
 							class="input input-bordered w-full mb-2 input-info"
 							placeholder="Super Mario" />
 					</div>
-					<div class="w-full">
+					<!-- <div class="w-full">
 						<label for="brand" class="block mb-2 text-sm font-medium ">Tag Name</label>
 						<input
 							type="text"
@@ -47,7 +48,7 @@
 							id="brand"
 							class="input input-bordered w-full mb-2 input-info"
 							placeholder="Product brand" />
-					</div>
+					</div> -->
 					<div class="w-full">
 						<label for="url" class="block mb-2 text-sm font-medium ">URL</label>
 						<input
@@ -60,7 +61,10 @@
 					</div>
 					<div class="w-full">
 						<label for="category" class="block mb-2 text-sm font-medium ">Category</label>
-						<select id="category" class="input input-bordered input-info mb-2 w-full">
+						<select
+							id="category"
+							name="category"
+							class="input input-bordered input-info mb-2 w-full">
 							<option>Select category</option>
 							<option value="TV">TV/Monitors</option>
 							<option value="PC">PC</option>

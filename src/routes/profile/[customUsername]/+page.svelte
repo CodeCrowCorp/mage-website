@@ -39,14 +39,13 @@
 		isLoading = true
 
 		profile = await get(`users/search/username?username=${$page.params.customUsername}`)
-		// profile = await get(`users/search/username?username=gagan_suie`)
-		const user = await get(`users/search/id?userId=${profile._id}`)
+		// const user = await get(`users/search/id?userId=${profile._id}`)
 
-		console.log(profile, user)
-		if (user) {
+		console.log(profile)
+		if (profile) {
 			myChannels = await get(`channels/me/hosted?skip=${0}&limit=${10}`, {
-				userId: user._id,
-				token: user.token
+				userId: profile._id,
+				token: profile.token
 			})
 
 			console.log(myChannels)
