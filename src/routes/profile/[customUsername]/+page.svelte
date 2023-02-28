@@ -25,6 +25,7 @@
 	// 	bio: string
 	// 	description: string
 	// 	html_url: string
+	// 	token: string
 	// } = {
 	// 	_id: '',
 	// 	username: '',
@@ -32,7 +33,8 @@
 	// 	displayName: '',
 	// 	bio: '',
 	// 	description: '',
-	// 	html_url: ''
+	// 	html_url: '',
+	// 	token: ''
 	// }
 
 	onMount(async () => {
