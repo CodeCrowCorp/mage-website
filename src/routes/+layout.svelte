@@ -1,5 +1,7 @@
 <script lang="ts">
 	import '$lib/assets/styles/tailwind-output.css'
+	import { techList } from '$lib/stores/channelStore'
+	import imageUrlsJson from '$lib/assets/svg-json/image_urls.json'
 
 	// @ts-ignore
 	import NProgress from 'nprogress'
@@ -73,6 +75,10 @@
 			console.log(data)
 			platformConnection.set('close')
 		})
+
+		if (!$techList.length) {
+			$techList = imageUrlsJson
+		}
 	})
 </script>
 

@@ -1,12 +1,12 @@
 <script lang="ts">
 	import IconPhoto from '$lib/assets/icons/IconPhoto.svelte'
-	import { tags, getTags } from '$lib/stores/channelStore'
+	import { tags } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
 	import DrawerAddCategory from './DrawerAddCategory.svelte'
 	import { goto } from '$app/navigation'
-	import { post, put } from '$lib/api'
 	import { current_user } from '$lib/stores/authStore'
+	import { get, post, put } from '$lib/api'
 
 	export let showDrawer: boolean
 	export let user: any
@@ -35,7 +35,8 @@
 
 	onMount(async () => {
 		if (!$tags.length) {
-			await getTags()
+			const suggestedTags = await get(`tags`)
+			$tags = suggestedTags
 		}
 	})
 
