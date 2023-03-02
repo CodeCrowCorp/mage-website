@@ -3,8 +3,8 @@
 	import IconCross from '$lib/assets/icons/IconCross.svelte'
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
 	import DrawerCreateChannel from './DrawerCreateChannel.svelte'
-	import { current_user } from '$lib/stores/authStore'
 	import { is_login_modal_open } from '$lib/stores/helperStore'
+	import { page } from '$app/stores'
 
 	export let searchPage = false
 	export let searchQuery: string | null = ''
@@ -36,7 +36,7 @@
 				for="create-channel-drawer"
 				class="btn w-[21rem] btn-primary gap-2 drawer-button"
 				on:click={() => {
-					if ($current_user) {
+					if ($page.data?.user) {
 						showDrawer = true
 					} else {
 						$is_login_modal_open = true

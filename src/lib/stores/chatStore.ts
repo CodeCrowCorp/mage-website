@@ -1,7 +1,5 @@
 import { writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
-import { current_user } from './authStore'
-import { currentChannel } from './channelStore'
 
 let lastMessageSendDate: Date = new Date()
 let skip = 0

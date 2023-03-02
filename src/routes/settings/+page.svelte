@@ -2,17 +2,16 @@
 	import { browser } from '$app/environment'
 	import { onMount } from 'svelte'
 	import { themeChange } from 'theme-change'
-	import { current_user } from '$lib/stores/authStore'
 	import type { ActionData } from './$types'
 	import Toast from '$lib/components/Global/Toast.svelte'
 	import { enhance } from '$app/forms'
 	export let form: ActionData
 
-	$: email = $current_user.email
+	// $: email = $page.data.user.user.email
 
 	let isDarkTheme = true
 	if (browser) {
-		isDarkTheme = localStorage.getItem('theme') === 'dark'
+		isDarkTheme = localStorage.getItem('theme') === 'dark' || true
 	}
 	onMount(() => {
 		themeChange(false)
