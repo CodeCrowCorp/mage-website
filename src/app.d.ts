@@ -9,7 +9,6 @@ declare namespace App {
 			userId?: string
 			user?: any
 		}
-		isBanned?: boolean
 	}
 	// interface PageData {}
 	// interface Error {}
