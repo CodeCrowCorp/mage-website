@@ -1,6 +1,17 @@
 <script lang="ts">
+	import DrawerAddCategory from '../Browse/DrawerAddCategory.svelte'
+
 	export let showDrawer: boolean
 	export let profile: any
+
+	let showAddCategory = false,
+		categoryIcons: any = [],
+		maxCategory = 4
+
+	$: maxCategoryLabel =
+		profile.category && profile.category.length == maxCategory
+			? 'max reached'
+			: 'max ' + maxCategory
 
 	let refToggle: any
 	const toggleDrawer = () => {
@@ -19,94 +30,95 @@
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<label
 			for="edit-profile-drawer"
-			class="drawer-overlay"
-			on:click={() => {
+			on:click={() =>
 				setTimeout(() => {
 					showDrawer = false
-				}, 200)
-			}} />
-
-		<form action="/profile/{profile.username}?/updateProfile" method="post">
-			<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col">
-				<div class="p-3">
-					<div class="sm:col-span-2">
-						<label for="name" class="block mb-2 text-sm font-medium ">Display Name</label>
+				}, 200)}
+			class="drawer-overlay" />
+		{#if showAddCategory}
+			<DrawerAddCategory
+				bind:showAddCategory
+				bind:categoryIcons
+				bind:categories={profile.category} />
+		{:else}
+			<form action="/profile/{profile.username}?/updateProfile" method="post">
+				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col">
+					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
+						Update Profile
+					</p>
+					<div class="flex flex-col p-3">
 						<input
 							bind:value={profile.displayName}
 							type="text"
 							name="name"
 							id="name"
 							required
-							class="input input-bordered w-full mb-2 input-info"
-							placeholder="Super Mario" />
-					</div>
-					<!-- <div class="w-full">
-						<label for="brand" class="block mb-2 text-sm font-medium ">Tag Name</label>
+							class="input input-primary input-bordered mt-5 w-full"
+							placeholder="Display name" />
 						<input
+							bind:value={profile.username}
 							type="text"
-							name="brand"
-							id="brand"
-							class="input input-bordered w-full mb-2 input-info"
-							placeholder="Product brand" />
-					</div> -->
-					<div class="w-full">
-						<label for="url" class="block mb-2 text-sm font-medium ">URL</label>
-						<input
-							bind:value={profile.html_url}
-							type="url"
-							name="url"
-							id="url"
-							class="input input-bordered w-full mb-2 input-info"
-							placeholder="https://github.com" />
-					</div>
-					<div class="w-full">
-						<label for="category" class="block mb-2 text-sm font-medium ">Category</label>
-						<select
-							id="category"
-							name="category"
-							class="input input-bordered input-info mb-2 w-full">
-							<option>Select category</option>
-							<option value="TV">TV/Monitors</option>
-							<option value="PC">PC</option>
-							<option value="GA">Gaming/Console</option>
-							<option value="PH">Phones</option>
-						</select>
-					</div>
-					<!-- <div class="w-full">Add categories here</div> -->
-					<div class="w-full">
-						<label for="avatar" class="block mb-2 text-sm font-medium ">Avatar</label>
+							name="username"
+							id="username"
+							required
+							class="input input-primary input-bordered mt-5 w-full"
+							placeholder="Username" />
 
 						<input
-							type="file"
-							name="avatar"
-							id="avatar"
-							class="file-input file-input-bordered mb-2 file-input-primary w-full" />
-					</div>
-					<div class="w-full">
-						<label for="banner" class="block mb-2 text-sm font-medium ">Banner</label>
+							bind:value={profile.html_url}
+							type="text"
+							name="url"
+							id="url"
+							required
+							class="input input-primary input-bordered mt-5 w-full"
+							placeholder="Your website URL" />
+
+						<label for="banner" class="block my-2 text-sm font-medium ">Banner</label>
 						<input
 							type="file"
 							name="banner"
 							id="banner"
-							class="file-input file-input-bordered mb-2 file-input-primary w-full" />
-					</div>
-					<div class="sm:col-span-2">
-						<label for="description" class="block mb-2 text-sm font-medium ">Description</label>
+							class="file-input file-input-bordered file-input-primary w-full" />
+
+						<label for="avatar" class="block my-2 text-sm font-medium ">Avatar</label>
+						<input
+							type="file"
+							name="banner"
+							id="banner"
+							class="file-input file-input-bordered file-input-primary w-full" />
+
+						<div class="relative">
+							<input
+								on:click={() => (showAddCategory = true)}
+								type="text"
+								name="category"
+								placeholder={categoryIcons.length ? '' : 'Categories'}
+								class="input input-primary input-bordered mt-5 w-full " />
+							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
+							<span class="absolute flex flex-row gap-2 left-0 top-1/2  pl-5">
+								{#if categoryIcons.length}
+									{#each categoryIcons as icon}
+										<img src={icon} alt="" class="h-5 w-5" />
+									{/each}
+								{/if}
+							</span>
+						</div>
+
 						<textarea
 							bind:value={profile.bio}
 							id="description"
 							name="description"
-							rows="4"
-							class="block p-2.5 w-full textarea textarea-info"
+							class="block w-full mt-5 textarea h-28 input-primary"
 							placeholder="Your description here" />
 					</div>
+
+					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
+						<button type="button" class="btn btn-default grow" on:click={() => toggleDrawer()}
+							>Cancel</button>
+						<button type="submit" class="btn btn-primary grow">Save</button>
+					</div>
 				</div>
-				<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
-					<button type="button" class="btn btn-default grow" on:click={() => toggleDrawer()}
-						>Cancel</button>
-					<button type="submit" class="btn btn-primary grow">Save</button>
-				</div>
-			</div>
-		</form>
+			</form>
+		{/if}
 	</div>
 </div>
