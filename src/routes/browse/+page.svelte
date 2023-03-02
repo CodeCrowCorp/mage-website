@@ -6,11 +6,12 @@
 	import SectionUser from '$lib/components/Browse/Sections/SectionUser.svelte'
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	import type { PageData } from './$types'
-	import { current_user } from '$lib/stores/authStore'
+	import { page } from '$app/stores'
 	import { get } from '$lib/api'
 
 	export let data: PageData
-	$: ({ user } = data)
+
+	$: user = $page.data?.user
 
 	let mostActiveChannels: any = []
 	let weeklyChannels: any = []
@@ -73,7 +74,7 @@
 	bind:users={risingStarUsers}
 	bind:isLoading />
 
-{#if $current_user}
+{#if user}
 	<SectionChannel sectionId={'my'} title="My channels" bind:channels={myChannels} bind:isLoading />
 
 	<SectionChannel

@@ -18,7 +18,9 @@
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
 	import { goto } from '$app/navigation'
 	import { env } from '$env/dynamic/public'
-	import { current_user, user_role } from '$lib/stores/authStore'
+	import { page } from '$app/stores'
+	import { user_role } from '$lib/stores/authStore'
+
 	import {
 		is_maintenance_mode_enabled
 		// is_feature_mint_page_enabled,
@@ -34,17 +36,12 @@
 
 	export var nav_drawer: HTMLInputElement
 
-	function logout() {
-		setTimeout(() => {
-			$current_user = null
-		}, 500)
-		goto('/logout')
-	}
+	$: currentUser = $page.data?.user?.user
 
-	let exp = 512 //Math.floor(Math.random() * (10000 - 0 + 1) + 0) //$current_user.exp
+	let exp = 512 //Math.floor(Math.random() * (10000 - 0 + 1) + 0) //currentUser.exp
 	let levelAndBarValue = levelAndBarValueFromExp(exp)
-	let progressBarLevel = levelAndBarValue.level //levelFromExp(exp) //$current_user.exp
-	let progressBarValue = levelAndBarValue.barValue //barValueFromExp(exp) //$current_user.exp
+	let progressBarLevel = levelAndBarValue.level //levelFromExp(exp) //currentUser.exp
+	let progressBarValue = levelAndBarValue.barValue //barValueFromExp(exp) //currentUser.exp
 	let progressBarColor = colorFromLevel(progressBarLevel)
 </script>
 
@@ -61,25 +58,25 @@
 				</li>
 			</ul>
 		</div>
-		{#if $current_user}
+		{#if currentUser}
 			<li>
 				<a href="/profile/{$current_user.username}" class="hero rounded-md cursor-pointer">
 					<div>
 						<div class="hero-content">
 							<div class="max-w-md">
-								<div class="avatar online">
+								<div class="avatar {currentUser.isOnline ? 'online' : 'offline'}">
 									<div
 										class="w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
-										<img src={$current_user.avatar} alt="" />
+										<img src={currentUser.avatar} alt="" />
 									</div>
 								</div>
 							</div>
 							<div class="grid grid-cols-3 gap-1">
-								<div class="col-span-3 tooltip flex" data-tip={$current_user.displayName}>
-									<p class="truncate">{$current_user.displayName}</p>
+								<div class="col-span-3 tooltip flex" data-tip={currentUser.displayName}>
+									<p class="truncate">{currentUser.displayName}</p>
 								</div>
-								<div class="col-span-3 tooltip flex" data-tip="@{$current_user.username}">
-									<p class=" text-pink-500 truncate">@{$current_user.username}</p>
+								<div class="col-span-3 tooltip flex" data-tip="@{currentUser.username}">
+									<p class=" text-pink-500 truncate">@{currentUser.username}</p>
 								</div>
 								<IconDrawerStreak />
 								<p class="col-span-2 tooltip text-start" data-tip="62 day streak">62 d</p>
@@ -100,7 +97,7 @@
 		{/if}
 		<!-- Sidebar content here -->
 
-		{#if $current_user && $user_role === 'admin'}
+		{#if currentUser && $user_role === 'admin'}
 			<li>
 				<a href="/admin">
 					<IconDrawerAdmin />
@@ -114,7 +111,7 @@
 				Browse
 			</a>
 		</li>
-		<!-- {#if $current_user}
+		<!-- {#if currentUser}
 			<li>
 				<a href="">
 					<IconDrawerMessages />
@@ -123,7 +120,7 @@
 				</a>
 			</li>
 		{/if} -->
-		<!-- {#if $current_user && $isFeatureVideoResponsesEnabled}
+		<!-- {#if currentUser && $isFeatureVideoResponsesEnabled}
 			<li>
 				<a href="/videos">
 					<IconDrawerVideos />
@@ -136,7 +133,7 @@
 					Creator Space</a>
 			</li>
 		{/if}
-		{#if $current_user && $isFeatureMintPageEnabled}
+		{#if currentUser && $isFeatureMintPageEnabled}
 			<li>
 				<a
 					href="https://mint.codecrow.io"
@@ -148,7 +145,7 @@
 				</a>
 			</li>
 		{/if}
-		{#if $current_user && $isFeaturePremiumPageEnabled}
+		{#if currentUser && $isFeaturePremiumPageEnabled}
 			<li>
 				<a href="/premium" class="text-pink-500">
 					<IconDrawerPremium />
@@ -173,19 +170,21 @@
 				</ul>
 			</div>
 		</li>
-		{#if $current_user}
+		{#if currentUser}
 			<li>
 				<a href="/settings">
 					<IconDrawerSettings />
 					Settings</a>
 			</li>
 		{/if}
-		{#if $current_user}
-			<li>
-				<button on:click={logout}>
-					<IconDrawerLogOut />
-					Log Out</button>
-			</li>
+		{#if currentUser}
+			<form action="/logout" method="POST">
+				<li>
+					<button type="submit">
+						<IconDrawerLogOut />
+						Log out</button>
+				</li>
+			</form>
 		{:else}
 			<li>
 				<button

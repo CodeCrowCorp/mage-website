@@ -2,17 +2,16 @@
 	import { browser } from '$app/environment'
 	import { onMount } from 'svelte'
 	import { themeChange } from 'theme-change'
-	import { current_user } from '$lib/stores/authStore'
 	import type { ActionData } from './$types'
 	import Toast from '$lib/components/Global/Toast.svelte'
 	import { enhance } from '$app/forms'
 	export let form: ActionData
 
-	$: email = $current_user.email
+	// $: email = $page.data.user.user.email
 
 	let isDarkTheme = true
 	if (browser) {
-		isDarkTheme = localStorage.getItem('theme') === 'dark'
+		isDarkTheme = localStorage.getItem('theme') === 'dark' || true
 	}
 	onMount(() => {
 		themeChange(false)
@@ -22,7 +21,7 @@
 <div class="flex justify-center h-screen bg-base-200 py-10">
 	<div class="text-center w-fit">
 		<h1 class="text-5xl font-bold">Settings</h1>
-		<div class="py-6">
+		<!-- <div class="py-6">
 			<form
 				method="POST"
 				action="?/update-email"
@@ -48,12 +47,12 @@
 					</label>
 					{#if form?.success}
 						<Toast message="Email updated successfully" type="success" />
-						<!-- {:else if form?.error}
-						<Toast message="Error updating email" type="error" /> -->
+					{:else}
+						<Toast message="Error updating email" type="error" />
 					{/if}
 				</div>
 			</form>
-		</div>
+		</div> -->
 
 		<div class="flex flex-col border-opacity-50">
 			<div class="divider">Theming</div>
