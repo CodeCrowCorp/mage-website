@@ -8,6 +8,7 @@
 	import DrawerEditProfile from '$lib/components/Profile/DrawerEditProfile.svelte'
 	import { get } from '$lib/api'
 	import AvatarLoader from '$lib/components/Profile/Elements/AvatarLoader.svelte'
+	import { getTechListJson, techList } from '$lib/stores/channelStore'
 
 	let tabs = ['Stats', 'Channels', 'Subscribers']
 	let activeTab = 0
@@ -40,6 +41,10 @@
 
 	onMount(async () => {
 		isLoading = true
+
+		if (!$techList.length) {
+			await getTechListJson()
+		}
 
 		profile = await get(`users/search/username?username=${$page.params.customUsername}`)
 		// const user = await get(`users/search/id?userId=${profile._id}`)
@@ -122,9 +127,6 @@
 											<label for="edit-profile-drawer" on:click={() => (showDrawer = true)}>
 												Edit</label>
 										</li>
-										<!-- <li><a>Message</a></li>
-									<li><a>Block</a></li>
-									<li><a>Report</a></li> -->
 									</ul>
 								</div>
 							{/if}
@@ -176,10 +178,17 @@
 							</div>
 						{/if}
 						<div class="flex gap-2 justify-center">
-							<img src="/category-optimized/games/call-of-duty-black-ops-4.svg" alt="" />
+							<!-- <img src="/category-optimized/games/call-of-duty-black-ops-4.svg" alt="" />
 							<img src="/category-optimized/games/fortnite.svg" alt="" />
 							<img src="/category-optimized/games/overwatch.svg" alt="" />
-							<img src="/category-optimized/games/valorant.svg" alt="" />
+							<img src="/category-optimized/games/valorant.svg" alt="" /> -->
+							{#if profile?.category && profile?.category.length}
+								{#each profile.category as category}
+									<div class="tooltip" data-tip={category}>
+										<img src={$techList[category]} alt="" class="h-7 w-7 m-1" />
+									</div>
+								{/each}
+							{/if}
 						</div>
 					</div>
 				</div>
