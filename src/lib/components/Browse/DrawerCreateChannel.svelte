@@ -5,7 +5,6 @@
 	import Tags from 'svelte-tags-input'
 	import DrawerAddCategory from './DrawerAddCategory.svelte'
 	import { goto } from '$app/navigation'
-	import { current_user } from '$lib/stores/authStore'
 	import { get, post, put } from '$lib/api'
 
 	export let showDrawer: boolean
@@ -75,7 +74,7 @@
 				}
 			)
 			if (!updatedUser.error) {
-				current_user.set(updatedUser)
+				// current_user.set(updatedUser)
 				console.log(updatedUser)
 
 				goto(`/channel/${channel._id}`)

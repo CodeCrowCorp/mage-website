@@ -6,7 +6,6 @@
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
 	import DrawerEditProfile from '$lib/components/Profile/DrawerEditProfile.svelte'
-	import { current_user } from '$lib/stores/authStore'
 	import { get } from '$lib/api'
 	import AvatarLoader from '$lib/components/Profile/Elements/AvatarLoader.svelte'
 
@@ -16,6 +15,8 @@
 	let isLoading = false
 	let myChannels = []
 	let profile = {}
+
+	$: currentUser = $page.data?.user?.user
 
 	// let profile: {
 	// 	_id: string
@@ -101,7 +102,7 @@
 						<div class="py-6 px-3 mt-32 sm:mt-0 flex justify-end gap-4">
 							<button class="btn btn-secondary">Subscribe</button>
 							<button class="btn btn-primary" disabled>Sponsor</button>
-							{#if $current_user.username === $page.params.customUsername}
+							{#if currentUser.username === $page.params.customUsername}
 								<div class="dropdown dropdown-end">
 									<button class="btn btn-circle btn-primary" tabindex="0">
 										<IconMore />
