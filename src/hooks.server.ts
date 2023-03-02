@@ -9,15 +9,15 @@ import {
 } from '$lib/stores/remoteConfigStore'
 import { Authenticate } from '$lib/authentication/authentication'
 import { get } from '$lib/api'
-import { current_user, user_role } from '$lib/stores/authStore'
+import { user_role } from '$lib/stores/authStore'
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname
+
 	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
 	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
 
-	let user: any = event.locals.user?.user || '',
-		isBanned = false
+	let user: any = event.locals.user?.user || ''
 	const role = getWritableVal(user_role)
 	let maintenance_mode
 	const remoteConfigs = await get('remote-configs', { userId, token })
@@ -45,7 +45,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 					token = response.freshJwt
 				}
 				user = response.user
-				current_user.set(user)
 			}
 		}
 
@@ -85,19 +84,18 @@ export const handle: Handle = async ({ event, resolve }) => {
 				user
 			}
 		}
+	} else {
+		return await resolve(event)
 	}
 
 	if (user && user.isBanned) {
-		isBanned = true
-		const cookieItem = ['token', 'userId']
+		const cookieItem = ['token', 'userId', 'user']
 		cookieItem.forEach((item) => {
 			event.cookies.set(item, '', {
 				path: '/',
 				expires: new Date(0)
 			})
 		})
-		user_role.set('user')
-		event.locals['isBanned'] = isBanned
 	}
 
 	if (

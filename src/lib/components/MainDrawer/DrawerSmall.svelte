@@ -12,8 +12,8 @@
 	import IconDrawerLogOut from '$lib/assets/icons/drawer/IconDrawerLogOut.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
 	import { goto } from '$app/navigation'
-	import { env } from '$env/dynamic/public'
-	import { current_user, user_role } from '$lib/stores/authStore'
+	import { page } from '$app/stores'
+	import { user_role } from '$lib/stores/authStore'
 	import {
 		is_maintenance_mode_enabled,
 		is_feature_mint_page_enabled,
@@ -29,17 +29,12 @@
 
 	export let nav_drawer: HTMLInputElement
 
-	function logout() {
-		setTimeout(() => {
-			$current_user = null
-		}, 500)
-		goto('/logout')
-	}
+	$: currentUser = $page.data?.user?.user
 
-	let exp = 512 //Math.floor(Math.random() * (10000 - 0 + 1) + 0) //$current_user.exp
+	let exp = 512 //Math.floor(Math.random() * (10000 - 0 + 1) + 0) //currentUser.exp
 	let levelAndBarValue = levelAndBarValueFromExp(exp)
-	let progressBarLevel = levelAndBarValue.level //levelFromExp(exp) //$current_user.exp
-	let progressBarValue = levelAndBarValue.barValue //barValueFromExp(exp) //$current_user.exp
+	let progressBarLevel = levelAndBarValue.level //levelFromExp(exp) //currentUser.exp
+	let progressBarValue = levelAndBarValue.barValue //barValueFromExp(exp) //currentUser.exp
 	let progressBarColor = colorFromLevel(progressBarLevel)
 </script>
 
@@ -56,22 +51,22 @@
 				</li>
 			</ul>
 		</div>
-		{#if $current_user}
+		{#if currentUser}
 			<li class="w-full">
 				<a href="/profile/me" class="rounded-md justify-center">
 					<div>
 						<div>
-							<div class="avatar online">
+							<div class="avatar {currentUser.isOnline ? 'online' : 'offline'}">
 								<div
 									class="w-12 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
-									<img src={$current_user.avatar} alt="" />
+									<img src={currentUser.avatar} alt="" />
 								</div>
 							</div>
 						</div>
 						<!-- <div class="grid grid-cols-1 gap-1">
-							<p>{$current_user.displayName || 'Gagan Suie'}</p>
+							<p>{currentUser.displayName || 'Gagan Suie'}</p>
 							<p class="text-pink-500 w-12 truncate">
-								@{$current_user.username}
+								@{currentUser.username}
 							</p>
 						</div> -->
 						<div class="tooltip" data-tip="level {progressBarLevel}">
@@ -88,7 +83,7 @@
 
 		<!-- Sidebar content here -->
 
-		{#if $current_user && $user_role === 'admin'}
+		{#if currentUser && $user_role === 'admin'}
 			<li>
 				<a href="/admin">
 					<IconDrawerAdmin />
@@ -100,7 +95,7 @@
 				<IconDrawerHome />
 			</a>
 		</li>
-		<!-- {#if $current_user}
+		<!-- {#if currentUser}
 			<li>
 				<a href="">
 					<IconDrawerMessages />
@@ -108,7 +103,7 @@
 				</a>
 			</li>
 		{/if} -->
-		{#if $current_user && $is_feature_video_responses_enabled}
+		{#if currentUser && $is_feature_video_responses_enabled}
 			<li>
 				<a href="/videos">
 					<IconDrawerVideos />
@@ -118,7 +113,7 @@
 				<a href="/creator-space"> <IconDrawerCreatorSpace /></a>
 			</li>
 		{/if}
-		{#if $current_user && $is_feature_mint_page_enabled}
+		{#if currentUser && $is_feature_mint_page_enabled}
 			<li>
 				<a
 					href="https://mint.codecrow.io"
@@ -129,7 +124,7 @@
 				</a>
 			</li>
 		{/if}
-		{#if $current_user && $is_feature_premium_page_enabled}
+		{#if currentUser && $is_feature_premium_page_enabled}
 			<li>
 				<a href="/premium" class="text-pink-500">
 					<IconDrawerPremium />
@@ -150,19 +145,19 @@
 				</ul>
 			</div>
 		</li>
-		{#if $current_user}
+		{#if currentUser}
 			<li>
 				<a href="/settings">
 					<IconDrawerSettings />
 				</a>
 			</li>
 		{/if}
-		{#if $current_user}
-			<li>
-				<button on:click={logout}>
-					<IconDrawerLogOut />
-				</button>
-			</li>
+		{#if currentUser}
+			<form action="/logout" method="POST">
+				<li>
+					<button type="submit"> <IconDrawerLogOut /></button>
+				</li>
+			</form>
 		{:else}
 			<li>
 				<button

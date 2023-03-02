@@ -9,8 +9,8 @@ Bad: user_id, user-id
 
 ### Writables and HTML components
 
-Good: current_user
-Bad: currentUser, current-user
+Good: user_rule
+Bad: userRole, user-role
 
 ### Query Params
 

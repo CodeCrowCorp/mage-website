@@ -1,11 +1,11 @@
 <script lang="ts">
 	import '$lib/assets/styles/tailwind-output.css'
+	import { techList } from '$lib/stores/channelStore'
+	import imageUrlsJson from '$lib/assets/svg-json/image_urls.json'
 
 	// @ts-ignore
 	import NProgress from 'nprogress'
-	import { browser } from '$app/environment'
 	import { navigating } from '$app/stores'
-	import { current_user, user_role } from '$lib/stores/authStore'
 
 	// NProgress Loading bar
 	import '$lib/assets/styles/nprogress.css'
@@ -30,26 +30,12 @@
 	$: {
 		if ($navigating) {
 			NProgress.start()
-		}
-		if (!$navigating) {
-			storeUserData()
+		} else {
 			NProgress.done()
 		}
 	}
 
-	export let data: any
-
 	let nav_drawer: HTMLInputElement
-
-	function storeUserData() {
-		if (browser) {
-			if (data?.user?.user) {
-				$current_user = data.user.user
-			} else {
-				$current_user = null
-			}
-		}
-	}
 
 	onMount(async () => {
 		const platformSocketId = await get(`wsinit/wsid`)
@@ -73,6 +59,10 @@
 			console.log(data)
 			platformConnection.set('close')
 		})
+
+		if (!$techList.length) {
+			$techList = imageUrlsJson
+		}
 	})
 </script>
 
@@ -99,7 +89,7 @@
 			</ul>
 		</div>
 
-		{#if data && data.isBanned}
+		{#if $page.data?.user?.user?.isBanned}
 			<div class="alert alert-error shadow-lg">
 				<div>
 					<div class="font-bold text-white">

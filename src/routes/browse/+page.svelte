@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { getTechListJson, techList } from '$lib/stores/channelStore'
 	import SectionCarousel from '$lib/components/Browse/Sections/SectionCarousel.svelte'
 	import SectionChannel from '$lib/components/Browse/Sections/SectionChannel.svelte'
 	import SearchBar from '$lib/components/Browse/SearchBar.svelte'
 	import SectionUser from '$lib/components/Browse/Sections/SectionUser.svelte'
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	import type { PageData } from './$types'
-	import { current_user } from '$lib/stores/authStore'
+	import { page } from '$app/stores'
 	import { get } from '$lib/api'
 
 	export let data: PageData
-	$: ({ user } = data)
+
+	$: user = $page.data?.user
 
 	let mostActiveChannels: any = []
 	let weeklyChannels: any = []
@@ -25,9 +25,6 @@
 
 	onMount(async () => {
 		isLoading = true
-		if (!$techList.length) {
-			await getTechListJson()
-		}
 		mostActiveChannels = await get(`channels/most-active?skip=${0}&limit=${5}`)
 		weeklyChannels = []
 		// await get(`channels/weekly?skip=${0}&limit=${10}`)
@@ -77,7 +74,7 @@
 	bind:users={risingStarUsers}
 	bind:isLoading />
 
-{#if current_user}
+{#if user}
 	<SectionChannel sectionId={'my'} title="My channels" bind:channels={myChannels} bind:isLoading />
 
 	<SectionChannel

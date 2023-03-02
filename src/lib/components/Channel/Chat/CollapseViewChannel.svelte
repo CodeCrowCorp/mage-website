@@ -3,7 +3,7 @@
 	import IconChatDownChevron from '$lib/assets/icons/chat/IconChatDownChevron.svelte'
 	import { techList } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
-	import { current_user } from '$lib/stores/authStore'
+	import { page } from '$app/stores'
 
 	export let channel: any
 
@@ -12,7 +12,7 @@
 
 	onMount(async () => {
 		host = await get(`users/search/id?userId=${channel.user}`)
-		isHost = channel.user !== $current_user?._id
+		isHost = channel.user !== $page.data.user.user?._id
 	})
 
 	const copyToClipboard = async (text: string) => {
