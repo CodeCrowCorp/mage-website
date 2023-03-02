@@ -89,9 +89,16 @@
 					<div class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
 						<div class="relative">
 							{#if profile?.avatar}
-								<div
+								<!-- <div
 									class="mask mask-squircle h-auto align-middle absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px">
 									<img src={profile?.avatar} alt="" />
+								</div> -->
+								<div class="w-32 h-32">
+									<div class="avatar -top-16 {profile?.isOnline ? 'online' : 'offline'}">
+										<div class="mask mask-squircle h-auto align-middle max-w-150-px">
+											<img src={profile?.avatar} alt="" />
+										</div>
+									</div>
 								</div>
 							{:else}
 								<AvatarLoader />
@@ -140,7 +147,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="text-center mt-12 flex flex-col items-center">
+				<div class="text-center flex flex-col items-center">
 					{#if profile?.displayName}
 						<h3 class="text-4xl font-semibold leading-normal mb-2">
 							{profile?.displayName || ''}
@@ -150,20 +157,24 @@
 							<span class="sr-only">Loading...</span>
 						</div>
 					{/if}
-					<div class="text-lg leading-normal mt-0 mb-2 font-bold text-pink-500">
-						@{profile?.username || ''}
-					</div>
-					<div class="text-lg leading-normal mt-0 mb-2">
-						{profile?.bio || profile?.description || ''}
-					</div>
+					{#if profile?.username}
+						<div class="text-lg leading-normal mt-0 mb-2 font-bold text-pink-500">
+							@{profile?.username || ''}
+						</div>
+					{/if}
+					{#if profile?.bio || profile?.description}
+						<div class="text-lg leading-normal mt-0 mb-2">
+							{profile?.bio || profile?.description || ''}
+						</div>
+					{/if}
 					<div class="pt-4">
-						<div class="flex gap-2 justify-center p-4">
-							{#if profile?.html_url}
+						{#if profile?.html_url}
+							<div class="flex gap-2 justify-center p-4">
 								<IconLink />
 								<a class="link link-info" href={profile?.html_url} target="_blank" rel="noreferrer"
 									>{profile?.html_url || ''}</a>
-							{/if}
-						</div>
+							</div>
+						{/if}
 						<div class="flex gap-2 justify-center">
 							<img src="/category-optimized/games/call-of-duty-black-ops-4.svg" alt="" />
 							<img src="/category-optimized/games/fortnite.svg" alt="" />
