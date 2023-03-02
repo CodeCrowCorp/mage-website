@@ -19,7 +19,7 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@playwright/test": "1.31.0",
+		"@playwright/test": "1.31.1",
 		"@sveltejs/adapter-cloudflare": "^2.0.2",
 		"@sveltejs/kit": "^1.8.3",
 		"@sveltejs/svelte-virtual-list": "^3.0.1",
