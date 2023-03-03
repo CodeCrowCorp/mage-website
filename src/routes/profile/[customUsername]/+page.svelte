@@ -17,6 +17,7 @@
 	let showDrawer = false
 	let isLoading = false
 	let myChannels = []
+	let mySubscribers = []
 	let profile = {}
 
 	$: currentUser = $page.data?.user?.user
@@ -58,7 +59,19 @@
 				token: profile.token
 			})
 			// console.log(myChannels)
+
+			mySubscribers = await get(
+				`subscribe?source=${
+					profile._id
+				}&sourceType=${'user'}&searchQuery=${''}&skip=${0}&limit=${10}`,
+				{
+					userId: profile._id,
+					token: profile.token
+				}
+			)
+			console.log(mySubscribers)
 		}
+
 		isLoading = false
 	})
 </script>
@@ -179,10 +192,6 @@
 							</div>
 						{/if}
 						<div class="flex gap-2 justify-center">
-							<!-- <img src="/category-optimized/games/call-of-duty-black-ops-4.svg" alt="" />
-							<img src="/category-optimized/games/fortnite.svg" alt="" />
-							<img src="/category-optimized/games/overwatch.svg" alt="" />
-							<img src="/category-optimized/games/valorant.svg" alt="" /> -->
 							{#if profile?.category}
 								{#if profile?.category.length}
 									{#each profile.category as category}
@@ -267,7 +276,7 @@
 								<SectionTable bind:channels={myChannels} bind:isLoading />
 							</div>
 							<div class="flex-auto h-full" class:hidden={activeTab != 2}>
-								<ListSubscribe />
+								<ListSubscribe bind:subscribers={mySubscribers} />
 							</div>
 						</div>
 					</div>
