@@ -8,6 +8,8 @@
 	import DrawerEditProfile from '$lib/components/Profile/DrawerEditProfile.svelte'
 	import { get } from '$lib/api'
 	import AvatarLoader from '$lib/components/Profile/Elements/AvatarLoader.svelte'
+	import NameLoader from '$lib/components/Profile/Elements/NameLoader.svelte'
+	import CategoryLoader from '$lib/components/Profile/Elements/CategoryLoader.svelte'
 	import { getTechListJson, techList } from '$lib/stores/channelStore'
 
 	let tabs = ['Stats', 'Channels', 'Subscribers']
@@ -55,8 +57,7 @@
 				userId: profile._id,
 				token: profile.token
 			})
-
-			console.log(myChannels)
+			// console.log(myChannels)
 		}
 		isLoading = false
 	})
@@ -155,14 +156,14 @@
 							{profile?.displayName || ''}
 						</h3>
 					{:else}
-						<div role="status" class="flex w-40 h-12 bg-gray-300 rounded-lg dark:bg-gray-700">
-							<span class="sr-only">Loading...</span>
-						</div>
+						<NameLoader />
 					{/if}
 					{#if profile?.username}
 						<div class="text-lg leading-normal mt-0 mb-2 font-bold text-pink-500">
 							@{profile?.username || ''}
 						</div>
+					{:else}
+						<NameLoader />
 					{/if}
 					{#if profile?.bio || profile?.description}
 						<div class="text-lg leading-normal mt-0 mb-2">
@@ -182,12 +183,16 @@
 							<img src="/category-optimized/games/fortnite.svg" alt="" />
 							<img src="/category-optimized/games/overwatch.svg" alt="" />
 							<img src="/category-optimized/games/valorant.svg" alt="" /> -->
-							{#if profile?.category && profile?.category.length}
-								{#each profile.category as category}
-									<div class="tooltip" data-tip={category}>
-										<img src={$techList[category]} alt="" class="h-7 w-7 m-1" />
-									</div>
-								{/each}
+							{#if profile?.category}
+								{#if profile?.category.length}
+									{#each profile.category as category}
+										<div class="tooltip" data-tip={category}>
+											<img src={$techList[category]} alt="" class="h-7 w-7 m-1" />
+										</div>
+									{/each}
+								{:else}
+									<CategoryLoader />
+								{/if}
 							{/if}
 						</div>
 					</div>
