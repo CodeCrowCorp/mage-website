@@ -1,21 +1,15 @@
 <script lang="ts">
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
-	import IconMore from '$lib/assets/icons/IconMore.svelte'
-	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
-	import ListSubscribe from '$lib/components/Profile/ListSubscribe.svelte'
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
 	import DrawerEditProfile from '$lib/components/Profile/DrawerEditProfile.svelte'
 	import { get } from '$lib/api'
-	import AvatarLoader from '$lib/components/Profile/Elements/AvatarLoader.svelte'
 	import NameLoader from '$lib/components/Profile/Elements/NameLoader.svelte'
 	import CategoryLoader from '$lib/components/Profile/Elements/CategoryLoader.svelte'
 	import { getTechListJson, techList } from '$lib/stores/channelStore'
 	import StatSection from '$lib/components/Profile/StatSection.svelte'
 	import TopSection from '$lib/components/Profile/TopSection.svelte'
 
-	let tabs = ['Stats', 'Channels', 'Subscribers']
-	let activeTab = 0
 	let showDrawer = false
 	let isLoading = false
 	let myChannels = []
@@ -63,7 +57,7 @@
 			mySubscribers = await get(
 				`subscribe?source=${
 					profile._id
-				}&sourceType=${'user'}&searchQuery=${''}&skip=${0}&limit=${10}`,
+				}&sourceType=${'source2'}&searchQuery=${''}&skip=${0}&limit=${10}`,
 				{
 					userId: profile._id,
 					token: profile.token
