@@ -7,11 +7,9 @@
 
 	export let title: string = '',
 		users: any = undefined,
-		isLoading: boolean = false,
 		sectionId: string = ''
 
 	let ref: any
-	$: hidden = ((users != undefined && users.length == 0) || users.error) && !isLoading
 
 	const prev = () => {
 		if (ref) {
@@ -32,9 +30,21 @@
 	}
 </script>
 
-{#if users && !users.error}
-	<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide" class:hidden>
-		{#if users && users.length}
+<!--class:hidden-->
+{#await users}
+	<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide">
+		<div class="font-semibold m-3">
+			<div class="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4 animate-pulse" />
+		</div>
+		<div role="status" class="flex flex-row gap-1 animate-pulse ">
+			{#each Array(6) as _, index (index)}
+				<LoadingItemChannel />
+			{/each}
+		</div>
+	</div>
+{:then value}
+	{#if value.length > 0}
+		<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide">
 			<div class="font-semibold m-3">
 				<a class="link link-secondary text-lg" href="/browse/{sectionId}">{title}</a>
 			</div>
@@ -49,15 +59,14 @@
 
 				<div
 					bind:this={ref}
-					class="relative w-full flex gap-6 scrollbar-hide snap-x snap-mandatory overflow-x-auto flex-grow">
-					{#each users as user}
+					class="relative w-full flex gap-6 snap-x scrollbar-hide snap-mandatory overflow-x-auto flex-grow">
+					{#each value as user}
 						<div
 							class="flex flex-col shrink-0 first:pl-8 last:pr-8 w-[300px] md:w-[400px] rounded-md">
 							<div class="relative">
-								<!-- svelte-ignore a11y-click-events-have-key-events -->
 								<div
 									class="video-thumbnail"
-									on:click|preventDefault={() => goto(`/channel/${user._id}`)}>
+									on:click|preventDefault={() => goto(`/profile/${user._id}`)}>
 									{#if user.thumbnail}
 										<div
 											class="video-thumbnail"
@@ -98,24 +107,15 @@
 					</div>
 				</div>
 			</div>
-		{:else}
-			<div class="font-semibold m-3">
-				<div class="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4 animate-pulse" />
-			</div>
-			<div role="status" class="flex flex-row gap-1 animate-pulse ">
-				{#each Array(6) as _, index (index)}
-					<LoadingItemChannel />
-				{/each}
-				<span class="sr-only">Loading...</span>
-			</div>
-		{/if}
-	</div>
-{/if}
+		</div>
+	{/if}
+{/await}
 
 <style>
 	.video-thumbnail {
 		@apply bg-slate-400 w-full h-64 flex items-center justify-center text-white rounded-md cursor-pointer;
 	}
+
 	.scrollbar-hide::-webkit-scrollbar {
 		display: none;
 	}
