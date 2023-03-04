@@ -51,3 +51,12 @@ export const getSectionUrl = ({
 			return `channels?searchQuery=${query}&skip=${skip}&limit=${limit}`
 	}
 }
+
+export const copyToClipboard = async (text: string) => {
+	try {
+		await navigator.clipboard.writeText(text)
+		console.log('Text copied to clipboard')
+	} catch (err) {
+		console.error('Error copying text to clipboard:', err)
+	}
+}
