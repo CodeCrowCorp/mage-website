@@ -43,7 +43,7 @@
 	})
 </script>
 
-<div class="bg-base-100 flex flex-col overflow-y-hidden">
+<div class="bg-base-100 flex flex-col overflow-y-hidden hover:opacity-100 opacity-70">
 	<CollapseViewChannel bind:channel />
 	<div class="flex flex-col-reverse p-3 grow overflow-y-auto">
 		{#each chatHistory as sender}
