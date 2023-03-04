@@ -4,25 +4,17 @@
 	import { techList } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
+	import { copyToClipboard } from '$lib/utils'
 
-	export let channel: any
+	export let channel: any = undefined
 
 	let host: any = {},
 		isHost: boolean = false
 
 	onMount(async () => {
-		host = await get(`users/search/id?userId=${channel.user}`)
-		isHost = channel.user !== $page.data.user.user?._id
+		host = await get(`users/search/id?userId=${channel?.user}`)
+		isHost = channel?.user !== $page.data.user.user?._id
 	})
-
-	const copyToClipboard = async (text: string) => {
-		try {
-			await navigator.clipboard.writeText(text)
-			console.log('Text copied to clipboard')
-		} catch (err) {
-			console.error('Error copying text to clipboard:', err)
-		}
-	}
 </script>
 
 <div class="menu dropdown dropdown-bottom">
@@ -69,7 +61,7 @@
 			</a>
 		</li>
 		<li>
-			<a href="/profile/{host._id}">
+			<a href="/profile/{host?._id}">
 				<div class="flex flex-wrap gap-2">
 					<div class="avatar online">
 						<div
