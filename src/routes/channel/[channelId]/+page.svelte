@@ -12,10 +12,10 @@
 	} from '$lib/websocket'
 	import { channelConnection, channelMessage } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
+	import { isChatDrawerOpen } from '$lib/stores/channelStore'
 	export let data: PageData
 
 	$: ({ channelId, userId, username } = data)
-	let isChatDrawerOpen: boolean = false
 
 	onMount(async () => {
 		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
@@ -45,7 +45,7 @@
 		})
 
 		setTimeout(() => {
-			isChatDrawerOpen = true
+			$isChatDrawerOpen = true
 		}, 700)
 	})
 
@@ -61,7 +61,7 @@
 				id="chat-drawer"
 				type="checkbox"
 				class="drawer-toggle"
-				bind:checked={isChatDrawerOpen} />
+				bind:checked={$isChatDrawerOpen} />
 			<div class="drawer-content">
 				<VideoGrid />
 			</div>
