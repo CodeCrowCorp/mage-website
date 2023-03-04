@@ -1,6 +1,6 @@
 <div
 	role="status"
-	class="rounded-[2.5rem] relative -mt-16 w-32 h-32 overflow-hidden bg-gray-100 dark:bg-gray-600">
+	class="rounded-[2.5rem] relative -mt-16 w-32 h-32 overflow-hidden bg-gray-100 dark:bg-gray-600 animate-pulse">
 	<svg
 		class="absolute w-full h-40 text-gray-400"
 		fill="currentColor"
