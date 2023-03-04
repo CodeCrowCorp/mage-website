@@ -16,6 +16,8 @@
 	let mySubscribers = []
 	let profile = {}
 
+	// $: ({ profile, lazy } = $page.data)
+
 	// let profile: {
 	// 	_id: string
 	// 	username: string
@@ -63,7 +65,7 @@
 					token: profile.token
 				}
 			)
-			console.log(mySubscribers)
+			// console.log(mySubscribers)
 		}
 
 		isLoading = false
@@ -142,7 +144,7 @@
 						</div>
 					</div>
 				</div>
-				<StatSection bind:myChannels bind:mySubscribers bind:isLoading />
+				<StatSection bind:myChannels bind:mySubscribers />
 			</div>
 		</div>
 	</div>

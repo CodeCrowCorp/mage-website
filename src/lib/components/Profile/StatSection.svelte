@@ -3,7 +3,8 @@
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	import Stats from './Elements/Stats.svelte'
 
-	export let myChannels, mySubscribers, isLoading
+	export let myChannels: any = [],
+		mySubscribers: any = []
 
 	let tabs = ['Stats', 'Channels', 'Subscribers']
 	let activeTab = 0
@@ -24,7 +25,7 @@
 				<Stats />
 			</div>
 			<div class="flex-auto h-full text-left" class:hidden={activeTab != 1}>
-				<SectionTable bind:channels={myChannels} bind:isLoading />
+				<SectionTable bind:channels={myChannels} />
 			</div>
 			<div class="flex-auto h-full" class:hidden={activeTab != 2}>
 				<ListSubscribe bind:subscribers={mySubscribers} />
