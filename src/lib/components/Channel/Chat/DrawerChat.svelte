@@ -9,10 +9,19 @@
 		username: string = ''
 
 	let chatHistory: any[] = []
+
+	const setRole = (msg: any): any => {
+		if (msg.userData?.userId === channel?.user) msg.role = 'Host'
+		else if (channel?.mods?.includes(msg.userData._id)) msg.role = 'Mod'
+		else if (msg.userData?.userId === userId) msg.role = 'You'
+		else msg.role = 'Rando'
+		return msg
+	}
+
 	channelMessage.subscribe((value) => {
 		if (!value) return
 		var parsedMsg = JSON.parse(value)
-		if (parsedMsg.eventName === `channel-message-${channel._id}`) {
+		if (parsedMsg.eventName === `channel-message-${channel?._id}`) {
 			if (parsedMsg.isMessageHistory) {
 				if (Array.isArray(parsedMsg.data)) {
 					parsedMsg.data.forEach((message: any) => {
@@ -32,17 +41,9 @@
 			chatHistory = chatHistory.reverse()
 		}
 	})
-
-	function setRole(msg: any): any {
-		if (msg.userData?.userId === channel.user) msg.role = 'Host'
-		else if (channel.mods?.includes(msg.userData._id)) msg.role = 'Mod'
-		else if (msg.userData?.userId === userId) msg.role = 'You'
-		else msg.role = 'Rando'
-		return msg
-	}
 </script>
 
-<div class="bg-base-100 flex flex-col overflow-y-hidden">
+<div class="bg-base-100 flex flex-col overflow-y-hidden hover:opacity-100 opacity-70">
 	<CollapseViewChannel bind:channel />
 	<div class="flex flex-col-reverse p-3 grow overflow-y-auto">
 		{#each chatHistory as sender}
