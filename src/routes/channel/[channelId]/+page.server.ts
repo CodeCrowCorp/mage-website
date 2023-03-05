@@ -1,12 +1,12 @@
 import type { PageServerLoad } from './$types'
-import { getChannel } from '$lib/stores/channelStore'
+import { get } from '$lib/api'
 
 export const load = (async ({ params, locals }) => {
 	const userId = locals?.user?.userId || ''
 	const username = locals?.user?.user?.username || ''
 	return {
 		lazy: {
-			channel: getChannel({ channelId: params.channelId })
+			channel: get(`channel?channelId=${params.channelId}`)
 		},
 		channelId: params.channelId,
 		userId,
