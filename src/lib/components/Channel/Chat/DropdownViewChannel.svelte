@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
 	import { copyToClipboard } from '$lib/utils'
+	import IconChatDelete from '$lib/assets/icons/chat/IconChatDelete.svelte'
 
 	export let channel: any = undefined
 
@@ -81,7 +82,18 @@
 			</a>
 		</li>
 		{#if isHost}
-			<button class="btn w-full"> Edit channel </button>
+			<div class="grid grid-cols-5 gap-2">
+				<button
+					class="btn col-span-4 border-none font-normal normal-case tooltip tooltip-top"
+					data-tip="Edit channel">
+					Edit channel
+				</button>
+				<button
+					class="btn col-span-1 bg-error text-white border-none font-normal normal-case tooltip tooltip-left tooltip-error flex"
+					data-tip="Delete channel">
+					<IconChatDelete />
+				</button>
+			</div>
 		{/if}
 	</ul>
 </div>
