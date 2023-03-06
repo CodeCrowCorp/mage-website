@@ -11,12 +11,9 @@
 	import TopSection from '$lib/components/Profile/TopSection.svelte'
 
 	let showDrawer = false
-	let isLoading = false
 	let myChannels = []
 	let mySubscribers = []
-	let profile = {}
-
-	// $: ({ profile, lazy } = $page.data)
+	// let profile = {}
 
 	// let profile: {
 	// 	_id: string
@@ -38,37 +35,36 @@
 	// 	token: ''
 	// }
 
-	onMount(async () => {
-		isLoading = true
+	export let data
+	$: ({ profile } = data)
 
+	onMount(async () => {
 		if (!$techList.length) {
 			await getTechListJson()
 		}
 
-		profile = await get(`users/search/username?username=${$page.params.customUsername}`)
-		// const user = await get(`users/search/id?userId=${profile._id}`)
+		// profile = await get(`users/search/username?username=${$page.params.customUsername}`)
+		// // const user = await get(`users/search/id?userId=${profile._id}`)
 
-		console.log(profile)
-		if (profile) {
-			myChannels = await get(`channels/me/hosted?skip=${0}&limit=${10}`, {
-				userId: profile._id,
-				token: profile.token
-			})
-			// console.log(myChannels)
+		// console.log(profile)
+		// if (profile) {
+		// 	myChannels = await get(`channels/me/hosted?skip=${0}&limit=${10}`, {
+		// 		userId: profile._id,
+		// 		token: profile.token
+		// 	})
+		// 	// console.log(myChannels)
 
-			mySubscribers = await get(
-				`subscribe?source=${
-					profile._id
-				}&sourceType=${'source2'}&searchQuery=${''}&skip=${0}&limit=${10}`,
-				{
-					userId: profile._id,
-					token: profile.token
-				}
-			)
-			// console.log(mySubscribers)
-		}
-
-		isLoading = false
+		// 	mySubscribers = await get(
+		// 		`subscribe?source=${
+		// 			profile._id
+		// 		}&sourceType=${'source2'}&searchQuery=${''}&skip=${0}&limit=${10}`,
+		// 		{
+		// 			userId: profile._id,
+		// 			token: profile.token
+		// 		}
+		// 	)
+		// 	// console.log(mySubscribers)
+		// }
 	})
 </script>
 
@@ -144,7 +140,9 @@
 						</div>
 					</div>
 				</div>
-				<StatSection bind:myChannels bind:mySubscribers />
+				<StatSection
+					bind:myChannels={data.lazy.myChannels}
+					bind:mySubscribers={data.lazy.mySubscribers} />
 			</div>
 		</div>
 	</div>
