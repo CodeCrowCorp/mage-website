@@ -10,33 +10,13 @@
 	import StatSection from '$lib/components/Profile/StatSection.svelte'
 	import TopSection from '$lib/components/Profile/TopSection.svelte'
 
+	export let data
+	$: ({ profile } = data)
+
 	let showDrawer = false
 	let myChannels = []
 	let mySubscribers = []
 	// let profile = {}
-
-	// let profile: {
-	// 	_id: string
-	// 	username: string
-	// 	avatar: string
-	// 	displayName: string
-	// 	bio: string
-	// 	description: string
-	// 	html_url: string
-	// 	token: string
-	// } = {
-	// 	_id: '',
-	// 	username: '',
-	// 	avatar: '',
-	// 	displayName: '',
-	// 	bio: '',
-	// 	description: '',
-	// 	html_url: '',
-	// 	token: ''
-	// }
-
-	export let data
-	$: ({ profile } = data)
 
 	onMount(async () => {
 		if (!$techList.length) {
