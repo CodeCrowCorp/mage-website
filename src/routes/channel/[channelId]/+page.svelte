@@ -3,7 +3,7 @@
 	import VideoGrid from '$lib/components/Channel/VideoGrid.svelte'
 	import type { PageData } from './$types'
 	import { onDestroy, onMount } from 'svelte'
-	import { get } from '$lib/api'
+	import { get, del } from '$lib/api'
 	import {
 		emitHistoryToChannel,
 		initChannelSocket,
@@ -13,9 +13,14 @@
 	import { channelConnection, channelMessage } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
 	import { isChatDrawerOpen } from '$lib/stores/channelStore'
+	import Modal from '$lib/components/Global/Modal.svelte'
+	import { goto } from '$app/navigation'
+
 	export let data: PageData
 
-	$: ({ channelId, userId, username } = data)
+	$: ({ channelId, userId, token, username } = data)
+
+	let isDeleteModalOpen = false
 
 	onMount(async () => {
 		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
@@ -50,6 +55,15 @@
 	})
 
 	onDestroy(() => channelSocket?.close())
+
+	const deleteChannelNoAction = () => {
+		isDeleteModalOpen = false
+	}
+	const deleteChannelYesAction = async () => {
+		await del(`channels/${channelId}`, { userId, token })
+		//TODO: delete all channel messages
+		goto('/browse')
+	}
 </script>
 
 {#await data.lazy.channel}
@@ -71,4 +85,20 @@
 			</div>
 		</div>
 	</div>
+
+	<input
+		type="checkbox"
+		id="modal-delete-channel"
+		class="modal-toggle"
+		bind:checked={isDeleteModalOpen} />
+
+	<Modal
+		id="modal-delete-channel"
+		title="Delete channel"
+		message="Are you sure you want to delete this channel?"
+		no="Cancel"
+		noAction={deleteChannelNoAction}
+		yes="Yes"
+		yesAction={deleteChannelYesAction}
+		isError={true} />
 {/await}

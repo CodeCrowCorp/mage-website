@@ -43,9 +43,10 @@
 	})
 </script>
 
-<div class="bg-base-100 flex flex-col overflow-y-hidden opacity-100">
+<div class="bg-base-100 flex flex-col overflow-y-hidden">
+	<!--lg:opacity-70-->
 	<DropdownViewChannel bind:channel />
-	<div class="flex flex-col-reverse p-3 grow overflow-y-scroll">
+	<div class="flex flex-col-reverse p-3 grow overflow-y-scroll lg:w-[425px] w-[415px]">
 		{#each chatHistory as sender}
 			<Message bind:sender />
 		{/each}
