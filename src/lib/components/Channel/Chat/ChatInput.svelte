@@ -1,8 +1,8 @@
 <script lang="ts">
-	// import IconChatAttachment from '$lib/assets/icons/chat/IconChatAttachment.svelte'
-	// import IconChatEmoji from '$lib/assets/icons/chat/IconChatEmoji.svelte'
-	// import IconChatGif from '$lib/assets/icons/chat/IconChatGif.svelte'
-	// import IconChatCode from '$lib/assets/icons/chat/IconChatCode.svelte'
+	import IconChatAttachment from '$lib/assets/icons/chat/IconChatAttachment.svelte'
+	import IconChatEmoji from '$lib/assets/icons/chat/IconChatEmoji.svelte'
+	import IconChatGif from '$lib/assets/icons/chat/IconChatGif.svelte'
+	import IconChatCode from '$lib/assets/icons/chat/IconChatCode.svelte'
 	import IconChatSendMessage from '$lib/assets/icons/chat/IconChatSendMessage.svelte'
 	import { emitMessageToChannel } from '$lib/websocket'
 
@@ -23,30 +23,38 @@
 </script>
 
 <form class="rounded-lg bg-base-200 p-2 w-full">
-	<!-- <button
+	<button
+		disabled
 		type="button"
-		class="inline-flex justify-center p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+		class="btn border-none text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 tooltip font-normal normal-case"
+		data-tip="Attachment">
 		<IconChatAttachment />
 		<span class="sr-only">Upload attachment</span>
 	</button>
 	<button
+		disabled
 		type="button"
-		class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+		class="btn border-none text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 tooltip font-normal normal-case"
+		data-tip="Emoji">
 		<IconChatEmoji />
 		<span class="sr-only">Add emoji</span>
 	</button>
 	<button
+		disabled
 		type="button"
-		class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+		class="btn border-none text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 tooltip font-normal normal-case"
+		data-tip="GIF">
 		<IconChatGif />
 		<span class="sr-only">Add GIF</span>
 	</button>
 	<button
+		disabled
 		type="button"
-		class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+		class="btn border-none text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 tooltip font-normal normal-case"
+		data-tip="Code snippet">
 		<IconChatCode />
 		<span class="sr-only">Add code snippet</span>
-	</button> -->
+	</button>
 	<div class="flex items-center py-2 rounded-lg">
 		<textarea
 			on:keydown={(e) => {
