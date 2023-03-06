@@ -2,7 +2,7 @@
 	import ChatInput from '$lib/components/Channel/Chat/ChatInput.svelte'
 	import Message from '$lib/components/Channel/Chat/Message.svelte'
 	import { channelMessage } from '$lib/stores/websocketStore'
-	import CollapseViewChannel from '$lib/components/Channel/Chat/CollapseViewChannel.svelte'
+	import DropdownViewChannel from '$lib/components/Channel/Chat/DropdownViewChannel.svelte'
 
 	export let channel: any = undefined,
 		userId: string = '',
@@ -43,9 +43,9 @@
 	})
 </script>
 
-<div class="bg-base-100 flex flex-col overflow-y-hidden hover:opacity-100 opacity-70">
-	<CollapseViewChannel bind:channel />
-	<div class="flex flex-col-reverse p-3 grow overflow-y-auto">
+<div class="bg-base-100 flex flex-col overflow-y-hidden opacity-100">
+	<DropdownViewChannel bind:channel />
+	<div class="flex flex-col-reverse p-3 grow overflow-y-scroll">
 		{#each chatHistory as sender}
 			<Message bind:sender />
 		{/each}

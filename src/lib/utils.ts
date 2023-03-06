@@ -60,3 +60,9 @@ export const copyToClipboard = async (text: string) => {
 		console.error('Error copying text to clipboard:', err)
 	}
 }
+
+export const hasOneHourPassed = (date: number) => {
+	const hour = 1000 * 60 * 60
+	const hourago = Date.now() - hour
+	return hourago > date
+}

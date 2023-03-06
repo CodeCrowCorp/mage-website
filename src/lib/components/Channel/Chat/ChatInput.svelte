@@ -22,7 +22,7 @@
 	}
 </script>
 
-<form class="rounded-lg bg-base-200 p-2 w-96">
+<form class="rounded-lg bg-base-200 p-2 w-full">
 	<!-- <button
 		type="button"
 		class="inline-flex justify-center p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
