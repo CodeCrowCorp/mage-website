@@ -3,6 +3,7 @@ import { get } from '$lib/api'
 
 export const load = (async ({ params, locals }) => {
 	const userId = locals?.user?.userId || ''
+	const token = locals?.user?.token || ''
 	const username = locals?.user?.user?.username || ''
 	return {
 		lazy: {
@@ -10,6 +11,7 @@ export const load = (async ({ params, locals }) => {
 		},
 		channelId: params.channelId,
 		userId,
-		username
+		username,
+		token
 	}
 }) satisfies PageServerLoad

@@ -88,11 +88,12 @@
 					data-tip="Edit channel">
 					Edit channel
 				</button>
-				<button
+				<label
+					for="modal-delete-channel"
 					class="btn col-span-1 bg-error text-white border-none font-normal normal-case tooltip tooltip-left tooltip-error flex"
 					data-tip="Delete channel">
 					<IconChatDelete />
-				</button>
+				</label>
 			</div>
 		{/if}
 	</ul>
