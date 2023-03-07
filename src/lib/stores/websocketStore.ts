@@ -1,6 +1,6 @@
 import { writable, type Writable } from 'svelte/store'
 
-export const platformConnection: Writable<string> = writable()
-export const channelConnection: Writable<string> = writable()
-export const platformMessage: Writable<string> = writable()
-export const channelMessage: Writable<any> = writable()
+export const platform_connection: Writable<string> = writable()
+export const channel_connection: Writable<string> = writable()
+export const platform_message: Writable<string> = writable()
+export const channel_message: Writable<any> = writable()

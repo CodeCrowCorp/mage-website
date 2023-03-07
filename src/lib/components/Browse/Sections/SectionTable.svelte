@@ -1,6 +1,6 @@
 <script lang="ts">
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
-	import IconLock from '$lib/assets/icons/IconLock.svelte'
+	// import IconLock from '$lib/assets/icons/IconLock.svelte'
 	// import VirtualList from '@sveltejs/svelte-virtual-list'
 	import { techList } from '$lib/stores/channelStore'
 	import { goto } from '$app/navigation'
@@ -19,11 +19,11 @@
 			<table class="w-full">
 				<thead>
 					<tr>
-						<th class="pl-4">Host</th>
-						<th>Title</th>
-						<th>Viewers</th>
-						<th>Tag</th>
-						<th>Category</th>
+						<th class="pl-4 text-start">Host</th>
+						<th class="text-start">Title</th>
+						<th class="text-start">Viewers</th>
+						<th class="text-start">Tag</th>
+						<th class="text-start">Category</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -53,9 +53,9 @@
 							</td>
 							<td>
 								<div class="flex gap-2 my-3">
-									{#if channel.isPrivate}
+									<!-- {#if channel.isPrivate}
 										<IconLock />
-									{/if}
+									{/if} -->
 									<IconViewers />
 									<span>{channel.memberCount || '0'}</span>
 								</div>
@@ -66,7 +66,7 @@
 										{#each channel.tags as tag}
 											<div>
 												<span
-													class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold"
+													class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold border-none"
 													>{tag}</span>
 											</div>
 										{/each}
@@ -89,11 +89,11 @@
 				</tbody>
 				<tfoot>
 					<tr>
-						<th class="pl-4">Host</th>
-						<th>Title</th>
-						<th>Viewers</th>
-						<th>Tags</th>
-						<th>Category</th>
+						<th class="pl-4 text-start">Host</th>
+						<th class="text-start">Title</th>
+						<th class="text-start">Viewers</th>
+						<th class="text-start">Tag</th>
+						<th class="text-start">Category</th>
 					</tr>
 				</tfoot>
 			</table>

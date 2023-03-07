@@ -5,34 +5,10 @@
 	import IconChatHorizontalMore from '$lib/assets/icons/chat/IconChatHorizontalMore.svelte'
 	import ProfileCard from '$lib/components/Channel/Chat/ProfileCard.svelte'
 	import { emitDeleteMessageToChannel } from '$lib/websocket'
+	import { getColoredRole } from '$lib/utils'
 
 	export let sender: any
-	let coloredRoles: { tagColor?: any; textColor?: string } = {}
-
-	switch (sender.role) {
-		case 'Host':
-			coloredRoles = {
-				tagColor: 'bg-secondary',
-				textColor: 'text-pink-500'
-			}
-			break
-		case 'You':
-			coloredRoles = {
-				tagColor: 'bg-gray-600'
-			}
-			break
-		case 'Mod':
-			coloredRoles = {
-				tagColor: 'bg-green-700',
-				textColor: 'text-success'
-			}
-			break
-		case 'Rando':
-			coloredRoles = {
-				textColor: 'text-info'
-			}
-			break
-	}
+	let coloredRole = getColoredRole(sender.role)
 
 	const deleteMessage = () => {
 		var channelId = sender.eventName.split('-').pop()
@@ -53,7 +29,7 @@
 				<span>
 					<span class="break-words">{sender.message}</span>
 					<span class="font-medium">@{sender.userData?.username}</span>
-					<span class="{coloredRoles?.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
+					<span class="{coloredRole?.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
 						>{sender.role}</span>
 				</span>
 				<div
@@ -74,12 +50,12 @@
 			<div class="p-1 border border-transparent rounded-lg flex gap-2 w-96">
 				<span>
 					{#if sender.role === 'Host' || sender.role === 'Mod'}
-						<span class="{coloredRoles?.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
+						<span class="{coloredRole?.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
 							>{sender.role}</span>
 					{/if}
 					<span
 						data-popover-target="popover-user-profile"
-						class="{coloredRoles?.textColor} font-medium">@{sender.userData?.username}</span>
+						class="{coloredRole?.textColor} font-medium">@{sender.userData?.username}</span>
 					<span class="break-words">{sender.message}</span>
 					<div
 						class="group-hover:block dropdown-menu absolute hidden right-0 dropdown dropdown-left dropdown-end"
