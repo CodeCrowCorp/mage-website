@@ -1,7 +1,7 @@
 <script lang="ts">
 	import SubscriberItem from './Elements/SubscriberItem.svelte'
 
-	export let subscribers = []
+	export let subscribers
 </script>
 
 <div class="flex flex-row justify-center gap-5 mt-8">
