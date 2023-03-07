@@ -3,7 +3,7 @@
 	import AvatarLoader from './Elements/AvatarLoader.svelte'
 	import { page } from '$app/stores'
 
-	export let profile,
+	export let profile: any,
 		showDrawer = false
 	$: currentUser = $page.data?.user?.user
 </script>
@@ -35,6 +35,7 @@
 					</button>
 					<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 						<li>
+							<!-- svelte-ignore a11y-click-events-have-key-events -->
 							<label for="edit-profile-drawer" on:click={() => (showDrawer = true)}> Edit</label>
 						</li>
 					</ul>
