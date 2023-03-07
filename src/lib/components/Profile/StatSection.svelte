@@ -13,7 +13,7 @@
 <div class="mt-10 py-10 border-t border-blueGray-200 text-center">
 	<div class="flex flex-wrap justify-center">
 		<div class="w-full px-4">
-			<div class="tabs tabs-boxed flex justify-center bg-base-100">
+			<div class="tabs-boxed flex justify-center bg-base-100">
 				{#each tabs as tab, index}
 					<button
 						class="tab"

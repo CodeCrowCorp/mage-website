@@ -25,7 +25,7 @@
 		</div>
 	</div>
 	<div class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
-		<div class="py-6 px-3 mt-32 sm:mt-0 flex justify-end gap-4">
+		<div class="py-6 px-3 justify-center flex md:justify-end gap-4">
 			<button class="btn btn-secondary">Subscribe</button>
 			<button class="btn btn-primary" disabled>Sponsor</button>
 			{#if currentUser.username === $page.params.customUsername}
