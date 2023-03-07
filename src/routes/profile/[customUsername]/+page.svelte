@@ -7,42 +7,17 @@
 	import StatSection from '$lib/components/Profile/StatSection.svelte'
 	import TopSection from '$lib/components/Profile/TopSection.svelte'
 	import UserDetails from '$lib/components/Profile/Elements/UserDetails.svelte'
+	import type { PageData } from './$types'
 
-	export let data
+	export let data: PageData
 	$: ({ profile } = data)
 
 	let showDrawer = false
-	let myChannels = []
-	let mySubscribers = []
-	// let profile = {}
 
 	onMount(async () => {
 		if (!$techList.length) {
 			await getTechListJson()
 		}
-
-		// profile = await get(`users/search/username?username=${$page.params.customUsername}`)
-		// // const user = await get(`users/search/id?userId=${profile._id}`)
-
-		// console.log(profile)
-		// if (profile) {
-		// 	myChannels = await get(`channels/me/hosted?skip=${0}&limit=${10}`, {
-		// 		userId: profile._id,
-		// 		token: profile.token
-		// 	})
-		// 	// console.log(myChannels)
-
-		// 	mySubscribers = await get(
-		// 		`subscribe?source=${
-		// 			profile._id
-		// 		}&sourceType=${'source2'}&searchQuery=${''}&skip=${0}&limit=${10}`,
-		// 		{
-		// 			userId: profile._id,
-		// 			token: profile.token
-		// 		}
-		// 	)
-		// 	// console.log(mySubscribers)
-		// }
 	})
 </script>
 
