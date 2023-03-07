@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ChatInput from '$lib/components/Channel/Chat/ChatInput.svelte'
 	import Message from '$lib/components/Channel/Chat/Message.svelte'
-	import { channelMessage } from '$lib/stores/websocketStore'
+	import { channel_message } from '$lib/stores/websocketStore'
 	import DropdownViewChannel from '$lib/components/Channel/Chat/DropdownViewChannel.svelte'
 
 	export let channel: any = undefined,
@@ -18,7 +18,7 @@
 		return msg
 	}
 
-	channelMessage.subscribe((value) => {
+	channel_message.subscribe((value) => {
 		if (!value) return
 		var parsedMsg = JSON.parse(value)
 		if (parsedMsg.eventName === `channel-message-${channel?._id}`) {

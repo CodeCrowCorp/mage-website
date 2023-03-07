@@ -10,9 +10,9 @@
 		channelSocket,
 		emitChannelSubscribeByUser
 	} from '$lib/websocket'
-	import { channelConnection, channelMessage } from '$lib/stores/websocketStore'
+	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
-	import { isChatDrawerOpen } from '$lib/stores/channelStore'
+	import { is_chat_drawer_open } from '$lib/stores/channelStore'
 	import Modal from '$lib/components/Global/Modal.svelte'
 	import { goto } from '$app/navigation'
 
@@ -28,7 +28,7 @@
 		channelSocket.addEventListener('open', (data) => {
 			console.log('channel socket connection open')
 			console.log(data)
-			channelConnection.set('open')
+			channel_connection.set('open')
 			emitChannelSubscribeByUser({ channelId, userId })
 			emitHistoryToChannel({ channelId, skip: 100 })
 		})
@@ -36,7 +36,7 @@
 			console.log('channel listening to messages')
 			if (isJsonString(data.data)) {
 				console.log('data', data.data)
-				channelMessage.set(data.data)
+				channel_message.set(data.data)
 			}
 		})
 		channelSocket.addEventListener('error', (data) => {
@@ -46,11 +46,11 @@
 		channelSocket.addEventListener('close', (data) => {
 			console.log('channel socket connection close')
 			console.log(data)
-			channelConnection.set('close')
+			channel_connection.set('close')
 		})
 
 		setTimeout(() => {
-			$isChatDrawerOpen = true
+			$is_chat_drawer_open = true
 		}, 700)
 	})
 
@@ -75,7 +75,7 @@
 				id="chat-drawer"
 				type="checkbox"
 				class="drawer-toggle"
-				bind:checked={$isChatDrawerOpen} />
+				bind:checked={$is_chat_drawer_open} />
 			<div class="drawer-content">
 				<VideoGrid />
 			</div>

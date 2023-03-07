@@ -10,7 +10,7 @@ export const categoryAssets: Writable<{
 	web3: object
 	game: object
 }> = writable({ web2: {}, web3: {}, game: {} })
-export const isChatDrawerOpen: Writable<boolean> = writable(false)
+export const is_chat_drawer_open: Writable<boolean> = writable(false)
 
 async function createChannel({
 	title,
