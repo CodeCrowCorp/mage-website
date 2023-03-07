@@ -1,6 +1,6 @@
 <script lang="ts">
 	import DrawerChat from '$lib/components/Channel/Chat/DrawerChat.svelte'
-	import VideoGrid from '$lib/components/Channel/VideoGrid.svelte'
+	import VideoGrid from '$lib/components/Channel/Stream/VideoGrid.svelte'
 	import type { PageData } from './$types'
 	import { onDestroy, onMount } from 'svelte'
 	import { get, del } from '$lib/api'
@@ -79,7 +79,7 @@
 			<div class="drawer-content">
 				<VideoGrid />
 			</div>
-			<div class="drawer-side m-5 rounded-lg md:w-fit">
+			<div class="drawer-side m-5 rounded-lg md:w-fit lg:drop-shadow-lg">
 				<label for="chat-drawer" class="drawer-overlay" />
 				<DrawerChat channel={value} bind:userId bind:username />
 			</div>

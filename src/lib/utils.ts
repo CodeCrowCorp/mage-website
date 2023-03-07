@@ -66,3 +66,26 @@ export const hasOneHourPassed = (date: number) => {
 	const hourago = Date.now() - hour
 	return hourago > date
 }
+
+export const getColoredRole = (role: any) => {
+	switch (role) {
+		case 'Host':
+			return {
+				tagColor: 'bg-secondary',
+				textColor: 'text-pink-500'
+			}
+		case 'You':
+			return {
+				tagColor: 'bg-gray-600'
+			}
+		case 'Mod':
+			return {
+				tagColor: 'bg-green-700',
+				textColor: 'text-success'
+			}
+		case 'Rando':
+			return {
+				textColor: 'text-info'
+			}
+	}
+}
