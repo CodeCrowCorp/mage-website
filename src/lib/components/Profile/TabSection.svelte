@@ -1,10 +1,9 @@
 <script lang="ts">
 	import ListSubscribe from '$lib/components/Profile/ListSubscribe.svelte'
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
-	import Stats from './Elements/Stats.svelte'
+	import Stats from '$lib/components/Profile/Elements/Stats.svelte'
 
-	export let myChannels: any = [],
-		mySubscribers: any = []
+	export let channels: Promise<any>, subscribers: Promise<any>, interests: Promise<any>
 
 	let tabs = ['Stats', 'Channels', 'Subscribers']
 	let activeTab = 0
@@ -25,10 +24,14 @@
 				<Stats />
 			</div>
 			<div class="flex-auto h-full text-left" class:hidden={activeTab != 1}>
-				<SectionTable bind:channels={myChannels} />
+				{#await channels}
+					Place skeleton layout here
+				{:then value}
+					<SectionTable channels={value} />
+				{/await}
 			</div>
 			<div class="flex-auto h-full" class:hidden={activeTab != 2}>
-				<ListSubscribe bind:subscribers={mySubscribers} />
+				<ListSubscribe {subscribers} {interests} />
 			</div>
 		</div>
 	</div>

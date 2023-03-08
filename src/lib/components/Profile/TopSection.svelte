@@ -30,7 +30,7 @@
 			<button class="btn btn-primary" disabled>Sponsor</button>
 			{#if currentUser.username === $page.params.customUsername}
 				<div class="dropdown dropdown-end">
-					<button class="btn btn-circle btn-primary" tabindex="0">
+					<button class="btn btn-circle" tabindex="0">
 						<IconMore />
 					</button>
 					<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">

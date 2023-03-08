@@ -7,8 +7,7 @@
 	import { goto } from '$app/navigation'
 	import { get, post, put } from '$lib/api'
 
-	export let showDrawer: boolean
-	export let user: any
+	export let showDrawer: boolean, user: any
 
 	let newChannel: any = {
 			title: '',

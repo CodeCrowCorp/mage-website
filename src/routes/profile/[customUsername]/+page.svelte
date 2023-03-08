@@ -1,48 +1,41 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
 	import DrawerEditProfile from '$lib/components/Profile/DrawerEditProfile.svelte'
-	import { page } from '$app/stores'
-	import { get } from '$lib/api'
-	import { getTechListJson, techList } from '$lib/stores/channelStore'
-	import StatSection from '$lib/components/Profile/StatSection.svelte'
+	import TabSection from '$lib/components/Profile/TabSection.svelte'
 	import TopSection from '$lib/components/Profile/TopSection.svelte'
 	import UserDetails from '$lib/components/Profile/Elements/UserDetails.svelte'
 	import type { PageData } from './$types'
 
 	export let data: PageData
-	$: ({ profile } = data)
 
 	let showDrawer = false
-
-	onMount(async () => {
-		if (!$techList.length) {
-			await getTechListJson()
-		}
-	})
 </script>
 
-<div class="relative block h-[31rem]">
-	<div
-		class="absolute top-0 w-full h-full bg-center bg-cover"
-		style="background-image: url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2710&amp;q=80');">
-		<span id="blackOverlay" class="w-full h-full absolute opacity-50 bg-black" />
-	</div>
-</div>
-<div class="relative py-16">
-	<div class="container mx-auto px-4">
+{#await data.lazy.profile}
+	<span>Put skeleton layout here</span>
+{:then value}
+	<div class="relative block h-[31rem]">
 		<div
-			class="relative flex flex-col min-w-0 break-words bg-base-100 w-full mb-6 shadow-xl rounded-lg -mt-64">
-			<div class="px-6">
-				<TopSection bind:profile bind:showDrawer />
-				<UserDetails bind:profile bind:techList={$techList} />
-				<StatSection
-					bind:myChannels={data.lazy.myChannels}
-					bind:mySubscribers={data.lazy.mySubscribers} />
+			class="absolute top-0 w-full h-full bg-center bg-cover"
+			style="background-image: url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2710&amp;q=80');">
+			<span id="blackOverlay" class="w-full h-full absolute opacity-50 bg-black" />
+		</div>
+	</div>
+	<div class="relative py-16">
+		<div class="container mx-auto px-4">
+			<div
+				class="relative flex flex-col min-w-0 break-words bg-base-100 w-full mb-6 shadow-xl rounded-lg -mt-64">
+				<div class="px-6">
+					<TopSection profile={value} bind:showDrawer />
+					<UserDetails profile={value} />
+					<TabSection
+						channels={data.lazy.channels}
+						subscribers={data.lazy.subscribers}
+						interests={data.lazy.interests} />
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
-
-{#if showDrawer}
-	<DrawerEditProfile bind:profile bind:showDrawer />
-{/if}
+	{#if showDrawer}
+		<DrawerEditProfile profile={value} bind:showDrawer />
+	{/if}
+{/await}

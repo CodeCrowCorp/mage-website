@@ -1,5 +1,5 @@
 <script lang="ts">
-	import DrawerAddCategory from '../Browse/DrawerAddCategory.svelte'
+	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 
 	export let showDrawer: boolean
 	export let profile: any
