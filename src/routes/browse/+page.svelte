@@ -12,7 +12,7 @@
 </script>
 
 <SectionCarousel bind:channels={data.lazy.mostActiveChannels} />
-<SearchBar />
+<SearchBar {user} />
 
 <SectionChannel sectionId={'weekly'} bind:channels={data.lazy.weeklyChannels} />
 

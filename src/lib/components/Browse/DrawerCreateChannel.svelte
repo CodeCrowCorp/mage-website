@@ -7,7 +7,7 @@
 	import { goto } from '$app/navigation'
 	import { get, post, put } from '$lib/api'
 
-	export let showDrawer: boolean
+	export let showDrawer: boolean, user: any
 
 	let newChannel: any = {
 			title: '',
@@ -16,7 +16,7 @@
 			category: [],
 			tags: [],
 			isPrivate: false,
-			user: '',
+			user: user?.user._id,
 			channelType: ''
 		},
 		fileuploader: HTMLInputElement,
@@ -62,15 +62,46 @@
 
 	const addChannel = async () => {
 		const channel = await post('/channel', newChannel)
-		await put(`users/host-channels?hostChannelId=${channel._id}`)
-		goto(`/channel/${channel._id}`)
+		// await put(`/users/host-channels?hostChannelId=${channel._id}`)
+		if (user) {
+			const updatedUser = await put(
+				`users/host-channels?hostChannelId=${channel._id}`,
+				{},
+				{
+					userId: user.userId,
+					token: user.token
+				}
+			)
+			if (!updatedUser.error) {
+				// current_user.set(updatedUser)
+				console.log(updatedUser)
+
+				goto(`/channel/${channel._id}`)
+			}
+		}
+	}
+
+	let refToggle: any
+	const toggleDrawer = () => {
+		if (refToggle) {
+			refToggle.checked = false
+		}
+		setTimeout(() => {
+			showDrawer = false
+		}, 200)
 	}
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
-	<input id="create-channel-drawer" type="checkbox" class="drawer-toggle" />
+	<input id="create-channel-drawer" bind:this={refToggle} type="checkbox" class="drawer-toggle" />
 	<div class="drawer-side">
-		<div on:click={() => (showDrawer = false)} class="drawer-overlay" />
+		<label
+			for="create-channel-drawer"
+			on:click={() =>
+				setTimeout(() => {
+					showDrawer = false
+				}, 200)}
+			class="drawer-overlay" />
 		{#if showAddCategory}
 			<DrawerAddCategory
 				bind:showAddCategory
@@ -169,7 +200,7 @@
 					</div>
 
 					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
-						<button type="button" class="btn btn-default grow" on:click={() => (showDrawer = false)}
+						<button type="button" class="btn btn-default grow" on:click={() => toggleDrawer()}
 							>Cancel</button>
 						<button type="submit" class="btn btn-primary grow">Add</button>
 					</div>

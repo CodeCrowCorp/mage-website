@@ -2,11 +2,18 @@
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
 	// import IconLock from '$lib/assets/icons/IconLock.svelte'
 	// import VirtualList from '@sveltejs/svelte-virtual-list'
-	import { techList } from '$lib/stores/channelStore'
 	import { goto } from '$app/navigation'
 	import LoadingItemTable from '$lib/components/Browse/Sections/LoadingItemTable.svelte'
+	import { onMount } from 'svelte'
+	import { getTechListJson, techList } from '$lib/stores/channelStore'
 
 	export let channels: any = []
+
+	onMount(async () => {
+		if (!$techList.length) {
+			await getTechListJson()
+		}
+	})
 </script>
 
 {#await channels}
