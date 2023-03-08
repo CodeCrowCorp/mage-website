@@ -2,11 +2,11 @@
 <table class="w-full">
 	<thead>
 		<tr>
-			<th class="pl-4">Host</th>
-			<th>Title</th>
-			<th>Viewers</th>
-			<th>Tag</th>
-			<th>Category</th>
+			<th class="pl-4 text-start">Host</th>
+			<th class="text-start">Title</th>
+			<th class="text-start">Viewers</th>
+			<th class="text-start">Tag</th>
+			<th class="text-start">Category</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -40,11 +40,11 @@
 	</tbody>
 	<tfoot>
 		<tr>
-			<th class="pl-4">Host</th>
-			<th>Title</th>
-			<th>Viewers</th>
-			<th>Tags</th>
-			<th>Category</th>
+			<th class="pl-4 text-start">Host</th>
+			<th class="text-start">Title</th>
+			<th class="text-start">Viewers</th>
+			<th class="text-start">Tag</th>
+			<th class="text-start">Category</th>
 		</tr>
 	</tfoot>
 </table>

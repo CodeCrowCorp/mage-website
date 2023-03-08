@@ -3,9 +3,9 @@ import { env } from '$env/dynamic/public'
 // import { currentChannel } from '$lib/stores/channelStore'
 import { emitRoomMemberUpdate, emitUserActions } from '$lib/websocket'
 
-export const isSharingScreen: Writable<boolean> = writable(false)
-export const isSharingWebcam: Writable<boolean> = writable(false)
-export const isSharingAudio: Writable<boolean> = writable(false)
+export const is_sharing_screen: Writable<boolean> = writable(false)
+export const is_sharing_webcam: Writable<boolean> = writable(false)
+export const is_sharing_audio: Writable<boolean> = writable(false)
 
 let videoStreamId = ''
 let hasActiveTracks = false

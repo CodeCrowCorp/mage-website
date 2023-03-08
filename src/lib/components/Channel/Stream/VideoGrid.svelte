@@ -1,6 +1,7 @@
 <script lang="ts">
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
-	import StreamControls from '$lib/components/Channel/StreamControls.svelte'
+	import StreamControls from '$lib/components/Channel/Stream/StreamControls.svelte'
+	import DropdownViewers from '$lib/components/Channel/Stream/DropdownViewers.svelte'
 	export let count: number = 10
 </script>
 
@@ -11,10 +12,13 @@
 				class="btn-sm bg-red-700 rounded-md font-medium text-white border-none flex items-center">
 				LIVE
 			</span>
-			<button class="btn btn-sm rounded-md font-medium gap-2 text-white border-none">
-				<IconViewers />
-				{count}
-			</button>
+			<div class="dropdown dropdown-bottom">
+				<label class="btn btn-sm rounded-md font-medium gap-2 text-white border-none" tabindex="0">
+					<IconViewers />
+					{count}
+				</label>
+				<DropdownViewers />
+			</div>
 		</div>
 		<!-- {#each} -->
 		<!-- <div class="carousel-item h-full">

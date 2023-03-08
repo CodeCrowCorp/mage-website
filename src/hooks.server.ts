@@ -99,8 +99,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 				user
 			}
 		}
-	} else {
-		return await resolve(event)
 	}
 
 	if (

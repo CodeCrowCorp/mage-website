@@ -15,8 +15,8 @@
 	import { page } from '$app/stores'
 	import { onMount } from 'svelte'
 	import { get } from '$lib/api'
-	import { initPlatformSocket, platformSocket } from '$lib/websocket'
-	import { platformConnection, platformMessage } from '$lib/stores/websocketStore'
+	import { emitUserConnection, initPlatformSocket, platformSocket } from '$lib/websocket'
+	import { platform_connection, platform_message } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
 	import IconMageText from '$lib/assets/icons/IconMageText.svg'
 	import IconMageTextDark from '$lib/assets/icons/IconMageTextDark.svg'
@@ -43,12 +43,13 @@
 		platformSocket.addEventListener('open', (data) => {
 			console.log('socket connection open')
 			console.log(data)
-			platformConnection.set('open')
+			platform_connection.set('open')
+			emitUserConnection({ userId: $page.data?.user?.userId, isOnline: true })
 		})
 		platformSocket.addEventListener('message', (data) => {
 			console.log('listening to messages')
 			console.log(data.data)
-			if (isJsonString(data.data)) platformMessage.set(data.data)
+			if (isJsonString(data.data)) platform_message.set(data.data)
 		})
 		platformSocket.addEventListener('error', (data) => {
 			console.log('socket connection error')
@@ -57,7 +58,7 @@
 		platformSocket.addEventListener('close', (data) => {
 			console.log('socket connection close')
 			console.log(data)
-			platformConnection.set('close')
+			platform_connection.set('close')
 		})
 
 		if (!$techList.length) {

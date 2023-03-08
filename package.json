@@ -39,7 +39,7 @@
 		"svelte": "^3.55.1",
 		"svelte-check": "^3.0.4",
 		"svelte-preprocess": "^5.0.1",
-		"svelte-tags-input": "^4.0.0",
+		"svelte-tags-input": "^5.0.0",
 		"svgo": "^3.0.2",
 		"swiper": "^9.1.0",
 		"tailwind-clip-path": "^1.0.0",

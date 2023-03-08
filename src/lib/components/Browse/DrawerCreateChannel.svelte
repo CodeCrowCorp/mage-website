@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IconPhoto from '$lib/assets/icons/IconPhoto.svelte'
+	// import IconPhoto from '$lib/assets/icons/IconPhoto.svelte'
 	import { tags } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
@@ -95,7 +95,6 @@
 <div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
 	<input id="create-channel-drawer" bind:this={refToggle} type="checkbox" class="drawer-toggle" />
 	<div class="drawer-side">
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<label
 			for="create-channel-drawer"
 			on:click={() =>
@@ -157,9 +156,8 @@
 						<div class="flex flex-wrap">
 							{#if $tags && $tags.length > 0}
 								{#each $tags as tag}
-									<!-- svelte-ignore a11y-click-events-have-key-events -->
 									<span
-										class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold mx-1 cursor-pointer"
+										class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold mx-1 cursor-pointer border-none"
 										on:click={() => addTag(tag.name)}>{tag.name}</span>
 								{/each}
 							{:else}

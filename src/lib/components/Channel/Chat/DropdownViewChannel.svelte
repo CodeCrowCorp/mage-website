@@ -53,7 +53,8 @@
 					{#if channel.tags && channel.tags.length}
 						{#each channel.tags as tag}
 							<div>
-								<span class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold"
+								<span
+									class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold border-none"
 									>{tag}</span>
 							</div>
 						{/each}
