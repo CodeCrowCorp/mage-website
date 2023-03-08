@@ -4,16 +4,9 @@
 	// import VirtualList from '@sveltejs/svelte-virtual-list'
 	import { goto } from '$app/navigation'
 	import LoadingItemTable from '$lib/components/Browse/Sections/LoadingItemTable.svelte'
-	import { onMount } from 'svelte'
-	import { getTechListJson, techList } from '$lib/stores/channelStore'
+	import { techList } from '$lib/stores/channelStore'
 
 	export let channels: any = []
-
-	onMount(async () => {
-		if (!$techList.length) {
-			await getTechListJson()
-		}
-	})
 </script>
 
 {#await channels}
