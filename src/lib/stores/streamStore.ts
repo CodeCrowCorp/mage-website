@@ -3,6 +3,10 @@ import { env } from '$env/dynamic/public'
 // import { currentChannel } from '$lib/stores/channelStore'
 import { emitRoomMemberUpdate, emitUserActions } from '$lib/websocket'
 
+export const is_sharing_screen: Writable<boolean> = writable(false)
+export const is_sharing_webcam: Writable<boolean> = writable(false)
+export const is_sharing_audio: Writable<boolean> = writable(false)
+
 let videoStreamId = ''
 let hasActiveTracks = false
 
@@ -770,26 +774,28 @@ async function createStreamRecord(stream: any) {
 		method: 'POST',
 		body: stream
 	})
-	
 }
 
-async function updateProfileViews(view:any) {
+async function updateProfileViews(view: any) {
 	return await fetch(`${env.PUBLIC_API_URL}/stats/profile/views/week`, {
 		method: 'POST',
 		body: view
-	})	
+	})
 }
 
-async function getProfileWeeklyViews(profile:any) {
-	return await fetch(`${env.PUBLIC_API_URL}/stats/profile/views?id=${profile.id}&profileType=${profile.type}`, {
-		method: 'GET',
-	})	
+async function getProfileWeeklyViews(profile: any) {
+	return await fetch(
+		`${env.PUBLIC_API_URL}/stats/profile/views?id=${profile.id}&profileType=${profile.type}`,
+		{
+			method: 'GET'
+		}
+	)
 }
 
-async function updateTwitterShareCount(channelId:string) {
+async function updateTwitterShareCount(channelId: string) {
 	return await fetch(`${env.PUBLIC_API_URL}/stats/channel/shared?channelId=${channelId}`, {
 		method: 'PUT'
-	})	
+	})
 }
 
 async function getTwitterShareCount(channelId: string) {
@@ -798,19 +804,19 @@ async function getTwitterShareCount(channelId: string) {
 	})
 }
 
-async function getStreamStreak(userId:string) {
+async function getStreamStreak(userId: string) {
 	return await fetch(`${env.PUBLIC_API_URL}/stats/stream/streak?userId=${userId}`, {
 		method: 'GET'
 	})
-} 
+}
 
-async function getStreamAvgLength(userId:string){
+async function getStreamAvgLength(userId: string) {
 	return await fetch(`${env.PUBLIC_API_URL}/stats/stream/avg-length?userId=${userId}`, {
 		method: 'GET'
 	})
 }
 
-async function getStreamTotalHours(userId:string) {
+async function getStreamTotalHours(userId: string) {
 	return await fetch(`${env.PUBLIC_API_URL}/stats/stream/total-hours?userId=${userId}`, {
 		method: 'GET'
 	})

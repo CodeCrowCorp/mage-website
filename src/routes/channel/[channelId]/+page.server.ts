@@ -1,17 +1,17 @@
-import { error } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
-import { getChannel } from '$lib/stores/channelStore'
+import { get } from '$lib/api'
 
 export const load = (async ({ params, locals }) => {
-	const post = await getChannel({ channelId: params.channelId })
-	if (post) {
-		const userId = locals?.user?.userId || ''
-		const username = locals?.user?.user?.username || ''
-		return {
-			post,
-			userId,
-			username
-		}
+	const userId = locals?.user?.userId || ''
+	const token = locals?.user?.token || ''
+	const username = locals?.user?.user?.username || ''
+	return {
+		lazy: {
+			channel: get(`channel?channelId=${params.channelId}`)
+		},
+		channelId: params.channelId,
+		userId,
+		username,
+		token
 	}
-	throw error(404, 'Not found')
 }) satisfies PageServerLoad

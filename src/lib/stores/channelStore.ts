@@ -10,6 +10,7 @@ export const categoryAssets: Writable<{
 	web3: object
 	game: object
 }> = writable({ web2: {}, web3: {}, game: {} })
+export const is_chat_drawer_open: Writable<boolean> = writable(false)
 
 async function createChannel({
 	title,
@@ -344,7 +345,7 @@ async function toggleNotifications({ channel, userId }: { channel: any; userId: 
 
 async function getTechListJson() {
 	if (get(techList).length < 1) {
-		let gameAssets: any = await fetch(`svg-json/image_urls.json`, {
+		let gameAssets: any = await fetch(`/svg-json/image_urls.json`, {
 			method: 'GET'
 		})
 		if (gameAssets.ok) {

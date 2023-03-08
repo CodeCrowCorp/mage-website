@@ -53,7 +53,7 @@
 		</div>
 		{#if currentUser}
 			<li class="w-full">
-				<a href="/profile/me" class="rounded-md justify-center">
+				<a href="/profile/{currentUser.username}" class="rounded-md justify-center">
 					<div>
 						<div>
 							<div class="avatar {currentUser.isOnline ? 'online' : 'offline'}">

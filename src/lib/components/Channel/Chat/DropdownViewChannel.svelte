@@ -4,25 +4,18 @@
 	import { techList } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
+	import { copyToClipboard } from '$lib/utils'
+	import IconChatDelete from '$lib/assets/icons/chat/IconChatDelete.svelte'
 
-	export let channel: any
+	export let channel: any = undefined
 
 	let host: any = {},
 		isHost: boolean = false
 
 	onMount(async () => {
-		host = await get(`users/search/id?userId=${channel.user}`)
-		isHost = channel.user !== $page.data.user.user?._id
+		host = await get(`users/search/id?userId=${channel?.user}`)
+		isHost = channel?.user !== $page.data.user.user?._id
 	})
-
-	const copyToClipboard = async (text: string) => {
-		try {
-			await navigator.clipboard.writeText(text)
-			console.log('Text copied to clipboard')
-		} catch (err) {
-			console.error('Error copying text to clipboard:', err)
-		}
-	}
 </script>
 
 <div class="menu dropdown dropdown-bottom">
@@ -60,7 +53,8 @@
 					{#if channel.tags && channel.tags.length}
 						{#each channel.tags as tag}
 							<div>
-								<span class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold"
+								<span
+									class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold border-none"
 									>{tag}</span>
 							</div>
 						{/each}
@@ -69,7 +63,7 @@
 			</a>
 		</li>
 		<li>
-			<a href="/profile/{host._id}">
+			<a href="/profile/{host?._id}">
 				<div class="flex flex-wrap gap-2">
 					<div class="avatar online">
 						<div
@@ -89,7 +83,19 @@
 			</a>
 		</li>
 		{#if isHost}
-			<button class="btn w-full"> Edit channel </button>
+			<div class="grid grid-cols-5 gap-2">
+				<button
+					class="btn col-span-4 border-none font-normal normal-case tooltip tooltip-top"
+					data-tip="Edit channel">
+					Edit channel
+				</button>
+				<label
+					for="modal-delete-channel"
+					class="btn col-span-1 bg-error text-white border-none font-normal normal-case tooltip tooltip-left tooltip-error flex"
+					data-tip="Delete channel">
+					<IconChatDelete />
+				</label>
+			</div>
 		{/if}
 	</ul>
 </div>

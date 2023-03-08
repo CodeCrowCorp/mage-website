@@ -51,3 +51,41 @@ export const getSectionUrl = ({
 			return `channels?searchQuery=${query}&skip=${skip}&limit=${limit}`
 	}
 }
+
+export const copyToClipboard = async (text: string) => {
+	try {
+		await navigator.clipboard.writeText(text)
+		console.log('Text copied to clipboard')
+	} catch (err) {
+		console.error('Error copying text to clipboard:', err)
+	}
+}
+
+export const hasOneHourPassed = (date: number) => {
+	const hour = 1000 * 60 * 60
+	const hourago = Date.now() - hour
+	return hourago > date
+}
+
+export const getColoredRole = (role: any) => {
+	switch (role) {
+		case 'Host':
+			return {
+				tagColor: 'bg-secondary',
+				textColor: 'text-pink-500'
+			}
+		case 'You':
+			return {
+				tagColor: 'bg-gray-600'
+			}
+		case 'Mod':
+			return {
+				tagColor: 'bg-green-700',
+				textColor: 'text-success'
+			}
+		case 'Rando':
+			return {
+				textColor: 'text-info'
+			}
+	}
+}

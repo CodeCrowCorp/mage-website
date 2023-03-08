@@ -1,8 +1,8 @@
 import { redirect } from '@sveltejs/kit'
+import type { LayoutServerLoad } from './$types'
 
-/** @type {import('./$types').LayoutServerLoad} */
-export function load({ locals }: { locals: any }) {
+export const load = (({ locals }: { locals: any }) => {
 	if (!locals.user || locals.user) {
 		throw redirect(307, '/browse')
 	}
-}
+}) satisfies LayoutServerLoad

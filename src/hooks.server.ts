@@ -10,31 +10,40 @@ import {
 import { Authenticate } from '$lib/authentication/authentication'
 import { get } from '$lib/api'
 import { user_role } from '$lib/stores/authStore'
+import { hasOneHourPassed } from '$lib/utils'
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname
 
 	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
 	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
+	const lastTimeTillLoadConfig = event.cookies.get('loadConfigTime') || '0'
 
 	let user: any = event.locals.user?.user || ''
 	const role = getWritableVal(user_role)
 	let maintenance_mode
-	const remoteConfigs = await get('remote-configs', { userId, token })
-	if (remoteConfigs && remoteConfigs.length) {
-		remoteConfigs.map((config: { flagKey: string; flagValue: boolean }) => {
-			if (config.flagKey === 'maintenance-mode') {
-				is_maintenance_mode_enabled.set(config.flagValue)
-				maintenance_mode = config.flagValue
-			}
-			if (config.flagKey === 'feature-video-responses')
-				is_feature_video_responses_enabled.set(config.flagValue)
-			if (config.flagKey === 'feature-group-chat')
-				is_feature_group_chat_enabled.set(config.flagValue)
-			if (config.flagKey === 'feature-mint-page') is_feature_mint_page_enabled.set(config.flagValue)
-			if (config.flagKey === 'feature-premium-page')
-				is_feature_premium_page_enabled.set(config.flagValue)
+	if (hasOneHourPassed(+lastTimeTillLoadConfig)) {
+		const remoteConfigs = await get('remote-configs', { userId, token })
+		event.cookies.set('loadConfigTime', Date.now().toString(), {
+			path: '/',
+			maxAge: 60 * 60 * 24 * 30
 		})
+		if (remoteConfigs && remoteConfigs.length) {
+			remoteConfigs.map((config: { flagKey: string; flagValue: boolean }) => {
+				if (config.flagKey === 'maintenance-mode') {
+					is_maintenance_mode_enabled.set(config.flagValue)
+					maintenance_mode = config.flagValue
+				}
+				if (config.flagKey === 'feature-video-responses')
+					is_feature_video_responses_enabled.set(config.flagValue)
+				if (config.flagKey === 'feature-group-chat')
+					is_feature_group_chat_enabled.set(config.flagValue)
+				if (config.flagKey === 'feature-mint-page')
+					is_feature_mint_page_enabled.set(config.flagValue)
+				if (config.flagKey === 'feature-premium-page')
+					is_feature_premium_page_enabled.set(config.flagValue)
+			})
+		}
 	}
 
 	if (token && userId) {
@@ -46,23 +55,29 @@ export const handle: Handle = async ({ event, resolve }) => {
 				}
 				user = response.user
 			}
+		} else {
+			if (user.isBanned) {
+				const cookieItem = ['token', 'userId', 'user']
+				cookieItem.forEach((item) => {
+					event.cookies.set(item, '', {
+						path: '/',
+						expires: new Date(0)
+					})
+				})
+			}
 		}
 
 		if (!role) {
-			try {
-				const allRoles = await get('roles', { userId, token })
-				if (Array.isArray(allRoles)) {
-					const userRole = await get('roles/role-mapping', { userId, token })
-					if (userRole && userRole.role) {
-						const usersRoleName = allRoles.find((item) => {
-							return item._id == userRole.role
-						})?.name
+			const allRoles = await get('roles', { userId, token })
+			if (Array.isArray(allRoles)) {
+				const userRole = await get('roles/role-mapping', { userId, token })
+				if (userRole && userRole.role) {
+					const usersRoleName = allRoles.find((item) => {
+						return item._id == userRole.role
+					})?.name
 
-						user_role.set(usersRoleName)
-					}
+					user_role.set(usersRoleName)
 				}
-			} catch (err) {
-				console.log('something went wrong', err)
 			}
 		}
 
@@ -84,18 +99,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 				user
 			}
 		}
-	} else {
-		return await resolve(event)
-	}
-
-	if (user && user.isBanned) {
-		const cookieItem = ['token', 'userId', 'user']
-		cookieItem.forEach((item) => {
-			event.cookies.set(item, '', {
-				path: '/',
-				expires: new Date(0)
-			})
-		})
 	}
 
 	if (

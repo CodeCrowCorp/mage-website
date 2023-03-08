@@ -60,7 +60,7 @@
 		</div>
 		{#if currentUser}
 			<li>
-				<a href="/profile/me" class="hero rounded-md cursor-pointer">
+				<a href="/profile/{currentUser.username}" class="hero rounded-md cursor-pointer">
 					<div>
 						<div class="hero-content">
 							<div class="max-w-md">

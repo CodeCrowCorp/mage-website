@@ -1,18 +1,27 @@
 <script lang="ts">
 	import ChatInput from '$lib/components/Channel/Chat/ChatInput.svelte'
 	import Message from '$lib/components/Channel/Chat/Message.svelte'
-	import { channelMessage } from '$lib/stores/websocketStore'
-	import CollapseViewChannel from '$lib/components/Channel/Chat/CollapseViewChannel.svelte'
+	import { channel_message } from '$lib/stores/websocketStore'
+	import DropdownViewChannel from '$lib/components/Channel/Chat/DropdownViewChannel.svelte'
 
 	export let channel: any = undefined,
 		userId: string = '',
 		username: string = ''
 
 	let chatHistory: any[] = []
-	channelMessage.subscribe((value) => {
+
+	const setRole = (msg: any): any => {
+		if (msg.userData?.userId === channel?.user) msg.role = 'Host'
+		else if (channel?.mods?.includes(msg.userData._id)) msg.role = 'Mod'
+		else if (msg.userData?.userId === userId) msg.role = 'You'
+		else msg.role = 'Rando'
+		return msg
+	}
+
+	channel_message.subscribe((value) => {
 		if (!value) return
 		var parsedMsg = JSON.parse(value)
-		if (parsedMsg.eventName === `channel-message-${channel._id}`) {
+		if (parsedMsg.eventName === `channel-message-${channel?._id}`) {
 			if (parsedMsg.isMessageHistory) {
 				if (Array.isArray(parsedMsg.data)) {
 					parsedMsg.data.forEach((message: any) => {
@@ -32,19 +41,12 @@
 			chatHistory = chatHistory.reverse()
 		}
 	})
-
-	function setRole(msg: any): any {
-		if (msg.userData?.userId === channel.user) msg.role = 'Host'
-		else if (channel.mods?.includes(msg.userData._id)) msg.role = 'Mod'
-		else if (msg.userData?.userId === userId) msg.role = 'You'
-		else msg.role = 'Rando'
-		return msg
-	}
 </script>
 
 <div class="bg-base-100 flex flex-col overflow-y-hidden">
-	<CollapseViewChannel bind:channel />
-	<div class="flex flex-col-reverse p-3 grow overflow-y-auto">
+	<!--lg:opacity-70-->
+	<DropdownViewChannel bind:channel />
+	<div class="flex flex-col-reverse p-3 grow overflow-y-scroll lg:w-[425px] w-[415px]">
 		{#each chatHistory as sender}
 			<Message bind:sender />
 		{/each}

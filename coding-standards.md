@@ -22,7 +22,7 @@ Bad: search_query, search-query
 ### Forms
 
 -use actions rather than on:submit or on:click events
--load data in onMount and show skeleton layouts while loading
+-load data in server load function using streaming-with-promises and show skeleton layouts while loading
 
 ### Custom Stores
 
