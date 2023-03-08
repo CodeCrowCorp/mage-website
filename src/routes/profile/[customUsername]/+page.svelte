@@ -3,6 +3,7 @@
 	import TabSection from '$lib/components/Profile/TabSection.svelte'
 	import TopSection from '$lib/components/Profile/TopSection.svelte'
 	import UserDetails from '$lib/components/Profile/Elements/UserDetails.svelte'
+	import WholePageSkeleton from '$lib/components/Profile/Elements/WholePageSkeleton.svelte'
 	import type { PageData } from './$types'
 
 	export let data: PageData
@@ -11,7 +12,7 @@
 </script>
 
 {#await data.lazy.profile}
-	<span>Put skeleton layout here</span>
+	<WholePageSkeleton />
 {:then value}
 	<div class="relative block h-[31rem]">
 		<div

@@ -28,7 +28,7 @@
 					</div>
 					<div class="w-full lg:w-4/12 px-4 lg:order-1">
 						<div class="flex flex-row justify-center py-4 lg:pt-4 pt-8">
-							<div class="flex flex-row gap-2">
+							<div class="flex flex-row gap-5">
 								<div class="flex flex-col gap-2 items-center">
 									<div
 										role="status"
@@ -38,7 +38,7 @@
 
 									<div
 										role="status"
-										class="flex w-20 h-5 bg-gray-300 rounded-sm dark:bg-gray-700 animate-pulse">
+										class="flex w-24 h-5 bg-gray-300 rounded-sm dark:bg-gray-700 animate-pulse">
 										<span class="sr-only">Loading...</span>
 									</div>
 								</div>
@@ -51,7 +51,7 @@
 
 									<div
 										role="status"
-										class="flex w-20 h-5 bg-gray-300 rounded-sm dark:bg-gray-700 animate-pulse">
+										class="flex w-24 h-5 bg-gray-300 rounded-sm dark:bg-gray-700 animate-pulse">
 										<span class="sr-only">Loading...</span>
 									</div>
 								</div>
@@ -64,7 +64,7 @@
 
 									<div
 										role="status"
-										class="flex w-20 h-5 bg-gray-300 rounded-sm dark:bg-gray-700 animate-pulse">
+										class="flex w-24 h-5 bg-gray-300 rounded-sm dark:bg-gray-700 animate-pulse">
 										<span class="sr-only">Loading...</span>
 									</div>
 								</div>
