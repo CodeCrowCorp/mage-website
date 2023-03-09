@@ -4,7 +4,7 @@
 	// import VirtualList from '@sveltejs/svelte-virtual-list'
 	import { goto } from '$app/navigation'
 	import LoadingItemTable from '$lib/components/Browse/Sections/LoadingItemTable.svelte'
-	import { techList } from '$lib/stores/channelStore'
+	import { tech_list } from '$lib/stores/channelStore'
 
 	export let channels: any = []
 </script>
@@ -78,7 +78,7 @@
 									{#if channel.category && channel.category.length}
 										{#each channel.category as category}
 											<div class="tooltip" data-tip={category}>
-												<img src={$techList[category]} alt="" class="h-7 w-7 m-1" />
+												<img src={$tech_list[category]} alt="" class="h-7 w-7 m-1" />
 											</div>
 										{/each}
 									{/if}

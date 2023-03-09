@@ -20,7 +20,6 @@
 			createdByDisplayName: $page.data.user.user.displayName,
 			createdByUsername: $page.data.user.user.username,
 			avatar: $page.data.user.user.avatar,
-			isHostActive: true,
 			channelType: 'channel'
 		},
 		fileuploader: HTMLInputElement,

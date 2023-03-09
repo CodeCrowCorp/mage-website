@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '$lib/assets/styles/tailwind-output.css'
-	import { techList } from '$lib/stores/channelStore'
+	import { tech_list } from '$lib/stores/channelStore'
 	import imageUrlsJson from '$lib/assets/svg-json/image_urls.json'
 
 	// @ts-ignore
@@ -61,8 +61,8 @@
 			platform_connection.set('close')
 		})
 
-		if (!$techList.length) {
-			$techList = imageUrlsJson
+		if (!$tech_list.length) {
+			$tech_list = imageUrlsJson
 		}
 	})
 </script>

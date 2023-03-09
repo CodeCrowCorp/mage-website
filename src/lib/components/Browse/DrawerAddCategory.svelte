@@ -1,7 +1,7 @@
 <script lang="ts">
 	import IconInfo from '$lib/assets/icons/IconInfo.svelte'
 	import { onMount } from 'svelte'
-	import { categoryAssets } from '$lib/stores/channelStore'
+	import { category_assets } from '$lib/stores/channelStore'
 	import web2UrlsJson from '$lib/assets/svg-json/web2.json'
 	import web3UrlsJson from '$lib/assets/svg-json/web3.json'
 	import gameUrlsJson from '$lib/assets/svg-json/game.json'
@@ -22,25 +22,25 @@
 	const setActiveIcons = () => {
 		assetIcons =
 			activeTab == 'Game'
-				? $categoryAssets.game
+				? $category_assets.game
 				: activeTab == 'Web2'
-				? $categoryAssets.web2
-				: $categoryAssets.web3
+				? $category_assets.web2
+				: $category_assets.web3
 	}
 
 	const loadWeb2 = () => {
-		if (!Object.keys($categoryAssets.web2).length) {
-			$categoryAssets.web2 = web2UrlsJson
+		if (!Object.keys($category_assets.web2).length) {
+			$category_assets.web2 = web2UrlsJson
 		}
 	}
 	const loadWeb3 = () => {
-		if (!Object.keys($categoryAssets.web3).length) {
-			$categoryAssets.web3 = web3UrlsJson
+		if (!Object.keys($category_assets.web3).length) {
+			$category_assets.web3 = web3UrlsJson
 		}
 	}
 	const loadGame = () => {
-		if (!Object.keys($categoryAssets.game).length) {
-			$categoryAssets.game = gameUrlsJson
+		if (!Object.keys($category_assets.game).length) {
+			$category_assets.game = gameUrlsJson
 		}
 	}
 
@@ -53,7 +53,7 @@
 		setActiveIcons()
 	}
 
-	$: allIcons = { ...$categoryAssets.web2, ...$categoryAssets.web3, ...$categoryAssets.game }
+	$: allIcons = { ...$category_assets.web2, ...$category_assets.web3, ...$category_assets.game }
 	$: maxCategoryLabel = categories.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 	$: renderingAssets = searchQuery != '' ? Object.entries(searchResult) : Object.entries(assetIcons)
 
