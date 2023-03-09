@@ -8,7 +8,6 @@
 
 	export let searchPage = false
 	export let searchQuery: string | null = ''
-	export let user: any = undefined
 
 	let showDrawer = false
 </script>
@@ -49,6 +48,6 @@
 	{/if}
 
 	{#if showDrawer && !searchPage}
-		<DrawerCreateChannel bind:user bind:showDrawer />
+		<DrawerCreateChannel bind:showDrawer />
 	{/if}
 </div>

@@ -14,7 +14,7 @@
 
 	onMount(async () => {
 		host = await get(`users/search/id?userId=${channel?.user}`)
-		isHost = channel?.user !== $page.data.user.user?._id
+		isHost = channel?.user !== $page.data.user.userId
 	})
 </script>
 
@@ -63,7 +63,7 @@
 			</a>
 		</li>
 		<li>
-			<a href="/profile/{host?._id}">
+			<a href="/profile/{host?.username}">
 				<div class="flex flex-wrap gap-2">
 					<div class="avatar online">
 						<div

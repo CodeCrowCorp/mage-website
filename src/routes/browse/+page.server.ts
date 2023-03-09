@@ -1,5 +1,6 @@
-import { get } from '$lib/api'
-import type { PageServerLoad } from './$types'
+import type { Actions, PageServerLoad } from './$types'
+import { get, post } from '$lib/api'
+import { redirect } from '@sveltejs/kit'
 
 export const load = (async ({ locals }) => {
 	return {
@@ -24,3 +25,16 @@ export const load = (async ({ locals }) => {
 		}
 	}
 }) satisfies PageServerLoad
+
+export const actions = {
+	'create-channel': async ({ request, locals }: { request: any; locals: any }) => {
+		const { userId, token } = locals.user
+		const data = await request.formData()
+		const newChannel = data.get('newChannel')
+		const channel = await post('channel', JSON.parse(newChannel), {
+			userId,
+			token
+		})
+		throw redirect(303, `/channel/${channel._id}`)
+	}
+} satisfies Actions

@@ -4,20 +4,24 @@
 	import { onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
 	import DrawerAddCategory from './DrawerAddCategory.svelte'
-	import { goto } from '$app/navigation'
-	import { get, post, put } from '$lib/api'
+	import { get } from '$lib/api'
+	import { enhance } from '$app/forms'
+	import { page } from '$app/stores'
 
-	export let showDrawer: boolean, user: any
+	export let showDrawer: boolean
 
 	let newChannel: any = {
 			title: '',
+			// thumbnail: '',
 			description: '',
-			thumbnail: '',
+			isPrivate: false,
 			category: [],
 			tags: [],
-			isPrivate: false,
-			user: user?.user._id,
-			channelType: ''
+			createdByDisplayName: $page.data.user.user.displayName,
+			createdByUsername: $page.data.user.user.username,
+			avatar: $page.data.user.user.avatar,
+			isHostActive: true,
+			channelType: 'channel'
 		},
 		fileuploader: HTMLInputElement,
 		thumbnailRef: any,
@@ -60,27 +64,6 @@
 		newChannel = newChannel
 	}
 
-	const addChannel = async () => {
-		const channel = await post('/channel', newChannel)
-		// await put(`/users/host-channels?hostChannelId=${channel._id}`)
-		if (user) {
-			const updatedUser = await put(
-				`users/host-channels?hostChannelId=${channel._id}`,
-				{},
-				{
-					userId: user.userId,
-					token: user.token
-				}
-			)
-			if (!updatedUser.error) {
-				// current_user.set(updatedUser)
-				console.log(updatedUser)
-
-				goto(`/channel/${channel._id}`)
-			}
-		}
-	}
-
 	let refToggle: any
 	const toggleDrawer = () => {
 		if (refToggle) {
@@ -108,7 +91,12 @@
 				bind:categoryIcons
 				bind:categories={newChannel.category} />
 		{:else}
-			<form on:submit={() => addChannel()}>
+			<form
+				action="?/create-channel"
+				method="post"
+				use:enhance={({ data }) => {
+					data.append('newChannel', JSON.stringify(newChannel))
+				}}>
 				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col">
 					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 						Create a new channel
