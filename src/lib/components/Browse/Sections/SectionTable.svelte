@@ -39,8 +39,8 @@
 										</div>
 									</div>
 									<div>
-										<div class="font-bold">{channel.createdBy || ''}</div>
-										<div class="text-sm text-pink-500">@{channel.username || ''}</div>
+										<div class="font-bold">{channel.createdByDisplayName || ''}</div>
+										<div class="text-sm text-pink-500">@{channel.createdByUsername || ''}</div>
 									</div>
 								</div>
 							</td>

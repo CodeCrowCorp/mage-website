@@ -36,7 +36,6 @@
 	})
 </script>
 
-<!--class:hidden-->
 {#await channels}
 	<div class="relative p-1">
 		<div role="status" class="flex flex-row gap-1 animate-pulse">
