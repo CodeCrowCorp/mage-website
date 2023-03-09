@@ -2,7 +2,7 @@
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import CategoryLoader from '$lib/components/Profile/Elements/CategoryLoader.svelte'
 	import NameLoader from '$lib/components/Profile/Elements/NameLoader.svelte'
-	import { techList } from '$lib/stores/channelStore'
+	import { tech_list } from '$lib/stores/channelStore'
 
 	export let profile: any
 </script>
@@ -40,7 +40,7 @@
 				{#if profile?.category.length}
 					{#each profile.category as category}
 						<div class="tooltip" data-tip={category}>
-							<img src={$techList[category]} alt="" class="h-7 w-7 m-1" />
+							<img src={$tech_list[category]} alt="" class="h-7 w-7 m-1" />
 						</div>
 					{/each}
 				{:else}
