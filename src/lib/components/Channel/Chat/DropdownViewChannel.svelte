@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { get } from '$lib/api'
 	import IconChatDownChevron from '$lib/assets/icons/chat/IconChatDownChevron.svelte'
-	import { tech_list } from '$lib/stores/channelStore'
+	import { category_list } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
 	import { copyToClipboard } from '$lib/utils'
@@ -41,7 +41,7 @@
 					{#if channel.category && channel.category.length}
 						{#each channel.category as category}
 							<div class="tooltip" data-tip={category}>
-								<img src={$tech_list[category]} alt="" class="w-7 m-1" />
+								<img src={$category_list[category]} alt="" class="w-7 m-1" />
 							</div>
 						{/each}
 					{/if}

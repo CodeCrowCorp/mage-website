@@ -3,10 +3,11 @@
 	import { tags } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
-	import DrawerAddCategory from './DrawerAddCategory.svelte'
+	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 	import { get } from '$lib/api'
 	import { enhance } from '$app/forms'
 	import { page } from '$app/stores'
+	import { category_list } from '$lib/stores/channelStore'
 
 	export let showDrawer: boolean
 
@@ -26,7 +27,6 @@
 		thumbnailRef: any,
 		showThumbnail = false,
 		showAddCategory = false,
-		categoryIcons: any = [],
 		maxTag = 3,
 		maxCategory = 4
 
@@ -85,10 +85,7 @@
 				}, 200)}
 			class="drawer-overlay" />
 		{#if showAddCategory}
-			<DrawerAddCategory
-				bind:showAddCategory
-				bind:categoryIcons
-				bind:categories={newChannel.category} />
+			<DrawerAddCategory bind:showAddCategory bind:categories={newChannel.category} />
 		{:else}
 			<form
 				action="?/create-channel"
@@ -158,7 +155,7 @@
 								bind:tags={newChannel.tags}
 								maxTags={maxTag}
 								id="tags"
-								placeholder={newChannel.tags.length > 0 ? '' : 'Tags'} />
+								placeholder={newChannel.tags.length > 0 ? '' : 'Tag'} />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxTagLabel})</span>
 						</div>
 						<div class="relative">
@@ -167,13 +164,13 @@
 								type="text"
 								name="category"
 								required={!newChannel.category.length}
-								placeholder={categoryIcons.length ? '' : 'Categories'}
+								placeholder={newChannel?.category?.length ? '' : 'Category'}
 								class="input input-primary input-bordered mt-5 w-full " />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
 							<span class="absolute flex flex-row gap-2 left-0 top-1/2  pl-5">
-								{#if categoryIcons.length}
-									{#each categoryIcons as icon}
-										<img src={icon} alt="" class="h-5 w-5" />
+								{#if newChannel?.category?.length}
+									{#each newChannel?.category as icon}
+										<img src={$category_list[icon]} alt="" class="h-5 w-5" />
 									{/each}
 								{/if}
 							</span>
