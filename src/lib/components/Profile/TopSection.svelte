@@ -26,21 +26,23 @@
 	</div>
 	<div class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
 		<div class="py-6 px-3 justify-center flex md:justify-end gap-4">
-			<button class="btn btn-secondary">Subscribe</button>
+			<button class="btn btn-secondary" disabled={profile?._id === $page.data?.user?.userId}
+				>Subscribe</button>
 			<button class="btn btn-primary" disabled>Sponsor</button>
-			{#if currentUser.username === $page.params.customUsername}
-				<div class="dropdown dropdown-end">
-					<button class="btn btn-circle" tabindex="0">
-						<IconMore />
-					</button>
-					<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
-						<li>
-							<!-- svelte-ignore a11y-click-events-have-key-events -->
-							<label for="edit-profile-drawer" on:click={() => (showDrawer = true)}> Edit</label>
-						</li>
-					</ul>
-				</div>
-			{/if}
+			<div class="dropdown dropdown-end">
+				<button
+					class="btn btn-circle"
+					tabindex="0"
+					disabled={currentUser.username !== $page.params.username}>
+					<IconMore />
+				</button>
+				<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+					<li>
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
+						<label for="edit-profile-drawer" on:click={() => (showDrawer = true)}> Edit</label>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</div>
 	<div class="w-full lg:w-4/12 px-4 lg:order-1">

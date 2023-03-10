@@ -2,7 +2,7 @@
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import CategoryLoader from '$lib/components/Profile/Elements/CategoryLoader.svelte'
 	import NameLoader from '$lib/components/Profile/Elements/NameLoader.svelte'
-	import { tech_list } from '$lib/stores/channelStore'
+	import { category_list } from '$lib/stores/channelStore'
 
 	export let profile: any
 </script>
@@ -22,30 +22,28 @@
 	{:else}
 		<NameLoader />
 	{/if}
-	{#if profile?.bio || profile?.description}
+	{#if profile?.bio}
 		<div class="text-lg leading-normal mt-0 mb-2">
-			{profile?.bio || profile?.description || ''}
+			{profile?.bio || ''}
 		</div>
 	{/if}
 	<div class="pt-4">
-		{#if profile?.html_url}
+		{#if profile?.website}
 			<div class="flex gap-2 justify-center p-4">
 				<IconLink />
-				<a class="link link-info" href={profile?.html_url} target="_blank" rel="noreferrer"
-					>{profile?.html_url || ''}</a>
+				<a class="link link-info" href={profile?.website} target="_blank" rel="noreferrer"
+					>{profile?.website || ''}</a>
 			</div>
 		{/if}
 		<div class="flex gap-2 justify-center">
-			{#if profile?.category}
-				{#if profile?.category.length}
-					{#each profile.category as category}
-						<div class="tooltip" data-tip={category}>
-							<img src={$tech_list[category]} alt="" class="h-7 w-7 m-1" />
-						</div>
-					{/each}
-				{:else}
-					<CategoryLoader />
-				{/if}
+			{#if profile?.category?.length}
+				{#each profile.category as category}
+					<div class="tooltip" data-tip={category}>
+						<img src={$category_list[category]} alt="" class="h-7 w-7 m-1" />
+					</div>
+				{/each}
+			{:else}
+				<CategoryLoader />
 			{/if}
 		</div>
 	</div>

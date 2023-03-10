@@ -1,7 +1,7 @@
 import { get, writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
 
-export const tech_list: Writable<any> = writable({})
+export const category_list: Writable<any> = writable({})
 export const tags: Writable<any> = writable([])
 export const category_assets: Writable<{
 	web2: object
@@ -296,14 +296,14 @@ async function toggleNotifications({ channel, userId }: { channel: any; userId: 
 // }
 
 async function getTechListJson() {
-	if (get(tech_list).length < 1) {
+	if (get(category_list).length < 1) {
 		let gameAssets: any = await fetch(`/svg-json/image_urls.json`, {
 			method: 'GET'
 		})
 		if (gameAssets.ok) {
 			gameAssets = await gameAssets.json()
 		}
-		tech_list.set(gameAssets)
+		category_list.set(gameAssets)
 		return gameAssets
 	}
 }
