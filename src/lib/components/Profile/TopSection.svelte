@@ -4,8 +4,12 @@
 	import { page } from '$app/stores'
 
 	export let profile: any,
+		subscriberCount: Promise<any>,
+		interestCount: Promise<any>,
+		isSubscribed: Promise<any>,
 		showDrawer = false
-	$: currentUser = $page.data?.user?.user
+
+	$: currentUser = $page.data.user?.user
 </script>
 
 <div class="flex flex-wrap justify-center">
@@ -26,9 +30,18 @@
 	</div>
 	<div class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
 		<div class="py-6 px-3 justify-center flex md:justify-end gap-4">
-			<button class="btn btn-secondary" disabled={profile?._id === $page.data?.user?.userId}
-				>Subscribe</button>
-			<button class="btn btn-primary" disabled>Sponsor</button>
+			<form action="?/subscribe" method="post">
+				<div class="gap-4">
+					{#await isSubscribed}
+						<span>Loading...</span>
+					{:then value}
+						<button class="btn btn-secondary" disabled={profile?._id === $page.data.user?.userId}
+							>{value.isSubscriber ? 'Subscribe' : 'Unsubscribe'}</button>
+					{/await}
+					<!--TODO: open sponsor dialog-->
+					<button class="btn btn-primary" formaction="?/sponsor" disabled>Sponsor</button>
+				</div>
+			</form>
 			<div class="dropdown dropdown-end">
 				<button
 					class="btn btn-circle"
@@ -47,14 +60,22 @@
 	</div>
 	<div class="w-full lg:w-4/12 px-4 lg:order-1">
 		<div class="flex justify-center py-4 lg:pt-4 pt-8">
-			<div class="mr-4 p-3 text-center tooltip" data-tip="22 subscribers">
-				<span class="text-xl font-bold block uppercase tracking-wide">22</span><span class="text-sm"
-					>Subscribers</span>
-			</div>
-			<div class="mr-4 p-3 text-center tooltip" data-tip="10 interests">
-				<span class="text-xl font-bold block uppercase tracking-wide">10</span><span class="text-sm"
-					>Interests</span>
-			</div>
+			{#await subscriberCount}
+				<span>Loading...</span>
+			{:then value}
+				<div class="mr-4 p-3 text-center tooltip" data-tip="{value || 0} subscribers">
+					<span class="text-xl font-bold block uppercase tracking-wide">{value || 0}</span><span
+						class="text-sm">Subscribers</span>
+				</div>
+			{/await}
+			{#await interestCount}
+				<span>Loading...</span>
+			{:then value}
+				<div class="mr-4 p-3 text-center tooltip" data-tip="{value || 0} interests">
+					<span class="text-xl font-bold block uppercase tracking-wide">{value || 0}</span><span
+						class="text-sm">Interests</span>
+				</div>
+			{/await}
 			<div class="lg:mr-4 p-3 text-center tooltip" data-tip="2045 unique profile views">
 				<span class="text-xl font-bold block uppercase tracking-wide">2045</span><span
 					class="text-sm">Views</span>

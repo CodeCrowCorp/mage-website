@@ -44,7 +44,7 @@
 			console.log('socket connection open')
 			console.log(data)
 			platform_connection.set('open')
-			emitUserConnection({ userId: $page.data?.user?.userId, isOnline: true })
+			emitUserConnection({ userId: $page.data.user?.userId, isOnline: true })
 		})
 		platformSocket.addEventListener('message', (data) => {
 			console.log('listening to messages')
@@ -90,7 +90,7 @@
 			</ul>
 		</div>
 
-		{#if $page.data?.user?.user?.isBanned}
+		{#if $page.data.user?.user?.isBanned}
 			<div class="alert alert-error shadow-lg">
 				<div>
 					<div class="font-bold text-white">

@@ -21,7 +21,7 @@ export const load = (async ({ locals }) => {
 						token: locals.user.token
 				  })
 				: [],
-			tableChannels: get(`channels?skip=${0}&limit=${50}`)
+			tableChannels: get(`channels?skip=${0}&limit=${100}`)
 		}
 	}
 }) satisfies PageServerLoad
