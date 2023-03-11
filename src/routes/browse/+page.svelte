@@ -8,7 +8,7 @@
 	import { page } from '$app/stores'
 
 	export let data: PageData
-	$: user = $page.data?.user
+	$: user = $page.data.user
 </script>
 
 <SectionCarousel bind:channels={data.lazy.mostActiveChannels} />

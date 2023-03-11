@@ -36,7 +36,7 @@
 
 	export var nav_drawer: HTMLInputElement
 
-	$: currentUser = $page.data?.user?.user
+	$: currentUser = $page.data.user?.user
 
 	let exp = 512 //Math.floor(Math.random() * (10000 - 0 + 1) + 0) //currentUser.exp
 	let levelAndBarValue = levelAndBarValueFromExp(exp)
