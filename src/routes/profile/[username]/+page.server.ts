@@ -3,20 +3,21 @@ import { get, patch } from '$lib/api'
 import { redirect } from '@sveltejs/kit'
 
 export const load = (async ({ params, locals }) => {
+	const profile = await get(`users/search/username?username=${params.username}`)
 	return {
+		profile: profile,
 		lazy: {
-			profile: get(`users/search/username?username=${params.username}`),
-			channels: get(`channels/me/hosted?skip=${0}&limit=${10}`),
+			channels: get(`channels/user?userId=${profile._id}skip=${0}&limit=${10}`),
 			subscribers: get(
-				`subscribe?source=${
-					locals.user.userId
-				}&sourceType=${'source2'}&searchQuery=${''}&skip=${0}&limit=${10}`
+				`subscribes?source=${profile._id}&sourceType=source1&skip=${0}&limit=${10}`,
+				{ userId: locals.user?.userId, token: locals.user?.token }
 			),
-			interests: get(
-				`subscribe?source=${
-					locals.user.userId
-				}&sourceType=${'source2'}&searchQuery=${''}&skip=${0}&limit=${10}`
-			)
+			interests: get(`subscribes?source=${profile._id}&sourceType=source2&skip=${0}&limit=${10}`, {
+				userId: locals.user?.userId,
+				token: locals.user?.token
+			}),
+			subscriberCount: get(`subscribes/count?source=${profile._id}&sourceType=source1`),
+			interestCount: get(`subscribes/count?source=${profile._id}&sourceType=source2`)
 		}
 	}
 }) satisfies PageServerLoad

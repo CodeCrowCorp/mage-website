@@ -11,9 +11,9 @@
 	let showDrawer = false
 </script>
 
-{#await data.lazy.profile}
+{#if data.profile?.length}
 	<WholePageSkeleton />
-{:then value}
+{:else}
 	<div class="relative block h-[31rem]">
 		<div
 			class="absolute top-0 w-full h-full bg-center bg-cover"
@@ -26,8 +26,8 @@
 			<div
 				class="relative flex flex-col min-w-0 break-words bg-base-100 w-full mb-6 shadow-xl rounded-lg -mt-64">
 				<div class="px-6">
-					<TopSection profile={value} bind:showDrawer />
-					<UserDetails profile={value} />
+					<TopSection profile={data.profile} bind:showDrawer />
+					<UserDetails profile={data.profile} />
 					<TabSection
 						channels={data.lazy.channels}
 						subscribers={data.lazy.subscribers}
@@ -37,6 +37,6 @@
 		</div>
 	</div>
 	{#if showDrawer}
-		<DrawerEditProfile profile={value} bind:showDrawer />
+		<DrawerEditProfile profile={data.profile} bind:showDrawer />
 	{/if}
-{/await}
+{/if}
