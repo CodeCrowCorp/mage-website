@@ -30,8 +30,6 @@
 		maxTag = 3,
 		maxCategory = 4
 
-	let isProcessing = false
-
 	$: maxTagLabel = newChannel.tags.length == maxTag ? 'max reached' : 'max ' + maxTag
 	$: maxCategoryLabel =
 		newChannel.category.length == maxCategory ? 'max reached' : 'max ' + maxCategory
@@ -188,13 +186,7 @@
 					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
 						<button type="button" class="btn btn-default grow" on:click={() => toggleDrawer()}
 							>Cancel</button>
-						<button
-							type="submit"
-							class="btn btn-primary grow"
-							on:click={() => {
-								isProcessing = true
-							}}
-							disabled={isProcessing}>Add</button>
+						<button type="submit" class="btn btn-primary grow">Add</button>
 					</div>
 				</div>
 			</form>

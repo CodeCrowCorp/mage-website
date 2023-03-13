@@ -1,5 +1,6 @@
 <script lang="ts">
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
+	export let subscriberItem: any
 </script>
 
 <div class="flex flex-row gap-2 px-4 py-2 rounded-md bg-slate-100 justify-between">

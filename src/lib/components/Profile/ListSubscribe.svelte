@@ -1,16 +1,17 @@
 <script lang="ts">
 	import SubscriberItem from '$lib/components/Profile/Elements/SubscriberItem.svelte'
+	import { subscriber_count, interest_count } from '$lib/stores/profileStore'
 
 	export let subscribers, interests
 </script>
 
 <div class="flex flex-row justify-center gap-5 mt-8">
 	{#await subscribers}
-		Place skeleton layout here
+		Loading...
 	{:then value}
 		{#if value}
 			<div class="flex flex-col w-2/4 gap-2 bg-blue-200 py-4 px-8">
-				<p class="text-start text-black font-semibold">Subscribers (30)</p>
+				<p class="text-start text-black font-semibold">Subscribers ({$subscriber_count})</p>
 
 				<div class="relative w-full">
 					<div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -33,21 +34,18 @@
 						required />
 				</div>
 
-				<SubscriberItem />
-				<SubscriberItem />
-				<SubscriberItem />
-				<SubscriberItem />
-				<SubscriberItem />
-				<SubscriberItem />
+				{#each value as subscriberItem}
+					<SubscriberItem {subscriberItem} />
+				{/each}
 			</div>
 		{/if}
 	{/await}
 	{#await interests}
-		Place skeleton layout here
+		Loading...
 	{:then value}
 		{#if value}
 			<div class="flex flex-col w-2/4 gap-2 bg-pink-100 py-4 px-8">
-				<p class="text-start text-black font-semibold">Interests (30)</p>
+				<p class="text-start text-black font-semibold">Interests ({$interest_count})</p>
 				<div class="relative w-full">
 					<div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
 						<svg
@@ -68,12 +66,9 @@
 						placeholder="Search"
 						required />
 				</div>
-				<SubscriberItem />
-				<SubscriberItem />
-				<SubscriberItem />
-				<SubscriberItem />
-				<SubscriberItem />
-				<SubscriberItem />
+				{#each value as subscriberItem}
+					<SubscriberItem {subscriberItem} />
+				{/each}
 			</div>
 		{/if}
 	{/await}
