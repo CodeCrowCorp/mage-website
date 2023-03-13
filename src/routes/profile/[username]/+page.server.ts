@@ -7,7 +7,7 @@ export const load = (async ({ params, locals }) => {
 	return {
 		profile: profile,
 		lazy: {
-			channels: get(`channels/user?userId=${profile._id}skip=${0}&limit=${10}`),
+			channels: get(`channels/user?userId=${profile._id}&skip=${0}&limit=${10}`),
 			subscribers: get(
 				`subscribes?source=${profile._id}&sourceType=source1&skip=${0}&limit=${10}`,
 				{ userId: locals.user?.userId, token: locals.user?.token }
