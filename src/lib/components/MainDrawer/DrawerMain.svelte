@@ -33,6 +33,8 @@
 
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
+	import { onMount } from 'svelte'
+	import { get } from '$lib/api'
 
 	export var nav_drawer: HTMLInputElement
 
@@ -43,6 +45,16 @@
 	let progressBarLevel = levelAndBarValue.level //levelFromExp(exp) //currentUser.exp
 	let progressBarValue = levelAndBarValue.barValue //barValueFromExp(exp) //currentUser.exp
 	let progressBarColor = colorFromLevel(progressBarLevel)
+
+	let streamCount = 0
+	let hoursStreamed = 0
+
+	onMount(async () => {
+		if (currentUser) {
+			streamCount = 0 //await get(`TODO: add endpoint here`)
+			hoursStreamed = 0 //await get(`TODO: add endpoint here`)
+		}
+	})
 </script>
 
 <div class="menu p-4 w-80 bg-base-100 text-base-content flex flex-col">
@@ -79,9 +91,13 @@
 									<p class=" text-pink-500 truncate">@{currentUser.username}</p>
 								</div>
 								<IconDrawerStreak />
-								<p class="col-span-2 tooltip text-start" data-tip="62 day streak">62 d</p>
+								<p class="col-span-2 tooltip text-start" data-tip="{streamCount} day streak">
+									{streamCount} d
+								</p>
 								<IconDrawerStreamDuration />
-								<p class="col-span-2 tooltip text-start" data-tip="300 hours streamed">300 h</p>
+								<p class="col-span-2 tooltip text-start" data-tip="{hoursStreamed} hours streamed">
+									{hoursStreamed} h
+								</p>
 							</div>
 						</div>
 						<div class="tooltip" data-tip="level {progressBarLevel}">

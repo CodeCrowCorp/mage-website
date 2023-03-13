@@ -8,7 +8,8 @@
 		emitHistoryToChannel,
 		initChannelSocket,
 		channelSocket,
-		emitChannelSubscribeByUser
+		emitChannelSubscribeByUser,
+		emitDeleteAllMessagesToChannel
 	} from '$lib/websocket'
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
@@ -65,7 +66,7 @@
 			userId: $page.data.user?.userId,
 			token: $page.data.user?.token
 		})
-		//TODO: delete all channel messages
+		emitDeleteAllMessagesToChannel({ channelId })
 		goto('/browse')
 	}
 </script>
