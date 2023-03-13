@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { get } from '$lib/api'
 	import IconChatDownChevron from '$lib/assets/icons/chat/IconChatDownChevron.svelte'
-	import { techList } from '$lib/stores/channelStore'
+	import { category_list } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
 	import { copyToClipboard } from '$lib/utils'
 	import IconChatDelete from '$lib/assets/icons/chat/IconChatDelete.svelte'
+	import { enhance } from '$app/forms'
 
 	export let channel: any = undefined
 
@@ -14,7 +15,7 @@
 
 	onMount(async () => {
 		host = await get(`users/search/id?userId=${channel?.user}`)
-		isHost = channel?.user !== $page.data.user.user?._id
+		isHost = channel?.user === $page.data.user.userId
 	})
 </script>
 
@@ -41,7 +42,7 @@
 					{#if channel.category && channel.category.length}
 						{#each channel.category as category}
 							<div class="tooltip" data-tip={category}>
-								<img src={$techList[category]} alt="" class="w-7 m-1" />
+								<img src={$category_list[category]} alt="" class="w-7 m-1" />
 							</div>
 						{/each}
 					{/if}
@@ -63,7 +64,7 @@
 			</a>
 		</li>
 		<li>
-			<a href="/profile/{host?._id}">
+			<a href="/profile/{host?.username}">
 				<div class="flex flex-wrap gap-2">
 					<div class="avatar online">
 						<div
@@ -89,12 +90,21 @@
 					data-tip="Edit channel">
 					Edit channel
 				</button>
-				<label
-					for="modal-delete-channel"
-					class="btn col-span-1 bg-error text-white border-none font-normal normal-case tooltip tooltip-left tooltip-error flex"
-					data-tip="Delete channel">
-					<IconChatDelete />
-				</label>
+				<form
+					action="?/subscribe"
+					method="post"
+					use:enhance={() => {
+						return async ({ update }) => {
+							await update({ reset: false })
+						}
+					}}>
+					<label
+						for="modal-delete-channel"
+						class="btn col-span-1 bg-error text-white border-none font-normal normal-case tooltip tooltip-left tooltip-error flex"
+						data-tip="Delete channel">
+						<IconChatDelete />
+					</label>
+				</form>
 			</div>
 		{/if}
 	</ul>

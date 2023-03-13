@@ -8,17 +8,19 @@
 		emitHistoryToChannel,
 		initChannelSocket,
 		channelSocket,
-		emitChannelSubscribeByUser
+		emitChannelSubscribeByUser,
+		emitDeleteAllMessagesToChannel
 	} from '$lib/websocket'
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
 	import { is_chat_drawer_open } from '$lib/stores/channelStore'
 	import Modal from '$lib/components/Global/Modal.svelte'
 	import { goto } from '$app/navigation'
+	import { page } from '$app/stores'
 
 	export let data: PageData
 
-	$: ({ channelId, userId, token, username } = data)
+	$: ({ channelId } = data)
 
 	let isDeleteModalOpen = false
 
@@ -29,7 +31,7 @@
 			console.log('channel socket connection open')
 			console.log(data)
 			channel_connection.set('open')
-			emitChannelSubscribeByUser({ channelId, userId })
+			emitChannelSubscribeByUser({ channelId, userId: $page.data.user?.userId })
 			emitHistoryToChannel({ channelId, skip: 100 })
 		})
 		channelSocket.addEventListener('message', (data) => {
@@ -60,8 +62,11 @@
 		isDeleteModalOpen = false
 	}
 	const deleteChannelYesAction = async () => {
-		await del(`channels/${channelId}`, { userId, token })
-		//TODO: delete all channel messages
+		await del(`channels?channelId=${channelId}`, {
+			userId: $page.data.user?.userId,
+			token: $page.data.user?.token
+		})
+		emitDeleteAllMessagesToChannel({ channelId })
 		goto('/browse')
 	}
 </script>
@@ -81,7 +86,7 @@
 			</div>
 			<div class="drawer-side m-5 rounded-lg md:w-fit lg:drop-shadow-lg">
 				<label for="chat-drawer" class="drawer-overlay" />
-				<DrawerChat channel={value} bind:userId bind:username />
+				<DrawerChat channel={value} />
 			</div>
 		</div>
 	</div>

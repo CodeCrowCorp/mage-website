@@ -5,8 +5,9 @@
 	import IconChatCode from '$lib/assets/icons/chat/IconChatCode.svelte'
 	import IconChatSendMessage from '$lib/assets/icons/chat/IconChatSendMessage.svelte'
 	import { emitMessageToChannel } from '$lib/websocket'
+	import { page } from '$app/stores'
 
-	export let channelId: string, userId: string, username: string
+	export let channelId: string
 
 	$: chatMessage = ''
 
@@ -15,7 +16,10 @@
 		const completeMessage = {
 			body: chatMessage,
 			state: { timestamp: new Date().toISOString() },
-			user: { userId: userId || '', username: username || '' }
+			user: {
+				userId: $page.data.user?.userId || '',
+				username: $page.data.user?.user?.username || ''
+			}
 		}
 		emitMessageToChannel({ channelId, message: JSON.stringify(completeMessage) })
 		chatMessage = ''

@@ -1,14 +1,13 @@
 <script lang="ts">
 	import IconInfo from '$lib/assets/icons/IconInfo.svelte'
 	import { onMount } from 'svelte'
-	import { categoryAssets } from '$lib/stores/channelStore'
+	import { category_assets, category_list } from '$lib/stores/channelStore'
 	import web2UrlsJson from '$lib/assets/svg-json/web2.json'
 	import web3UrlsJson from '$lib/assets/svg-json/web3.json'
 	import gameUrlsJson from '$lib/assets/svg-json/game.json'
 
 	export let showAddCategory: boolean = true,
-		categories: any = [],
-		categoryIcons: any = []
+		categories: any = []
 
 	let maxCategory = 4,
 		tabs = ['Game', 'Web2', 'Web3'],
@@ -22,51 +21,47 @@
 	const setActiveIcons = () => {
 		assetIcons =
 			activeTab == 'Game'
-				? $categoryAssets.game
+				? $category_assets.game
 				: activeTab == 'Web2'
-				? $categoryAssets.web2
-				: $categoryAssets.web3
+				? $category_assets.web2
+				: $category_assets.web3
 	}
 
 	const loadWeb2 = () => {
-		if (!Object.keys($categoryAssets.web2).length) {
-			$categoryAssets.web2 = web2UrlsJson
+		if (!Object.keys($category_assets.web2).length) {
+			$category_assets.web2 = web2UrlsJson
 		}
 	}
 	const loadWeb3 = () => {
-		if (!Object.keys($categoryAssets.web3).length) {
-			$categoryAssets.web3 = web3UrlsJson
+		if (!Object.keys($category_assets.web3).length) {
+			$category_assets.web3 = web3UrlsJson
 		}
 	}
 	const loadGame = () => {
-		if (!Object.keys($categoryAssets.game).length) {
-			$categoryAssets.game = gameUrlsJson
+		if (!Object.keys($category_assets.game).length) {
+			$category_assets.game = gameUrlsJson
 		}
 	}
 
 	const setActiveTab = async (tab: string) => {
 		activeTab = tab
-		// assetIcons = []
 		loadWeb2()
 		loadGame()
 		loadWeb3()
 		setActiveIcons()
 	}
 
-	$: allIcons = { ...$categoryAssets.web2, ...$categoryAssets.web3, ...$categoryAssets.game }
+	$: allIcons = { ...$category_assets.web2, ...$category_assets.web3, ...$category_assets.game }
 	$: maxCategoryLabel = categories.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 	$: renderingAssets = searchQuery != '' ? Object.entries(searchResult) : Object.entries(assetIcons)
 
 	const toggleCategory = (name: string, image_url: string) => {
 		if (categories.includes(name)) {
 			categories.splice(categories.indexOf(name), 1)
-			categoryIcons.splice(categoryIcons.indexOf(image_url), 1)
 		} else if (categories.length < maxCategory) {
 			categories.push(name)
-			categoryIcons.push(image_url)
 		}
 		categories = categories
-		categoryIcons = categoryIcons
 	}
 
 	const removeCategory = (image_url: string) => {
@@ -98,10 +93,10 @@
 		<div class="relative">
 			<div class="flex gap-1 input input-primary">
 				<div class="flex flex-row gap-2 items-center left-0">
-					{#if categoryIcons.length}
-						{#each categoryIcons as icon}
+					{#if categories?.length}
+						{#each categories as icon}
 							<img
-								src={icon}
+								src={$category_list[icon]}
 								alt=""
 								class="h-5 w-5 cursor-pointer"
 								on:click={() => removeCategory(icon)} />
@@ -115,7 +110,7 @@
 					on:input={() => searchCategory()}
 					name=""
 					class="grow md:ml-4 md:mr-12 focus:outline-0 max-w-[8rem] bg-base-100 md:max-w-xs"
-					placeholder={categoryIcons.length ? '' : 'Categories'}
+					placeholder={categories?.length ? '' : 'Category'}
 					autocomplete="off" />
 			</div>
 			<span class="absolute right-0 top-1/4 text-gray-400 pr-3">({maxCategoryLabel})</span>
@@ -163,12 +158,8 @@
 		<button
 			type="button"
 			class="btn btn-default grow"
-			on:click={() => ((categories = []), (categoryIcons = []), (showAddCategory = false))}
-			>Cancel</button>
+			on:click={() => ((categories = []), (showAddCategory = false))}>Cancel</button>
 		<button type="button" class="btn btn-primary grow" on:click={() => (showAddCategory = false)}
 			>Add</button>
 	</div>
 </div>
-
-<style>
-</style>

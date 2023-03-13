@@ -3,27 +3,30 @@
 	import { tags } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
-	import DrawerAddCategory from './DrawerAddCategory.svelte'
-	import { goto } from '$app/navigation'
-	import { get, post, put } from '$lib/api'
+	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
+	import { get } from '$lib/api'
+	import { enhance } from '$app/forms'
+	import { page } from '$app/stores'
+	import { category_list } from '$lib/stores/channelStore'
 
-	export let showDrawer: boolean, user: any
+	export let showDrawer: boolean
 
 	let newChannel: any = {
 			title: '',
+			// thumbnail: '',
 			description: '',
-			thumbnail: '',
+			isPrivate: false,
 			category: [],
 			tags: [],
-			isPrivate: false,
-			user: user?.user._id,
-			channelType: ''
+			createdByDisplayName: $page.data.user.user.displayName,
+			createdByUsername: $page.data.user.user.username,
+			avatar: $page.data.user.user.avatar,
+			channelType: 'channel'
 		},
 		fileuploader: HTMLInputElement,
 		thumbnailRef: any,
 		showThumbnail = false,
 		showAddCategory = false,
-		categoryIcons: any = [],
 		maxTag = 3,
 		maxCategory = 4
 
@@ -60,27 +63,6 @@
 		newChannel = newChannel
 	}
 
-	const addChannel = async () => {
-		const channel = await post('/channel', newChannel)
-		// await put(`/users/host-channels?hostChannelId=${channel._id}`)
-		if (user) {
-			const updatedUser = await put(
-				`users/host-channels?hostChannelId=${channel._id}`,
-				{},
-				{
-					userId: user.userId,
-					token: user.token
-				}
-			)
-			if (!updatedUser.error) {
-				// current_user.set(updatedUser)
-				console.log(updatedUser)
-
-				goto(`/channel/${channel._id}`)
-			}
-		}
-	}
-
 	let refToggle: any
 	const toggleDrawer = () => {
 		if (refToggle) {
@@ -103,12 +85,14 @@
 				}, 200)}
 			class="drawer-overlay" />
 		{#if showAddCategory}
-			<DrawerAddCategory
-				bind:showAddCategory
-				bind:categoryIcons
-				bind:categories={newChannel.category} />
+			<DrawerAddCategory bind:showAddCategory bind:categories={newChannel.category} />
 		{:else}
-			<form on:submit={() => addChannel()}>
+			<form
+				action="?/create-channel"
+				method="post"
+				use:enhance={({ data }) => {
+					data.append('newChannel', JSON.stringify(newChannel))
+				}}>
 				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col">
 					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 						Create a new channel
@@ -171,7 +155,7 @@
 								bind:tags={newChannel.tags}
 								maxTags={maxTag}
 								id="tags"
-								placeholder={newChannel.tags.length > 0 ? '' : 'Tags'} />
+								placeholder={newChannel.tags.length > 0 ? '' : 'Tag'} />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxTagLabel})</span>
 						</div>
 						<div class="relative">
@@ -180,13 +164,13 @@
 								type="text"
 								name="category"
 								required={!newChannel.category.length}
-								placeholder={categoryIcons.length ? '' : 'Categories'}
+								placeholder={newChannel?.category?.length ? '' : 'Category'}
 								class="input input-primary input-bordered mt-5 w-full " />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
 							<span class="absolute flex flex-row gap-2 left-0 top-1/2  pl-5">
-								{#if categoryIcons.length}
-									{#each categoryIcons as icon}
-										<img src={icon} alt="" class="h-5 w-5" />
+								{#if newChannel?.category?.length}
+									{#each newChannel?.category as icon}
+										<img src={$category_list[icon]} alt="" class="h-5 w-5" />
 									{/each}
 								{/if}
 							</span>

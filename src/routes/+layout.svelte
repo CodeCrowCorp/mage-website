@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '$lib/assets/styles/tailwind-output.css'
-	import { techList } from '$lib/stores/channelStore'
+	import { category_list } from '$lib/stores/channelStore'
 	import imageUrlsJson from '$lib/assets/svg-json/image_urls.json'
 
 	// @ts-ignore
@@ -44,7 +44,7 @@
 			console.log('socket connection open')
 			console.log(data)
 			platform_connection.set('open')
-			emitUserConnection({ userId: $page.data?.user?.userId, isOnline: true })
+			emitUserConnection({ userId: $page.data.user?.userId, isOnline: true })
 		})
 		platformSocket.addEventListener('message', (data) => {
 			console.log('listening to messages')
@@ -61,8 +61,8 @@
 			platform_connection.set('close')
 		})
 
-		if (!$techList.length) {
-			$techList = imageUrlsJson
+		if (!$category_list.length) {
+			$category_list = imageUrlsJson
 		}
 	})
 </script>
@@ -90,7 +90,7 @@
 			</ul>
 		</div>
 
-		{#if $page.data?.user?.user?.isBanned}
+		{#if $page.data.user?.user?.isBanned}
 			<div class="alert alert-error shadow-lg">
 				<div>
 					<div class="font-bold text-white">

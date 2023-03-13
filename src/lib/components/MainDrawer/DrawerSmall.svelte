@@ -29,7 +29,7 @@
 
 	export let nav_drawer: HTMLInputElement
 
-	$: currentUser = $page.data?.user?.user
+	$: currentUser = $page.data.user?.user
 
 	let exp = 512 //Math.floor(Math.random() * (10000 - 0 + 1) + 0) //currentUser.exp
 	let levelAndBarValue = levelAndBarValueFromExp(exp)
@@ -103,7 +103,7 @@
 				</a>
 			</li>
 		{/if} -->
-		{#if currentUser && $is_feature_video_responses_enabled}
+		<!-- {#if currentUser && $is_feature_video_responses_enabled}
 			<li>
 				<a href="/videos">
 					<IconDrawerVideos />
@@ -130,15 +130,15 @@
 					<IconDrawerPremium />
 				</a>
 			</li>
-		{/if}
+		{/if} -->
 		<li>
 			<a href="/careers"> <IconDrawerCareers /></a>
 		</li>
 		<li>
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-			<div class="dropdown dropdown-bottom dropdown-end" tabindex="0">
+			<div class="dropdown dropdown-bottom dropdown-end menu-item" tabindex="0">
 				<IconDrawerHelpAndLegal />
-				<IconDrawerChevron />
+				<!-- <IconDrawerChevron /> -->
 				<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li><a href="/contact">Contact</a></li>
 					<li><a href="/legal">Legal</a></li>
@@ -155,12 +155,13 @@
 		{#if currentUser}
 			<form action="/logout" method="POST">
 				<li>
-					<button type="submit"> <IconDrawerLogOut /></button>
+					<button type="submit" class="menu-item"> <IconDrawerLogOut /></button>
 				</li>
 			</form>
 		{:else}
 			<li>
 				<button
+					class="menu-item"
 					on:click={() => {
 						$is_login_modal_open = true
 						if (nav_drawer.checked) {
@@ -185,5 +186,10 @@
 
 	:global(html[data-theme='light'] .mage-logo-dark) {
 		display: none;
+	}
+
+	a,
+	.menu-item {
+		justify-content: center;
 	}
 </style>

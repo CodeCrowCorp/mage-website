@@ -67,7 +67,7 @@ export const hasOneHourPassed = (date: number) => {
 	return hourago > date
 }
 
-export const getColoredRole = (role: any) => {
+export const getColoredRole = (role: string) => {
 	switch (role) {
 		case 'Host':
 			return {

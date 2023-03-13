@@ -8,7 +8,6 @@
 
 	export let searchPage = false
 	export let searchQuery: string | null = ''
-	export let user: any = undefined
 
 	let showDrawer = false
 </script>
@@ -37,7 +36,7 @@
 				for="create-channel-drawer"
 				class="btn w-[21rem] btn-primary gap-2 drawer-button"
 				on:click={() => {
-					if ($page.data?.user) {
+					if ($page.data.user) {
 						showDrawer = true
 					} else {
 						$is_login_modal_open = true
@@ -49,6 +48,6 @@
 	{/if}
 
 	{#if showDrawer && !searchPage}
-		<DrawerCreateChannel bind:user bind:showDrawer />
+		<DrawerCreateChannel bind:showDrawer />
 	{/if}
 </div>

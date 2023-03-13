@@ -1,11 +1,9 @@
 import { get, writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
 
-export const searchQuery: Writable<string> = writable('')
-export const currentChannel: Writable<any> = writable(null)
-export const techList: Writable<any> = writable({})
+export const category_list: Writable<any> = writable({})
 export const tags: Writable<any> = writable([])
-export const categoryAssets: Writable<{
+export const category_assets: Writable<{
 	web2: object
 	web3: object
 	game: object
@@ -43,14 +41,12 @@ async function createChannel({
 			user: user._id,
 			createdBy: user.displayName,
 			avatar: user.avatar,
-			isHostActive: true,
 			channelType
 		})
 	}).then(async (response) => {
 		const res = await response.json()
 		if (channelType === 'channel') {
 			await addHostChannelToUser({ hostChannelId: res.channel._id })
-			currentChannel.set(res)
 		}
 		return res
 	})
@@ -265,53 +261,9 @@ async function getWeeklyChannels({ skip = 0, limit = 50 }: { skip: number; limit
 }
 
 async function getChannels({ skip = 0, limit = 50 }: { skip: number; limit: number }) {
-	const q = get(searchQuery)
-	return await fetch(
-		`${env.PUBLIC_API_URL}/channels?searchQuery=${q}&skip=${skip}&limit=${limit}`,
-		{
-			method: 'GET'
-		}
-	).then((response) => response.json())
-}
-
-async function leaveChannel({
-	userId,
-	deleteOrLeaveOnExit = false
-}: {
-	userId: string
-	deleteOrLeaveOnExit?: boolean
-}) {
-	//TODO: fix writeable subscribe
-	currentChannel.subscribe(async (value) => {
-		if (value) {
-			if (value.user === userId) {
-				// if host
-				if (deleteOrLeaveOnExit) {
-					await removeHostChannelFromUser({
-						hostChannelId: value._id
-					})
-					await deleteChannel({ channelId: value._id })
-					await deleteMembers({
-						channelId: value._id
-					})
-				}
-			} else {
-				// if participant
-				if (deleteOrLeaveOnExit) {
-					await removeChannelFromUser({
-						channelId: value._id,
-						userId
-					})
-				}
-			}
-			currentChannel.set(null)
-		}
-	})
-}
-
-async function enterChannel({ channel }: { channel: any }) {
-	currentChannel.set(channel)
-	return currentChannel
+	return await fetch(`${env.PUBLIC_API_URL}/channels?skip=${skip}&limit=${limit}`, {
+		method: 'GET'
+	}).then((response) => response.json())
 }
 
 async function toggleNotifications({ channel, userId }: { channel: any; userId: string }) {
@@ -344,14 +296,14 @@ async function toggleNotifications({ channel, userId }: { channel: any; userId: 
 // }
 
 async function getTechListJson() {
-	if (get(techList).length < 1) {
+	if (get(category_list).length < 1) {
 		let gameAssets: any = await fetch(`/svg-json/image_urls.json`, {
 			method: 'GET'
 		})
 		if (gameAssets.ok) {
 			gameAssets = await gameAssets.json()
 		}
-		techList.set(gameAssets)
+		category_list.set(gameAssets)
 		return gameAssets
 	}
 }
@@ -387,8 +339,6 @@ export {
 	getMostActiveChannels,
 	getWeeklyChannels,
 	getChannels,
-	leaveChannel,
-	enterChannel,
 	toggleNotifications,
 	getTechListJson,
 	getTags
