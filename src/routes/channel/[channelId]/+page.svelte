@@ -17,12 +17,14 @@
 	import Modal from '$lib/components/Global/Modal.svelte'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
+	import DrawerEditChannel from '$lib/components/Channel/Chat/DrawerEditChannel.svelte'
 
 	export let data: PageData
 
 	$: ({ channelId } = data)
 
-	let isDeleteModalOpen = false
+	let isDeleteModalOpen = false,
+		showEditChannelDrawer = false
 
 	onMount(async () => {
 		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
@@ -71,9 +73,7 @@
 	}
 </script>
 
-{#await data.lazy.channel}
-	Loading...
-{:then value}
+{#await data.lazy.channel then value}
 	<div class="flex flex-auto">
 		<div class="drawer drawer-end">
 			<input
@@ -86,7 +86,7 @@
 			</div>
 			<div class="drawer-side m-5 rounded-lg md:w-fit lg:drop-shadow-lg">
 				<label for="chat-drawer" class="drawer-overlay" />
-				<DrawerChat channel={value} />
+				<DrawerChat channel={value} bind:showEditChannelDrawer />
 			</div>
 		</div>
 	</div>
@@ -96,7 +96,6 @@
 		id="modal-delete-channel"
 		class="modal-toggle"
 		bind:checked={isDeleteModalOpen} />
-
 	<Modal
 		id="modal-delete-channel"
 		title="Delete channel"
@@ -106,4 +105,10 @@
 		yes="Yes"
 		yesAction={deleteChannelYesAction}
 		isError={true} />
+
+	<!-- <input id="edit-channel-drawer" type="checkbox" class="drawer-toggle" />
+
+	{#if showEditChannelDrawer}
+		<DrawerEditChannel bind:showDrawer={showEditChannelDrawer} />
+	{/if} -->
 {/await}
