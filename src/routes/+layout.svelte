@@ -44,7 +44,7 @@
 			console.log('socket connection open')
 			console.log(data)
 			platform_connection.set('open')
-			emitUserConnection({ userId: $page.data.user?.userId, isOnline: true })
+			if($page.data.user?.userId) emitUserConnection({ userId: $page.data.user?.userId, isOnline: true })
 		})
 		platformSocket.addEventListener('message', (data) => {
 			console.log('listening to messages')
