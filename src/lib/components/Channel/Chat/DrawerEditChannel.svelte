@@ -106,9 +106,7 @@
 						Edit channel
 					</p>
 					<div class="flex flex-col p-3">
-						<p class="text-lg font-semibold mt-10">
-							Please hide all sensitive data before going live.
-						</p>
+						<p class="text-lg font-semibold">Please hide all sensitive data before going live.</p>
 
 						<!-- <div class="flex flex-row justify-center w-full">
 							<div class="card w-40 shadow-xl">
@@ -189,11 +187,8 @@
 					</div>
 
 					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
-						<label
-							on:keyup
-							for="edit-channel-drawer"
-							class="btn btn-default grow"
-							on:click={() => toggleDrawer()}>Cancel</label>
+						<button type="button" class="btn btn-default grow" on:click={() => toggleDrawer()}
+							>Cancel</button>
 						<button type="submit" class="btn btn-primary grow">Edit</button>
 					</div>
 				</div>
