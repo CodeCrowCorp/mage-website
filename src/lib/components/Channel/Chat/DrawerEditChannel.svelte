@@ -9,30 +9,18 @@
 	import { page } from '$app/stores'
 	import { category_list } from '$lib/stores/channelStore'
 
-	export let showDrawer: boolean
+	export let channel: any, showDrawer: boolean
 
-	let newChannel: any = {
-			title: '',
-			// thumbnail: '',
-			description: '',
-			isPrivate: false,
-			category: [],
-			tags: [],
-			createdByDisplayName: $page.data.user.user.displayName,
-			createdByUsername: $page.data.user.user.username,
-			avatar: $page.data.user.user.avatar,
-			channelType: 'channel'
-		},
-		fileuploader: HTMLInputElement,
+	let fileuploader: HTMLInputElement,
 		thumbnailRef: any,
 		showThumbnail = false,
 		showAddCategory = false,
 		maxTag = 3,
 		maxCategory = 4
 
-	$: maxTagLabel = newChannel.tags.length == maxTag ? 'max reached' : 'max ' + maxTag
+	$: maxTagLabel = channel?.tags.length == maxTag ? 'max reached' : 'max ' + maxTag
 	$: maxCategoryLabel =
-		newChannel.category.length == maxCategory ? 'max reached' : 'max ' + maxCategory
+		channel?.category.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 
 	onMount(async () => {
 		if (!$tags.length) {
@@ -54,7 +42,7 @@
 			})
 			reader.readAsDataURL(file)
 
-			// newChannel.thumbnail = reader.result
+			// channel.thumbnail = reader.result
 			showThumbnail = true
 			return
 		}
@@ -62,8 +50,8 @@
 	}
 
 	const addTag = (tagName: string) => {
-		tagName && newChannel.tags.length < maxTag ? newChannel.tags.push(tagName) : ''
-		newChannel = newChannel
+		tagName && channel.tags.length < maxTag ? channel.tags.push(tagName) : ''
+		channel = channel
 	}
 
 	let refToggle: any
@@ -93,13 +81,13 @@
 			<DrawerAddCategory
 				classes={'w-[415px] lg:w-[425px]'}
 				bind:showAddCategory
-				bind:categories={newChannel.category} />
+				bind:categories={channel.category} />
 		{:else}
 			<form
 				action="?/edit-channel"
 				method="post"
 				use:enhance={({ data }) => {
-					data.append('newChannel', JSON.stringify(newChannel))
+					data.append('channel', JSON.stringify(channel))
 				}}>
 				<div class="bg-base-200 rounded-lg w-[415px] lg:w-[425px] h-full flex flex-col">
 					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
@@ -126,14 +114,14 @@
 							type="file"
 							class="file-input file-input-bordered file-input-primary w-full mt-5" /> -->
 						<input
-							bind:value={newChannel.title}
+							bind:value={channel.title}
 							type="text"
 							name="title"
 							required
 							placeholder="Title"
 							class="input input-primary input-bordered mt-5 w-full" />
 						<textarea
-							bind:value={newChannel.description}
+							bind:value={channel.description}
 							placeholder="Description"
 							name="description"
 							required
@@ -155,10 +143,10 @@
 						</div>
 						<div class="relative">
 							<Tags
-								bind:tags={newChannel.tags}
+								bind:tags={channel.tags}
 								maxTags={maxTag}
 								id="tags"
-								placeholder={newChannel.tags.length > 0 ? '' : 'Tag'} />
+								placeholder={channel.tags.length > 0 ? '' : 'Tag'} />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxTagLabel})</span>
 						</div>
 						<div class="relative">
@@ -166,13 +154,13 @@
 								on:click={() => (showAddCategory = true)}
 								type="text"
 								name="category"
-								required={!newChannel.category.length}
-								placeholder={newChannel?.category?.length ? '' : 'Category'}
+								required={!channel.category.length}
+								placeholder={channel?.category?.length ? '' : 'Category'}
 								class="input input-primary input-bordered mt-5 w-full " />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
 							<span class="absolute flex flex-row gap-2 left-0 top-1/2  pl-5">
-								{#if newChannel?.category?.length}
-									{#each newChannel?.category as icon}
+								{#if channel?.category?.length}
+									{#each channel?.category as icon}
 										<img src={$category_list[icon]} alt="" class="h-5 w-5" />
 									{/each}
 								{/if}
@@ -180,7 +168,7 @@
 						</div>
 						<!-- <div class="flex flex-row mt-5 ">
 							<input
-								bind:checked={newChannel.isPrivate}
+								bind:checked={channel.isPrivate}
 								type="checkbox"
 								class="checkbox checkbox-primary mr-3" /> Private
 						</div> -->

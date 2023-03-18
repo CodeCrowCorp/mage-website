@@ -75,9 +75,6 @@
 
 {#await data.lazy.channel then value}
 	<div class="flex flex-auto">
-		<!-- {#if showEditChannelDrawer}
-			<DrawerEditChannel bind:showDrawer={showEditChannelDrawer} />
-		{/if} -->
 		<div class="drawer drawer-end">
 			<input
 				id="chat-drawer"
@@ -87,7 +84,7 @@
 			<div class="drawer-content">
 				<VideoGrid />
 				{#if showEditChannelDrawer}
-					<DrawerEditChannel bind:showDrawer={showEditChannelDrawer} />
+					<DrawerEditChannel channel={value} bind:showDrawer={showEditChannelDrawer} />
 				{/if}
 			</div>
 			<div
@@ -114,6 +111,4 @@
 		yes="Yes"
 		yesAction={deleteChannelYesAction}
 		isError={true} />
-
-	<!-- <input id="edit-channel-drawer" type="checkbox" class="drawer-toggle" /> -->
 {/await}
