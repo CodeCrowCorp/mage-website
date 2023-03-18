@@ -41,6 +41,7 @@
 			<DrawerAddCategory bind:showAddCategory bind:categories={profile.category} />
 		{:else}
 			<form
+				class="flex m-5"
 				action="?/update-profile"
 				method="post"
 				use:enhance={({ data }) => {
