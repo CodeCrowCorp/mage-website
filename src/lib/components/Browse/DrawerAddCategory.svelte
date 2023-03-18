@@ -7,7 +7,8 @@
 	import gameUrlsJson from '$lib/assets/svg-json/game.json'
 
 	export let showAddCategory: boolean = true,
-		categories: any = []
+		categories: any = [],
+		classes: string = ''
 
 	let maxCategory = 4,
 		tabs = ['Game', 'Web2', 'Web3'],
@@ -87,7 +88,7 @@
 	})
 </script>
 
-<div class="bg-base-200 w-80 md:w-[30rem] flex flex-col">
+<div class="bg-base-200 rounded-lg w-80 md:w-[30rem] flex flex-col {classes}">
 	<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">Select category</p>
 	<div class="flex flex-col p-3 h-full">
 		<div class="relative">
