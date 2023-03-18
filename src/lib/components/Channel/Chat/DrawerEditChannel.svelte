@@ -80,7 +80,7 @@
 <div class="drawer drawer-end absolute right-0 z-10 top-0">
 	<input id="edit-channel-drawer" bind:this={refToggle} type="checkbox" class="drawer-toggle" />
 
-	<div class="drawer-side m-5">
+	<div class="drawer-side m-5 rounded-lg">
 		<label
 			on:keyup
 			for="edit-channel-drawer"

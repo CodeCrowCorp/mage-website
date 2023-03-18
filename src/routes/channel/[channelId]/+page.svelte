@@ -75,9 +75,9 @@
 
 {#await data.lazy.channel then value}
 	<div class="flex flex-auto">
-		{#if showEditChannelDrawer}
+		<!-- {#if showEditChannelDrawer}
 			<DrawerEditChannel bind:showDrawer={showEditChannelDrawer} />
-		{/if}
+		{/if} -->
 		<div class="drawer drawer-end">
 			<input
 				id="chat-drawer"
@@ -86,8 +86,13 @@
 				bind:checked={$is_chat_drawer_open} />
 			<div class="drawer-content">
 				<VideoGrid />
+				{#if showEditChannelDrawer}
+					<DrawerEditChannel bind:showDrawer={showEditChannelDrawer} />
+				{/if}
 			</div>
-			<div class="drawer-side m-5 rounded-lg md:w-fit lg:drop-shadow-lg">
+			<div
+				class="drawer-side m-5 rounded-lg md:w-fit lg:drop-shadow-lg"
+				class:!hidden={showEditChannelDrawer}>
 				<label for="chat-drawer" class="drawer-overlay" />
 
 				<DrawerChat channel={value} bind:showEditChannelDrawer />
