@@ -1,7 +1,7 @@
 <script lang="ts">
 	// import IconPhoto from '$lib/assets/icons/IconPhoto.svelte'
 	import { tags } from '$lib/stores/channelStore'
-	import { onMount } from 'svelte'
+	import { onDestroy, onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 	import { get } from '$lib/api'
@@ -40,6 +40,9 @@
 			$tags = suggestedTags
 		}
 	})
+	onDestroy(() => {
+		showDrawer = false
+	})
 
 	const fileupload = async () => {
 		const file = fileuploader.files && fileuploader.files[0]
@@ -62,10 +65,22 @@
 		tagName && newChannel.tags.length < maxTag ? newChannel.tags.push(tagName) : ''
 		newChannel = newChannel
 	}
+
+	let refToggle: any
+	const toggleDrawer = () => {
+		if (refToggle) {
+			refToggle.checked = false
+		}
+		setTimeout(() => {
+			showDrawer = false
+		}, 200)
+	}
 </script>
 
-<div class="drawer drawer-end absolute right-0 w-auto z-10 top-0">
-	<div class="drawer-side">
+<div class="drawer drawer-end absolute right-0 z-10 top-0">
+	<input id="edit-channel-drawer" bind:this={refToggle} type="checkbox" class="drawer-toggle" />
+
+	<div class="drawer-side m-5">
 		<label
 			on:keyup
 			for="edit-channel-drawer"
@@ -75,7 +90,10 @@
 					showDrawer = false
 				}, 200)} />
 		{#if showAddCategory}
-			<DrawerAddCategory bind:showAddCategory bind:categories={newChannel.category} />
+			<DrawerAddCategory
+				classes={'w-[415px] lg:w-[425px]'}
+				bind:showAddCategory
+				bind:categories={newChannel.category} />
 		{:else}
 			<form
 				action="?/edit-channel"
@@ -83,7 +101,7 @@
 				use:enhance={({ data }) => {
 					data.append('newChannel', JSON.stringify(newChannel))
 				}}>
-				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col h-screen">
+				<div class="bg-base-200 rounded-lg w-[415px] lg:w-[425px] h-full flex flex-col">
 					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 						Edit channel
 					</p>
@@ -179,10 +197,7 @@
 							on:keyup
 							for="edit-channel-drawer"
 							class="btn btn-default grow"
-							on:click={() =>
-								setTimeout(() => {
-									showDrawer = false
-								}, 200)}>Cancel</label>
+							on:click={() => toggleDrawer()}>Cancel</label>
 						<button type="submit" class="btn btn-primary grow">Edit</button>
 					</div>
 				</div>

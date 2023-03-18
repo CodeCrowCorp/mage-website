@@ -90,10 +90,7 @@
 					for="edit-channel-drawer"
 					class="btn col-span-4 border-none font-normal normal-case tooltip tooltip-top flex"
 					data-tip="Edit channel"
-					on:click={() =>
-						setTimeout(() => {
-							showEditChannelDrawer = true
-						}, 200)}>
+					on:click={() => (showEditChannelDrawer = true)}>
 					Edit channel
 				</label>
 				<label

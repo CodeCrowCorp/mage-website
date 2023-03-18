@@ -75,6 +75,9 @@
 
 {#await data.lazy.channel then value}
 	<div class="flex flex-auto">
+		{#if showEditChannelDrawer}
+			<DrawerEditChannel bind:showDrawer={showEditChannelDrawer} />
+		{/if}
 		<div class="drawer drawer-end">
 			<input
 				id="chat-drawer"
@@ -86,6 +89,7 @@
 			</div>
 			<div class="drawer-side m-5 rounded-lg md:w-fit lg:drop-shadow-lg">
 				<label for="chat-drawer" class="drawer-overlay" />
+
 				<DrawerChat channel={value} bind:showEditChannelDrawer />
 			</div>
 		</div>
@@ -107,8 +111,4 @@
 		isError={true} />
 
 	<!-- <input id="edit-channel-drawer" type="checkbox" class="drawer-toggle" /> -->
-
-	{#if showEditChannelDrawer}
-		<DrawerEditChannel bind:showDrawer={showEditChannelDrawer} />
-	{/if}
 {/await}
