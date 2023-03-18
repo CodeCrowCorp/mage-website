@@ -106,10 +106,6 @@
 						Edit channel
 					</p>
 					<div class="flex flex-col p-3">
-						<p class="text-s">
-							When you create a channel, you may share your screen, webcam, and chat with the
-							community
-						</p>
 						<p class="text-lg font-semibold mt-10">
 							Please hide all sensitive data before going live.
 						</p>
@@ -205,3 +201,37 @@
 		{/if}
 	</div>
 </div>
+
+<style>
+	:global(.svelte-tags-input-layout) {
+		--tw-border-opacity: 1 !important;
+		border-color: hsl(var(--p) / var(--tw-border-opacity)) !important;
+		border-radius: var(--rounded-btn, 0.5rem) !important;
+		height: 3rem;
+		padding-left: 1rem !important;
+		padding-right: 1rem !important;
+		--tw-bg-opacity: 1 !important;
+		background-color: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
+		flex-wrap: nowrap !important;
+	}
+	:global(.svelte-tags-input-layout) {
+		@apply mt-5 w-full;
+	}
+	:global(.svelte-tags-input-layout:focus-within) {
+		outline: 2px solid hsl(var(--p)) !important;
+		outline-offset: 2px !important;
+	}
+	:global(.svelte-tags-input) {
+		width: 100%;
+		font-size: 1rem !important;
+		font-family: inherit !important;
+		background-color: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
+	}
+
+	:global(.svelte-tags-input-tag) {
+		background-color: hsl(var(--p) / var(--tw-bg-opacity)) !important;
+		padding-left: 0.5rem !important;
+		padding-right: 0.5rem !important;
+		border-radius: var(--rounded-badge, 1.5rem) !important;
+	}
+</style>
