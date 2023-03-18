@@ -6,9 +6,9 @@
 	import { page } from '$app/stores'
 	import { copyToClipboard } from '$lib/utils'
 	import IconChatDelete from '$lib/assets/icons/chat/IconChatDelete.svelte'
-	import { enhance } from '$app/forms'
 
-	export let channel: any = undefined
+	export let channel: any = undefined,
+		showEditChannelDrawer: boolean = false
 
 	let host: any = {},
 		isHost: boolean = false
@@ -85,26 +85,22 @@
 		</li>
 		{#if isHost}
 			<div class="grid grid-cols-5 gap-2">
-				<button
-					class="btn col-span-4 border-none font-normal normal-case tooltip tooltip-top"
-					data-tip="Edit channel">
+				<label
+					for="edit-channel-drawer"
+					class="btn col-span-4 border-none font-normal normal-case tooltip tooltip-top flex"
+					data-tip="Edit channel"
+					on:click={() =>
+						setTimeout(() => {
+							showEditChannelDrawer = true
+						}, 200)}>
 					Edit channel
-				</button>
-				<form
-					action="?/subscribe"
-					method="post"
-					use:enhance={() => {
-						return async ({ update }) => {
-							await update({ reset: false })
-						}
-					}}>
-					<label
-						for="modal-delete-channel"
-						class="btn col-span-1 bg-error text-white border-none font-normal normal-case tooltip tooltip-left tooltip-error flex"
-						data-tip="Delete channel">
-						<IconChatDelete />
-					</label>
-				</form>
+				</label>
+				<label
+					for="modal-delete-channel"
+					class="btn col-span-1 bg-error text-white border-none font-normal normal-case tooltip tooltip-left tooltip-error flex"
+					data-tip="Delete channel">
+					<IconChatDelete />
+				</label>
 			</div>
 		{/if}
 	</ul>
