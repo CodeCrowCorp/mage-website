@@ -106,9 +106,9 @@
 		yesAction={deleteChannelYesAction}
 		isError={true} />
 
-	<!-- <input id="edit-channel-drawer" type="checkbox" class="drawer-toggle" />
+	<!-- <input id="edit-channel-drawer" type="checkbox" class="drawer-toggle" /> -->
 
 	{#if showEditChannelDrawer}
 		<DrawerEditChannel bind:showDrawer={showEditChannelDrawer} />
-	{/if} -->
+	{/if}
 {/await}

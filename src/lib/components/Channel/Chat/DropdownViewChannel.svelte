@@ -33,10 +33,10 @@
 		</li>
 	</ul>
 	<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-96 m-3">
-		<li on:click={() => copyToClipboard(channel.description)}>
+		<li on:click={() => copyToClipboard(channel.description)} on:keyup>
 			<a class="text-sm max-w-md">{channel.description || 'No description'}</a>
 		</li>
-		<li on:click={() => copyToClipboard(channel.category)}>
+		<li on:click={() => copyToClipboard(channel.category)} on:keyup>
 			<a
 				><div class="flex flex-wrap">
 					{#if channel.category && channel.category.length}
@@ -48,7 +48,7 @@
 					{/if}
 				</div></a>
 		</li>
-		<li on:click={() => copyToClipboard(channel.tags)}>
+		<li on:click={() => copyToClipboard(channel.tags)} on:keyup>
 			<a>
 				<div class="flex flex-wrap gap-2">
 					{#if channel.tags && channel.tags.length}

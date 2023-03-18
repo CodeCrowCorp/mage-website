@@ -67,6 +67,7 @@
 <div class="drawer drawer-end absolute right-0 w-auto z-10 top-0">
 	<div class="drawer-side">
 		<label
+			on:keyup
 			for="edit-channel-drawer"
 			class="drawer-overlay"
 			on:click={() =>
@@ -131,6 +132,7 @@
 								{#each $tags as tag}
 									<span
 										class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold mx-1 cursor-pointer border-none"
+										on:keyup
 										on:click={() => addTag(tag.name)}>{tag.name}</span>
 								{/each}
 							{:else}
@@ -174,6 +176,7 @@
 
 					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
 						<label
+							on:keyup
 							for="edit-channel-drawer"
 							class="btn btn-default grow"
 							on:click={() =>
