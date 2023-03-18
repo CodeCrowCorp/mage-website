@@ -20,7 +20,7 @@
 </script>
 
 <div class="menu dropdown dropdown-bottom">
-	<ul tabindex="0">
+	<ul tabindex="-1">
 		<li>
 			<div class="p-3 text-xl mb-2 pb-2 border-purple-500 font-semibold border-b-2 flex">
 				<p>{channel.title || 'Chat'}</p>
@@ -32,7 +32,7 @@
 			</div>
 		</li>
 	</ul>
-	<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-96 m-3">
+	<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-96 m-3">
 		<li on:click={() => copyToClipboard(channel.description)}>
 			<a class="text-sm max-w-md">{channel.description || 'No description'}</a>
 		</li>
@@ -85,6 +85,7 @@
 		</li>
 		{#if isHost}
 			<div class="grid grid-cols-5 gap-2">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<label
 					for="edit-channel-drawer"
 					class="btn col-span-4 border-none font-normal normal-case tooltip tooltip-top flex"
