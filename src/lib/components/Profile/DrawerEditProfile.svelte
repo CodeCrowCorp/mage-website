@@ -31,6 +31,7 @@
 	<div class="drawer-side">
 		<label
 			for="edit-profile-drawer"
+			on:keyup
 			on:click={() =>
 				setTimeout(() => {
 					showDrawer = false
@@ -47,7 +48,7 @@
 						data.append('category', JSON.stringify(profile?.category))
 					}
 				}}>
-				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col">
+				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col rounded-lg">
 					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 						Update Profile
 					</p>
