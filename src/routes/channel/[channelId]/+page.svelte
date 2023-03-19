@@ -1,6 +1,6 @@
 <script lang="ts">
 	import DrawerChat from '$lib/components/Channel/Chat/DrawerChat.svelte'
-	import VideoGrid from '$lib/components/Channel/Stream/VideoGrid.svelte'
+	import StreamContainer from '$lib/components/Channel/Stream/StreamContainer.svelte'
 	import type { PageData } from './$types'
 	import { onDestroy, onMount } from 'svelte'
 	import { get, del } from '$lib/api'
@@ -82,7 +82,8 @@
 				class="drawer-toggle"
 				bind:checked={$is_chat_drawer_open} />
 			<div class="drawer-content">
-				<VideoGrid />
+				<StreamContainer />
+
 				{#if showEditChannelDrawer}
 					<DrawerEditChannel channel={value} bind:showDrawer={showEditChannelDrawer} />
 				{/if}
