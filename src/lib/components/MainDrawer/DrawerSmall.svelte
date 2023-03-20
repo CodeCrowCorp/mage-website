@@ -38,7 +38,7 @@
 	let progressBarColor = colorFromLevel(progressBarLevel)
 </script>
 
-<div class="menu p-4 bg-base-100 text-base-content flex flex-col">
+<div class="menu p-4 w-80 md:w-32 bg-base-100 text-base-content flex flex-col">
 	<!-- <MessagesDrawer /> -->
 	<ul>
 		<div class="menu">
