@@ -40,6 +40,10 @@
 			}
 			chatHistory = chatHistory.reverse()
 		}
+
+		if (parsedMsg.eventName === `channel-update-${channel._id}`) {
+			channel = parsedMsg.channel
+		}
 	})
 </script>
 
