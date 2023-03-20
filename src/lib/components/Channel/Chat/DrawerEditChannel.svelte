@@ -6,8 +6,8 @@
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 	import { get } from '$lib/api'
 	import { enhance } from '$app/forms'
-	import { page } from '$app/stores'
 	import { category_list } from '$lib/stores/channelStore'
+	import { emitChannelUpdate } from '$lib/websocket'
 
 	export let channel: any, showDrawer: boolean
 
@@ -87,7 +87,15 @@
 				action="?/edit-channel"
 				method="post"
 				use:enhance={({ data }) => {
-					data.append('channel', JSON.stringify(channel))
+					data.append('category-selected', JSON.stringify(channel.category))
+					data.append('tags-selected', JSON.stringify(channel.tags))
+					return ({ result }) => {
+						if (result.type === 'success') {
+							console.log('channel', channel)
+							emitChannelUpdate({ channel })
+							toggleDrawer()
+						}
+					}
 				}}>
 				<div class="bg-base-200 rounded-lg w-[415px] lg:w-[425px] h-full flex flex-col">
 					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
