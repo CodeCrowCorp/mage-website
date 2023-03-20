@@ -24,7 +24,8 @@
 	$: ({ channelId } = data)
 
 	let isDeleteModalOpen = false,
-		showEditChannelDrawer = false
+		showEditChannelDrawer = false,
+		hideChat = false
 
 	onMount(async () => {
 		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
@@ -71,6 +72,14 @@
 		emitDeleteAllMessagesToChannel({ channelId })
 		goto('/browse')
 	}
+
+	$: if (!$is_chat_drawer_open) {
+		setTimeout(() => {
+			hideChat = true
+		}, 200)
+	} else {
+		hideChat = false
+	}
 </script>
 
 {#await data.lazy.channel then value}
@@ -88,13 +97,15 @@
 					<DrawerEditChannel channel={value} bind:showDrawer={showEditChannelDrawer} />
 				{/if}
 			</div>
-			<div
-				class="drawer-side m-5 rounded-lg md:w-fit lg:drop-shadow-lg"
-				class:!hidden={showEditChannelDrawer}>
-				<label for="chat-drawer" class="drawer-overlay" />
+			{#if !hideChat}
+				<div
+					class="drawer-side m-5 rounded-lg md:w-fit lg:drop-shadow-lg"
+					class:!hidden={showEditChannelDrawer}>
+					<label for="chat-drawer" class="drawer-overlay" />
 
-				<DrawerChat channel={value} bind:showEditChannelDrawer />
-			</div>
+					<DrawerChat channel={value} bind:showEditChannelDrawer />
+				</div>
+			{/if}
 		</div>
 	</div>
 
