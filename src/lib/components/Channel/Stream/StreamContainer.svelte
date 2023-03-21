@@ -22,7 +22,6 @@
 			if (entry) {
 				const id = entry.target.id
 				active_channel = channels.filter((channel: any) => channel._id === id)[0]
-
 				if (!active_channel) {
 					// active_channel is undefined when scroll back to original channel
 					active_channel = channel
@@ -30,7 +29,12 @@
 				if (channels.length && channels[channels.length - 2]['_id'] == id) {
 					dispatch('loadMore')
 				}
-				// goto(`${id}`, { replaceState: true, noScroll: true })
+				$page.url.searchParams.set('c', id)
+				goto(`?${$page.url.searchParams.toString()}`, {
+					keepFocus: true,
+					replaceState: true,
+					noScroll: true
+				})
 			}
 		}
 
