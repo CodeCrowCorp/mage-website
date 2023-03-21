@@ -1,11 +1,5 @@
 <script lang="ts">
 	import IconDrawerHome from '$lib/assets/icons/drawer/IconDrawerHome.svelte'
-	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
-	import IconDrawerMessages from '$lib/assets/icons/drawer/IconDrawerMessages.svelte'
-	import IconDrawerVideos from '$lib/assets/icons/drawer/IconDrawerVideos.svelte'
-	import IconDrawerCreatorSpace from '$lib/assets/icons/drawer/IconDrawerCreatorSpace.svelte'
-	import IconDrawerMint from '$lib/assets/icons/drawer/IconDrawerMint.svelte'
-	import IconDrawerPremium from '$lib/assets/icons/drawer/IconDrawerPremium.svelte'
 	import IconDrawerCareers from '$lib/assets/icons/drawer/IconDrawerCareers.svelte'
 	import IconDrawerHelpAndLegal from '$lib/assets/icons/drawer/IconDrawerHelpAndLegal.svelte'
 	import IconDrawerSettings from '$lib/assets/icons/drawer/IconDrawerSettings.svelte'
@@ -14,16 +8,8 @@
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { user_role } from '$lib/stores/authStore'
-	import {
-		is_maintenance_mode_enabled,
-		is_feature_mint_page_enabled,
-		is_feature_premium_page_enabled,
-		is_feature_group_chat_enabled,
-		is_feature_video_responses_enabled
-	} from '$lib/stores/remoteConfigStore'
 	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svg'
 	import IconMageLogoDark from '$lib/assets/icons/IconMageLogoDark.svg'
-
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
 
@@ -39,7 +25,6 @@
 </script>
 
 <div class="menu p-4 w-80 md:w-32 bg-base-100 text-base-content flex flex-col">
-	<!-- <MessagesDrawer /> -->
 	<ul>
 		<div class="menu">
 			<ul>
@@ -63,12 +48,6 @@
 								</div>
 							</div>
 						</div>
-						<!-- <div class="grid grid-cols-1 gap-1">
-							<p>{currentUser.displayName || 'Gagan Suie'}</p>
-							<p class="text-pink-500 w-12 truncate">
-								@{currentUser.username}
-							</p>
-						</div> -->
 						<div class="tooltip" data-tip="level {progressBarLevel}">
 							<progress
 								class="progress w-12"
@@ -80,8 +59,6 @@
 				</a>
 			</li>
 		{/if}
-
-		<!-- Sidebar content here -->
 
 		{#if currentUser && $user_role === 'admin'}
 			<li>
@@ -95,50 +72,13 @@
 				<IconDrawerHome />
 			</a>
 		</li>
-		<!-- {#if currentUser}
-			<li>
-				<a href="">
-					<IconDrawerMessages />
-					<IconDrawerChevron />
-				</a>
-			</li>
-		{/if} -->
-		<!-- {#if currentUser && $is_feature_video_responses_enabled}
-			<li>
-				<a href="/videos">
-					<IconDrawerVideos />
-				</a>
-			</li>
-			<li>
-				<a href="/creator-space"> <IconDrawerCreatorSpace /></a>
-			</li>
-		{/if}
-		{#if currentUser && $is_feature_mint_page_enabled}
-			<li>
-				<a
-					href="https://mint.codecrow.io"
-					class="text-emerald-600"
-					target="_blank"
-					rel="noreferrer">
-					<IconDrawerMint />
-				</a>
-			</li>
-		{/if}
-		{#if currentUser && $is_feature_premium_page_enabled}
-			<li>
-				<a href="/premium" class="text-pink-500">
-					<IconDrawerPremium />
-				</a>
-			</li>
-		{/if} -->
+
 		<li>
 			<a href="/careers"> <IconDrawerCareers /></a>
 		</li>
 		<li>
-			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-			<div class="dropdown dropdown-bottom dropdown-end menu-item" tabindex="0">
+			<div class="dropdown dropdown-bottom dropdown-end menu-item" tabindex="-1">
 				<IconDrawerHelpAndLegal />
-				<!-- <IconDrawerChevron /> -->
 				<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li><a href="/contact">Contact</a></li>
 					<li><a href="/legal">Legal</a></li>
