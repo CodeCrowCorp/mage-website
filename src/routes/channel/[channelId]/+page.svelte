@@ -35,7 +35,8 @@
 		showEditChannelDrawer = false,
 		hideChat = false,
 		channels: any = [],
-		channelLimit = 0
+		channelLimit = 0,
+		active_channel: any = null
 
 	onMount(async () => {
 		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
@@ -100,7 +101,11 @@
 				class="drawer-toggle"
 				bind:checked={$is_chat_drawer_open} />
 			<div class="drawer-content">
-				<StreamContainer channel={value} bind:channels on:loadMore={loadMoreChannels} />
+				<StreamContainer
+					channel={value}
+					bind:active_channel
+					bind:channels
+					on:loadMore={loadMoreChannels} />
 
 				{#if showEditChannelDrawer}
 					<DrawerEditChannel channel={value} bind:showDrawer={showEditChannelDrawer} />
@@ -112,7 +117,7 @@
 					class:!hidden={showEditChannelDrawer}>
 					<label for="chat-drawer" class="drawer-overlay" />
 
-					<DrawerChat channel={value} bind:showEditChannelDrawer />
+					<DrawerChat bind:active_channel channel={value} bind:showEditChannelDrawer />
 				</div>
 			{/if}
 		</div>

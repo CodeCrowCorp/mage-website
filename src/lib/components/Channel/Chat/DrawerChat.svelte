@@ -6,9 +6,13 @@
 	import { page } from '$app/stores'
 
 	export let channel: any = undefined,
-		showEditChannelDrawer: boolean = false
-
+		showEditChannelDrawer: boolean = false,
+		active_channel: any = undefined
 	let chatHistory: any[] = []
+
+	$: if (active_channel) {
+		channel = active_channel
+	}
 
 	const setRole = (msg: any): any => {
 		if (msg.userData?.userId === channel?.user) msg.role = 'Host'
