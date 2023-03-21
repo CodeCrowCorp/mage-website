@@ -25,11 +25,14 @@
 
 	let isDeleteModalOpen = false,
 		showEditChannelDrawer = false,
-		hideChat = false
+		hideChat = false,
+		channels: any = []
 
 	onMount(async () => {
 		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
 		initChannelSocket(channelSocketId)
+		channels = await get(`channels?skip=${0}&limit=${10}`)
+
 		channelSocket.addEventListener('open', (data) => {
 			console.log('channel socket connection open')
 			console.log(data)
@@ -91,7 +94,7 @@
 				class="drawer-toggle"
 				bind:checked={$is_chat_drawer_open} />
 			<div class="drawer-content">
-				<StreamContainer />
+				<StreamContainer channel={value} bind:channels />
 
 				{#if showEditChannelDrawer}
 					<DrawerEditChannel channel={value} bind:showDrawer={showEditChannelDrawer} />
