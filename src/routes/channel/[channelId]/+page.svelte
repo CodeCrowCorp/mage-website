@@ -23,15 +23,23 @@
 
 	$: ({ channelId } = data)
 
+	$: if (!$is_chat_drawer_open) {
+		setTimeout(() => {
+			hideChat = true
+		}, 200)
+	} else {
+		hideChat = false
+	}
+
 	let isDeleteModalOpen = false,
 		showEditChannelDrawer = false,
 		hideChat = false,
-		channels: any = []
+		channels: any = [],
+		channelLimit = 0
 
 	onMount(async () => {
 		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
 		initChannelSocket(channelSocketId)
-		channels = await get(`channels?skip=${0}&limit=${10}`)
 
 		channelSocket.addEventListener('open', (data) => {
 			console.log('channel socket connection open')
@@ -60,6 +68,8 @@
 		setTimeout(() => {
 			$is_chat_drawer_open = true
 		}, 700)
+
+		await loadMoreChannels()
 	})
 
 	onDestroy(() => channelSocket?.close())
@@ -75,13 +85,9 @@
 		emitDeleteAllMessagesToChannel({ channelId })
 		goto('/browse')
 	}
-
-	$: if (!$is_chat_drawer_open) {
-		setTimeout(() => {
-			hideChat = true
-		}, 200)
-	} else {
-		hideChat = false
+	const loadMoreChannels = async () => {
+		channelLimit += 10
+		channels = await get(`channels?skip=${0}&limit=${channelLimit}`)
 	}
 </script>
 
@@ -94,7 +100,7 @@
 				class="drawer-toggle"
 				bind:checked={$is_chat_drawer_open} />
 			<div class="drawer-content">
-				<StreamContainer channel={value} bind:channels />
+				<StreamContainer channel={value} bind:channels on:loadMore={loadMoreChannels} />
 
 				{#if showEditChannelDrawer}
 					<DrawerEditChannel channel={value} bind:showDrawer={showEditChannelDrawer} />
