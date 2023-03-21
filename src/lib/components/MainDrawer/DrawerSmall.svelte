@@ -1,19 +1,30 @@
 <script lang="ts">
+	import IconDrawerStreak from '$lib/assets/icons/drawer/IconDrawerStreak.svelte'
+	import IconDrawerStreamDuration from '$lib/assets/icons/drawer/IconDrawerStreamDuration.svelte'
 	import IconDrawerHome from '$lib/assets/icons/drawer/IconDrawerHome.svelte'
+	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
 	import IconDrawerCareers from '$lib/assets/icons/drawer/IconDrawerCareers.svelte'
 	import IconDrawerHelpAndLegal from '$lib/assets/icons/drawer/IconDrawerHelpAndLegal.svelte'
 	import IconDrawerSettings from '$lib/assets/icons/drawer/IconDrawerSettings.svelte'
 	import IconDrawerLogOut from '$lib/assets/icons/drawer/IconDrawerLogOut.svelte'
+	import IconSocialTwitter from '$lib/assets/icons/social/IconSocialTwitter.svelte'
+	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svg'
+	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
 	import { goto } from '$app/navigation'
+	import { env } from '$env/dynamic/public'
 	import { page } from '$app/stores'
 	import { user_role } from '$lib/stores/authStore'
 	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svg'
 	import IconMageLogoDark from '$lib/assets/icons/IconMageLogoDark.svg'
+	import IconMageText from '$lib/assets/icons/IconMageText.svg'
+	import IconMageTextDark from '$lib/assets/icons/IconMageTextDark.svg'
+
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
+	import { onMount } from 'svelte'
 
-	export let nav_drawer: HTMLInputElement
+	export var nav_drawer: HTMLInputElement
 
 	$: currentUser = $page.data.user?.user
 
@@ -22,35 +33,65 @@
 	let progressBarLevel = levelAndBarValue.level //levelFromExp(exp) //currentUser.exp
 	let progressBarValue = levelAndBarValue.barValue //barValueFromExp(exp) //currentUser.exp
 	let progressBarColor = colorFromLevel(progressBarLevel)
+
+	let streamCount = 0
+	let hoursStreamed = 0
+
+	onMount(async () => {
+		if (currentUser) {
+			streamCount = 0 //await get(`TODO: add endpoint here`)
+			hoursStreamed = 0 //await get(`TODO: add endpoint here`)
+		}
+	})
 </script>
 
-<div class="menu p-4 w-80 md:w-32 bg-base-100 text-base-content flex flex-col">
-	<ul>
+<div class="menu p-4 w-80 md:w-36 bg-base-100 text-base-content flex flex-col">
+	<ul class="md:flex md:flex-col items-center">
 		<div class="menu">
 			<ul>
 				<li>
-					<a href="/browse" class="justify-center">
-						<img class="w-7 mage-logo" src={IconMageLogo} alt="" />
-						<img class="w-7 mage-logo-dark" src={IconMageLogoDark} alt="" />
+					<a href="/browse" class="md:justify-center">
+						<img class="w-20 md:w-7 mage-text hidden md:block" src={IconMageLogo} alt="" />
+						<img class="w-20 md:w-7 mage-text-dark hidden md:block" src={IconMageLogoDark} alt="" />
+						<img class="w-20 md:w-7 mage-text md:hidden" src={IconMageText} alt="" />
+						<img class="w-20 md:w-7 mage-text-dark md:hidden" src={IconMageTextDark} alt="" />
 					</a>
 				</li>
 			</ul>
 		</div>
 		{#if currentUser}
-			<li class="w-full">
-				<a href="/profile/{currentUser.username}" class="rounded-md justify-center">
-					<div>
-						<div>
-							<div class="avatar {currentUser.isOnline ? 'online' : 'offline'}">
-								<div
-									class="w-12 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
-									<img src={currentUser.avatar} alt="" />
+			<li>
+				<a href="/profile/{currentUser.username}" class="rounded-md justify-center cursor-pointer">
+					<div class="md:text-center">
+						<div class="hero-content">
+							<div class="max-w-md">
+								<div class="avatar {currentUser.isOnline ? 'online' : 'offline'}">
+									<div
+										class="w-24 md:w-12 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
+										<img src={currentUser.avatar} alt="" />
+									</div>
 								</div>
+							</div>
+							<div class="grid grid-cols-3 gap-1 md:hidden">
+								<div class="col-span-3 tooltip flex" data-tip={currentUser.displayName}>
+									<p class="truncate">{currentUser.displayName}</p>
+								</div>
+								<div class="col-span-3 tooltip flex" data-tip="@{currentUser.username}">
+									<p class=" text-pink-500 truncate">@{currentUser.username}</p>
+								</div>
+								<IconDrawerStreak />
+								<p class="col-span-2 tooltip text-start" data-tip="{streamCount} day streak">
+									{streamCount} d
+								</p>
+								<IconDrawerStreamDuration />
+								<p class="col-span-2 tooltip text-start" data-tip="{hoursStreamed} hours streamed">
+									{hoursStreamed} h
+								</p>
 							</div>
 						</div>
 						<div class="tooltip" data-tip="level {progressBarLevel}">
 							<progress
-								class="progress w-12"
+								class="progress w-64 md:w-12"
 								style="--progress-bar-color: {progressBarColor}"
 								value={progressBarValue}
 								max="100" />
@@ -64,22 +105,30 @@
 			<li>
 				<a href="/admin">
 					<IconDrawerAdmin />
+					<span class="md:hidden">Admin</span>
 				</a>
 			</li>
 		{/if}
 		<li>
 			<a href="/browse">
 				<IconDrawerHome />
+				<span class="md:hidden">Browse</span>
 			</a>
 		</li>
-
 		<li>
-			<a href="/careers"> <IconDrawerCareers /></a>
+			<a href="/careers">
+				<IconDrawerCareers />
+				<span class="md:hidden"> Careers </span>
+			</a>
 		</li>
 		<li>
-			<div class="dropdown dropdown-bottom dropdown-end menu-item" tabindex="-1">
+			<div class="dropdown dropdown-bottom dropdown-end" tabindex="-1">
 				<IconDrawerHelpAndLegal />
-				<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+
+				<span class="md:hidden flex flex-row gap-4">
+					Help & Legal
+					<IconDrawerChevron /></span>
+				<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li><a href="/contact">Contact</a></li>
 					<li><a href="/legal">Legal</a></li>
 				</ul>
@@ -89,19 +138,20 @@
 			<li>
 				<a href="/settings">
 					<IconDrawerSettings />
+					<span class="md:hidden"> Settings </span>
 				</a>
 			</li>
-		{/if}
-		{#if currentUser}
 			<form action="/logout" method="POST">
 				<li>
-					<button type="submit" class="menu-item"> <IconDrawerLogOut /></button>
+					<button type="submit">
+						<IconDrawerLogOut />
+						<span class="md:hidden">Log out </span>
+					</button>
 				</li>
 			</form>
 		{:else}
 			<li>
 				<button
-					class="menu-item"
 					on:click={() => {
 						$is_login_modal_open = true
 						if (nav_drawer.checked) {
@@ -109,10 +159,27 @@
 						}
 					}}>
 					<IconDrawerLogOut />
+					<span class="md:hidden">Log In </span>
 				</button>
 			</li>
 		{/if}
 	</ul>
+
+	<footer class="mt-auto p-4 md:hidden">
+		<div class="flex gap-4">
+			<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
+				<IconSocialGitHub />
+			</a>
+			<a href="https://discord.gg/CodeCrow" target="_blank" rel="noreferrer">
+				<img src={IconSocialDiscord} alt="" />
+			</a>
+			<a href="https://twitter.com/CodeCrowCorp" target="_blank" rel="noreferrer">
+				<IconSocialTwitter />
+			</a>
+		</div>
+		<p>Code Crow Corp © 2023</p>
+		<p class="text-gray-500">v{__VERSION__} [{env.PUBLIC_ENV}]</p>
+	</footer>
 </div>
 
 <style>
@@ -128,8 +195,11 @@
 		display: none;
 	}
 
-	a,
-	.menu-item {
-		justify-content: center;
+	:global(html[data-theme='dark'] .mage-text) {
+		display: none;
+	}
+
+	:global(html[data-theme='light'] .mage-text-dark) {
+		display: none;
 	}
 </style>
