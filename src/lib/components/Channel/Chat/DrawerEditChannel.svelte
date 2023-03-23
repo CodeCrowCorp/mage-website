@@ -1,44 +1,35 @@
 <script lang="ts">
 	// import IconPhoto from '$lib/assets/icons/IconPhoto.svelte'
 	import { tags } from '$lib/stores/channelStore'
-	import { onMount } from 'svelte'
+	import { onDestroy, onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 	import { get } from '$lib/api'
 	import { enhance } from '$app/forms'
-	import { page } from '$app/stores'
 	import { category_list } from '$lib/stores/channelStore'
+	import { emitChannelUpdate } from '$lib/websocket'
 
-	export let showDrawer: boolean
+	export let channel: any, showDrawer: boolean
 
-	let newChannel: any = {
-			title: '',
-			// thumbnail: '',
-			description: '',
-			isPrivate: false,
-			category: [],
-			tags: [],
-			createdByDisplayName: $page.data.user.user.displayName,
-			createdByUsername: $page.data.user.user.username,
-			avatar: $page.data.user.user.avatar,
-			channelType: 'channel'
-		},
-		fileuploader: HTMLInputElement,
+	let fileuploader: HTMLInputElement,
 		thumbnailRef: any,
 		showThumbnail = false,
 		showAddCategory = false,
 		maxTag = 3,
 		maxCategory = 4
 
-	$: maxTagLabel = newChannel.tags.length == maxTag ? 'max reached' : 'max ' + maxTag
+	$: maxTagLabel = channel?.tags.length == maxTag ? 'max reached' : 'max ' + maxTag
 	$: maxCategoryLabel =
-		newChannel.category.length == maxCategory ? 'max reached' : 'max ' + maxCategory
+		channel?.category.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 
 	onMount(async () => {
 		if (!$tags.length) {
 			const suggestedTags = await get(`tags`)
 			$tags = suggestedTags
 		}
+	})
+	onDestroy(() => {
+		showDrawer = false
 	})
 
 	const fileupload = async () => {
@@ -51,7 +42,7 @@
 			})
 			reader.readAsDataURL(file)
 
-			// newChannel.thumbnail = reader.result
+			// channel.thumbnail = reader.result
 			showThumbnail = true
 			return
 		}
@@ -59,8 +50,8 @@
 	}
 
 	const addTag = (tagName: string) => {
-		tagName && newChannel.tags.length < maxTag ? newChannel.tags.push(tagName) : ''
-		newChannel = newChannel
+		tagName && channel.tags.length < maxTag ? channel.tags.push(tagName) : ''
+		channel = channel
 	}
 
 	let refToggle: any
@@ -74,39 +65,44 @@
 	}
 </script>
 
-<div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
-	<input id="create-channel-drawer" bind:this={refToggle} type="checkbox" class="drawer-toggle" />
-	<div class="drawer-side">
+<div class="drawer drawer-end absolute right-0 z-10 top-0">
+	<input id="edit-channel-drawer" bind:this={refToggle} type="checkbox" class="drawer-toggle" />
+
+	<div class="drawer-side m-5 rounded-lg">
 		<label
-			for="create-channel-drawer"
 			on:keyup
+			for="edit-channel-drawer"
+			class="drawer-overlay"
 			on:click={() =>
 				setTimeout(() => {
 					showDrawer = false
-				}, 200)}
-			class="drawer-overlay" />
+				}, 200)} />
 		{#if showAddCategory}
-			<DrawerAddCategory bind:showAddCategory bind:categories={newChannel.category} />
+			<DrawerAddCategory
+				classes={'w-[415px] lg:w-[425px]'}
+				bind:showAddCategory
+				bind:categories={channel.category} />
 		{:else}
 			<form
-				class="flex m-5"
-				action="?/create-channel"
+				action="?/edit-channel"
 				method="post"
 				use:enhance={({ data }) => {
-					data.append('newChannel', JSON.stringify(newChannel))
+					data.append('category-selected', JSON.stringify(channel.category))
+					data.append('tags-selected', JSON.stringify(channel.tags))
+					return ({ result }) => {
+						if (result.type === 'success') {
+							console.log('channel', channel)
+							emitChannelUpdate({ channel })
+							toggleDrawer()
+						}
+					}
 				}}>
-				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col rounded-lg">
+				<div class="bg-base-200 rounded-lg w-[415px] lg:w-[425px] h-full flex flex-col">
 					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
-						Create a new channel
+						Edit channel
 					</p>
 					<div class="flex flex-col p-3">
-						<p class="text-s">
-							When you create a channel, you may share your screen, webcam, and chat with the
-							community
-						</p>
-						<p class="text-lg font-semibold mt-10">
-							Please hide all sensitive data before going live.
-						</p>
+						<p class="text-lg font-semibold">Please hide all sensitive data before going live.</p>
 
 						<!-- <div class="flex flex-row justify-center w-full">
 							<div class="card w-40 shadow-xl">
@@ -126,14 +122,14 @@
 							type="file"
 							class="file-input file-input-bordered file-input-primary w-full mt-5" /> -->
 						<input
-							bind:value={newChannel.title}
+							bind:value={channel.title}
 							type="text"
 							name="title"
 							required
 							placeholder="Title"
 							class="input input-primary input-bordered mt-5 w-full" />
 						<textarea
-							bind:value={newChannel.description}
+							bind:value={channel.description}
 							placeholder="Description"
 							name="description"
 							required
@@ -144,6 +140,7 @@
 								{#each $tags as tag}
 									<span
 										class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold mx-1 cursor-pointer border-none"
+										on:keyup
 										on:click={() => addTag(tag.name)}>{tag.name}</span>
 								{/each}
 							{:else}
@@ -154,10 +151,10 @@
 						</div>
 						<div class="relative">
 							<Tags
-								bind:tags={newChannel.tags}
+								bind:tags={channel.tags}
 								maxTags={maxTag}
 								id="tags"
-								placeholder={newChannel.tags.length > 0 ? '' : 'Tag'} />
+								placeholder={channel.tags.length > 0 ? '' : 'Tag'} />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxTagLabel})</span>
 						</div>
 						<div class="relative">
@@ -165,13 +162,13 @@
 								on:click={() => (showAddCategory = true)}
 								type="text"
 								name="category"
-								required={!newChannel.category.length}
-								placeholder={newChannel?.category?.length ? '' : 'Category'}
+								required={!channel.category.length}
+								placeholder={channel?.category?.length ? '' : 'Category'}
 								class="input input-primary input-bordered mt-5 w-full " />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
 							<span class="absolute flex flex-row gap-2 left-0 top-1/2  pl-5">
-								{#if newChannel?.category?.length}
-									{#each newChannel?.category as icon}
+								{#if channel?.category?.length}
+									{#each channel?.category as icon}
 										<img src={$category_list[icon]} alt="" class="h-5 w-5" />
 									{/each}
 								{/if}
@@ -179,7 +176,7 @@
 						</div>
 						<!-- <div class="flex flex-row mt-5 ">
 							<input
-								bind:checked={newChannel.isPrivate}
+								bind:checked={channel.isPrivate}
 								type="checkbox"
 								class="checkbox checkbox-primary mr-3" /> Private
 						</div> -->
@@ -188,7 +185,7 @@
 					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
 						<button type="button" class="btn btn-default grow" on:click={() => toggleDrawer()}
 							>Cancel</button>
-						<button type="submit" class="btn btn-primary grow">Add</button>
+						<button type="submit" class="btn btn-primary grow">Edit</button>
 					</div>
 				</div>
 			</form>

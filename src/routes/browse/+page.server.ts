@@ -10,10 +10,7 @@ export const load = (async ({ locals }) => {
 			highestRankedUsers: get(`users/highest-ranked?skip=${0}&limit=${10}`),
 			risingStarUsers: get(`users/rising-stars?skip=${0}&limit=${10}`),
 			myChannels: locals.user
-				? get(`channels/me/hosted?skip=${0}&limit=${10}`, {
-						userId: locals.user.userId,
-						token: locals.user.token
-				  })
+				? get(`channels/user?userId=${locals.user.userId}&skip=${0}&limit=${10}`)
 				: [],
 			favChannels: locals.user
 				? get(`channels/me/fav?skip=${0}&limit=${10}`, {

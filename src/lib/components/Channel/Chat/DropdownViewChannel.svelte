@@ -6,9 +6,9 @@
 	import { page } from '$app/stores'
 	import { copyToClipboard } from '$lib/utils'
 	import IconChatDelete from '$lib/assets/icons/chat/IconChatDelete.svelte'
-	import { enhance } from '$app/forms'
 
-	export let channel: any = undefined
+	export let channel: any = undefined,
+		showEditChannelDrawer: boolean = false
 
 	let host: any = {},
 		isHost: boolean = false
@@ -20,7 +20,7 @@
 </script>
 
 <div class="menu dropdown dropdown-bottom">
-	<ul tabindex="0">
+	<ul tabindex="-1">
 		<li>
 			<div class="p-3 text-xl mb-2 pb-2 border-purple-500 font-semibold border-b-2 flex">
 				<p>{channel.title || 'Chat'}</p>
@@ -32,11 +32,11 @@
 			</div>
 		</li>
 	</ul>
-	<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-96 m-3">
-		<li on:click={() => copyToClipboard(channel.description)}>
+	<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-96 m-3">
+		<li on:click={() => copyToClipboard(channel.description)} on:keyup>
 			<a class="text-sm max-w-md">{channel.description || 'No description'}</a>
 		</li>
-		<li on:click={() => copyToClipboard(channel.category)}>
+		<li on:click={() => copyToClipboard(channel.category)} on:keyup>
 			<a
 				><div class="flex flex-wrap">
 					{#if channel.category && channel.category.length}
@@ -48,7 +48,7 @@
 					{/if}
 				</div></a>
 		</li>
-		<li on:click={() => copyToClipboard(channel.tags)}>
+		<li on:click={() => copyToClipboard(channel.tags)} on:keyup>
 			<a>
 				<div class="flex flex-wrap gap-2">
 					{#if channel.tags && channel.tags.length}
@@ -85,26 +85,20 @@
 		</li>
 		{#if isHost}
 			<div class="grid grid-cols-5 gap-2">
-				<button
-					class="btn col-span-4 border-none font-normal normal-case tooltip tooltip-top"
-					data-tip="Edit channel">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<label
+					for="edit-channel-drawer"
+					class="btn col-span-4 border-none font-normal normal-case tooltip tooltip-top flex"
+					data-tip="Edit channel"
+					on:click={() => (showEditChannelDrawer = true)}>
 					Edit channel
-				</button>
-				<form
-					action="?/subscribe"
-					method="post"
-					use:enhance={() => {
-						return async ({ update }) => {
-							await update({ reset: false })
-						}
-					}}>
-					<label
-						for="modal-delete-channel"
-						class="btn col-span-1 bg-error text-white border-none font-normal normal-case tooltip tooltip-left tooltip-error flex"
-						data-tip="Delete channel">
-						<IconChatDelete />
-					</label>
-				</form>
+				</label>
+				<label
+					for="modal-delete-channel"
+					class="btn col-span-1 bg-error text-white border-none font-normal normal-case tooltip tooltip-left tooltip-error flex"
+					data-tip="Delete channel">
+					<IconChatDelete />
+				</label>
 			</div>
 		{/if}
 	</ul>

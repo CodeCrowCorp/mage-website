@@ -5,7 +5,7 @@
 	export let channel: any
 </script>
 
-<div class="flex flex-col shrink-0 first:pl-8 last:pr-8 w-[300px] md:w-[400px] rounded-md">
+<a class="flex flex-col shrink-0 first:pl-8 last:pr-8 w-[300px] md:w-[400px] rounded-md" href="/channel/{channel._id}">
 	<div class="relative">
 		<div class="video-thumbnail" on:click|preventDefault={() => goto(`/channel/${channel._id}`)}>
 			{#if channel.thumbnail}
@@ -34,4 +34,4 @@
 			<p class="text-sm text-gray-600">{channel.description}</p>
 		</div>
 	</div>
-</div>
+</a>

@@ -74,8 +74,8 @@ function emitRemovedUser({ channelId, userId }: { channelId: string; userId: str
 	channelSocket.send(JSON.stringify({ eventName: `user-removed`, channelId, userId }))
 }
 
-function emitChannelUpdate({ channelId }: { channelId: string }) {
-	channelSocket.send(JSON.stringify({ eventName: `channel-update`, channelId }))
+function emitChannelUpdate({ channel }: { channel: any }) {
+	channelSocket.send(JSON.stringify({ eventName: `channel-update`, channel }))
 }
 
 function emitChannelSubscribeByUser({ channelId, userId }: { channelId: string; userId: string }) {
