@@ -110,8 +110,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 		} else {
 			return await resolve(event)
 		}
+	} else {
+		return await resolve(event)
 	}
-	throw redirect(302, '/browse')
+	// throw redirect(302, '/browse')
 }
 
 export const handleError = ({ error }: { error: any }) => {
