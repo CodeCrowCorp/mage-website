@@ -7,11 +7,6 @@
 </script>
 
 <!-- create a grid layout of video items centered and responsive with maximum 4 in a gridd and scrolling more horizontally -->
-<!-- <div class="grid grid-cols-2 grid-rows-2 gap-4 h-full overflow-x-auto">
-	{#each Array(9) as _, i}
-		<VideoItem />
-	{/each}
-</div> -->
 <div class="carousel h-full pb-6">
 	{#each divideNumber(videoCount, 16) as videos, i}
 		<div class="carousel-item w-full">
