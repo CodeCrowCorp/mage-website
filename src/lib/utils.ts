@@ -104,3 +104,21 @@ export const divideNumber = (number: number, divider: number): number[] => {
 	const quotient = Math.floor(number / divider)
 	return [divider].concat(quotient > 0 ? divideNumber(number - divider, divider) : [])
 }
+
+export const cardCounts: { [key: number]: number[] } = {
+	2: [2],
+	3: [2, 1],
+	4: [2, 2],
+	5: [2, 2, 1],
+	6: [3, 3],
+	7: [3, 2, 2],
+	8: [3, 3, 2],
+	9: [3, 3, 3],
+	10: [4, 3, 3],
+	11: [4, 4, 3],
+	12: [4, 4, 4],
+	13: [4, 4, 4, 1],
+	14: [4, 4, 3, 3],
+	15: [4, 4, 4, 3],
+	16: [4, 4, 4, 4]
+}

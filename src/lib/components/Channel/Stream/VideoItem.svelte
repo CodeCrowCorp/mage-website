@@ -1,7 +1,7 @@
 <script lang="ts">
 </script>
 
-<div class="w-full">
+<div class="w-96">
 	<div class="bg-gray-200 relative w-full h-full">
 		<div class="flex items-center justify-center h-full">
 			<div class="relative w-14 h-14 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
