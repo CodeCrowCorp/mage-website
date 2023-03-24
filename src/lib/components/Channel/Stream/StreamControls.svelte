@@ -3,10 +3,25 @@
 	import IconShareWebcam from '$lib/assets/icons/channel/IconShareWebcam.svelte'
 	import IconShareAudio from '$lib/assets/icons/channel/IconShareAudio.svelte'
 	import IconChatDrawer from '$lib/assets/icons/channel/IconChatDrawer.svelte'
-	import { is_chat_drawer_open } from '$lib/stores/channelStore'
+	import { is_chat_drawer_open, is_chat_drawer_destroy } from '$lib/stores/channelStore'
 	import { is_sharing_screen, is_sharing_webcam, is_sharing_audio } from '$lib/stores/streamStore'
 
 	export let isHost: boolean = true
+
+	const handleChatDrawer = () => {
+		if ($is_chat_drawer_open) {
+			$is_chat_drawer_open = false
+			setTimeout(() => {
+				$is_chat_drawer_destroy = true
+			}, 300)
+			return
+		}
+
+		$is_chat_drawer_destroy = false
+		setTimeout(() => {
+			$is_chat_drawer_open = !$is_chat_drawer_open
+		}, 100)
+	}
 </script>
 
 <div class="flex gap-4">
@@ -34,10 +49,12 @@
 		<IconShareAudio />
 	</button>
 
-	<div class="form-control tooltip" data-tip="Chat">
-		<label for="chat-drawer" class="btn {$is_chat_drawer_open ? 'btn-primary' : ''}">
-			<IconChatDrawer /></label>
-	</div>
+	<button
+		class="btn tooltip font-normal normal-case {$is_chat_drawer_open ? 'btn-primary' : ''}"
+		data-tip="Chat"
+		on:click={() => handleChatDrawer()}>
+		<IconChatDrawer />
+	</button>
 </div>
 
 <!-- <button>

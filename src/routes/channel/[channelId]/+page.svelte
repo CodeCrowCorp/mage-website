@@ -13,7 +13,7 @@
 	} from '$lib/websocket'
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
-	import { is_chat_drawer_open } from '$lib/stores/channelStore'
+	import { is_chat_drawer_open, is_chat_drawer_destroy } from '$lib/stores/channelStore'
 	import Modal from '$lib/components/Global/Modal.svelte'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
@@ -23,17 +23,8 @@
 
 	$: ({ channelId } = data)
 
-	$: if (!$is_chat_drawer_open) {
-		setTimeout(() => {
-			hideChat = true
-		}, 200)
-	} else {
-		hideChat = false
-	}
-
 	let isDeleteModalOpen = false,
 		showEditChannelDrawer = false,
-		hideChat = false,
 		channels: any = [],
 		channelLimit = 0,
 		active_channel: any = null
@@ -111,7 +102,7 @@
 					<DrawerEditChannel channel={value} bind:showDrawer={showEditChannelDrawer} />
 				{/if}
 			</div>
-			{#if !hideChat}
+			{#if !$is_chat_drawer_destroy}
 				<div
 					class="drawer-side m-5 rounded-lg md:w-fit lg:drop-shadow-lg"
 					class:!hidden={showEditChannelDrawer}>
