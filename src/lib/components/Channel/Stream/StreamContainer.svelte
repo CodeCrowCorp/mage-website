@@ -6,6 +6,7 @@
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { createEventDispatcher } from 'svelte'
+	import { is_chat_drawer_open } from '$lib/stores/channelStore'
 
 	const dispatch = createEventDispatcher()
 	export let count: number = 10,
@@ -44,7 +45,10 @@
 
 <div class="flex justify-center h-full">
 	<div class="carousel carousel-vertical rounded-lg bg-base-100 w-full m-5 mb-24">
-		<div class="carousel-item h-full p-3" id={channel?._id} use:autoActive>
+		<div
+			class="carousel-item h-full p-3 {$is_chat_drawer_open ? 'w-[70%]' : ''}"
+			id={channel?._id}
+			use:autoActive>
 			<div class="flex flex-col w-full">
 				<div class="flex gap-2 mb-3">
 					<span
@@ -71,7 +75,10 @@
 		</div>
 
 		{#each channels as nextchannel}
-			<div class="carousel-item h-full p-3" id={nextchannel?._id} use:autoActive>
+			<div
+				class="carousel-item h-full p-3 {$is_chat_drawer_open ? 'w-[70%]' : ''}"
+				id={nextchannel?._id}
+				use:autoActive>
 				<div class="flex flex-col w-full">
 					<div class="flex gap-2 mb-3">
 						<span
