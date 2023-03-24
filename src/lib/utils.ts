@@ -89,3 +89,18 @@ export const getColoredRole = (role: string) => {
 			}
 	}
 }
+
+/*
+Input: 33, 16
+Output: [16, 16, 1]
+
+Input: 20, 16
+Output: [16, 4]
+*/
+export const divideNumber = (number: number, divider: number): number[] => {
+	if (number < divider) {
+		return [number]
+	}
+	const quotient = Math.floor(number / divider)
+	return [divider].concat(quotient > 0 ? divideNumber(number - divider, divider) : [])
+}

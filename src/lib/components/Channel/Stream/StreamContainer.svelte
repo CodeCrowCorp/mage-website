@@ -45,7 +45,7 @@
 <div class="flex justify-center h-full">
 	<div class="carousel carousel-vertical rounded-lg bg-base-100 w-full m-5 mb-24">
 		<div class="carousel-item h-full p-3" id={channel?._id} use:autoActive>
-			<div>
+			<div class="flex flex-col w-full">
 				<div class="flex gap-2 mb-3">
 					<span
 						class="btn-sm bg-red-700 rounded-md font-medium text-white border-none flex items-center">
@@ -72,7 +72,7 @@
 
 		{#each channels as nextchannel}
 			<div class="carousel-item h-full p-3" id={nextchannel?._id} use:autoActive>
-				<div>
+				<div class="flex flex-col w-full">
 					<div class="flex gap-2 mb-3">
 						<span
 							class="btn-sm bg-red-700 rounded-md font-medium text-white border-none flex items-center">
