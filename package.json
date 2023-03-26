@@ -19,7 +19,7 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@playwright/test": "1.31.2",
+		"@playwright/test": "1.32.0",
 		"@sveltejs/adapter-cloudflare": "^2.2.0",
 		"@sveltejs/kit": "^1.10.0",
 		"@sveltejs/svelte-virtual-list": "^3.0.1",
@@ -55,7 +55,7 @@
 		"animate.css": "^4.1.1",
 		"daisyui": "^2.51.3",
 		"nprogress": "^0.2.0",
-		"playwright-e2e-coverage-report": "^1.0.20",
+		"playwright-e2e-coverage-report": "^1.0.28",
 		"theme-change": "^2.5.0"
 	}
 }
