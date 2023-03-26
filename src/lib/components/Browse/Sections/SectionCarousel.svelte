@@ -56,7 +56,7 @@
 					{#each value as channel}
 						<div
 							class="swiper-slide flex cursor-pointer rounded-md"
-							on:click|preventDefault={() => goto(`/channel/${channel._id}`)}>
+							on:click|preventDefault={() => goto(`/channel?c=${channel._id}`)}>
 							<div class="flex flex-row items-end w-3/4">
 								<div class="avatar my-3 ml-2">
 									<div class="w-14 rounded-full">
