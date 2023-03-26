@@ -51,7 +51,7 @@
 	})
 </script>
 
-<div class="bg-base-100 flex flex-col overflow-y-hidden">
+<div class="bg-base-100 flex flex-col overflow-y-hidden w-full">
 	<DropdownViewChannel bind:channel bind:showEditChannelDrawer />
 	<div class="flex flex-col-reverse p-3 grow overflow-y-scroll lg:w-[425px] w-[415px]">
 		{#each chatHistory as sender}
