@@ -164,39 +164,39 @@ function emitReactToMessage({
 
 /************ Channel streaming ****************/
 
-function emitRoomMemberUpdate({
-	channelId,
-	userData,
-	isNewUser
-}: {
-	channelId: string
-	userData: any
-	isNewUser: boolean
-}) {
-	channelSocket.send(
-		JSON.stringify({
-			eventName: 'channel-streaming-room-member-update',
-			channel: channelId,
-			userData,
-			isNewUser
-		})
-	)
-}
+// function emitRoomMemberUpdate({
+// 	channelId,
+// 	userData,
+// 	isNewUser
+// }: {
+// 	channelId: string
+// 	userData: any
+// 	isNewUser: boolean
+// }) {
+// 	channelSocket.send(
+// 		JSON.stringify({
+// 			eventName: 'channel-streaming-room-member-update',
+// 			channel: channelId,
+// 			userData,
+// 			isNewUser
+// 		})
+// 	)
+// }
 
 function emitUserActions({
 	channelId,
-	userData,
+	video,
 	message
 }: {
 	channelId: string
-	userData: any
+	video: any
 	message: string
 }) {
 	channelSocket.send(
 		JSON.stringify({
 			eventName: `channel-streaming-user-actions`,
 			channel: channelId,
-			userData,
+			video,
 			message
 		})
 	)
@@ -355,6 +355,6 @@ export {
 	emitDeleteAllMessagesToChannel,
 	emitHistoryToChannel,
 	// emitChannelChatTypingByUser,
-	emitRoomMemberUpdate,
+	// emitRoomMemberUpdate,
 	emitUserActions
 }
