@@ -36,13 +36,6 @@
 					replaceState: true,
 					noScroll: true
 				})
-
-				// $page.url.searchParams.set('c', id)
-				// goto(`?${$page.url.searchParams.toString()}`, {
-				// 	keepFocus: true,
-				// 	replaceState: true,
-				// 	noScroll: true
-				// })
 			}
 		}
 
