@@ -29,7 +29,7 @@
 				{#each value as channel}
 					<tr
 						class="cursor-pointer hover:btn-ghost border border-transparent"
-						on:click|preventDefault={() => goto(`/channel?c=${channel._id}`)}>
+						on:click|preventDefault={() => goto(`/channel/${channel._id}`)}>
 						<!-- <ul class="menu">
 								<li> -->
 						<td>

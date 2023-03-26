@@ -29,7 +29,7 @@
 </script>
 
 <div class="flex flex-col md:flex-row gap-4">
-	<a href={`/channel?c=${channel._id}`} class=" md:w-96 bg-gray-200">
+	<a href={`/channel/${channel._id}`} class=" md:w-96 bg-gray-200">
 		<img
 			loading="lazy"
 			src={channel.thumbnail || 'https://via.placeholder.com/300/09f/fff.png'}
@@ -46,7 +46,7 @@
 			</div>
 		{/if}
 
-		<a href={`/channel?c=${channel._id}`}>
+		<a href={`/channel/${channel._id}`}>
 			<h2 class="text-xl font-semibold dark:text-white">
 				{channel.title || ''}
 			</h2>
@@ -56,7 +56,7 @@
 			{channel.memberCount || 0} Views - {timeSince(channel.createdAt)}
 		</p>
 
-		<a href={`/channel?c=${channel._id}`} class="flex items-center">
+		<a href={`/channel/${channel._id}`} class="flex items-center">
 			<div class="avatar">
 				<div class="w-8 rounded-full">
 					<img
