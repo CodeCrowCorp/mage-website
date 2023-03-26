@@ -1,11 +1,13 @@
 import { writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
 // import { currentChannel } from '$lib/stores/channelStore'
-import { emitRoomMemberUpdate, emitUserActions } from '$lib/websocket'
+import { emitUserActions } from '$lib/websocket'
 
-export const is_sharing_screen: Writable<boolean> = writable(false)
-export const is_sharing_webcam: Writable<boolean> = writable(false)
-export const is_sharing_audio: Writable<boolean> = writable(false)
+export const video_items: Writable<any> = writable([
+	{ title: 'test1' },
+	{ title: 'test1' },
+	{ title: 'test1' }
+])
 
 let videoStreamId = ''
 let hasActiveTracks = false
@@ -685,7 +687,7 @@ function sendDataToRoom(message: any) {
 	// if (channelStore.currentChannel) {
 	emitUserActions({
 		channelId: '', //TODO: get channelId from writeable channelStore.currentChannel._id,
-		userData: userData,
+		video: userData,
 		message: JSON.stringify(message)
 	})
 	// }

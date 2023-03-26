@@ -29,7 +29,8 @@
 	let isDeleteModalOpen = false,
 		showEditChannelDrawer = false,
 		channels: any = [],
-		channelLimit = 0,
+		skip = 0,
+		limit = 10,
 		active_channel: any = null
 
 	onMount(async () => {
@@ -83,8 +84,8 @@
 		goto('/browse')
 	}
 	const loadMoreChannels = async () => {
-		channelLimit += 10
-		channels = await get(`channels?skip=${0}&limit=${channelLimit}`)
+		skip += limit
+		channels = await get(`channels?skip=${skip}&limit=${limit}`)
 	}
 </script>
 
