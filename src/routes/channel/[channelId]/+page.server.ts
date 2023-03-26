@@ -2,12 +2,12 @@ import type { Actions, PageServerLoad } from './$types'
 import { get, patch } from '$lib/api'
 
 export const load = (async ({ params }) => {
-	return {
-		lazy: {
-			channel: get(`channel?channelId=${params.channelId}`)
-		},
-		channelId: params.channelId
-	}
+	// return {
+	// 	lazy: {
+	// 		channel: get(`channel?channelId=${params.channelId}`)
+	// 	},
+	// 	channelId: params.channelId
+	// }
 }) satisfies PageServerLoad
 
 export const actions = {

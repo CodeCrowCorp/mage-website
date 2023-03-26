@@ -30,12 +30,19 @@
 				if (channels.length && channels[channels.length - 2]['_id'] == id) {
 					dispatch('loadMore')
 				}
-				$page.url.searchParams.set('c', id)
-				goto(`?${$page.url.searchParams.toString()}`, {
+
+				goto(`${id}`, {
 					keepFocus: true,
 					replaceState: true,
 					noScroll: true
 				})
+
+				// $page.url.searchParams.set('c', id)
+				// goto(`?${$page.url.searchParams.toString()}`, {
+				// 	keepFocus: true,
+				// 	replaceState: true,
+				// 	noScroll: true
+				// })
 			}
 		}
 

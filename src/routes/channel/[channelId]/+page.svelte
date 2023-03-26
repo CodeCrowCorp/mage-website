@@ -19,9 +19,12 @@
 	import { page } from '$app/stores'
 	import DrawerEditChannel from '$lib/components/Channel/Chat/DrawerEditChannel.svelte'
 
-	export let data: PageData
+	// export let data: PageData
 
-	$: ({ channelId } = data)
+	// $: ({ channelId } = data)
+
+	let value: undefined
+	let channelId = $page.params.channelId || ''
 
 	let isDeleteModalOpen = false,
 		showEditChannelDrawer = false,
@@ -30,6 +33,8 @@
 		active_channel: any = null
 
 	onMount(async () => {
+		value = await get(`channel?channelId=${channelId}`)
+
 		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
 		initChannelSocket(channelSocketId)
 
@@ -83,7 +88,7 @@
 	}
 </script>
 
-{#await data.lazy.channel then value}
+{#if value}
 	<div class="flex flex-auto">
 		<div class="drawer drawer-end">
 			<input
@@ -128,4 +133,4 @@
 		yes="Yes"
 		yesAction={deleteChannelYesAction}
 		isError={true} />
-{/await}
+{/if}

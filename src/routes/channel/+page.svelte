@@ -22,7 +22,6 @@
 	// export let data: PageData
 
 	let channelId = $page.url.searchParams.get('c') || ''
-
 	let channel: undefined
 
 	// $: ({ channelId } = data)
