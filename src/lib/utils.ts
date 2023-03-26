@@ -89,3 +89,36 @@ export const getColoredRole = (role: string) => {
 			}
 	}
 }
+
+/*
+Input: 33, 16
+Output: [16, 16, 1]
+
+Input: 20, 16
+Output: [16, 4]
+*/
+export const divideNumber = (number: number, divider: number): number[] => {
+	if (number < divider) {
+		return [number]
+	}
+	const quotient = Math.floor(number / divider)
+	return [divider].concat(quotient > 0 ? divideNumber(number - divider, divider) : [])
+}
+
+export const cardCounts: { [key: number]: number[] } = {
+	2: [2],
+	3: [2, 1],
+	4: [2, 2],
+	5: [2, 2, 1],
+	6: [3, 3],
+	7: [3, 2, 2],
+	8: [3, 3, 2],
+	9: [3, 3, 3],
+	10: [4, 3, 3],
+	11: [4, 4, 3],
+	12: [4, 4, 4],
+	13: [4, 4, 4, 1],
+	14: [4, 4, 3, 3],
+	15: [4, 4, 4, 3],
+	16: [4, 4, 4, 4]
+}

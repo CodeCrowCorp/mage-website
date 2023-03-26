@@ -13,9 +13,17 @@
 	let host: any = {},
 		isHost: boolean = false
 
-	onMount(async () => {
+	$: if (channel) {
+		fetchHost()
+	}
+
+	const fetchHost = async () => {
 		host = await get(`users/search/id?userId=${channel?.user}`)
 		isHost = channel?.user === $page.data.user.userId
+	}
+
+	onMount(async () => {
+		await fetchHost()
 	})
 </script>
 

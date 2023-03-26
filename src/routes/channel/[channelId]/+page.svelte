@@ -13,22 +13,31 @@
 	} from '$lib/websocket'
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
-	import { is_chat_drawer_open } from '$lib/stores/channelStore'
+	import { is_chat_drawer_open, is_chat_drawer_destroy } from '$lib/stores/channelStore'
 	import Modal from '$lib/components/Global/Modal.svelte'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import DrawerEditChannel from '$lib/components/Channel/Chat/DrawerEditChannel.svelte'
 
-	export let data: PageData
+	// export let data: PageData
 
-	$: ({ channelId } = data)
+	// $: ({ channelId } = data)
+
+	let value: undefined
+	let channelId = $page.params.channelId || ''
 
 	let isDeleteModalOpen = false,
-		showEditChannelDrawer = false
+		showEditChannelDrawer = false,
+		channels: any = [],
+		channelLimit = 0,
+		active_channel: any = null
 
 	onMount(async () => {
+		value = await get(`channel?channelId=${channelId}`)
+
 		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
 		initChannelSocket(channelSocketId)
+
 		channelSocket.addEventListener('open', (data) => {
 			console.log('channel socket connection open')
 			console.log(data)
@@ -56,6 +65,8 @@
 		setTimeout(() => {
 			$is_chat_drawer_open = true
 		}, 700)
+
+		await loadMoreChannels()
 	})
 
 	onDestroy(() => channelSocket?.close())
@@ -71,9 +82,13 @@
 		emitDeleteAllMessagesToChannel({ channelId })
 		goto('/browse')
 	}
+	const loadMoreChannels = async () => {
+		channelLimit += 10
+		channels = await get(`channels?skip=${0}&limit=${channelLimit}`)
+	}
 </script>
 
-{#await data.lazy.channel then value}
+{#if value}
 	<div class="flex flex-auto">
 		<div class="drawer drawer-end">
 			<input
@@ -82,19 +97,25 @@
 				class="drawer-toggle"
 				bind:checked={$is_chat_drawer_open} />
 			<div class="drawer-content">
-				<StreamContainer />
+				<StreamContainer
+					channel={value}
+					bind:active_channel
+					bind:channels
+					on:loadMore={loadMoreChannels} />
 
 				{#if showEditChannelDrawer}
 					<DrawerEditChannel channel={value} bind:showDrawer={showEditChannelDrawer} />
 				{/if}
 			</div>
-			<div
-				class="drawer-side m-5 rounded-lg md:w-fit lg:drop-shadow-lg"
-				class:!hidden={showEditChannelDrawer}>
-				<label for="chat-drawer" class="drawer-overlay" />
+			{#if !$is_chat_drawer_destroy}
+				<div
+					class="drawer-side m-5 rounded-lg md:w-fit lg:drop-shadow-lg"
+					class:!hidden={showEditChannelDrawer}>
+					<label for="chat-drawer" class="drawer-overlay" />
 
-				<DrawerChat channel={value} bind:showEditChannelDrawer />
-			</div>
+					<DrawerChat bind:active_channel channel={value} bind:showEditChannelDrawer />
+				</div>
+			{/if}
 		</div>
 	</div>
 
@@ -112,4 +133,4 @@
 		yes="Yes"
 		yesAction={deleteChannelYesAction}
 		isError={true} />
-{/await}
+{/if}
