@@ -20,10 +20,9 @@
 	import DrawerEditChannel from '$lib/components/Channel/Chat/DrawerEditChannel.svelte'
 
 	// export let data: PageData
-
 	// $: ({ channelId } = data)
 
-	let value: undefined
+	let channel: undefined
 	let channelId = $page.params.channelId || ''
 
 	let isDeleteModalOpen = false,
@@ -34,8 +33,22 @@
 		active_channel: any = null
 
 	onMount(async () => {
-		value = await get(`channel?channelId=${channelId}`)
+		await loadChannel()
+		await handleWebsocket()
+		await loadMoreChannels()
 
+		setTimeout(() => {
+			$is_chat_drawer_open = true
+		}, 700)
+	})
+
+	onDestroy(() => channelSocket?.close())
+
+	const loadChannel = async () => {
+		channel = await get(`channel?channelId=${channelId}`)
+	}
+
+	const handleWebsocket = async () => {
 		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
 		initChannelSocket(channelSocketId)
 
@@ -62,19 +75,20 @@
 			console.log(data)
 			channel_connection.set('close')
 		})
-
-		setTimeout(() => {
-			$is_chat_drawer_open = true
-		}, 700)
-
-		await loadMoreChannels()
-	})
-
-	onDestroy(() => channelSocket?.close())
+	}
 
 	const deleteChannelNoAction = () => {
 		isDeleteModalOpen = false
 	}
+
+	$: if (active_channel) {
+		channelId = active_channel?._id
+		// First close connection here
+		// channel_connection.set('close')
+
+		handleWebsocket()
+	}
+
 	const deleteChannelYesAction = async () => {
 		await del(`channels?channelId=${channelId}`, {
 			userId: $page.data.user?.userId,
@@ -89,7 +103,7 @@
 	}
 </script>
 
-{#if value}
+{#if channel}
 	<div class="flex flex-auto">
 		<div class="drawer drawer-end">
 			<input
@@ -99,13 +113,13 @@
 				bind:checked={$is_chat_drawer_open} />
 			<div class="drawer-content">
 				<StreamContainer
-					channel={value}
+					{channel}
 					bind:active_channel
 					bind:channels
 					on:loadMore={loadMoreChannels} />
 
 				{#if showEditChannelDrawer}
-					<DrawerEditChannel channel={value} bind:showDrawer={showEditChannelDrawer} />
+					<DrawerEditChannel {channel} bind:showDrawer={showEditChannelDrawer} />
 				{/if}
 			</div>
 			{#if !$is_chat_drawer_destroy}
@@ -114,7 +128,7 @@
 					class:!hidden={showEditChannelDrawer}>
 					<label for="chat-drawer" class="drawer-overlay" />
 
-					<DrawerChat bind:active_channel channel={value} bind:showEditChannelDrawer />
+					<DrawerChat bind:active_channel {channel} bind:showEditChannelDrawer />
 				</div>
 			{/if}
 		</div>
