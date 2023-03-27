@@ -99,7 +99,8 @@
 	}
 	const loadMoreChannels = async () => {
 		skip += limit
-		channels = await get(`channels?skip=${skip}&limit=${limit}`)
+		let newchannels = await get(`channels?skip=${skip}&limit=${limit}`)
+		channels = [...channels, ...newchannels]
 	}
 </script>
 
