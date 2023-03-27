@@ -53,7 +53,7 @@
 
 <div class="bg-base-100 flex flex-col overflow-y-hidden w-72 md:w-full">
 	<DropdownViewChannel bind:channel bind:showEditChannelDrawer />
-	<div class="flex flex-col-reverse p-3 grow overflow-y-scroll lg:w-[425px] w-[415px]">
+	<div class="flex flex-col-reverse p-3 grow overflow-y-scroll w-[400px]">
 		{#each chatHistory as sender}
 			<Message bind:sender bind:hostId={channel.user} />
 		{/each}
