@@ -27,7 +27,7 @@
 <ul class="menu">
 	<li class="group relative dropdown">
 		<!--Host, Mod, You or Rando-->
-		<div class="p-1 border border-transparent rounded-lg flex gap-2 w-96 overflow-x-hidden">
+		<div class="p-1 border border-transparent rounded-lg flex gap-2 overflow-x-hidden">
 			<span>
 				{#if sender.role === 'Host' || sender.role === 'Mod' || sender.role === 'You'}
 					<span class="{coloredRole?.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
