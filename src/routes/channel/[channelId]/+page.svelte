@@ -37,9 +37,10 @@
 		await handleWebsocket()
 		await loadMoreChannels()
 
+		$is_chat_drawer_destroy = false
 		setTimeout(() => {
 			$is_chat_drawer_open = true
-		}, 700)
+		}, 600)
 	})
 
 	onDestroy(() => channelSocket?.close())
