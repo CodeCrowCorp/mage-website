@@ -4,6 +4,8 @@
 	import { channel_message } from '$lib/stores/websocketStore'
 	import DropdownViewChannel from '$lib/components/Channel/Chat/DropdownViewChannel.svelte'
 	import { page } from '$app/stores'
+	import { onDestroy } from 'svelte'
+	import { is_chat_drawer_open } from '$lib/stores/channelStore'
 
 	export let channel: any = undefined,
 		showEditChannelDrawer: boolean = false,
@@ -48,6 +50,10 @@
 		if (parsedMsg.eventName === `channel-update-${channel._id}`) {
 			channel = parsedMsg.channel
 		}
+	})
+
+	onDestroy(() => {
+		$is_chat_drawer_open = false
 	})
 </script>
 
