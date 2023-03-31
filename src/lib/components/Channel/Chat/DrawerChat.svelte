@@ -14,6 +14,7 @@
 
 	$: if (active_channel) {
 		channel = active_channel
+		chatHistory = []
 	}
 
 	const setRole = (msg: any): any => {
@@ -61,7 +62,7 @@
 	<DropdownViewChannel bind:channel bind:showEditChannelDrawer />
 	<div class="flex flex-col-reverse p-3 grow overflow-y-scroll w-96">
 		{#each chatHistory as sender}
-			<Message bind:sender bind:hostId={channel.user} />
+			<Message bind:sender bind:hostId={channel.user} bind:channel />
 		{/each}
 	</div>
 	<div class="flex flex-row mt-auto p-3 w-full">

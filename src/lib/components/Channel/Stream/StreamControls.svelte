@@ -4,21 +4,19 @@
 	import IconShareAudio from '$lib/assets/icons/channel/IconShareAudio.svelte'
 	import IconChatDrawer from '$lib/assets/icons/channel/IconChatDrawer.svelte'
 	import { is_chat_drawer_open, is_chat_drawer_destroy } from '$lib/stores/channelStore'
-	import { del, post } from '$lib/api'
+	import { del, get, post } from '$lib/api'
 	import { page } from '$app/stores'
-	import { emitUserActions } from '$lib/websocket'
+	import { emitAction } from '$lib/websocket'
 	import { video_items } from '$lib/stores/streamStore'
 
-	export let isHost: boolean = true
+	export let isHost: boolean = true,
+		channel: any
 	let isSharingScreen: boolean = false
 	let isSharingWebcam: boolean = false
 	let isSharingAudio: boolean = false
 	let screenUid: string = ''
 	let webcamUid: string = ''
 	let audioUid: string = ''
-
-	//TODO: show WHEP from websocket
-	//const output = new WHEPClient(liveInput.webRTCPlayback.url, videoElement)
 
 	const handleChatDrawer = () => {
 		if ($is_chat_drawer_open) {
@@ -35,101 +33,163 @@
 		}, 100)
 	}
 
-	async function getLiveInput(trackData: any) {
-		return await post(`cloudflare/live-input`, JSON.stringify(trackData), {
+	const createLiveInput = async (trackData: any) => {
+		return await post(`cloudflare/live-input`, JSON.stringify({ trackData }), {
 			userId: $page.data.user.userId,
 			token: $page.data.user.token
 		})
 	}
 
-	async function deleteLiveInput({ inputId }: { inputId: string }) {
-		return await del(`cloudflare/live-input?inputId=${inputId}`, {
+	const deleteLiveInput = async ({
+		channelId,
+		inputId
+	}: {
+		channelId: string
+		inputId: string
+	}) => {
+		return await del(`cloudflare/live-input?channelId=${channelId}&inputId=${inputId}`, {
 			userId: $page.data.user.userId,
 			token: $page.data.user.token
 		})
 	}
 
-	async function startScreenStream() {
+	const startScreenStream = async () => {
 		const trackName = `screen-${$page.data.user.userId}`
-		const liveInput = await getLiveInput({
-			meta: { name: trackName },
+		const liveInput = await createLiveInput({
+			meta: {
+				name: `${$page.params.channelId}-${trackName}`,
+				trackName: trackName,
+				trackType: 'screen',
+				username: $page.data.user.user.username,
+				avatar: $page.data.user.user.avatar
+			},
 			recording: { mode: 'automatic' }
 		})
 		screenUid = liveInput.uid
 		$video_items.push(liveInput)
-		emitUserActions({
+		emitAction({
 			channelId: $page.params.channelId,
-			video: liveInput,
-			message: JSON.stringify({ type: 'toggleTrack', trackType: 'screen' })
+			message: {
+				action: 'toggleTrack-start',
+				video: liveInput
+			}
 		})
 	}
 
-	async function stopScreenStream() {
-		await deleteLiveInput({ inputId: screenUid })
+	const stopScreenStream = async () => {
+		await deleteLiveInput({ channelId: $page.params.channelId, inputId: screenUid })
 		$video_items = $video_items.filter(
-			(item: { meta: { name: string | string[] } }) => !item.meta.name.includes('screen')
+			(video: any) => video.trackName !== `screen-${$page.data.user.userId}`
 		)
-		emitUserActions({
+		emitAction({
 			channelId: $page.params.channelId,
-			video: { inputId: screenUid },
-			message: JSON.stringify({ type: 'toggleTrack', trackType: 'screen' })
+			message: {
+				action: 'toggleTrack-stop',
+				video: {
+					trackType: 'screen',
+					liveInput: { screenUid },
+					trackName: null,
+					username: $page.data.user.user.username,
+					avatar: $page.data.user.user.avatar
+				}
+			}
 		})
+		screenUid = ''
 	}
 
-	async function startWebcamStream() {
+	const startWebcamStream = async () => {
 		const trackName = `webcam-${$page.data.user.userId}`
-		const liveInput = await getLiveInput({
+		const liveInput = await createLiveInput({
 			meta: { name: trackName },
 			recording: { mode: 'automatic' }
 		})
 		webcamUid = liveInput.uid
-		$video_items.push(liveInput)
-		emitUserActions({
+		const video = {
+			trackType: 'webcam',
+			liveInput,
+			trackName,
+			username: $page.data.user.user.username,
+			avatar: $page.data.user.user.avatar
+		}
+		$video_items.push(video)
+		emitAction({
 			channelId: $page.params.channelId,
-			video: liveInput,
-			message: JSON.stringify({ type: 'toggleTrack', trackType: 'webcam' })
+			message: {
+				action: 'toggleTrack-start',
+				video: video
+			}
 		})
 	}
 
-	async function stopWebcamStream() {
-		await deleteLiveInput({ inputId: webcamUid })
+	const stopWebcamStream = async () => {
+		await deleteLiveInput({ channelId: $page.params.channelId, inputId: webcamUid })
 		$video_items = $video_items.filter(
-			(item: { meta: { name: string | string[] } }) => !item.meta.name.includes('webcam')
+			(video: any) => video.trackName !== `webcam-${$page.data.user.userId}`
 		)
-		emitUserActions({
+		emitAction({
 			channelId: $page.params.channelId,
-			video: { inputId: webcamUid },
-			message: JSON.stringify({ type: 'toggleTrack', trackType: 'webcam' })
+			message: {
+				action: 'toggleTrack-stop',
+				video: {
+					trackType: 'webcam',
+					liveInput: { webcamUid },
+					trackName: null,
+					username: $page.data.user.user.username,
+					avatar: $page.data.user.user.avatar
+				}
+			}
 		})
 		webcamUid = ''
 	}
 
-	async function startAudioStream() {
+	const startAudioStream = async () => {
 		const trackName = `audio-${$page.data.user.userId}`
-		const liveInput = await getLiveInput({
+		const liveInput = await createLiveInput({
 			meta: { name: trackName },
 			recording: { mode: 'automatic' }
 		})
 		audioUid = liveInput.uid
-		$video_items.push(liveInput)
-		emitUserActions({
+		const video = {
+			trackType: 'audio',
+			liveInput,
+			trackName,
+			username: $page.data.user.user.username,
+			avatar: $page.data.user.user.avatar
+		}
+		$video_items.push(video)
+		emitAction({
 			channelId: $page.params.channelId,
-			video: liveInput,
-			message: JSON.stringify({ type: 'toggleTrack', trackType: 'audio' })
+			message: {
+				action: 'toggleTrack-start',
+				video: video
+			}
 		})
 	}
 
-	async function stopAudioStream() {
-		await deleteLiveInput({ inputId: audioUid })
-		//remove item from video_items if trackname includes audio
+	const stopAudioStream = async () => {
+		await deleteLiveInput({ channelId: $page.params.channelId, inputId: audioUid })
 		$video_items = $video_items.filter(
-			(item: { meta: { name: string | string[] } }) => !item.meta.name.includes('audio')
+			(video: any) => video.trackName !== `audio-${$page.data.user.userId}`
 		)
-		emitUserActions({
+		emitAction({
 			channelId: $page.params.channelId,
-			video: { inputId: audioUid },
-			message: JSON.stringify({ type: 'toggleTrack', trackType: 'audio' })
+			message: {
+				action: 'toggleTrack-stop',
+				video: {
+					trackType: 'audio',
+					liveInput: { audioUid },
+					trackName: null,
+					username: $page.data.user.user.username,
+					avatar: $page.data.user.user.avatar
+				}
+			}
 		})
+		audioUid = ''
+	}
+
+	const isHostOrGuest = (): boolean => {
+		const isGuest = channel.guests.includes($page.data.user.userId)
+		return isHost || isGuest
 	}
 </script>
 
@@ -137,24 +197,33 @@
 	<button
 		class="btn tooltip font-normal normal-case {isSharingScreen ? 'btn-primary' : ''}"
 		data-tip="Screen"
-		on:click={() => (isSharingScreen = !isSharingScreen)}
-		disabled={!isHost}>
+		on:click={() => {
+			isSharingScreen = !isSharingScreen
+			isSharingScreen ? startScreenStream() : stopScreenStream()
+		}}
+		disabled={!isHostOrGuest}>
 		<IconShareScreen />
 	</button>
 
 	<button
 		class="btn tooltip font-normal normal-case {isSharingWebcam ? 'btn-primary' : ''}"
 		data-tip="Webcam"
-		on:click={() => (isSharingWebcam = !isSharingWebcam)}
-		disabled={!isHost}>
+		on:click={() => {
+			isSharingWebcam = !isSharingWebcam
+			isSharingWebcam ? startWebcamStream() : stopWebcamStream()
+		}}
+		disabled={!isHostOrGuest}>
 		<IconShareWebcam />
 	</button>
 
 	<button
 		class="btn tooltip font-normal normal-case {isSharingAudio ? 'btn-primary' : ''}"
 		data-tip="Audio"
-		on:click={() => (isSharingAudio = !isSharingAudio)}
-		disabled={!isHost}>
+		on:click={() => {
+			isSharingAudio = !isSharingAudio
+			isSharingAudio ? startAudioStream() : stopAudioStream()
+		}}
+		disabled={!isHostOrGuest}>
 		<IconShareAudio />
 	</button>
 

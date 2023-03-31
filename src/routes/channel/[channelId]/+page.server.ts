@@ -27,10 +27,10 @@ export const actions = {
 		const tags = JSON.parse(data.get('tags-selected'))
 		const category = JSON.parse(data.get('category-selected'))
 		const updatedChannel = { title, description, tags, category }
-		await patch(`channels?channelId=${params.channelId}`, updatedChannel, {
-			userId,
-			token
-		})
+		// await patch(`channels?channelId=${params.channelId}`, updatedChannel, {
+		// 	userId,
+		// 	token
+		// })
 		return { success: true }
 	}
 } satisfies Actions

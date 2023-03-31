@@ -1,12 +1,12 @@
 import { writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
 // import { currentChannel } from '$lib/stores/channelStore'
-import { emitUserActions } from '$lib/websocket'
+import { emitAction } from '$lib/websocket'
 
 export const video_items: Writable<any> = writable([
-	{ title: 'test1' },
-	{ title: 'test1' },
-	{ title: 'test1' }
+	// { title: 'test1' },
+	// { title: 'test2' },
+	// { title: 'test3' }
 ])
 
 let videoStreamId = ''
@@ -685,9 +685,8 @@ function toggleRestriction({ user, featureType }: { user: any; featureType: stri
 
 function sendDataToRoom(message: any) {
 	// if (channelStore.currentChannel) {
-	emitUserActions({
+	emitAction({
 		channelId: '', //TODO: get channelId from writeable channelStore.currentChannel._id,
-		video: userData,
 		message: JSON.stringify(message)
 	})
 	// }
