@@ -65,10 +65,6 @@
 						</label>
 						<DropdownViewers />
 					</div>
-
-					<span>
-						{channel?._id}
-					</span>
 				</div>
 				<VideoGrid />
 			</div>
@@ -95,10 +91,6 @@
 							</label>
 							<DropdownViewers />
 						</div>
-
-						<span>
-							{nextchannel?._id}
-						</span>
 					</div>
 					<VideoGrid />
 				</div>
@@ -107,6 +99,8 @@
 	</div>
 
 	<div class="absolute bottom-0 m-5">
-		<StreamControls />
+		<StreamControls
+			isHost={active_channel?.user === $page.data.user.userId}
+			bind:channel={active_channel} />
 	</div>
 </div>
