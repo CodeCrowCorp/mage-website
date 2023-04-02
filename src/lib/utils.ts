@@ -1,6 +1,9 @@
 export const levelAndBarValueFromExp = (
 	currentExp: number
 ): { level: number; barValue: number } => {
+	if (currentExp == 0) {
+		return { level: 1, barValue: 0 }
+	}
 	const equate = (xp: number) => {
 		return Math.floor(xp + 300 * Math.pow(2, xp / 7))
 	}
