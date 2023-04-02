@@ -1,19 +1,50 @@
 export const levelAndBarValueFromExp = (
 	currentExp: number
 ): { level: number; barValue: number } => {
-	const level = Math.floor(0.5 * Math.sqrt(currentExp)) + 1
-	const currentLevelExp = Math.pow(level - 1, 2) * 100
-	const nextLevelExp = Math.pow(level, 2) * 100
-	const expDifference = nextLevelExp - currentLevelExp
-	const expProgress = (currentExp - currentLevelExp) / expDifference
-	const barValue = Math.round(expProgress * 100)
+	const equate = (xp: number) => {
+		return Math.floor(xp + 300 * Math.pow(2, xp / 7))
+	}
+
+	const level_to_xp = (level: number) => {
+		let xp = 0
+		for (let i = 1; i < level; i++) xp += equate(i)
+		return Math.floor(xp / 4)
+	}
+
+	const xp_to_level = (xp: number) => {
+		let level = 1
+		while (level_to_xp(level) < xp) level++
+		return level
+	}
+
+	const level = xp_to_level(currentExp),
+		currentLevelMaxExp = level_to_xp(level),
+		prevLevelMaxExp = level_to_xp(level - 1),
+		expDiff = currentLevelMaxExp - prevLevelMaxExp,
+		remainingLevelExp = currentLevelMaxExp - currentExp,
+		barValue = Math.abs(100 - (remainingLevelExp / expDiff) * 100)
 
 	return { level, barValue }
 }
 
 export const colorFromLevel = (level: number): string => {
 	const hue = (360 * (level * 0.6180339887498949)) % 360
-	return `hsl(${hue}, 100%, 50%)`
+	return hslToHex(hue, 100, 50)
+
+	// return `hsl(${hue}, 100%, 50%)`
+}
+
+const hslToHex = (h: number, s: number, l: number): string => {
+	l /= 100
+	const a = (s * Math.min(l, 1 - l)) / 100
+	const f = (n: number) => {
+		const k = (n + h / 30) % 12
+		const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1)
+		return Math.round(255 * color)
+			.toString(16)
+			.padStart(2, '0') // convert to Hex and prefix "0" if needed
+	}
+	return `#${f(0)}${f(8)}${f(4)}`
 }
 
 export const isJsonString = (str: string): boolean => {
