@@ -59,7 +59,7 @@ async function getMessages({ chat, chatType }: { chat: any; chatType: string }) 
 	if (chatType == 'channelChat') {
 		skip = skip + limit
 		data.skip = skip
-		// emitHistoryToChannel({ channelId: chat.channel, skip: data.skip })
+		// emitChatHistoryToChannel({ channelId: chat.channel, skip: data.skip })
 	} else if (chatType == 'oneToOneChat') {
 		data.skip = chat.skip
 	}

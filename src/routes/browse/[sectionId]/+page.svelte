@@ -26,10 +26,10 @@
 
 	async function loadMore(): Promise<void> {
 		loadingMoreChannels = true
-		skip += limit
 		const url = getSectionUrl({ sectionId, query, skip, limit })
 		const moreChannels = await get(url, { userId: user?.userId, token: user?.token })
 		searchList = [...searchList, ...moreChannels]
+		skip += limit
 		loadingMoreChannels = false
 	}
 </script>

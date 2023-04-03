@@ -4,11 +4,18 @@
 	import { channel_message } from '$lib/stores/websocketStore'
 	import DropdownViewChannel from '$lib/components/Channel/Chat/DropdownViewChannel.svelte'
 	import { page } from '$app/stores'
+	import { onDestroy } from 'svelte'
+	import { is_chat_drawer_open } from '$lib/stores/channelStore'
 
 	export let channel: any = undefined,
-		showEditChannelDrawer: boolean = false
-
+		showEditChannelDrawer: boolean = false,
+		active_channel: any = undefined
 	let chatHistory: any[] = []
+
+	$: if (active_channel) {
+		channel = active_channel
+		chatHistory = []
+	}
 
 	const setRole = (msg: any): any => {
 		if (msg.userData?.userId === channel?.user) msg.role = 'Host'
@@ -45,13 +52,17 @@
 			channel = parsedMsg.channel
 		}
 	})
+
+	onDestroy(() => {
+		$is_chat_drawer_open = false
+	})
 </script>
 
-<div class="bg-base-100 flex flex-col overflow-y-hidden">
+<div class="bg-base-100 flex flex-col overflow-y-hidden w-72 md:w-full">
 	<DropdownViewChannel bind:channel bind:showEditChannelDrawer />
-	<div class="flex flex-col-reverse p-3 grow overflow-y-scroll lg:w-[425px] w-[415px]">
+	<div class="flex flex-col-reverse p-3 grow overflow-y-scroll w-96">
 		{#each chatHistory as sender}
-			<Message bind:sender bind:hostId={channel.user} />
+			<Message bind:sender bind:hostId={channel.user} bind:channel />
 		{/each}
 	</div>
 	<div class="flex flex-row mt-auto p-3 w-full">

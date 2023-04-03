@@ -13,9 +13,17 @@
 	let host: any = {},
 		isHost: boolean = false
 
-	onMount(async () => {
+	$: if (channel) {
+		fetchHost()
+	}
+
+	const fetchHost = async () => {
 		host = await get(`users/search/id?userId=${channel?.user}`)
 		isHost = channel?.user === $page.data.user.userId
+	}
+
+	onMount(async () => {
+		await fetchHost()
 	})
 </script>
 
@@ -32,7 +40,9 @@
 			</div>
 		</li>
 	</ul>
-	<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-96 m-3">
+	<ul
+		tabindex="-1"
+		class="dropdown-content menu p-2 shadow bg-base-200 rounded-box md:w-[23rem] md:m-3">
 		<li on:click={() => copyToClipboard(channel.description)} on:keyup>
 			<a class="text-sm max-w-md">{channel.description || 'No description'}</a>
 		</li>

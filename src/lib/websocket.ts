@@ -114,7 +114,7 @@ function emitDeleteAllMessagesToChannel({ channelId }: { channelId: string }) {
 	)
 }
 
-function emitHistoryToChannel({ channelId, skip }: { channelId: string; skip: number }) {
+function emitChatHistoryToChannel({ channelId, skip }: { channelId: string; skip: number }) {
 	channelSocket.send(
 		JSON.stringify({
 			eventName: `channel-message-history`,
@@ -124,21 +124,21 @@ function emitHistoryToChannel({ channelId, skip }: { channelId: string; skip: nu
 	)
 }
 
-function emitChannelChatTypingByUser({
-	channelId,
-	typingUser
-}: {
-	channelId: string
-	typingUser: string
-}) {
-	channelSocket.send(
-		JSON.stringify({
-			eventName: `channel-chat-typing`,
-			channel: channelId,
-			typingUser
-		})
-	)
-}
+// function emitChannelChatTypingByUser({
+// 	channelId,
+// 	typingUser
+// }: {
+// 	channelId: string
+// 	typingUser: string
+// }) {
+// 	channelSocket.send(
+// 		JSON.stringify({
+// 			eventName: `channel-chat-typing`,
+// 			channel: channelId,
+// 			typingUser
+// 		})
+// 	)
+// }
 
 function emitReactToMessage({
 	channelId,
@@ -164,45 +164,15 @@ function emitReactToMessage({
 
 /************ Channel streaming ****************/
 
-function emitRoomMemberUpdate({
-	channelId,
-	userData,
-	isNewUser
-}: {
-	channelId: string
-	userData: any
-	isNewUser: boolean
-}) {
+function emitAction({ channelId, message }: { channelId: string; message: any }) {
 	channelSocket.send(
 		JSON.stringify({
-			eventName: 'channel-streaming-room-member-update',
+			eventName: `channel-streaming-action`,
 			channel: channelId,
-			userData,
-			isNewUser
-		})
-	)
-}
-
-function emitUserActions({
-	channelId,
-	userData,
-	message
-}: {
-	channelId: string
-	userData: any
-	message: string
-}) {
-	channelSocket.send(
-		JSON.stringify({
-			eventName: `channel-streaming-user-actions`,
-			channel: channelId,
-			userData,
 			message
 		})
 	)
 }
-
-//TODO: place these everywhere we are using socket listeners
 
 // function listenToUserConnection({ userId }: { userId: string }) {
 // 	platformMessage.subscribe((value) => {
@@ -353,8 +323,7 @@ export {
 	emitReactToMessage,
 	emitDeleteMessageToChannel,
 	emitDeleteAllMessagesToChannel,
-	emitHistoryToChannel,
+	emitChatHistoryToChannel,
 	// emitChannelChatTypingByUser,
-	emitRoomMemberUpdate,
-	emitUserActions
+	emitAction
 }
