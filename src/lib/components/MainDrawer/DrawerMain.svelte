@@ -40,7 +40,7 @@
 
 	$: currentUser = $page.data.user?.user
 
-	let exp = 512 //Math.floor(Math.random() * (10000 - 0 + 1) + 0) //currentUser.exp
+	let exp = 500 //Math.floor(Math.random() * (10000 - 0 + 1) + 0) //currentUser.exp
 	let levelAndBarValue = levelAndBarValueFromExp(exp)
 	let progressBarLevel = levelAndBarValue.level //levelFromExp(exp) //currentUser.exp
 	let progressBarValue = levelAndBarValue.barValue //barValueFromExp(exp) //currentUser.exp
