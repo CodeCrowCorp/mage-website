@@ -2,7 +2,7 @@
 	import DrawerChat from '$lib/components/Channel/Chat/DrawerChat.svelte'
 	import StreamContainer from '$lib/components/Channel/Stream/StreamContainer.svelte'
 	import { onDestroy, onMount } from 'svelte'
-	import { get, del } from '$lib/api'
+	import { get, del, post } from '$lib/api'
 	import {
 		emitChatHistoryToChannel,
 		initChannelSocket,
@@ -20,10 +20,7 @@
 	import DrawerEditChannel from '$lib/components/Channel/Chat/DrawerEditChannel.svelte'
 	import { video_items } from '$lib/stores/streamStore'
 
-	// export let data: PageData
-	// $: ({ channelId } = data)
-
-	let channel: undefined
+	let channel: any
 	let channelId = $page.params.channelId || ''
 
 	let isDeleteModalOpen = false,
@@ -107,18 +104,33 @@
 	}
 
 	const loadMoreChannels = async () => {
-		skip += limit
 		let newchannels = await get(`channels?skip=${skip}&limit=${limit}`)
 		channels = [...channels, ...newchannels]
+		skip += limit
 	}
 
-	channel_message.subscribe((value) => {
+	channel_message.subscribe(async (value: any) => {
 		if (!value) return
 		var parsedMsg = JSON.parse(value)
 		switch (parsedMsg.eventName) {
 			case `channel-subscribe-${channelId}`:
 				//TODO: send back userIds from server
+				let videoItems = []
 				const connectedUserIds = parsedMsg.data.userIds
+				if (connectedUserIds?.length) {
+					const activeUserIds = connectedUserIds.filter((userId: string) =>
+						channel?.guests.includes(userId)
+					)
+					const users = await post(`users/search/ids`, activeUserIds)
+					const updatedUsers = users.map(
+						({ _id, username, avatar }: { _id: string; username: string; avatar: string }) => ({
+							_id,
+							username,
+							avatar
+						})
+					)
+					videoItems.push(...updatedUsers)
+				}
 				break
 			case `channel-streaming-action-${channelId}`:
 				switch (parsedMsg.data.action) {

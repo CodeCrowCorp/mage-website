@@ -24,9 +24,9 @@
 			</div>
 		</div>
 	</div>
-	<div class="flex flex-row gap-5 max-w-[400px]">
-		<div class="avatar my-3 ml-2">
-			<div class="w-9 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+	<div class="flex flex-row gap-3 max-w-[400px]">
+		<div class="avatar">
+			<div class="w-12 mask mask-squircle">
 				<img src={channel.avatar} alt="" />
 			</div>
 		</div>
