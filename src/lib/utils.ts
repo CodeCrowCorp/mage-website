@@ -10,13 +10,13 @@ export const levelAndBarValueFromExp = (
 
 	const level_to_xp = (level: number) => {
 		let xp = 0
-		for (let i = 1; i < level; i++) xp += equate(i)
+		for (let i = 1; i <= level; i++) xp += equate(i)
 		return Math.floor(xp / 4)
 	}
 
 	const xp_to_level = (xp: number) => {
 		let level = 1
-		while (level_to_xp(level) < xp) level++
+		while (level_to_xp(level) <= xp) level++
 		return level
 	}
 
