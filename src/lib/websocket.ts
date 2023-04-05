@@ -19,54 +19,54 @@ function emitUserConnection({ userId, isOnline }: { userId: string; isOnline: bo
 	)
 }
 
-function emitChannelAccessRequest({ channelId, userId }: { channelId: string; userId: string }) {
-	platformSocket.send(
-		JSON.stringify({ eventName: `channel-access-request`, channel: channelId, user: userId })
-	)
-}
+// function emitChannelAccessRequest({ channelId, userId }: { channelId: string; userId: string }) {
+// 	platformSocket.send(
+// 		JSON.stringify({ eventName: `channel-access-request`, channel: channelId, user: userId })
+// 	)
+// }
 
-function emitChannelAccessResponse({
-	channelId,
-	userId,
-	isGrantedAccess
-}: {
-	channelId: string
-	userId: string
-	isGrantedAccess: boolean
-}) {
-	platformSocket.send(
-		JSON.stringify({
-			eventName: `channel-access-response`,
-			channel: channelId,
-			user: userId,
-			isGrantedAccess
-		})
-	)
-}
+// function emitChannelAccessResponse({
+// 	channelId,
+// 	userId,
+// 	isGrantedAccess
+// }: {
+// 	channelId: string
+// 	userId: string
+// 	isGrantedAccess: boolean
+// }) {
+// 	platformSocket.send(
+// 		JSON.stringify({
+// 			eventName: `channel-access-response`,
+// 			channel: channelId,
+// 			user: userId,
+// 			isGrantedAccess
+// 		})
+// 	)
+// }
 
 /************ Chat ****************/
 
-function emitChatMessage({
-	source1,
-	source2,
-	message
-}: {
-	source1: string
-	source2: string
-	message: any
-}) {
-	platformSocket.send(JSON.stringify({ eventName: `message-sent`, source1, source2, message }))
-}
+// function emitChatMessage({
+// 	source1,
+// 	source2,
+// 	message
+// }: {
+// 	source1: string
+// 	source2: string
+// 	message: any
+// }) {
+// 	platformSocket.send(JSON.stringify({ eventName: `message-sent`, source1, source2, message }))
+// }
 
-function emitChatTypingByUser({ userId }: { userId: string }) {
-	platformSocket.send(
-		JSON.stringify({
-			eventName: `chat-typing`,
-			user: userId,
-			isTyping: true
-		})
-	)
-}
+// function emitChatTypingByUser({ userId }: { userId: string }) {
+// 	platformSocket.send(
+// 		JSON.stringify({
+// 			eventName: `chat-typing`,
+// 			user: userId,
+// 			isTyping: true
+// 		})
+// 	)
+// }
 
 /************ Channel chat ****************/
 
@@ -82,8 +82,8 @@ function emitChannelSubscribeByUser({ channelId, userId }: { channelId: string; 
 	channelSocket.send(
 		JSON.stringify({
 			eventName: `channel-subscribe`,
-			channel: channelId,
-			userId: userId
+			channelId: channelId,
+			user: userId
 		})
 	)
 }

@@ -2,7 +2,7 @@
 	import DrawerChat from '$lib/components/Channel/Chat/DrawerChat.svelte'
 	import StreamContainer from '$lib/components/Channel/Stream/StreamContainer.svelte'
 	import { onDestroy, onMount } from 'svelte'
-	import { get, del, post } from '$lib/api'
+	import { get, del } from '$lib/api'
 	import {
 		emitChatHistoryToChannel,
 		initChannelSocket,
@@ -22,6 +22,7 @@
 
 	let channel: any
 	let channelId = $page.params.channelId || ''
+	let count: number = 0
 
 	let isDeleteModalOpen = false,
 		showEditChannelDrawer = false,
@@ -69,7 +70,6 @@
 			channel_connection.set('open')
 			emitChannelSubscribeByUser({ channelId, userId: $page.data.user?.userId })
 			emitChatHistoryToChannel({ channelId, skip: 100 })
-			$video_items = await getLiveInputs(channelId)
 		})
 		channelSocket.addEventListener('message', (data) => {
 			console.log('channel listening to messages')
@@ -114,22 +114,21 @@
 		var parsedMsg = JSON.parse(value)
 		switch (parsedMsg.eventName) {
 			case `channel-subscribe-${channelId}`:
-				//TODO: send back userIds from server
-				let videoItems = []
-				const connectedUserIds = parsedMsg.data.userIds
-				if (connectedUserIds?.length) {
-					const activeUserIds = connectedUserIds.filter((userId: string) =>
-						channel?.guests.includes(userId)
-					)
-					const users = await post(`users/search/ids`, activeUserIds)
-					const updatedUsers = users.map(
-						({ _id, username, avatar }: { _id: string; username: string; avatar: string }) => ({
-							_id,
-							username,
-							avatar
+				count = parsedMsg.data.userCount
+				const activeGuests = parsedMsg.data.activeGuests
+				if (activeGuests?.length) {
+					$video_items = activeGuests
+					if (!active_channel.guests.some((userId: string) => userId === active_channel.user)) {
+						emitChannelUpdate({
+							channel: {
+								_id: channelId,
+								guests: [...active_channel.guests, active_channel.user]
+							}
 						})
-					)
-					videoItems.push(...updatedUsers)
+					}
+
+					//TODO: get live inputs
+					// $video_items = await getLiveInputs(channelId)
 				}
 				break
 			case `channel-streaming-action-${channelId}`:
@@ -166,6 +165,7 @@
 			<div class="drawer-content">
 				<StreamContainer
 					{channel}
+					bind:count
 					bind:active_channel
 					bind:channels
 					on:loadMore={loadMoreChannels} />
