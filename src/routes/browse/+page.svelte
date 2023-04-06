@@ -1,46 +1,35 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
-	import { getTechListJson, techList } from '$lib/stores/channelStore'
-	import CarouselSection from '$lib/components/Browse/Sections/CarouselSection.svelte'
-	import ChannelSection from '$lib/components/Browse/Sections/ChannelSection.svelte'
-	import SearchChannel from '$lib/components/Browse/SearchChannel.svelte'
-	import UserSection from '$lib/components/Browse/Sections/UserSection.svelte'
-	import TableSection from '$lib/components/Browse/Sections/TableSection.svelte'
+	import SectionCarousel from '$lib/components/Browse/Sections/SectionCarousel.svelte'
+	import SectionChannel from '$lib/components/Browse/Sections/SectionChannel.svelte'
+	import SearchBar from '$lib/components/Browse/SearchBar.svelte'
+	import SectionUser from '$lib/components/Browse/Sections/SectionUser.svelte'
+	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	import type { PageData } from './$types'
-	import { current_user } from '$lib/stores/authStore'
+	import { page } from '$app/stores'
 
 	export let data: PageData
-
-	let weeklyTitle = 'Weekly topics'
-	let weeklyChannels: any = []
-	if (!data.post.weeklyChannels.error) {
-		// weeklyTitle = `Wk${data.post.weeklyChannels.weekly.weekNumber} ${data.post.weeklyChannels.weekly.topic}`
-		weeklyTitle = 'Weekly topics'
-		weeklyChannels = data.post.weeklyChannels.channels
-	} else {
-		weeklyChannels = data.post.weeklyChannels.error
-	}
-
-	onMount(async () => {
-		if (!$techList.length) {
-			await getTechListJson()
-		}
-	})
+	$: user = $page.data.user
 </script>
 
-<CarouselSection channels={data.post.tableChannels} />
-<SearchChannel />
+<SectionCarousel bind:channels={data.lazy.mostActiveChannels} />
+<SearchBar />
 
-<ChannelSection title={weeklyTitle} bind:channels={weeklyChannels} />
+<SectionChannel sectionId={'weekly'} bind:channels={data.lazy.weeklyChannels} />
 
-<UserSection title="Highest ranked" bind:users={data.post.highestRankedUsers} />
+<SectionUser
+	sectionId={'highest-ranked'}
+	title="Highest ranked"
+	bind:users={data.lazy.highestRankedUsers} />
 
-<UserSection title="Rising stars" bind:users={data.post.risingStarUsers} />
+<SectionUser
+	sectionId={'rising-stars'}
+	title="Rising stars"
+	bind:users={data.lazy.risingStarUsers} />
 
-{#if current_user}
-	<ChannelSection title="My channels" bind:channels={data.post.myChannels} />
+{#if user}
+	<SectionChannel sectionId={'my'} title="My channels" bind:channels={data.lazy.myChannels} />
 
-	<ChannelSection title="Fav channels" bind:channels={data.post.favChannels} />
+	<SectionChannel sectionId={'fav'} title="Fav channels" bind:channels={data.lazy.favChannels} />
 {/if}
 
-<TableSection bind:channels={data.post.tableChannels} />
+<SectionTable bind:channels={data.lazy.tableChannels} />

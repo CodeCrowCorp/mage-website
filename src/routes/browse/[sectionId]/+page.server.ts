@@ -1,12 +1,5 @@
-import { error } from '@sveltejs/kit'
-import type { PageServerLoad } from './$types'
+import type { PageServerLoad } from '../$types'
 
-export const load = (async ({ params }) => {
-    // const post = await getChannels()
-
-    // if (post) {
-    //     return post
-    // }
-
-    // throw error(404, 'Not found')
+export const load = (() => {
+	return
 }) satisfies PageServerLoad

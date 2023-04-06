@@ -1,10 +1,10 @@
-import type { PlaywrightTestConfig } from '@playwright/test'
+import { defineConfig }  from '@playwright/test'
 
-const config: PlaywrightTestConfig = {
+export default defineConfig({
     reporter: [['json', { outputFile: 'e2eresults.json' }]],
     webServer: {
         command: 'npm run dev',
-        url: 'http://localhost:5173/',
+        port:5173,
         timeout: 240000,
         reuseExistingServer: !process.env.CI,
     },
@@ -12,6 +12,4 @@ const config: PlaywrightTestConfig = {
         baseURL: 'http://localhost:5173/',
     },
     workers: process.env.CI ? 4 : undefined
-}
-
-export default config
+});

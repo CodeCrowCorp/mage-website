@@ -7,13 +7,19 @@ declare namespace App {
 		user: {
 			token?: string
 			userId?: string
-			user?: object
+			user?: any
 		}
-		isBanned?: boolean
 	}
 	// interface PageData {}
 	// interface Error {}
 	// interface Platform {}
+}
+
+declare namespace svelteHTML {
+	// enhance elements
+	interface HTMLAttributes {
+		'on:loadMore'?: (event: any) => any
+	}
 }
 
 declare const __VERSION__: string

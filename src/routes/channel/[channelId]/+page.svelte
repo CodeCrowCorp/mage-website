@@ -1,56 +1,203 @@
 <script lang="ts">
-	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
-	import ChatDrawer from '$lib/components/Chat/ChatDrawer.svelte'
-	import type { PageData } from './$types'
-	import { onMount } from 'svelte'
-	import { get } from '$lib/api'
-	import { env } from '$env/dynamic/public'
-	import { channelConnection, channelMessage } from '$lib/stores/socketStore'
+	import DrawerChat from '$lib/components/Channel/Chat/DrawerChat.svelte'
+	import StreamContainer from '$lib/components/Channel/Stream/StreamContainer.svelte'
+	import { onDestroy, onMount } from 'svelte'
+	import { get, del } from '$lib/api'
+	import {
+		emitChatHistoryToChannel,
+		initChannelSocket,
+		channelSocket,
+		emitChannelSubscribeByUser,
+		emitDeleteAllMessagesToChannel,
+		emitChannelUpdate
+	} from '$lib/websocket'
+	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
+	import { isJsonString } from '$lib/utils'
+	import { is_chat_drawer_open, is_chat_drawer_destroy } from '$lib/stores/channelStore'
+	import Modal from '$lib/components/Global/Modal.svelte'
+	import { goto } from '$app/navigation'
+	import { page } from '$app/stores'
+	import DrawerEditChannel from '$lib/components/Channel/Chat/DrawerEditChannel.svelte'
+	import { video_items } from '$lib/stores/streamStore'
 
-	export let data: PageData
+	let channel: any
+	let channelId = $page.params.channelId || ''
+	let count: number = 0
 
-	$: ({ post } = data)
-	let showDrawer = false
+	let isDeleteModalOpen = false,
+		showEditChannelDrawer = false,
+		channels: any = [],
+		skip = 0,
+		limit = 10,
+		active_channel: any = null
+
+	$: if (active_channel) {
+		channelId = active_channel?._id
+		// First close connection here
+		// channel_connection.set('close')
+
+		handleWebsocket()
+	}
 
 	onMount(async () => {
-		const channelSocketId = await get(`wsinit/channelid?channelId=${data.post._id}`)		
-		const channelSocket = new WebSocket(
-			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${channelSocketId}/connect`
-		)
-		channelSocket?.addEventListener('open', (data) => {
+		await loadChannel()
+		await handleWebsocket()
+		await loadMoreChannels()
+
+		$is_chat_drawer_destroy = false
+		setTimeout(() => {
+			$is_chat_drawer_open = true
+		}, 600)
+	})
+
+	onDestroy(() => channelSocket?.close())
+
+	const loadChannel = async () => {
+		channel = await get(`channel?channelId=${channelId}`)
+	}
+
+	const getLiveInputs = async (channelId: string) => {
+		return await get(`cloudflare/live-input?channelId=${channelId}`)
+	}
+
+	const handleWebsocket = async () => {
+		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
+		initChannelSocket(channelSocketId)
+
+		channelSocket.addEventListener('open', async (data) => {
 			console.log('channel socket connection open')
 			console.log(data)
-			channelConnection.set('open')
+			channel_connection.set('open')
+			emitChannelSubscribeByUser({ channelId, userId: $page.data.user?.userId })
+			emitChatHistoryToChannel({ channelId, skip: 100 })
 		})
-		channelSocket?.addEventListener('message', (data) => {
-			console.log('listening to messages')
+		channelSocket.addEventListener('message', (data) => {
+			console.log('channel listening to messages')
+			if (isJsonString(data.data)) {
+				console.log('data', data.data)
+				channel_message.set(data.data)
+			}
+		})
+		channelSocket.addEventListener('error', (data) => {
+			console.log('channel socket connection error')
 			console.log(data)
-			channelMessage.set(data)
 		})
-		channelSocket?.addEventListener('error', (data) => {
-			console.log('socket connection error')
+		channelSocket.addEventListener('close', (data) => {
+			console.log('channel socket connection close')
 			console.log(data)
+			channel_connection.set('close')
+			channel_message.set(null)
 		})
-		channelSocket?.addEventListener('close', (data) => {
-			console.log('socket connection close')
-			console.log(data)
-			channelConnection.set('close')
+	}
+
+	const deleteChannelNoAction = () => {
+		isDeleteModalOpen = false
+	}
+
+	const deleteChannelYesAction = async () => {
+		await del(`channels?channelId=${channelId}`, {
+			userId: $page.data.user?.userId,
+			token: $page.data.user?.token
 		})
+		emitDeleteAllMessagesToChannel({ channelId })
+		goto('/browse')
+	}
+
+	const loadMoreChannels = async () => {
+		let newchannels = await get(`channels?skip=${skip}&limit=${limit}`)
+		channels = [...channels, ...newchannels]
+		skip += limit
+	}
+
+	channel_message.subscribe(async (value: any) => {
+		if (!value) return
+		var parsedMsg = JSON.parse(value)
+		switch (parsedMsg.eventName) {
+			case `channel-subscribe-${channelId}`:
+				count = parsedMsg.data.userCount
+				const activeGuests = parsedMsg.data.activeGuests
+				if (activeGuests?.length) {
+					$video_items = activeGuests
+					if (!active_channel.guests.some((userId: string) => userId === active_channel.user)) {
+						emitChannelUpdate({
+							channel: {
+								_id: channelId,
+								guests: [...active_channel.guests, active_channel.user]
+							}
+						})
+					}
+
+					//TODO: get live inputs
+					// $video_items = await getLiveInputs(channelId)
+				}
+				break
+			case `channel-streaming-action-${channelId}`:
+				switch (parsedMsg.data.action) {
+					case 'toggleTrack-start':
+						if (
+							!$video_items.some((video: any) => video.trackName === parsedMsg.data.video.trackName)
+						) {
+							$video_items.push(parsedMsg.data.video)
+						}
+						break
+					case 'toggleTrack-stop':
+						$video_items = $video_items.filter(
+							(video: any) => video.trackName !== parsedMsg.data.video.trackName
+						)
+						break
+				}
+				break
+			case `channel-streaming-video-history-${$page.data.user?.userId}`:
+				$video_items = parsedMsg.data.videos
+				break
+		}
 	})
 </script>
 
-<div class="flex flex-col md:flex-row gap-4 py-5 pl-5">
-	<div class="form-control">
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<label
-			for="create-channel-drawer"
-			class="btn w-[21rem] btn-primary gap-2 drawer-button"
-			on:click={() => (showDrawer = true)}>
-			<IconCreate />
-			Show Chat</label>
+{#if channel}
+	<div class="flex flex-auto">
+		<div class="drawer drawer-end">
+			<input
+				id="chat-drawer"
+				type="checkbox"
+				class="drawer-toggle"
+				bind:checked={$is_chat_drawer_open} />
+			<div class="drawer-content">
+				<StreamContainer
+					{channel}
+					bind:count
+					bind:active_channel
+					bind:channels
+					on:loadMore={loadMoreChannels} />
+
+				{#if showEditChannelDrawer}
+					<DrawerEditChannel {channel} bind:showDrawer={showEditChannelDrawer} />
+				{/if}
+			</div>
+			{#if !$is_chat_drawer_destroy}
+				<div
+					class="drawer-side m-5 rounded-lg md:w-fit lg:drop-shadow-lg"
+					class:!hidden={showEditChannelDrawer}>
+					<label for="chat-drawer" class="drawer-overlay" />
+
+					<DrawerChat bind:active_channel {channel} bind:showEditChannelDrawer />
+				</div>
+			{/if}
+		</div>
 	</div>
 
-	{#if showDrawer}
-		<ChatDrawer bind:showDrawer bind:channel={post} />
-	{/if}
-</div>
+	<input
+		type="checkbox"
+		id="modal-delete-channel"
+		class="modal-toggle"
+		bind:checked={isDeleteModalOpen} />
+	<Modal
+		id="modal-delete-channel"
+		title="Delete channel"
+		message="Are you sure you want to delete this channel?"
+		no="Cancel"
+		noAction={deleteChannelNoAction}
+		yes="Yes"
+		yesAction={deleteChannelYesAction}
+		isError={true} />
+{/if}

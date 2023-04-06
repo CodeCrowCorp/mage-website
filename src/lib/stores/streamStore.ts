@@ -1,7 +1,13 @@
 import { writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
 // import { currentChannel } from '$lib/stores/channelStore'
-import { emitRoomMemberUpdate, emitUserActions } from '$lib/stores/socketStore'
+import { emitAction } from '$lib/websocket'
+
+export const video_items: Writable<any> = writable([
+	// { title: 'test1' },
+	// { title: 'test2' },
+	// { title: 'test3' }
+])
 
 let videoStreamId = ''
 let hasActiveTracks = false
@@ -679,9 +685,8 @@ function toggleRestriction({ user, featureType }: { user: any; featureType: stri
 
 function sendDataToRoom(message: any) {
 	// if (channelStore.currentChannel) {
-	emitUserActions({
+	emitAction({
 		channelId: '', //TODO: get channelId from writeable channelStore.currentChannel._id,
-		userData: userData,
 		message: JSON.stringify(message)
 	})
 	// }
@@ -770,26 +775,28 @@ async function createStreamRecord(stream: any) {
 		method: 'POST',
 		body: stream
 	})
-	
 }
 
-async function updateProfileViews(view:any) {
+async function updateProfileViews(view: any) {
 	return await fetch(`${env.PUBLIC_API_URL}/stats/profile/views/week`, {
 		method: 'POST',
 		body: view
-	})	
+	})
 }
 
-async function getProfileWeeklyViews(profile:any) {
-	return await fetch(`${env.PUBLIC_API_URL}/stats/profile/views?id=${profile.id}&profileType=${profile.type}`, {
-		method: 'GET',
-	})	
+async function getProfileWeeklyViews(profile: any) {
+	return await fetch(
+		`${env.PUBLIC_API_URL}/stats/profile/views?id=${profile.id}&profileType=${profile.type}`,
+		{
+			method: 'GET'
+		}
+	)
 }
 
-async function updateTwitterShareCount(channelId:string) {
+async function updateTwitterShareCount(channelId: string) {
 	return await fetch(`${env.PUBLIC_API_URL}/stats/channel/shared?channelId=${channelId}`, {
 		method: 'PUT'
-	})	
+	})
 }
 
 async function getTwitterShareCount(channelId: string) {
@@ -798,19 +805,19 @@ async function getTwitterShareCount(channelId: string) {
 	})
 }
 
-async function getStreamStreak(userId:string) {
+async function getStreamStreak(userId: string) {
 	return await fetch(`${env.PUBLIC_API_URL}/stats/stream/streak?userId=${userId}`, {
 		method: 'GET'
 	})
-} 
+}
 
-async function getStreamAvgLength(userId:string){
+async function getStreamAvgLength(userId: string) {
 	return await fetch(`${env.PUBLIC_API_URL}/stats/stream/avg-length?userId=${userId}`, {
 		method: 'GET'
 	})
 }
 
-async function getStreamTotalHours(userId:string) {
+async function getStreamTotalHours(userId: string) {
 	return await fetch(`${env.PUBLIC_API_URL}/stats/stream/total-hours?userId=${userId}`, {
 		method: 'GET'
 	})
