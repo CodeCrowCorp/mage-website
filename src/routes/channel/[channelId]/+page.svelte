@@ -118,11 +118,20 @@
 				const activeGuests = parsedMsg.data.activeGuests
 				if (activeGuests?.length) {
 					$video_items = activeGuests
-					if (!active_channel.guests.some((userId: string) => userId === active_channel.user)) {
+					// if (!active_channel.guests.some((userId: string) => userId === active_channel.user)) {
+					// 	emitChannelUpdate({
+					// 		channel: {
+					// 			_id: channelId,
+					// 			guests: [...active_channel.guests, active_channel.user]
+					// 		}
+					// 	})
+					// }
+
+					if (!channel.guests.some((userId: string) => userId === channel.user)) {
 						emitChannelUpdate({
 							channel: {
 								_id: channelId,
-								guests: [...active_channel.guests, active_channel.user]
+								guests: [...channel.guests, channel.user]
 							}
 						})
 					}
