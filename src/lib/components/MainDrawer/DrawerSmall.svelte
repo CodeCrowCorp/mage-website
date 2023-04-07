@@ -11,7 +11,6 @@
 	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svg'
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
-	import { goto } from '$app/navigation'
 	import { env } from '$env/dynamic/public'
 	import { page } from '$app/stores'
 	import { user_role } from '$lib/stores/authStore'
@@ -47,8 +46,8 @@
 	})
 </script>
 
-<div class="menu p-4 w-80 md:w-36 bg-base-100 text-base-content flex flex-col">
-	<ul class="md:flex md:flex-col items-center">
+<div class="menu p-4 w-80 md:w-24 bg-base-100 text-base-content flex flex-col">
+	<ul class="md:flex md:flex-col items-center md:w-full">
 		<div class="menu w-full">
 			<ul>
 				<li>
@@ -62,8 +61,10 @@
 			</ul>
 		</div>
 		{#if currentUser}
-			<li>
-				<a href="/profile/{currentUser.username}" class="rounded-md justify-center cursor-pointer">
+			<li class="md:w-full">
+				<a
+					href="/profile/{currentUser.username}"
+					class="rounded-md justify-center cursor-pointer md:w-full">
 					<div class="md:text-center">
 						<div class="hero-content">
 							<div class="max-w-md">
