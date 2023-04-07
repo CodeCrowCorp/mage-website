@@ -8,14 +8,8 @@
 	import { is_chat_drawer_open } from '$lib/stores/channelStore'
 
 	export let channel: any = undefined,
-		showEditChannelDrawer: boolean = false,
-		active_channel: any = undefined
+		showEditChannelDrawer: boolean = false
 	let chatHistory: any[] = []
-
-	// $: if (active_channel) {
-	// 	channel = active_channel
-	// 	chatHistory = []
-	// }
 
 	const setRole = (msg: any): any => {
 		if (msg.userData?.userId === channel?.user) msg.role = 'Host'

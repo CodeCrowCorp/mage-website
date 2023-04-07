@@ -11,8 +11,7 @@
 	const dispatch = createEventDispatcher()
 	export let count: number = 10,
 		channel: any,
-		channels: any = [],
-		active_channel: any = undefined
+		channels: any = []
 
 	function autoActive(node: Element) {
 		const observer = new IntersectionObserver(callback, { threshold: 0.5 })
@@ -22,12 +21,8 @@
 			const entry = entries.find((entry) => entry.isIntersecting)
 			if (entry) {
 				const id = entry.target.id
-				// active_channel = channels.filter((channel: any) => channel._id === id)[0]
-				channel = channels.filter((channel: any) => channel._id === id)[0]
-				// if (!active_channel) {
-				// 	active_channel = channel
-				// }
-				if (channels.length && channels[channels.length - 2]['_id'] == id) {
+				channel = channels?.filter((channel: any) => channel?._id === id)[0]
+				if (channels?.length && channels[channels.length - 2]['_id'] == id) {
 					dispatch('loadMore')
 				}
 
