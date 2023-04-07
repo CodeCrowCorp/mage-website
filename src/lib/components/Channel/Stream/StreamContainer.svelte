@@ -22,11 +22,11 @@
 			const entry = entries.find((entry) => entry.isIntersecting)
 			if (entry) {
 				const id = entry.target.id
-				active_channel = channels.filter((channel: any) => channel._id === id)[0]
-				if (!active_channel) {
-					// active_channel is undefined when scroll back to original channel
-					active_channel = channel
-				}
+				// active_channel = channels.filter((channel: any) => channel._id === id)[0]
+				channel = channels.filter((channel: any) => channel._id === id)[0]
+				// if (!active_channel) {
+				// 	active_channel = channel
+				// }
 				if (channels.length && channels[channels.length - 2]['_id'] == id) {
 					dispatch('loadMore')
 				}
@@ -45,7 +45,7 @@
 
 <div class="flex justify-center h-full">
 	<div class="carousel carousel-vertical rounded-lg bg-base-100 w-full m-5 mb-24">
-		<div
+		<!-- <div
 			class="carousel-item h-full p-3 {$is_chat_drawer_open ? 'w-[70%]' : ''}"
 			id={channel?._id}
 			use:autoActive>
@@ -68,7 +68,7 @@
 				</div>
 				<VideoGrid />
 			</div>
-		</div>
+		</div> -->
 
 		{#each channels as nextchannel}
 			<div
@@ -99,8 +99,6 @@
 	</div>
 
 	<div class="absolute bottom-0 m-5">
-		<StreamControls
-			isHost={active_channel?.user === $page.data.user.userId}
-			bind:channel={active_channel} />
+		<StreamControls isHost={channel?.user === $page?.data?.user?.userId} bind:channel />
 	</div>
 </div>

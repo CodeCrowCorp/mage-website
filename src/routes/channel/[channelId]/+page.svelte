@@ -31,11 +31,10 @@
 		limit = 10,
 		active_channel: any = null
 
-	$: if (active_channel) {
-		channelId = active_channel?._id
+	$: if (channel) {
+		channelId = channel?._id
 		// First close connection here
 		// channel_connection.set('close')
-
 		handleWebsocket()
 	}
 
@@ -54,6 +53,7 @@
 
 	const loadChannel = async () => {
 		channel = await get(`channel?channelId=${channelId}`)
+		channels.push(channel)
 	}
 
 	const getLiveInputs = async (channelId: string) => {
@@ -118,11 +118,20 @@
 				const activeGuests = parsedMsg.data.activeGuests
 				if (activeGuests?.length) {
 					$video_items = activeGuests
-					if (!active_channel.guests.some((userId: string) => userId === active_channel.user)) {
+					// if (!active_channel.guests.some((userId: string) => userId === active_channel.user)) {
+					// 	emitChannelUpdate({
+					// 		channel: {
+					// 			_id: channelId,
+					// 			guests: [...active_channel.guests, active_channel.user]
+					// 		}
+					// 	})
+					// }
+
+					if (!channel.guests.some((userId: string) => userId === channel.user)) {
 						emitChannelUpdate({
 							channel: {
 								_id: channelId,
-								guests: [...active_channel.guests, active_channel.user]
+								guests: [...channel.guests, channel.user]
 							}
 						})
 					}
@@ -163,15 +172,10 @@
 				class="drawer-toggle"
 				bind:checked={$is_chat_drawer_open} />
 			<div class="drawer-content">
-				<StreamContainer
-					{channel}
-					bind:count
-					bind:active_channel
-					bind:channels
-					on:loadMore={loadMoreChannels} />
+				<StreamContainer bind:channel bind:count bind:channels on:loadMore={loadMoreChannels} />
 
 				{#if showEditChannelDrawer}
-					<DrawerEditChannel {channel} bind:showDrawer={showEditChannelDrawer} />
+					<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />
 				{/if}
 			</div>
 			{#if !$is_chat_drawer_destroy}
@@ -180,7 +184,7 @@
 					class:!hidden={showEditChannelDrawer}>
 					<label for="chat-drawer" class="drawer-overlay" />
 
-					<DrawerChat bind:active_channel {channel} bind:showEditChannelDrawer />
+					<DrawerChat bind:channel bind:showEditChannelDrawer />
 				</div>
 			{/if}
 		</div>
