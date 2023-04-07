@@ -99,6 +99,6 @@
 	</div>
 
 	<div class="absolute bottom-0 m-5">
-		<StreamControls isHost={channel?.user === $page.data.user.userId} bind:channel />
+		<StreamControls isHost={channel?.user === $page?.data?.user?.userId} bind:channel />
 	</div>
 </div>

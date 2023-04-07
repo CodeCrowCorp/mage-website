@@ -156,3 +156,14 @@ export const cardCounts: { [key: number]: number[] } = {
 	15: [4, 4, 4, 3],
 	16: [4, 4, 4, 4]
 }
+
+// export const isDarkerTheme = (currentTheme: string): boolean => {
+// 	switch (currentTheme) {
+// 		case 'light' || 'cyberpunk':
+// 			return false
+// 		case 'dark' || 'synthwave':
+// 			return true
+// 		default:
+// 			return true
+// 	}
+// }
