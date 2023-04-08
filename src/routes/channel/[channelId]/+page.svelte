@@ -112,9 +112,10 @@
 	channel_message.subscribe(async (value: any) => {
 		if (!value) return
 		var parsedMsg = JSON.parse(value)
+		console.log(parsedMsg)
 		switch (parsedMsg.eventName) {
 			case `channel-subscribe-${channelId}`:
-				count = parsedMsg.data.userCount
+				count = parsedMsg.userCount
 				const activeGuests = parsedMsg.data.activeGuests
 				if (activeGuests?.length) {
 					$video_items = activeGuests

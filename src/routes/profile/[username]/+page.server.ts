@@ -7,18 +7,18 @@ export const load = (async ({ params, locals }) => {
 	return {
 		profile: profile,
 		lazy: {
-			channels: get(`channels/user?userId=${profile._id}&skip=${0}&limit=${10}`),
-			subscribers: get(
+			channels: await get(`channels/user?userId=${profile._id}&skip=${0}&limit=${10}`),
+			subscribers: await get(
 				`subscribes?source=${profile._id}&sourceType=source1&skip=${0}&limit=${10}`,
 				{ userId: locals.user?.userId, token: locals.user?.token }
 			),
-			interests: get(`subscribes?source=${profile._id}&sourceType=source2&skip=${0}&limit=${10}`, {
+			interests: await get(`subscribes?source=${profile._id}&sourceType=source2&skip=${0}&limit=${10}`, {
 				userId: locals.user?.userId,
 				token: locals.user?.token
 			}),
-			subscriberCount: get(`subscribes/count?source=${profile._id}&sourceType=source1`),
-			interestCount: get(`subscribes/count?source=${profile._id}&sourceType=source2`),
-			isSubscribed: get(`subscribes/relationship?source=${profile._id}`, {
+			subscriberCount: await get(`subscribes/count?source=${profile._id}&sourceType=source1`),
+			interestCount: await get(`subscribes/count?source=${profile._id}&sourceType=source2`),
+			isSubscribed: await get(`subscribes/relationship?source=${profile._id}`, {
 				userId: locals.user?.userId,
 				token: locals.user?.token
 			})
