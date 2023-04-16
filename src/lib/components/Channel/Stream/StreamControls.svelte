@@ -3,8 +3,12 @@
 	import IconShareWebcam from '$lib/assets/icons/channel/IconShareWebcam.svelte'
 	import IconShareAudio from '$lib/assets/icons/channel/IconShareAudio.svelte'
 	import IconChatDrawer from '$lib/assets/icons/channel/IconChatDrawer.svelte'
-	import { is_chat_drawer_open, is_chat_drawer_destroy } from '$lib/stores/channelStore'
-	import { del, get, post } from '$lib/api'
+	import {
+		is_chat_drawer_open,
+		is_chat_drawer_destroy,
+		was_chat_drawer_closed
+	} from '$lib/stores/channelStore'
+	import { del, post } from '$lib/api'
 	import { page } from '$app/stores'
 	import { emitAction } from '$lib/websocket'
 	import { video_items } from '$lib/stores/streamStore'
@@ -21,6 +25,7 @@
 	const handleChatDrawer = () => {
 		if ($is_chat_drawer_open) {
 			$is_chat_drawer_open = false
+			$was_chat_drawer_closed = true
 			setTimeout(() => {
 				$is_chat_drawer_destroy = true
 			}, 300)
@@ -185,10 +190,7 @@
 		audioUid = ''
 	}
 
-	const isHostOrGuest = (): boolean => {
-		const isGuest = channel.guests.includes($page.data.user.userId)
-		return isHost || isGuest
-	}
+	$: isHostOrGuest = isHost || channel.guests.includes($page.data?.user?.userId)
 </script>
 
 <div class="flex gap-4">
@@ -232,7 +234,3 @@
 		<IconChatDrawer />
 	</button>
 </div>
-
-<!-- <button>
-    <IconShareRaiseHand/>
-</button> -->

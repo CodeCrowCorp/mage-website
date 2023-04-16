@@ -342,67 +342,6 @@ async function incomingMessageActivateChatTab(data: any) {
 	// }
 }
 
-async function blockUser({ senderId, isBlocked }: { senderId: string; isBlocked: boolean }) {
-	//TODO: get writable channel id
-	// await channelStore.blockUserFromChannel({
-	//     channelId: channelStore.currentChannel._id,
-	//     userId: senderId
-	// })
-	// await channelStore.removeChannelNotificationSubscriber({
-	//     channelId: channelStore.currentChannel._id,
-	//     userId: senderId
-	// })
-	// socketStore.emitRemovedUser(channelStore.currentChannel._id, senderId)
-	// channelStore.currentChannel.blockedUsers?.push(senderId)
-	// isBlocked = channelStore.isUserBlockedFromChannel(senderId)
-}
-
-async function unblockUser({ senderId, isBlocked }: { senderId: string; isBlocked: boolean }) {
-	//TODO: get writable channel id
-	// await channelStore.unblockUserFromChannel({
-	//     channelId: channelStore.currentChannel._id,
-	//     userId: senderId
-	// })
-	// channelStore.currentChannel.blockedUsers =
-	//     channelStore.currentChannel.blockedUsers?.filter(
-	//         (user) => !!(user != senderId)
-	//     )
-	// isBlocked = channelStore.isUserBlockedFromChannel(senderId)
-}
-
-async function showDeleteMessageDialog({ oneVone, message }: { oneVone: boolean; message: any }) {
-	// const dialogData: DialogData = {
-	//     title: 'Delete Message',
-	//     message: 'Are you sure you want to delete this message?',
-	//     okText: 'Yes',
-	//     cancelText: 'Cancel'
-	// }
-
-	// const dialogRef = dialogService.openDialog(dialogData, {
-	//     disableClose: true
-	// })
-
-	// dialogRef.afterClosed().subscribe((result) => {
-	// if (result) {
-	//TODO: show alert
-	commitDeleteMessage({ oneVone, message })
-	// }
-	// })
-}
-
-async function commitDeleteMessage({ oneVone, message }: { oneVone: boolean; message: any }) {
-	// let chan = null
-	// if (oneVone || !channelStore.currentChannel) {
-	//     chan = { _id: message.channelId } // if friend chat
-	// } else {
-	//     chan = channelStore.currentChannel // if channel chat
-	// }
-	// if (chan) {
-	//     //TODO: get writable channel id
-	//     deleteMessage({ message, channelId: chan._id })
-	// }
-}
-
 export {
 	// deleteMessage,
 	// deleteAllMessages,
@@ -426,9 +365,5 @@ export {
 	activateChatTab,
 	activateGroupTab,
 	checkAlreadyExist,
-	incomingMessageActivateChatTab,
-	blockUser,
-	unblockUser,
-	showDeleteMessageDialog,
-	commitDeleteMessage
+	incomingMessageActivateChatTab
 }
