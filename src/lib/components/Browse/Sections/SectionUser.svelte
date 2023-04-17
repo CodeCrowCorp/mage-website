@@ -66,7 +66,7 @@
 							<div class="relative">
 								<div
 									class="video-thumbnail"
-									on:click|preventDefault={() => goto(`/profile/${user.displayName}`)}>
+									on:click|preventDefault={() => goto(`/profile/${user.username}`)}>
 									{#if user.thumbnail}
 										<div
 											class="video-thumbnail"
