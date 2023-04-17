@@ -127,7 +127,6 @@
 	channel_message.subscribe(async (value: any) => {
 		if (!value) return
 		var parsedMsg = JSON.parse(value)
-		console.log(parsedMsg)
 		switch (parsedMsg.eventName) {
 			case `channel-update-${channel._id}`:
 				channel = parsedMsg.channel
