@@ -91,8 +91,9 @@
 								</div>
 
 								<div class="truncate mr-2">
-									<p class="text-lg font-semibold">{user.title}</p>
-									<p class="text-sm text-gray-600">{user.description}</p>
+									<div>{user.displayName}</div>
+									<p class="text-lg font-semibold">{user.username}</p>
+									<p class="text-sm text-gray-600">{user.bio||''}</p>
 								</div>
 							</div>
 						</div>
