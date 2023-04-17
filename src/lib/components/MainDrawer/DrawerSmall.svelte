@@ -11,7 +11,6 @@
 	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svg'
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
-	import { goto } from '$app/navigation'
 	import { env } from '$env/dynamic/public'
 	import { page } from '$app/stores'
 	import { user_role } from '$lib/stores/authStore'
@@ -28,26 +27,28 @@
 
 	$: currentUser = $page.data.user?.user
 
-	let exp = 512 //Math.floor(Math.random() * (10000 - 0 + 1) + 0) //currentUser.exp
-	let levelAndBarValue = levelAndBarValueFromExp(exp)
-	let progressBarLevel = levelAndBarValue.level //levelFromExp(exp) //currentUser.exp
-	let progressBarValue = levelAndBarValue.barValue //barValueFromExp(exp) //currentUser.exp
-	let progressBarColor = colorFromLevel(progressBarLevel)
-
+	let progressBarLevel = 1
+	let progressBarValue = 0
+	let progressBarColor = colorFromLevel(1)
 	let streamCount = 0
 	let hoursStreamed = 0
 
 	onMount(async () => {
 		if (currentUser) {
+			let exp = 500 //currentUser.exp
+			let levelAndBarValue = levelAndBarValueFromExp(exp)
+			progressBarLevel = levelAndBarValue.level
+			progressBarValue = levelAndBarValue.barValue
+			progressBarColor = colorFromLevel(progressBarLevel)
 			streamCount = 0 //await get(`TODO: add endpoint here`)
 			hoursStreamed = 0 //await get(`TODO: add endpoint here`)
 		}
 	})
 </script>
 
-<div class="menu p-4 w-80 md:w-36 bg-base-100 text-base-content flex flex-col">
-	<ul class="md:flex md:flex-col items-center">
-		<div class="menu">
+<div class="menu p-4 w-80 md:w-24 bg-base-100 text-base-content flex flex-col">
+	<ul class="md:flex md:flex-col items-center md:w-full">
+		<div class="menu w-full">
 			<ul>
 				<li>
 					<a href="/browse" class="md:justify-center">
@@ -60,8 +61,10 @@
 			</ul>
 		</div>
 		{#if currentUser}
-			<li>
-				<a href="/profile/{currentUser.username}" class="rounded-md justify-center cursor-pointer">
+			<li class="md:w-full">
+				<a
+					href="/profile/{currentUser.username}"
+					class="rounded-md justify-center cursor-pointer md:w-full">
 					<div class="md:text-center">
 						<div class="hero-content">
 							<div class="max-w-md">
@@ -122,7 +125,7 @@
 			</a>
 		</li>
 		<li>
-			<div class="dropdown dropdown-bottom dropdown-end" tabindex="-1">
+			<div class="dropdown dropdown-bottom" tabindex="-1">
 				<IconDrawerHelpAndLegal />
 
 				<span class="md:hidden flex flex-row gap-4">
@@ -134,13 +137,13 @@
 				</ul>
 			</div>
 		</li>
+		<li>
+			<a href="/settings">
+				<IconDrawerSettings />
+				<span class="md:hidden"> Settings </span>
+			</a>
+		</li>
 		{#if currentUser}
-			<li>
-				<a href="/settings">
-					<IconDrawerSettings />
-					<span class="md:hidden"> Settings </span>
-				</a>
-			</li>
 			<form action="/logout" method="POST">
 				<li>
 					<button type="submit">
@@ -185,21 +188,5 @@
 <style>
 	progress::-webkit-progress-value {
 		background-color: var(--progress-bar-color);
-	}
-
-	:global(html[data-theme='dark'] .mage-logo) {
-		display: none;
-	}
-
-	:global(html[data-theme='light'] .mage-logo-dark) {
-		display: none;
-	}
-
-	:global(html[data-theme='dark'] .mage-text) {
-		display: none;
-	}
-
-	:global(html[data-theme='light'] .mage-text-dark) {
-		display: none;
 	}
 </style>

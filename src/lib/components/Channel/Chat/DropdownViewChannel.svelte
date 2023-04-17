@@ -2,29 +2,14 @@
 	import { get } from '$lib/api'
 	import IconChatDownChevron from '$lib/assets/icons/chat/IconChatDownChevron.svelte'
 	import { category_list } from '$lib/stores/channelStore'
-	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
 	import { copyToClipboard } from '$lib/utils'
 	import IconChatDelete from '$lib/assets/icons/chat/IconChatDelete.svelte'
 
 	export let channel: any = undefined,
-		showEditChannelDrawer: boolean = false
-
-	let host: any = {},
+		showEditChannelDrawer: boolean = false,
+		host: any = {},
 		isHost: boolean = false
-
-	$: if (channel) {
-		fetchHost()
-	}
-
-	const fetchHost = async () => {
-		host = await get(`users/search/id?userId=${channel?.user}`)
-		isHost = channel?.user === $page.data.user.userId
-	}
-
-	onMount(async () => {
-		await fetchHost()
-	})
 </script>
 
 <div class="menu dropdown dropdown-bottom">
