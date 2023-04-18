@@ -57,9 +57,15 @@
 				<div
 					bind:this={ref}
 					class="relative w-full flex gap-6 snap-x scrollbar-hide snap-mandatory overflow-x-auto flex-grow mx-8">
-					{#each value as user}
-						<SectionUserItem {user} />
-					{/each}
+					{#if sectionId === 'rising-stars'}
+						{#each value.users as user}
+							<SectionUserItem {user} />
+						{/each}
+					{:else}
+						{#each value as user}
+							<SectionUserItem {user} />
+						{/each}
+					{/if}
 				</div>
 
 				<div class="relative flex items-center mr-3">

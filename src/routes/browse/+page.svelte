@@ -24,7 +24,7 @@
 <SectionUser
 	sectionId={'rising-stars'}
 	title="Rising stars"
-	bind:users={data.lazy.risingStarUsers.users} />
+	bind:users={data.lazy.risingStarUsers} />
 
 {#if user}
 	<SectionChannel sectionId={'my'} title="My channels" bind:channels={data.lazy.myChannels} />
