@@ -1,29 +1,27 @@
 <script lang="ts">
-	export let channel: any = {}
+	export let user: any = {}
 </script>
 
 <a
 	class="flex flex-col shrink-0 first:pl-8 last:pr-8 w-[300px] md:w-[400px] rounded-md"
-	href="/channel/{channel._id}">
+	href="/profile/{user.username}">
 	<div class="relative">
 		<div class="video-thumbnail">
 			<img
 				class="w-full h-full mask rounded-lg"
-				src={channel.thumbnail
-					? channel.thumbnail
-					: '/src/lib/assets/placeholder/programming-placeholder.jpg'} />
+				src={user.banner ? user.banner : '/src/lib/assets/placeholder/gaming-placeholder.jpg'} />
 		</div>
 	</div>
 	<div class="flex flex-row gap-3 max-w-[400px]">
 		<div class="avatar">
 			<div class="w-12 mask mask-squircle">
-				<img src={channel.avatar} alt="" />
+				<img src={user.avatar} alt="" />
 			</div>
 		</div>
 
 		<div class="truncate mr-2">
-			<p class="text-lg font-semibold">{channel.title}</p>
-			<p class="text-sm">{channel.description}</p>
+			<p class="text-lg font-semibold">{user.displayName}</p>
+			<p class="text-sm">@{user.username}</p>
 		</div>
 	</div>
 </a>
