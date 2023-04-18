@@ -43,7 +43,7 @@
 	let hoursStreamed = 0
 	onMount(async () => {
 		if (currentUser) {
-			let exp = 500 //currentUser.exp
+			let exp = currentUser.exp
 			let levelAndBarValue = levelAndBarValueFromExp(exp)
 			progressBarLevel = levelAndBarValue.level
 			progressBarValue = levelAndBarValue.barValue
