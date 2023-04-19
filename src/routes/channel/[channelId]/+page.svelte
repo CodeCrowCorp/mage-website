@@ -128,8 +128,8 @@
 		if (!value) return
 		var parsedMsg = JSON.parse(value)
 		switch (parsedMsg.eventName) {
-			case `channel-update-${channel._id}`:
-				channel = parsedMsg.channel
+			case `channel-update-${channelId}`:
+				channel = parsedMsg.channels
 				break
 			case `channel-subscribe-${channelId}`:
 				userCount = parsedMsg.userCount
@@ -138,14 +138,14 @@
 				} else {
 					const activeGuests = parsedMsg.activeGuests
 					if (activeGuests?.length) {
-						$video_items = [
-							...activeGuests
-							// ...activeGuests,
-							// ...activeGuests,
-							// ...activeGuests
-						]
-						//TODO: get live inputs
-						// $video_items = await getLiveInputs(channelId)
+						$video_items = [...activeGuests]
+						const liveInputs = await getLiveInputs(channelId)
+						$video_items.forEach((video: any) => {
+							if (Array.isArray(liveInputs)) {
+								const liveInput = liveInputs.find((liveInput: any) => liveInput._id === video._id)
+								video = { ...liveInput }
+							}
+						})
 					}
 				}
 				break
@@ -165,9 +165,6 @@
 						break
 				}
 				break
-			// case `channel-streaming-video-history-${$page.data.user?.userId}`:
-			// 	$video_items = parsedMsg.data.videos
-			// 	break
 		}
 	})
 </script>

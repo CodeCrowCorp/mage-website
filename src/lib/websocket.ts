@@ -205,111 +205,6 @@ function emitAction({ channelId, message }: { channelId: string; message: any })
 // 	})
 // }
 
-// function listenToVideoRecordingStarted({ channelId }: { channelId: string }) {
-// 	platformMessage.subscribe((value) => {
-// 		const parsedData = JSON.parse(value.data)
-// 		if (parsedData.eventName === `video-recording-started` && parsedData.channelId === channelId) {
-// 			console.log('parsedData', parsedData)
-// 		}
-// 	})
-// }
-
-// function listenToCompositionStatusUpdate({ channelId }: { channelId: string }) {
-// 	platformMessage.subscribe((value) => {
-// 		const parsedData = JSON.parse(value.data)
-// 		if (
-// 			parsedData.eventName === `composition-status-update` &&
-// 			parsedData.channelId === channelId
-// 		) {
-// 			console.log('parsedData', parsedData)
-// 		}
-// 	})
-// }
-
-// function listenToCompositionDeleted({ channelId }: { channelId: string }) {
-// 	platformMessage.subscribe((value) => {
-// 		const parsedData = JSON.parse(value.data)
-// 		if (parsedData.eventName === `composition-deleted` && parsedData.channelId === channelId) {
-// 			console.log('parsedData', parsedData)
-// 		}
-// 	})
-// }
-
-// function listenToChatMessages() {
-// 	platformMessage.subscribe((value) => {
-// 		const parsedData = JSON.parse(value.data)
-// 		if (parsedData.eventName === `message-received`) {
-// 			console.log('parsedData', parsedData)
-// 		}
-// 	})
-// }
-
-// function listenToChatTyping() {
-// 	platformMessage.subscribe((value) => {
-// 		const parsedData = JSON.parse(value.data)
-// 		if (parsedData.eventName === `chat-typing`) {
-// 			console.log('parsedData', parsedData)
-// 		}
-// 	})
-// }
-
-// function listenToRemovedUser({ channelId }: { channelId: string }) {
-// 	channelMessage.subscribe((value) => {
-// 		const parsedData = JSON.parse(value.data)
-// 		if (parsedData.eventName === `user-removed-${channelId}`) {
-// 			//parsedData.userId
-// 		}
-// 	})
-// }
-
-// function listenToChannelUpdate({ channelId }: { channelId: string }) {
-// 	channelMessage.subscribe((value) => {
-// 		const parsedData = JSON.parse(value.data)
-// 		if (parsedData.eventName === `channel-update-${channelId}`) {
-// 			// channelService.currentChannel.description = parsedData.channel.description
-// 			// channelService.currentChannel.thumbnail = parsedData.channel.thumbnail
-// 			// channelService.currentChannel.isPrivate = parsedData.channel.isPrivate
-// 			// channelService.currentChannel.attachments = parsedData.channel.attachments
-// 		}
-// 	})
-// }
-
-// function listenToChannelMessage({ channelId }: { channelId: string }) {
-// 	channelMessage.subscribe((value) => {
-// 		const parsedData = JSON.parse(value.data)
-// 		if (parsedData.eventName === `channel-message-${channelId}`) {
-// 			console.log('parsedData', parsedData)
-// 		}
-// 	})
-// }
-
-// function listenToChannelTyping() {
-// 	channelMessage.subscribe((value) => {
-// 		const parsedData = JSON.parse(value.data)
-// 		if (parsedData.eventName === `typing`) {
-// 			console.log('parsedData', parsedData)
-// 		}
-// 	})
-// }
-
-// function listenToRoomMemberUpdate({ channelId }: { channelId: string }) {
-// 	channelMessage.subscribe((value) => {
-// 		const parsedData = JSON.parse(value.data)
-// 		if (parsedData.eventName === `channel-streaming-room-member-update-${channelId}`) {
-// 			console.log('parsedData', parsedData)
-// 		}
-// 	})
-// }
-
-// function listenToUserActions({ channelId }: { channelId: string }) {
-// 	channelMessage.subscribe((value) => {
-// 		const parsedData = JSON.parse(value.data)
-// 		if (parsedData.eventName === `channel-streaming-user-actions-${channelId}`) {
-// 			console.log('parsedData', parsedData)
-// 		}
-// 	})
-// }
-
 export {
 	channelSocket,
 	platformSocket,
@@ -327,6 +222,5 @@ export {
 	emitDeleteMessageToChannel,
 	emitDeleteAllMessagesToChannel,
 	emitChatHistoryToChannel,
-	// emitChannelChatTypingByUser,
 	emitAction
 }

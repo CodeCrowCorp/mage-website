@@ -39,10 +39,14 @@
 	}
 
 	const createLiveInput = async (trackData: any) => {
-		return await post(`cloudflare/live-input`, JSON.stringify({ trackData }), {
-			userId: $page.data.user.userId,
-			token: $page.data.user.token
-		})
+		return await post(
+			`cloudflare/live-input?channelId=${$page.params.channelId}`,
+			JSON.stringify({ trackData }),
+			{
+				userId: $page.data.user.userId,
+				token: $page.data.user.token
+			}
+		)
 	}
 
 	const deleteLiveInput = async ({
@@ -65,8 +69,8 @@
 				name: `${$page.params.channelId}-${trackName}`,
 				trackName: trackName,
 				trackType: 'screen',
-				username: $page.data.user.user.username,
-				avatar: $page.data.user.user.avatar
+				userId: $page.data.user.userId,
+				username: $page.data.user.user.username
 			},
 			recording: { mode: 'automatic' }
 		})
@@ -94,8 +98,8 @@
 					trackType: 'screen',
 					liveInput: { screenUid },
 					trackName: null,
-					username: $page.data.user.user.username,
-					avatar: $page.data.user.user.avatar
+					userId: $page.data.user.userId,
+					username: $page.data.user.user.username
 				}
 			}
 		})
@@ -109,8 +113,7 @@
 				name: `${$page.params.channelId}-${trackName}`,
 				trackName: trackName,
 				trackType: 'webcam',
-				username: $page.data.user.user.username,
-				avatar: $page.data.user.user.avatar
+				username: $page.data.user.user.username
 			},
 			recording: { mode: 'automatic' }
 		})
@@ -138,8 +141,8 @@
 					trackType: 'webcam',
 					liveInput: { webcamUid },
 					trackName: null,
-					username: $page.data.user.user.username,
-					avatar: $page.data.user.user.avatar
+					userId: $page.data.user.userId,
+					username: $page.data.user.user.username
 				}
 			}
 		})
@@ -153,8 +156,8 @@
 				name: `${$page.params.channelId}-${trackName}`,
 				trackName: trackName,
 				trackType: 'webcam',
-				username: $page.data.user.user.username,
-				avatar: $page.data.user.user.avatar
+				userId: $page.data.user.userId,
+				username: $page.data.user.user.username
 			},
 			recording: { mode: 'automatic' }
 		})
@@ -182,8 +185,8 @@
 					trackType: 'audio',
 					liveInput: { audioUid },
 					trackName: null,
-					username: $page.data.user.user.username,
-					avatar: $page.data.user.user.avatar
+					userId: $page.data.user.userId,
+					username: $page.data.user.user.username
 				}
 			}
 		})
