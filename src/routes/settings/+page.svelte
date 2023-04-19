@@ -5,6 +5,8 @@
 	import type { ActionData } from './$types'
 	import Toast from '$lib/components/Global/Toast.svelte'
 	import { enhance } from '$app/forms'
+	import { app_theme } from '$lib/stores/profileStore'
+
 	export let form: ActionData
 
 	// $: email = $page.data.user.user.email
@@ -18,6 +20,10 @@
 		}
 		themeChange(false)
 	})
+
+	const setTheme = () => {
+		$app_theme = localStorage.getItem('theme') ?? 'light'
+	}
 </script>
 
 <div class="flex justify-center h-screen bg-base-200 py-10">
@@ -75,6 +81,7 @@
 					<label class="label cursor-pointer">
 						<span class="label-text">{theme}</span>
 						<input
+							on:change={setTheme}
 							type="radio"
 							name="radio-10"
 							class="radio radio-accent"
