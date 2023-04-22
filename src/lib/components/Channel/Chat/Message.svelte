@@ -9,19 +9,15 @@
 	import { emitChannelUpdate, emitDeleteMessageToChannel } from '$lib/websocket'
 	import { getColoredRole } from '$lib/utils'
 	import { page } from '$app/stores'
-	import { onMount } from 'svelte'
+	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 
 	export let sender: any, hostId: string, channel: any
-	let coloredRole: any = {},
-		isGuest = false
 
-	onMount(() => {
-		coloredRole = getColoredRole(sender.role)
-		isGuest = channel?.guests?.includes(sender.userData?.userId)
-	})
+	$: coloredRole = getColoredRole(sender.role)
+	$: isGuest = channel?.guests?.includes(sender.user?.userId)
 
 	const deleteMessage = () => {
-		if (sender.userData?.userId === hostId || sender.userData?.userId === $page.data.user?.userId) {
+		if (sender.user?.userId === hostId || sender.user?.userId === $page.data.user?.userId) {
 			var channelId = sender.eventName.split('-').pop()
 			var updatedSender: any = { ...sender }
 			delete updatedSender.user
@@ -30,20 +26,32 @@
 		}
 	}
 
-	const toggleMod = () => {
-		if (channel.mods.includes(sender.userData?.userId)) {
-			channel.mods = channel.mods.filter((mod: string) => mod !== sender.userData?.userId)
+	const toggleBan = () => {
+		if (channel.bans.includes(sender.user?.userId)) {
+			channel.bans = channel.bans.filter((ban: string) => ban !== sender.user?.userId)
 		} else {
-			channel.mods.push(sender.userData?.userId)
+			channel.bans.push(sender.user?.userId)
+			channel.guests = channel.guests.filter((guest: string) => guest !== sender.user?.userId)
+			channel.mods = channel.mods.filter((mod: string) => mod !== sender.user?.userId)
+			isGuest = false
+		}
+		emitChannelUpdate({ channel })
+	}
+
+	const toggleMod = () => {
+		if (channel.mods.includes(sender.user?.userId)) {
+			channel.mods = channel.mods.filter((mod: string) => mod !== sender.user?.userId)
+		} else {
+			channel.mods.push(sender.user?.userId)
 		}
 		emitChannelUpdate({ channel })
 	}
 
 	const toggleGuest = () => {
-		if (channel.guests.includes(sender.userData?.userId)) {
-			channel.guests = channel.guests.filter((guest: string) => guest !== sender.userData?.userId)
+		if (channel.guests.includes(sender.user?.userId)) {
+			channel.guests = channel.guests.filter((guest: string) => guest !== sender.user?.userId)
 		} else {
-			channel.guests.push(sender.userData?.userId)
+			channel.guests.push(sender.user?.userId)
 		}
 		emitChannelUpdate({ channel })
 	}
@@ -57,12 +65,11 @@
 		<div class="p-1 border border-transparent rounded-lg flex gap-2 overflow-x-hidden">
 			<span>
 				{#if sender.role === 'Host' || sender.role === 'Mod' || sender.role === 'You'}
-					<span class="{coloredRole?.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
+					<span class="{coloredRole.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
 						>{sender.role}</span>
 				{/if}
-				<span
-					data-popover-target="popover-user-profile"
-					class="{coloredRole?.textColor} font-medium">@{sender.userData?.username}</span>
+				<span data-popover-target="popover-user-profile" class="{coloredRole.textColor} font-medium"
+					>@{sender.user?.username}</span>
 				<span class="break-all">{sender.message}</span>
 			</span>
 			<div
@@ -71,10 +78,17 @@
 				<div class="rounded-lg bg-base-200 m-1 border-base-100 border-2">
 					<IconChatHorizontalMore />
 				</div>
-				<ul tabindex="1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-fit">
+				<ul tabindex="1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li class="disabled"><a><IconChatReact /> React </a></li>
 					<li class="disabled"><a><IconChatQuote /> Quote </a></li>
-					{#if sender.userData?.userId === hostId}
+					{#if sender.user?.userId === hostId && sender.user?.userId !== $page.data.user?.userId && channel?.mods?.includes($page.data.user?.userId)}
+						<li>
+							<a on:click={() => toggleBan()}
+								><IconChatBan /> {channel.bans?.includes(sender.user?.userId) ? 'Unban' : 'Ban'}
+							</a>
+						</li>
+					{/if}
+					{#if sender.user?.userId === hostId && sender.user?.userId !== $page.data.user?.userId}
 						<li>
 							<a on:click={() => toggleMod()}
 								><IconChatMod /> {sender.role === 'Mod' ? 'Remove Mod' : 'Grant Mod'}
@@ -86,7 +100,7 @@
 							</a>
 						</li>
 					{/if}
-					{#if sender.userData?.userId === hostId || sender.userData?.userId === $page.data.user?.userId}
+					{#if sender.user?.userId === hostId || sender.user?.userId === $page.data.user?.userId}
 						<li>
 							<a on:click={() => deleteMessage()}><IconChatDelete /> Delete</a>
 						</li>

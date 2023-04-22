@@ -130,3 +130,15 @@
 		{/if}
 	</div>
 </div>
+
+<style>
+	:global(html[data-theme='dark'] .mage-text),
+	:global(html[data-theme='synthwave'] .mage-text) {
+		display: none;
+	}
+
+	:global(html[data-theme='light'] .mage-text-dark),
+	:global(html[data-theme='cyberpunk'] .mage-text-dark) {
+		display: none;
+	}
+</style>

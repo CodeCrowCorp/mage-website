@@ -70,20 +70,24 @@ function emitUserConnection({ userId, isOnline }: { userId: string; isOnline: bo
 
 /************ Channel chat ****************/
 
-function emitRemovedUser({ channelId, userId }: { channelId: string; userId: string }) {
-	channelSocket.send(JSON.stringify({ eventName: `user-removed`, channelId, userId }))
-}
-
 function emitChannelUpdate({ channel }: { channel: any }) {
 	channelSocket.send(JSON.stringify({ eventName: `channel-update`, channel }))
 }
 
-function emitChannelSubscribeByUser({ channelId, userId }: { channelId: string; userId: string }) {
+function emitChannelSubscribeByUser({
+	channelId,
+	userId,
+	username
+}: {
+	channelId: string
+	userId: string
+	username: string
+}) {
 	channelSocket.send(
 		JSON.stringify({
 			eventName: `channel-subscribe`,
-			channelId: channelId,
-			user: userId
+			channel: channelId,
+			user: { userId, username }
 		})
 	)
 }
@@ -316,7 +320,6 @@ export {
 	// emitChannelAccessResponse,
 	// emitChatMessage,
 	// emitChatTypingByUser,
-	emitRemovedUser,
 	emitChannelUpdate,
 	emitChannelSubscribeByUser,
 	emitMessageToChannel,
