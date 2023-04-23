@@ -18,7 +18,7 @@
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import DrawerEditChannel from '$lib/components/Channel/Chat/DrawerEditChannel.svelte'
-	import { video_items } from '$lib/stores/streamStore'
+	import { updateVideoItems, video_items } from '$lib/stores/streamStore'
 
 	let channel: any
 	let channelId = $page.params.channelId || ''
@@ -73,7 +73,6 @@
 		initChannelSocket(channelSocketId)
 		channelSocket.addEventListener('open', async (data) => {
 			console.log('channel socket connection open', channelSocketId)
-			console.log(data)
 			$channel_connection = 'open'
 			$channel_message = ''
 			$video_items = []
@@ -140,28 +139,24 @@
 					if (activeGuests?.length) {
 						$video_items = [...activeGuests]
 						const liveInputs = await getLiveInputs(channelId)
-						$video_items.forEach((video: any) => {
-							if (Array.isArray(liveInputs)) {
-								const liveInput = liveInputs.find((liveInput: any) => liveInput._id === video._id)
-								video = { ...liveInput }
-							}
-						})
+						$video_items = updateVideoItems($video_items, liveInputs)
 					}
 				}
 				break
 			case `channel-streaming-action-${channelId}`:
 				switch (parsedMsg.data.action) {
 					case 'toggleTrack-start':
-						if (
-							!$video_items.some((video: any) => video.trackName === parsedMsg.data.video.trackName)
-						) {
-							$video_items.push(parsedMsg.data.video)
+						console.log('VIDEOOOOOO', $video_items)
+						console.log('start parsedMsg.data', parsedMsg.data)
+						if ($page.data.user.userId !== parsedMsg.data.video._id) {
+							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
 						}
 						break
 					case 'toggleTrack-stop':
-						$video_items = $video_items.filter(
-							(video: any) => video.trackName !== parsedMsg.data.video.trackName
-						)
+						console.log('stop parsedMsg.data', parsedMsg.data)
+						if ($page.data.user.userId !== parsedMsg.data.video._id) {
+							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
+						}
 						break
 				}
 				break

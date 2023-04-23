@@ -11,7 +11,7 @@
 	import { del, post } from '$lib/api'
 	import { page } from '$app/stores'
 	import { emitAction } from '$lib/websocket'
-	import { video_items } from '$lib/stores/streamStore'
+	import { updateVideoItems, video_items } from '$lib/stores/streamStore'
 
 	export let isHost: boolean = true,
 		channel: any
@@ -41,7 +41,7 @@
 	const createLiveInput = async (trackData: any) => {
 		return await post(
 			`cloudflare/live-input?channelId=${$page.params.channelId}`,
-			JSON.stringify({ trackData }),
+			JSON.stringify(trackData),
 			{
 				userId: $page.data.user.userId,
 				token: $page.data.user.token
@@ -66,16 +66,18 @@
 		const trackName = `screen-${$page.data.user.userId}`
 		const liveInput = await createLiveInput({
 			meta: {
-				name: `${$page.params.channelId}-${trackName}`,
-				trackName: trackName,
-				trackType: 'screen',
-				userId: $page.data.user.userId,
-				username: $page.data.user.user.username
+				name: JSON.stringify({
+					channel: `${$page.params.channelId}`,
+					isTrackActive: true,
+					trackType: 'screen',
+					_id: $page.data.user.userId
+				})
 			},
 			recording: { mode: 'automatic' }
 		})
 		screenUid = liveInput.uid
-		$video_items.push(liveInput)
+		$video_items = updateVideoItems($video_items, [liveInput])
+		console.log('video_items', $video_items)
 		emitAction({
 			channelId: $page.params.channelId,
 			message: {
@@ -87,19 +89,17 @@
 
 	const stopScreenStream = async () => {
 		await deleteLiveInput({ channelId: $page.params.channelId, inputId: screenUid })
-		$video_items = $video_items.filter(
-			(video: any) => video.trackName !== `screen-${$page.data.user.userId}`
-		)
+		$video_items = updateVideoItems($video_items, [
+			{ _id: $page.data.user.userId, trackType: 'screen', isTrackActive: false }
+		])
 		emitAction({
 			channelId: $page.params.channelId,
 			message: {
 				action: 'toggleTrack-stop',
 				video: {
 					trackType: 'screen',
-					liveInput: { screenUid },
-					trackName: null,
-					userId: $page.data.user.userId,
-					username: $page.data.user.user.username
+					isTrackActive: false,
+					_id: $page.data.user.userId
 				}
 			}
 		})
