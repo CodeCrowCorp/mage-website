@@ -146,14 +146,11 @@
 			case `channel-streaming-action-${channelId}`:
 				switch (parsedMsg.data.action) {
 					case 'toggleTrack-start':
-						console.log('VIDEOOOOOO', $video_items)
-						console.log('start parsedMsg.data', parsedMsg.data)
 						if ($page.data.user.userId !== parsedMsg.data.video._id) {
 							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
 						}
 						break
 					case 'toggleTrack-stop':
-						console.log('stop parsedMsg.data', parsedMsg.data)
 						if ($page.data.user.userId !== parsedMsg.data.video._id) {
 							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
 						}

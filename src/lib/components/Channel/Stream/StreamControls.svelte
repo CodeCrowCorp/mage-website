@@ -77,7 +77,6 @@
 		})
 		screenUid = liveInput.uid
 		$video_items = updateVideoItems($video_items, [liveInput])
-		console.log('video_items', $video_items)
 		emitAction({
 			channelId: $page.params.channelId,
 			message: {
