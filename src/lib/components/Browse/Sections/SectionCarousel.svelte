@@ -46,7 +46,7 @@
 {:then value}
 	{#if value.length > 0}
 		<div class="relative p-1">
-			<div class="btn btn-circle p-3 btn-prev absolute top-2/4 left-1 z-10 ml-3">
+			<div class="btn btn-square p-3 btn-prev absolute top-2/4 left-1 z-10 ml-3">
 				<IconDrawerLeft />
 			</div>
 			<div class="swiper carousel mt-10 mx-8">
@@ -56,7 +56,7 @@
 					{/each}
 				</div>
 			</div>
-			<div class="btn btn-circle z-10 p-3 btn-next absolute top-2/4 right-1 mr-3">
+			<div class="btn btn-square z-10 p-3 btn-next absolute top-2/4 right-1 mr-3">
 				<IconDrawerChevron />
 			</div>
 		</div>

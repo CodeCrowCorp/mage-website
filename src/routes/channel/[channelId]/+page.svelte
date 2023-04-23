@@ -18,7 +18,7 @@
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import DrawerEditChannel from '$lib/components/Channel/Chat/DrawerEditChannel.svelte'
-	import { video_items } from '$lib/stores/streamStore'
+	import { updateVideoItems, video_items } from '$lib/stores/streamStore'
 
 	let channel: any
 	let channelId = $page.params.channelId || ''
@@ -73,7 +73,6 @@
 		initChannelSocket(channelSocketId)
 		channelSocket.addEventListener('open', async (data) => {
 			console.log('channel socket connection open', channelSocketId)
-			console.log(data)
 			$channel_connection = 'open'
 			$channel_message = ''
 			$video_items = []
@@ -128,8 +127,8 @@
 		if (!value) return
 		var parsedMsg = JSON.parse(value)
 		switch (parsedMsg.eventName) {
-			case `channel-update-${channel._id}`:
-				channel = parsedMsg.channel
+			case `channel-update-${channelId}`:
+				channel = parsedMsg.channels
 				break
 			case `channel-subscribe-${channelId}`:
 				userCount = parsedMsg.userCount
@@ -138,36 +137,29 @@
 				} else {
 					const activeGuests = parsedMsg.activeGuests
 					if (activeGuests?.length) {
-						$video_items = [
-							...activeGuests
-							// ...activeGuests,
-							// ...activeGuests,
-							// ...activeGuests
-						]
-						//TODO: get live inputs
-						// $video_items = await getLiveInputs(channelId)
+						$video_items = [...activeGuests]
+						const liveInputs = await getLiveInputs(channelId)
+						$video_items = updateVideoItems($video_items, liveInputs)
 					}
 				}
 				break
 			case `channel-streaming-action-${channelId}`:
 				switch (parsedMsg.data.action) {
 					case 'toggleTrack-start':
-						if (
-							!$video_items.some((video: any) => video.trackName === parsedMsg.data.video.trackName)
-						) {
-							$video_items.push(parsedMsg.data.video)
+						console.log('VIDEOOOOOO', $video_items)
+						console.log('start parsedMsg.data', parsedMsg.data)
+						if ($page.data.user.userId !== parsedMsg.data.video._id) {
+							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
 						}
 						break
 					case 'toggleTrack-stop':
-						$video_items = $video_items.filter(
-							(video: any) => video.trackName !== parsedMsg.data.video.trackName
-						)
+						console.log('stop parsedMsg.data', parsedMsg.data)
+						if ($page.data.user.userId !== parsedMsg.data.video._id) {
+							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
+						}
 						break
 				}
 				break
-			// case `channel-streaming-video-history-${$page.data.user?.userId}`:
-			// 	$video_items = parsedMsg.data.videos
-			// 	break
 		}
 	})
 </script>

@@ -49,14 +49,14 @@
 			</div>
 			<div class="flex flex-row">
 				<div class="relative flex items-center ml-3">
-					<div class="absolute btn btn-circle p-2 left-0 z-10" on:click={prev}>
+					<div class="absolute btn btn-square p-2 left-0 z-10" on:click={prev}>
 						<IconDrawerLeft />
 					</div>
 				</div>
 
 				<div
 					bind:this={ref}
-					class="relative w-full flex gap-6 snap-x scrollbar-hide snap-mandatory overflow-x-auto flex-grow mx-8">
+					class="relative w-full flex gap-6 snap-x scrollbar-hide snap-mandatory overflow-x-auto flex-grow mx-14">
 					{#if sectionId === 'rising-stars'}
 						{#each value.users as user}
 							<SectionUserItem {user} />
@@ -69,7 +69,7 @@
 				</div>
 
 				<div class="relative flex items-center mr-3">
-					<div class="absolute btn btn-circle p-2 right-0 z-10" on:click={next}>
+					<div class="absolute btn btn-square p-2 right-0 z-10" on:click={next}>
 						<IconDrawerChevron />
 					</div>
 				</div>

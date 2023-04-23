@@ -45,7 +45,7 @@
 				<div class="flex flex-col w-full">
 					<div class="flex gap-2 mb-3">
 						<span
-							class="btn btn-sm rounded-md font-medium text-white border-none flex items-center {$video_items.length
+							class="btn btn-sm rounded-md font-medium text-white border-none flex items-center {$video_items?.length
 								? 'bg-red-700 hover:bg-red-700'
 								: ''}">
 							LIVE
