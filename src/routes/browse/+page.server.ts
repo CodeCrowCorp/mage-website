@@ -3,22 +3,24 @@ import { get, post } from '$lib/api'
 import { redirect } from '@sveltejs/kit'
 
 export const load = (async ({ locals }) => {
+	const risingStars = await get(`stats/stream/getRisingStars?skip=${0}&limit=${10}`)
+	console.log(risingStars.users)
 	return {
 		lazy: {
-			mostActiveChannels: get(`channels/most-active?skip=${0}&limit=${5}`),
-			weeklyChannels: get(`channels/weekly?skip=${0}&limit=${10}`),
-			highestRankedUsers: get(`users/highest-ranked?skip=${0}&limit=${10}`),
-			risingStarUsers: get(`stats/stream/getRisingStars?skip=${0}&limit=${10}`),
+			mostActiveChannels: await get(`channels/most-active?skip=${0}&limit=${5}`),
+			weeklyChannels: await get(`channels/weekly?skip=${0}&limit=${10}`),
+			highestRankedUsers: await get(`users/highest-ranked?skip=${0}&limit=${10}`),
+			risingStarUsers: await get(`stats/stream/getRisingStars?skip=${0}&limit=${10}`),
 			myChannels: locals.user
-				? get(`channels/user?userId=${locals.user.userId}&skip=${0}&limit=${10}`)
+				? await get(`channels/user?userId=${locals.user.userId}&skip=${0}&limit=${10}`)
 				: [],
 			favChannels: locals.user
-				? get(`channels/me/fav?skip=${0}&limit=${10}`, {
+				? await get(`channels/me/fav?skip=${0}&limit=${10}`, {
 						userId: locals.user.userId,
 						token: locals.user.token
 				  })
 				: [],
-			tableChannels: get(`channels?skip=${0}&limit=${100}`)
+			tableChannels: await get(`channels?skip=${0}&limit=${100}`)
 		}
 	}
 }) satisfies PageServerLoad

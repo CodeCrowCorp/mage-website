@@ -1,24 +1,26 @@
 import type { Actions, PageServerLoad } from './$types'
-import { get, patch, post, del } from '$lib/api'
+import { get, patch, put, del } from '$lib/api'
 import { redirect } from '@sveltejs/kit'
 
 export const load = (async ({ params, locals }) => {
 	const profile = await get(`users/search/username?username=${params.username}`)
+
+
 	return {
 		profile: profile,
 		lazy: {
-			channels: get(`channels/user?userId=${profile._id}&skip=${0}&limit=${10}`),
-			subscribers: get(
+			channels: await get(`channels/user?userId=${profile._id}&skip=${0}&limit=${10}`),
+			subscribers: await get(
 				`subscribes?source=${profile._id}&sourceType=source1&skip=${0}&limit=${10}`,
 				{ userId: locals.user?.userId, token: locals.user?.token }
 			),
-			interests: get(`subscribes?source=${profile._id}&sourceType=source2&skip=${0}&limit=${10}`, {
+			interests: await get(`subscribes?source=${profile._id}&sourceType=source2&skip=${0}&limit=${10}`, {
 				userId: locals.user?.userId,
 				token: locals.user?.token
 			}),
-			subscriberCount: get(`subscribes/count?source=${profile._id}&sourceType=source1`),
-			interestCount: get(`subscribes/count?source=${profile._id}&sourceType=source2`),
-			isSubscribed: get(`subscribes/relationship?source=${profile._id}`, {
+			subscriberCount: await get(`subscribes/count?source=${profile._id}&sourceType=source1`),
+			interestCount: await get(`subscribes/count?source=${profile._id}&sourceType=source2`),
+			isSubscribed: await get(`subscribes/relationship?source=${profile._id}`, {
 				userId: locals.user?.userId,
 				token: locals.user?.token
 			})
@@ -47,10 +49,13 @@ export const actions = {
 	subscribe: async ({ request, locals }: { request: any; locals: any }) => {
 		const data = await request.formData()
 		const isSubscribing = data.get('isSubscribing')
+		console.log(data)
 		const source1 = data.get('source1')
 		const source2 = data.get('source2')
-		if (isSubscribing) {
-			await post(
+		if (isSubscribing=='false') {
+			console.log('its not')
+
+			const sub = await put(
 				`subscribes?source1=${source1}&source2=${source2}`,
 				{},
 				{
@@ -58,6 +63,7 @@ export const actions = {
 					token: locals.user?.token
 				}
 			)
+			console.log(sub)
 		} else {
 			await del(`subscribes?source1=${source1}&source2=${source2}`, {
 				userId: locals.user?.userId,

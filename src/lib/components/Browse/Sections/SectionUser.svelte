@@ -9,7 +9,6 @@
 		sectionId: string = ''
 
 	let ref: any
-
 	const prev = () => {
 		if (ref) {
 			ref.scrollTo({
@@ -42,7 +41,7 @@
 		</div>
 	</div>
 {:then value}
-	{#if value.length > 0}
+	{#if false || value?.users?.length > 0}
 		<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide">
 			<div class="font-semibold m-3">
 				<a class="link link-secondary text-lg" href="/browse/{sectionId}">{title}</a>
