@@ -16,6 +16,7 @@
 			slidesPerView: 3,
 			spaceBetween: 15,
 			loop: true,
+			centeredSlides: true,
 			modules: [Navigation],
 			navigation: {
 				nextEl: '.btn-next',
