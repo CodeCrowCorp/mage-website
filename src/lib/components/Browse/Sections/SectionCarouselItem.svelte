@@ -2,7 +2,7 @@
 	export let channel: any = {}
 </script>
 
-<a class="swiper-slide flex cursor-pointer rounded-md" href="/channel/{channel._id}">
+<a class="swiper-slide bg-slate-50 !flex cursor-pointer rounded-md" href="/channel/{channel._id}">
 	<div class="flex flex-row items-end w-3/4">
 		<div class="avatar my-3 ml-2">
 			<div class="w-14 mask mask-squircle">

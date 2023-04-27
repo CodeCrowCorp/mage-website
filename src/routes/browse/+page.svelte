@@ -11,7 +11,7 @@
 	$: user = $page.data.user
 </script>
 
-<SectionCarousel bind:channels={data.lazy.mostActiveChannels} />
+<SectionCarousel bind:channels={data.tableChannels} />
 <SearchBar />
 
 <SectionChannel sectionId={'weekly'} bind:channels={data.lazy.weeklyChannels} />
