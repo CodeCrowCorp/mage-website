@@ -4,17 +4,19 @@
 	import LoadingItemCarousel from '$lib/components/Browse/Sections/LoadingItemCarousel.svelte'
 	import { onMount } from 'svelte'
 	import Swiper, { Navigation } from 'swiper'
-	import 'swiper/css'
 	import SectionCarouselItem from '$lib/components/Browse/Sections/SectionCarouselItem.svelte'
+	import 'swiper/css'
 
 	export let channels: any = []
+
 	let swiper: Swiper
 
-	onMount(() => {
+	const initSwiper = () => {
 		swiper = new Swiper('.carousel', {
 			slidesPerView: 3,
 			spaceBetween: 15,
 			loop: true,
+			centeredSlides: true,
 			modules: [Navigation],
 			navigation: {
 				nextEl: '.btn-next',
@@ -32,10 +34,14 @@
 				}
 			}
 		})
+	}
+
+	onMount(async () => {
+		initSwiper()
 	})
 </script>
 
-{#await channels}
+{#if channels.length == 0}
 	<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide">
 		<div role="status" class="flex flex-row gap-1 animate-pulse">
 			{#each Array(5) as _, index (index)}
@@ -43,31 +49,25 @@
 			{/each}
 		</div>
 	</div>
-{:then value}
-	{#if value.length > 0}
-		<div class="relative p-1">
-			<div class="btn btn-circle p-3 btn-prev absolute top-2/4 left-1 z-10 ml-3">
-				<IconDrawerLeft />
-			</div>
-			<div class="swiper carousel mt-10 mx-8">
-				<div class="swiper-wrapper">
-					{#each value as channel}
-						<SectionCarouselItem {channel} />
-					{/each}
-				</div>
-			</div>
-			<div class="btn btn-circle z-10 p-3 btn-next absolute top-2/4 right-1 mr-3">
-				<IconDrawerChevron />
+{:else}
+	<div class="relative p-1">
+		<div class="btn btn-circle p-3 btn-prev absolute top-2/4 left-1 z-10 ml-3">
+			<IconDrawerLeft />
+		</div>
+		<div class="swiper carousel mt-10 mx-8">
+			<div class="swiper-wrapper">
+				{#each channels as channel}
+					<SectionCarouselItem {channel} />
+				{/each}
 			</div>
 		</div>
-	{/if}
-{/await}
+		<div class="btn btn-circle z-10 p-3 btn-next absolute top-2/4 right-1 mr-3">
+			<IconDrawerChevron />
+		</div>
+	</div>
+{/if}
 
 <style>
-	.swiper-slide {
-		background: #fff;
-		display: flex;
-	}
 	:global(.swiper-slide) {
 		height: 20rem !important;
 	}
