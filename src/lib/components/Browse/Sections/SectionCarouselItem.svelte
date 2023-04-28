@@ -4,8 +4,11 @@
 	let bg_cover = channel.thumbnail || '/src/lib/assets/placeholder/programming-placeholder.jpg'
 </script>
 
-<a class="swiper-slide bg-slate-50 cursor-pointer rounded-md" href="/channel/{channel._id}">
-	<div class="flex flex-row items-end w-full h-full" style="background-image: url({bg_cover});">
+<a
+	class="swiper-slide bg-slate-50 cursor-pointer rounded-md"
+	href="/channel/{channel._id}"
+	style="background-image: url({bg_cover});">
+	<div class="flex flex-row items-end w-full h-full">
 		<div class="flex flex-row items-center gap-2 ml-2 mb-2">
 			<div class="avatar">
 				<div class="w-14 mask mask-squircle">
