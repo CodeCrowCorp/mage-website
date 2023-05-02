@@ -8,7 +8,7 @@ export const load = (async ({ locals }) => {
 			mostActiveChannels: get(`channels/most-active?skip=${0}&limit=${5}`),
 			weeklyChannels: get(`channels/weekly?skip=${0}&limit=${10}`),
 			highestRankedUsers: get(`users/highest-ranked?skip=${0}&limit=${10}`),
-			risingStarUsers: get(`users/rising-stars?skip=${0}&limit=${10}`),
+			risingStarUsers: get(`stats/stream/getRisingStars?skip=${0}&limit=${10}`),
 			myChannels: locals.user
 				? get(`channels/user?userId=${locals.user.userId}&skip=${0}&limit=${10}`)
 				: [],

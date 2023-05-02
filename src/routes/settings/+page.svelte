@@ -9,11 +9,13 @@
 
 	// $: email = $page.data.user.user.email
 
-	let isDarkTheme = true
-	if (browser) {
-		isDarkTheme = localStorage.getItem('theme') === 'dark' || true
-	}
+	let currentTheme: string | null = 'dark'
+	let themes = ['dark', 'light'] //, 'cyberpunk', 'synthwave']
+
 	onMount(() => {
+		if (browser) {
+			currentTheme = localStorage.getItem('theme') || 'dark'
+		}
 		themeChange(false)
 	})
 </script>
@@ -56,7 +58,7 @@
 
 		<div class="flex flex-col border-opacity-50">
 			<div class="divider">Theming</div>
-			<div class="form-control w-96">
+			<!-- <div class="form-control w-96">
 				<label class="cursor-pointer label">
 					<span class="label-text">Enable dark mode</span>
 					<input
@@ -67,7 +69,22 @@
 						data-act-class="ACTIVECLASS"
 						checked={isDarkTheme} />
 				</label>
-			</div>
+			</div> -->
+			{#each themes as theme}
+				<div class="form-control">
+					<label class="label cursor-pointer">
+						<span class="label-text">{theme}</span>
+						<input
+							type="radio"
+							name="radio-10"
+							class="radio radio-accent"
+							checked={currentTheme === theme}
+							data-toggle-theme={theme}
+							data-act-class="ACTIVECLASS" />
+					</label>
+				</div>
+			{/each}
+
 			<!-- <div class="divider">1v1 chat</div>
 			<div class="form-control w-96">
 				<label class="cursor-pointer label">

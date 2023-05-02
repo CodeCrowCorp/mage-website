@@ -2,7 +2,7 @@
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
 	import { goto } from '$app/navigation'
 	import { category_list } from '$lib/stores/channelStore'
-	export let channel: any
+	export let channel: any = {}
 </script>
 
 <tr
@@ -42,6 +42,12 @@
 	<td>
 		<div class="flex flex-wrap gap-2 my-3">
 			{#if channel.tags && channel.tags.length}
+				{#if channel.isLive}
+					<div>
+						<span class="badge badge-md text-white bg-red-700 rounded-md font-semibold border-none"
+							>LIVE</span>
+					</div>
+				{/if}
 				{#each channel.tags as tag}
 					<div>
 						<span

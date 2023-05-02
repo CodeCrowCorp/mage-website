@@ -16,41 +16,38 @@
 	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svg'
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
-	import { goto } from '$app/navigation'
 	import { env } from '$env/dynamic/public'
 	import { page } from '$app/stores'
 	import { user_role } from '$lib/stores/authStore'
-
-	import {
-		is_maintenance_mode_enabled
-		// is_feature_mint_page_enabled,
-		// is_feature_premium_page_enabled,
-		// is_feature_group_chat_enabled,
-		// is_feature_video_responses_enabled
-	} from '$lib/stores/remoteConfigStore'
+	// import {
+	// 	is_feature_mint_page_enabled,
+	// 	is_feature_premium_page_enabled,
+	// 	is_feature_group_chat_enabled,
+	// 	is_feature_video_responses_enabled
+	// } from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svg'
 	import IconMageTextDark from '$lib/assets/icons/IconMageTextDark.svg'
 
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
 	import { onMount } from 'svelte'
-	import { get } from '$lib/api'
 
 	export var nav_drawer: HTMLInputElement
 
 	$: currentUser = $page.data.user?.user
 
-	let exp = 500 //Math.floor(Math.random() * (10000 - 0 + 1) + 0) //currentUser.exp
-	let levelAndBarValue = levelAndBarValueFromExp(exp)
-	let progressBarLevel = levelAndBarValue.level //levelFromExp(exp) //currentUser.exp
-	let progressBarValue = levelAndBarValue.barValue //barValueFromExp(exp) //currentUser.exp
-	let progressBarColor = colorFromLevel(progressBarLevel)
-
+	let progressBarLevel = 1
+	let progressBarValue = 0
+	let progressBarColor = colorFromLevel(1)
 	let streamCount = 0
 	let hoursStreamed = 0
-
 	onMount(async () => {
 		if (currentUser) {
+			let exp = currentUser.exp
+			let levelAndBarValue = levelAndBarValueFromExp(exp)
+			progressBarLevel = levelAndBarValue.level
+			progressBarValue = levelAndBarValue.barValue
+			progressBarColor = colorFromLevel(progressBarLevel)
 			streamCount = 0 //await get(`TODO: add endpoint here`)
 			hoursStreamed = 0 //await get(`TODO: add endpoint here`)
 		}
@@ -186,13 +183,11 @@
 				</ul>
 			</div>
 		</li>
-		{#if currentUser}
-			<li>
-				<a href="/settings">
-					<IconDrawerSettings />
-					Settings</a>
-			</li>
-		{/if}
+		<li>
+			<a href="/settings">
+				<IconDrawerSettings />
+				Settings</a>
+		</li>
 		{#if currentUser}
 			<form action="/logout" method="POST">
 				<li>
@@ -243,13 +238,5 @@
 <style>
 	progress::-webkit-progress-value {
 		background-color: var(--progress-bar-color);
-	}
-
-	:global(html[data-theme='dark'] .mage-text) {
-		display: none;
-	}
-
-	:global(html[data-theme='light'] .mage-text-dark) {
-		display: none;
 	}
 </style>

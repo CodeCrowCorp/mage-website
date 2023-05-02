@@ -34,7 +34,7 @@
 		<div class="font-semibold m-3">
 			<div class="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4 animate-pulse" />
 		</div>
-		<div role="status" class="flex flex-row gap-1 animate-pulse ">
+		<div role="status" class="flex flex-row gap-1 animate-pulse">
 			{#each Array(6) as _, index (index)}
 				<LoadingItemChannel />
 			{/each}
@@ -48,17 +48,15 @@
 					>{sectionId === 'weekly' ? value.title : title}</a>
 			</div>
 			<div class="flex flex-row">
-				<div class="relative flex items-center">
-					<div
-						class="absolute bg-base-200 rounded-full p-2 left-0 z-10 cursor-pointer"
-						on:click={prev}>
+				<div class="relative flex items-center ml-3">
+					<div class="absolute btn btn-square p-2 left-0 z-10" on:click={prev}>
 						<IconDrawerLeft />
 					</div>
 				</div>
 
 				<div
 					bind:this={ref}
-					class="relative w-full flex gap-6 snap-x scrollbar-hide snap-mandatory overflow-x-auto flex-grow">
+					class="relative w-full flex gap-6 snap-x scrollbar-hide snap-mandatory overflow-x-auto flex-grow mx-8">
 					{#if sectionId === 'weekly'}
 						{#each value.channels as channel}
 							<SectionChannelItem {channel} />
@@ -70,10 +68,8 @@
 					{/if}
 				</div>
 
-				<div class="relative flex items-center">
-					<div
-						class="absolute bg-base-200 rounded-full p-2 right-0 z-10 cursor-pointer"
-						on:click={next}>
+				<div class="relative flex items-center mr-3">
+					<div class="absolute btn btn-square p-2 right-0 z-10" on:click={next}>
 						<IconDrawerChevron />
 					</div>
 				</div>
@@ -83,10 +79,6 @@
 {/await}
 
 <style>
-	.video-thumbnail {
-		@apply bg-slate-400 w-full h-64 flex items-center justify-center text-white rounded-md cursor-pointer;
-	}
-
 	.scrollbar-hide::-webkit-scrollbar {
 		display: none;
 	}
