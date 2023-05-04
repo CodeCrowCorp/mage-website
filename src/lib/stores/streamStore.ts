@@ -1,4 +1,4 @@
-import { writable, type Writable, get } from 'svelte/store'
+import { writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
 
 export const video_items: Writable<any> = writable([])

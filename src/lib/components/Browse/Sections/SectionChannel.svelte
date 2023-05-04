@@ -44,8 +44,8 @@
 	{#if sectionId === 'weekly' ? value.channels?.length > 0 : value.length > 0}
 		<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide">
 			<div class="font-semibold m-3">
-				<a class="link link-secondary text-lg" href="/browse/{sectionId}"
-					>{sectionId === 'weekly' ? value.title : title}</a>
+				<a class="link link-secondary text-lg">{sectionId === 'weekly' ? value.title : title}</a>
+				<!-- href="/browse/{sectionId}" -->
 			</div>
 			<div class="flex flex-row">
 				<div class="relative flex items-center ml-3">
@@ -56,7 +56,7 @@
 
 				<div
 					bind:this={ref}
-					class="relative w-full flex gap-6 snap-x scrollbar-hide snap-mandatory overflow-x-auto flex-grow mx-8">
+					class="relative w-full flex gap-6 snap-x scrollbar-hide snap-mandatory overflow-x-auto flex-grow mx-14">
 					{#if sectionId === 'weekly'}
 						{#each value.channels as channel}
 							<SectionChannelItem {channel} />

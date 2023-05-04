@@ -12,9 +12,9 @@
 
 	let coloredRole: any = {},
 		isGuest = false,
-		screenElement: any,
-		webcamElement: any,
-		audioElement: any,
+		screenElement: HTMLVideoElement,
+		webcamElement: HTMLVideoElement,
+		audioElement: HTMLVideoElement,
 		screenWhip: WHIPClient,
 		screenWhep: WHEPClient,
 		webcamWhip: WHIPClient,
@@ -22,85 +22,92 @@
 		audioWhip: WHIPClient,
 		audioWhep: WHEPClient
 
+	let wasCalled = false
+
 	$: if (video.screen) {
-		initClient({
-			videoWhip: screenWhip,
-			videoWhep: screenWhep,
-			videoElement: screenElement,
-			videoItem: video.screen
+		toggleClient({
+			trackType: 'screen'
 		})
+		wasCalled = true
 	}
 
 	$: if (video.webcam) {
-		initClient({
-			videoWhip: webcamWhip,
-			videoWhep: webcamWhep,
-			videoElement: webcamElement,
-			videoItem: video.webcam
+		toggleClient({
+			trackType: 'webcam'
 		})
 	}
 
 	$: if (video.audio) {
-		initClient({
-			videoWhip: audioWhip,
-			videoWhep: audioWhep,
-			videoElement: audioElement,
-			videoItem: video.audio
+		toggleClient({
+			trackType: 'audio'
 		})
 	}
 
-	const initVideoElement = ({
-		trackType,
-		videoElement
-	}: {
-		trackType: string
-		videoElement: any
-	}) => {
-		videoElement = document.getElementById(`${trackType}-${video._id}`)
-		if (videoElement) {
-			videoElement.addEventListener('dblclick', (event: any) => {
-				if (document.fullscreenElement) {
-					document.exitFullscreen()
-				} else {
-					videoElement.requestFullscreen()
-				}
-			})
-			videoElement.addEventListener(
-				'click',
-				(event: { preventDefault: () => void; stopPropagation: () => void }) => {
-					event.preventDefault()
-					event.stopPropagation()
-					videoElement.scrollIntoView()
-				}
-			)
-		}
-	}
-
-	const initClient = ({
-		videoWhip,
-		videoWhep,
-		videoElement,
-		videoItem
-	}: {
-		videoWhip: WHIPClient
-		videoWhep: WHEPClient
-		videoElement: any
-		videoItem: any
-	}) => {
+	const toggleClient = ({ trackType }: { trackType: string }) => {
 		if ($page.data.user.user.username === video.username) {
-			console.log(videoItem)
-			videoWhip = new WHIPClient(videoItem.webRTC.url, videoElement, videoItem.trackType)
+			switch (trackType) {
+				case 'screen':
+					if (wasCalled) return
+					console.log('video.screen.webRTC.url', video.screen.webRTC.url)
+					console.log('screenElement', screenElement)
+					console.log('video.screen.trackType', video.screen.trackType)
+					screenWhip = new WHIPClient(
+						video.screen.webRTC.url,
+						screenElement,
+						video.screen.trackType
+					)
+					wasCalled = true
+					break
+				case 'webcam':
+					webcamWhip = new WHIPClient(
+						video.webcam.webRTC.url,
+						webcamElement,
+						video.webcam.trackType
+					)
+					break
+				case 'audio':
+					audioWhip = new WHIPClient(video.audio.webRTC.url, audioElement, video.audio.trackType)
+					break
+			}
 		} else if ($page.data.user.user.username !== video.username) {
-			videoWhep = new WHEPClient(videoItem.webRTCPlayback.url, videoElement)
+			switch (trackType) {
+				case 'screen':
+					screenWhep = new WHEPClient(video.screen.webRTCPlayback.url, screenElement)
+					break
+				case 'webcam':
+					webcamWhep = new WHEPClient(video.webcam.webRTCPlayback.url, webcamElement)
+					break
+				case 'audio':
+					audioWhep = new WHEPClient(video.audio.webRTCPlayback.url, audioElement)
+					break
+			}
 		}
 	}
 
 	onMount(() => {
 		// coloredRole = getColoredRole(sender.role)
 		// isGuest = channel?.guests?.includes(sender.userData?.userId)
-		initVideoElement({ trackType: 'screen', videoElement: screenElement })
-		initVideoElement({ trackType: 'webcam', videoElement: webcamElement })
-		initVideoElement({ trackType: 'audio', videoElement: audioElement })
+		screenElement = document.getElementById(`screen-${video._id}`) as HTMLVideoElement
+		webcamElement = document.getElementById(`webcam-${video._id}`) as HTMLVideoElement
+		audioElement = document.getElementById(`audio-${video._id}`) as HTMLVideoElement
+
+		if (screenElement) {
+			screenElement.addEventListener('dblclick', (event: any) => {
+				if (document.fullscreenElement) {
+					document.exitFullscreen()
+				} else {
+					screenElement.requestFullscreen()
+				}
+			})
+			screenElement.addEventListener(
+				'click',
+				(event: { preventDefault: () => void; stopPropagation: () => void }) => {
+					event.preventDefault()
+					event.stopPropagation()
+					screenElement.scrollIntoView()
+				}
+			)
+		}
 	})
 
 	// const toggleMod = () => {
@@ -124,21 +131,21 @@
 
 <div class="w-[500px]">
 	<div class="bg-base-200 relative w-full h-full rounded-md">
-		<div class="flex items-center justify-center h-full">
+		{#if !video.screen && !video.webcam}
 			<div
-				class="w-24 md:w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
+				class="absolute w-24 md:w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2 right-0 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
 				<img src={video.avatar} alt="" />
 			</div>
-			{#if video.screen}
-				<video id={`screen-${video._id}`} />
-			{/if}
-			{#if video.webcam}
-				<video id={`webcam-${video._id}`} />
-			{/if}
-			{#if video.audio}
-				<video id={`audio-${video._id}`} />
-			{/if}
-		</div>
+		{/if}
+		<video id={`screen-${video._id}`} autoplay muted class="rounded-md" />
+
+		<video
+			id={`webcam-${video._id}`}
+			autoplay
+			muted
+			class="rounded-md absolute bottom-0 right-0 w-1/2 h-1/2" />
+
+		<video id={`audio-${video._id}`} autoplay muted class="rounded-md" />
 		<div class="absolute left-2 bottom-2 rounded-md dropdown">
 			<label tabindex="0" class="btn btn-sm normal-case">@{video.username}</label>
 			<!-- <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
