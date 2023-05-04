@@ -20,6 +20,7 @@
 	import { isJsonString } from '$lib/utils'
 	import IconMageText from '$lib/assets/icons/IconMageText.svg'
 	import IconMageTextDark from '$lib/assets/icons/IconMageTextDark.svg'
+	import { isOnline } from '$lib/stores/userStore'
 
 	NProgress.configure({
 		minimum: 0.75,
@@ -38,32 +39,55 @@
 	let nav_drawer: HTMLInputElement
 
 	onMount(async () => {
-		const platformSocketId = await get(`wsinit/wsid`)
-		initPlatformSocket(platformSocketId)
-		platformSocket.addEventListener('open', (data) => {
-			console.log('socket connection open')
-			console.log(data)
-			platform_connection.set('open')
-			if ($page.data.user?.userId)
-				emitUserConnection({ userId: $page.data.user?.userId, isOnline: true })
-		})
-		platformSocket.addEventListener('message', (data) => {
-			console.log('listening to messages')
-			console.log(data.data)
-			if (isJsonString(data.data)) platform_message.set(data.data)
-		})
-		platformSocket.addEventListener('error', (data) => {
-			console.log('socket connection error')
-			console.log(data)
-		})
-		platformSocket.addEventListener('close', (data) => {
-			console.log('socket connection close')
-			console.log(data)
-			platform_connection.set('close')
-		})
-
+		await handleWebsocket()
 		if (!$category_list.length) {
 			$category_list = imageUrlsJson
+		}
+	})
+
+	const handleWebsocket = async () => {
+		try {
+			if ($page.data.user?.userId) {
+				const platformSocketId = await get(`wsinit/wsid`)
+				initPlatformSocket(platformSocketId)
+				platformSocket.addEventListener('open', (data) => {
+					console.log('socket connection open')
+					console.log(data)
+					$platform_connection = 'open'
+				})
+				platformSocket.addEventListener('message', (data) => {
+					console.log('listening to messages')
+					console.log(data.data)
+					if (isJsonString(data.data)) platform_message.set(data.data)
+				})
+				platformSocket.addEventListener('error', (data) => {
+					console.log('socket connection error')
+					console.log(data)
+				})
+				platformSocket.addEventListener('close', (data) => {
+					console.log('socket connection close')
+					console.log(data)
+					$platform_connection = 'close'
+					attemptReconnect()
+				})
+			}
+		} catch (error) {
+			attemptReconnect()
+		}
+	}
+
+	const attemptReconnect = () => {
+		setTimeout(async () => {
+			console.log('Reconnecting to WebSocket...')
+			await handleWebsocket()
+		}, 4000)
+	}
+
+	platform_connection.subscribe(async (value: any) => {
+		if (!value) return
+		$isOnline = value === 'open'
+		if ($page.data.user?.userId && value === 'open') {
+			emitUserConnection({ userId: $page.data.user?.userId, isOnline: $isOnline })
 		}
 	})
 </script>

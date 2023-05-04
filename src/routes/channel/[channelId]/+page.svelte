@@ -145,12 +145,7 @@
 				break
 			case `channel-streaming-action-${channelId}`:
 				switch (parsedMsg.data.action) {
-					case 'toggleTrack-start':
-						if ($page.data.user.userId !== parsedMsg.data.video._id) {
-							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
-						}
-						break
-					case 'toggleTrack-stop':
+					case 'toggleTrack':
 						if ($page.data.user.userId !== parsedMsg.data.video._id) {
 							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
 						}
