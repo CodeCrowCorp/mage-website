@@ -61,7 +61,8 @@
 							<DropdownViewers />
 						</div>
 					</div>
-					<VideoGrid {channel} />
+					{#if channel && nextchannel?._id === $page.params.channelId}
+						<VideoGrid {channel} />{/if}
 				</div>
 			</div>
 		{/each}

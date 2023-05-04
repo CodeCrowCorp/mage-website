@@ -63,7 +63,6 @@
 	}
 
 	const startScreenStream = async () => {
-		const trackName = `screen-${$page.data.user.userId}`
 		const liveInput = await createLiveInput({
 			meta: {
 				name: JSON.stringify({
@@ -106,18 +105,19 @@
 	}
 
 	const startWebcamStream = async () => {
-		const trackName = `webcam-${$page.data.user.userId}`
 		const liveInput = await createLiveInput({
 			meta: {
-				name: `${$page.params.channelId}-${trackName}`,
-				trackName: trackName,
-				trackType: 'webcam',
-				username: $page.data.user.user.username
+				name: JSON.stringify({
+					channel: `${$page.params.channelId}`,
+					isTrackActive: true,
+					trackType: 'webcam',
+					_id: $page.data.user.userId
+				})
 			},
 			recording: { mode: 'automatic' }
 		})
 		webcamUid = liveInput.uid
-		$video_items.push(liveInput)
+		$video_items = updateVideoItems($video_items, [liveInput])
 		emitAction({
 			channelId: $page.params.channelId,
 			message: {
@@ -149,19 +149,19 @@
 	}
 
 	const startAudioStream = async () => {
-		const trackName = `audio-${$page.data.user.userId}`
 		const liveInput = await createLiveInput({
 			meta: {
-				name: `${$page.params.channelId}-${trackName}`,
-				trackName: trackName,
-				trackType: 'webcam',
-				userId: $page.data.user.userId,
-				username: $page.data.user.user.username
+				name: JSON.stringify({
+					channel: `${$page.params.channelId}`,
+					isTrackActive: true,
+					trackType: 'audio',
+					_id: $page.data.user.userId
+				})
 			},
 			recording: { mode: 'automatic' }
 		})
 		audioUid = liveInput.uid
-		$video_items.push(liveInput)
+		$video_items = updateVideoItems($video_items, [liveInput])
 		emitAction({
 			channelId: $page.params.channelId,
 			message: {

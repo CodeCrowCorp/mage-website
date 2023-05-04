@@ -213,7 +213,7 @@
 
 	<footer class="mt-auto p-4">
 		<!-- <RisingStars /> -->
-		<div class="flex gap-4">
+		<div class="flex gap-4 items-center">
 			<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 				<IconSocialGitHub />
 			</a>

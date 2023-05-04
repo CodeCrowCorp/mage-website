@@ -161,7 +161,7 @@
 	})
 </script>
 
-{#if channel}
+{#if channel && channel._id === channelId}
 	<div class="flex flex-auto">
 		<div class="drawer drawer-end">
 			<input

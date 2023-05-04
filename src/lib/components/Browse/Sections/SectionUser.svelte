@@ -29,7 +29,6 @@
 	}
 </script>
 
-<!--class:hidden-->
 {#await users}
 	<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide">
 		<div class="font-semibold m-3">
@@ -45,7 +44,8 @@
 	{#if value.length > 0}
 		<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide">
 			<div class="font-semibold m-3">
-				<a class="link link-secondary text-lg" href="/browse/{sectionId}">{title}</a>
+				<a class="link link-secondary text-lg">{title}</a>
+				<!-- href="/browse/{sectionId}" -->
 			</div>
 			<div class="flex flex-row">
 				<div class="relative flex items-center ml-3">
