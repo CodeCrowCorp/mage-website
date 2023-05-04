@@ -31,6 +31,7 @@
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
 	import { onMount } from 'svelte'
+	import { isOnline } from '$lib/stores/userStore'
 
 	export var nav_drawer: HTMLInputElement
 
@@ -73,7 +74,7 @@
 					<div>
 						<div class="hero-content">
 							<div class="max-w-md">
-								<div class="avatar {currentUser.isOnline ? 'online' : 'offline'}">
+								<div class="avatar {$isOnline ? 'online' : 'offline'}">
 									<div
 										class="w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
 										<img src={currentUser.avatar} alt="" />

@@ -79,7 +79,7 @@
 		emitAction({
 			channelId: $page.params.channelId,
 			message: {
-				action: 'toggleTrack-start',
+				action: 'toggleTrack',
 				video: liveInput
 			}
 		})
@@ -93,7 +93,7 @@
 		emitAction({
 			channelId: $page.params.channelId,
 			message: {
-				action: 'toggleTrack-stop',
+				action: 'toggleTrack',
 				video: {
 					trackType: 'screen',
 					isTrackActive: false,
@@ -121,7 +121,7 @@
 		emitAction({
 			channelId: $page.params.channelId,
 			message: {
-				action: 'toggleTrack-start',
+				action: 'toggleTrack',
 				video: liveInput
 			}
 		})
@@ -135,7 +135,7 @@
 		emitAction({
 			channelId: $page.params.channelId,
 			message: {
-				action: 'toggleTrack-stop',
+				action: 'toggleTrack',
 				video: {
 					trackType: 'webcam',
 					liveInput: { webcamUid },
@@ -165,7 +165,7 @@
 		emitAction({
 			channelId: $page.params.channelId,
 			message: {
-				action: 'toggleTrack-start',
+				action: 'toggleTrack',
 				video: liveInput
 			}
 		})
@@ -179,7 +179,7 @@
 		emitAction({
 			channelId: $page.params.channelId,
 			message: {
-				action: 'toggleTrack-stop',
+				action: 'toggleTrack',
 				video: {
 					trackType: 'audio',
 					liveInput: { audioUid },
