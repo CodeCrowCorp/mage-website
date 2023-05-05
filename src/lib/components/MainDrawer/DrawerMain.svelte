@@ -32,6 +32,7 @@
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
 	import { onMount } from 'svelte'
 	import { isOnline } from '$lib/stores/userStore'
+	import { get } from '$lib/api'
 
 	export var nav_drawer: HTMLInputElement
 
@@ -40,7 +41,7 @@
 	let progressBarLevel = 1
 	let progressBarValue = 0
 	let progressBarColor = colorFromLevel(1)
-	let streamCount = 0
+	let streakCount = 0
 	let hoursStreamed = 0
 	onMount(async () => {
 		if (currentUser) {
@@ -49,8 +50,16 @@
 			progressBarLevel = levelAndBarValue.level
 			progressBarValue = levelAndBarValue.barValue
 			progressBarColor = colorFromLevel(progressBarLevel)
-			streamCount = 0 //await get(`TODO: add endpoint here`)
-			hoursStreamed = 0 //await get(`TODO: add endpoint here`)
+			streakCount = await get(`/stats/stream/streak`, {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
+			console.log('streakCount', streakCount)
+			hoursStreamed = await get(`/stats/stream/total-hours`, {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
+			console.log('hoursStreamed', hoursStreamed)
 		}
 	})
 </script>
@@ -89,8 +98,8 @@
 									<p class=" text-pink-500 truncate">@{currentUser.username}</p>
 								</div>
 								<IconDrawerStreak />
-								<p class="col-span-2 tooltip text-start" data-tip="{streamCount} day streak">
-									{streamCount} d
+								<p class="col-span-2 tooltip text-start" data-tip="{streakCount} day streak">
+									{streakCount} d
 								</p>
 								<IconDrawerStreamDuration />
 								<p class="col-span-2 tooltip text-start" data-tip="{hoursStreamed} hours streamed">
