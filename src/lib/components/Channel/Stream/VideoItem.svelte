@@ -7,6 +7,7 @@
 	// import IconChatGuest from '$lib/assets/icons/chat/IconChatGuest.svelte'
 	// import { emitChannelUpdate } from '$lib/websocket'
 	// import { getColoredRole } from '$lib/utils'
+	import { draggable } from '@neodrag/svelte'
 
 	export let video: any, channel: any, sender: any
 
@@ -138,14 +139,10 @@
 			</div>
 		{/if}
 		<video id={`screen-${video._id}`} autoplay muted class="rounded-md" />
-
-		<video
-			id={`webcam-${video._id}`}
-			autoplay
-			muted
-			class="rounded-md absolute bottom-0 right-0 w-1/2 h-1/2" />
-
-		<video id={`audio-${video._id}`} autoplay muted class="rounded-md" />
+		<div use:draggable={{ bounds: 'parent' }} class="absolute bottom-0 right-0 w-1/2 h-fit">
+			<video id={`webcam-${video._id}`} autoplay muted class="rounded-md" />
+		</div>
+		<video id={`audio-${video._id}`} autoplay muted class="rounded-md w-0 h-0" />
 		<div class="absolute left-2 bottom-2 rounded-md dropdown">
 			<label tabindex="0" class="btn btn-sm normal-case">@{video.username}</label>
 			<!-- <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
