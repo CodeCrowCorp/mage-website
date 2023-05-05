@@ -79,10 +79,6 @@
 {/await}
 
 <style>
-	.video-thumbnail {
-		@apply bg-slate-400 w-full h-64 flex items-center justify-center text-white rounded-md cursor-pointer;
-	}
-
 	.scrollbar-hide::-webkit-scrollbar {
 		display: none;
 	}
