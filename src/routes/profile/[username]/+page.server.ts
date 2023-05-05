@@ -1,5 +1,5 @@
 import type { Actions, PageServerLoad } from './$types'
-import { get, patch, post, del } from '$lib/api'
+import { get, patch, put, del } from '$lib/api'
 import { redirect } from '@sveltejs/kit'
 
 export const load = (async ({ params, locals }) => {
@@ -49,8 +49,8 @@ export const actions = {
 		const isSubscribing = data.get('isSubscribing')
 		const source1 = data.get('source1')
 		const source2 = data.get('source2')
-		if (isSubscribing) {
-			await post(
+		if (isSubscribing === 'false') {
+			await put(
 				`subscribes?source1=${source1}&source2=${source2}`,
 				{},
 				{

@@ -7,13 +7,15 @@
 <ul class="menu shrink-0 bg-base-100 rounded-md">
 	<li>
 		<a class="rounded-md" href="/profile/{user.username}">
-			<div class="text-center space-y-3">
+			<div class="text-center space-y-3 max-w-[224px]">
 				<div class="avatar">
 					<div class="w-36 mask mask-squircle">
 						<img src={user.avatar} alt="" />
 					</div>
 				</div>
-				<p class="text-lg font-semibold">@{user.username}</p>
+				<div class="tooltip w-full" data-tip="@{user.username}">
+					<p class="text-lg font-semibold truncate">@{user.username}</p>
+				</div>
 				<div class="flex flex-wrap">
 					{#if user.category && user.category.length}
 						{#each user.category as category}
