@@ -29,7 +29,6 @@
 	}
 </script>
 
-<!--class:hidden-->
 {#await users}
 	<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide">
 		<div class="font-semibold m-3">
@@ -45,18 +44,19 @@
 	{#if value.length > 0}
 		<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide">
 			<div class="font-semibold m-3">
-				<a class="link link-secondary text-lg" href="/browse/{sectionId}">{title}</a>
+				<a class="link link-secondary text-lg">{title}</a>
+				<!-- href="/browse/{sectionId}" -->
 			</div>
 			<div class="flex flex-row">
 				<div class="relative flex items-center ml-3">
-					<div class="absolute btn btn-circle p-2 left-0 z-10" on:click={prev}>
+					<div class="absolute btn btn-square p-2 left-0 z-10" on:click={prev}>
 						<IconDrawerLeft />
 					</div>
 				</div>
 
 				<div
 					bind:this={ref}
-					class="relative w-full flex gap-6 snap-x scrollbar-hide snap-mandatory overflow-x-auto flex-grow mx-8">
+					class="relative w-full flex gap-6 snap-x scrollbar-hide snap-mandatory overflow-x-auto flex-grow mx-14">
 					{#if sectionId === 'rising-stars'}
 						{#each value.users as user}
 							<SectionUserItem {user} />
@@ -69,7 +69,7 @@
 				</div>
 
 				<div class="relative flex items-center mr-3">
-					<div class="absolute btn btn-circle p-2 right-0 z-10" on:click={next}>
+					<div class="absolute btn btn-square p-2 right-0 z-10" on:click={next}>
 						<IconDrawerChevron />
 					</div>
 				</div>
@@ -79,10 +79,6 @@
 {/await}
 
 <style>
-	.video-thumbnail {
-		@apply bg-slate-400 w-full h-64 flex items-center justify-center text-white rounded-md cursor-pointer;
-	}
-
 	.scrollbar-hide::-webkit-scrollbar {
 		display: none;
 	}

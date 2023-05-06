@@ -41,9 +41,9 @@ export default class WHIPClient {
 		 * connect the video stream to the provided <video> element.
 		 */
 		this.accessLocalMediaSources(trackType)
-			.then((stream) => {
+			.then((stream: any) => {
 				this.localStream = stream
-				videoElement.srcObject = stream as MediaProvider
+				videoElement.srcObject = stream
 			})
 			.catch(console.error)
 	}

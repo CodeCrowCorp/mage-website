@@ -3,80 +3,146 @@
 	import WHIPClient from '$lib/WHIPClient'
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
-	import IconChatMod from '$lib/assets/icons/chat/IconChatMod.svelte'
-	import IconChatGuest from '$lib/assets/icons/chat/IconChatGuest.svelte'
-	import { emitChannelUpdate } from '$lib/websocket'
-	import { getColoredRole } from '$lib/utils'
+	// import IconChatMod from '$lib/assets/icons/chat/IconChatMod.svelte'
+	// import IconChatGuest from '$lib/assets/icons/chat/IconChatGuest.svelte'
+	// import { emitChannelUpdate } from '$lib/websocket'
+	// import { getColoredRole } from '$lib/utils'
+	import { draggable } from '@neodrag/svelte'
 
 	export let video: any, channel: any, sender: any
 
 	let coloredRole: any = {},
-		isGuest = false
+		isGuest = false,
+		screenElement: HTMLVideoElement,
+		webcamElement: HTMLVideoElement,
+		audioElement: HTMLVideoElement,
+		screenWhip: WHIPClient,
+		screenWhep: WHEPClient,
+		webcamWhip: WHIPClient,
+		webcamWhep: WHEPClient,
+		audioWhip: WHIPClient,
+		audioWhep: WHEPClient
+
+	let wasCalled = false
+
+	$: if (video.screen) {
+		toggleClient({
+			trackType: 'screen'
+		})
+		wasCalled = true
+	}
+
+	$: if (video.webcam) {
+		toggleClient({
+			trackType: 'webcam'
+		})
+	}
+
+	$: if (video.audio) {
+		toggleClient({
+			trackType: 'audio'
+		})
+	}
+
+	const toggleClient = ({ trackType }: { trackType: string }) => {
+		if ($page.data.user.user.username === video.username) {
+			switch (trackType) {
+				case 'screen':
+					if (wasCalled) return
+					console.log('video.screen.webRTC.url', video.screen.webRTC.url)
+					console.log('screenElement', screenElement)
+					console.log('video.screen.trackType', video.screen.trackType)
+					screenWhip = new WHIPClient(
+						video.screen.webRTC.url,
+						screenElement,
+						video.screen.trackType
+					)
+					wasCalled = true
+					break
+				case 'webcam':
+					webcamWhip = new WHIPClient(
+						video.webcam.webRTC.url,
+						webcamElement,
+						video.webcam.trackType
+					)
+					break
+				case 'audio':
+					audioWhip = new WHIPClient(video.audio.webRTC.url, audioElement, video.audio.trackType)
+					break
+			}
+		} else if ($page.data.user.user.username !== video.username) {
+			switch (trackType) {
+				case 'screen':
+					screenWhep = new WHEPClient(video.screen.webRTCPlayback.url, screenElement)
+					break
+				case 'webcam':
+					webcamWhep = new WHEPClient(video.webcam.webRTCPlayback.url, webcamElement)
+					break
+				case 'audio':
+					audioWhep = new WHEPClient(video.audio.webRTCPlayback.url, audioElement)
+					break
+			}
+		}
+	}
 
 	onMount(() => {
-		coloredRole = getColoredRole(sender.role)
-		isGuest = channel?.guests?.includes(sender.userData?.userId)
+		// coloredRole = getColoredRole(sender.role)
+		// isGuest = channel?.guests?.includes(sender.userData?.userId)
+		screenElement = document.getElementById(`screen-${video._id}`) as HTMLVideoElement
+		webcamElement = document.getElementById(`webcam-${video._id}`) as HTMLVideoElement
+		audioElement = document.getElementById(`audio-${video._id}`) as HTMLVideoElement
 
-		const videoElement: any = document.getElementById(video.trackName)
-
-		if (videoElement) {
-			videoElement.addEventListener('dblclick', (event: any) => {
+		if (screenElement) {
+			screenElement.addEventListener('dblclick', (event: any) => {
 				if (document.fullscreenElement) {
 					document.exitFullscreen()
 				} else {
-					videoElement.requestFullscreen()
+					screenElement.requestFullscreen()
 				}
 			})
-			videoElement.addEventListener(
+			screenElement.addEventListener(
 				'click',
 				(event: { preventDefault: () => void; stopPropagation: () => void }) => {
 					event.preventDefault()
 					event.stopPropagation()
-					videoElement.scrollIntoView()
+					screenElement.scrollIntoView()
 				}
 			)
-
-			if (video.trackName) {
-				if ($page.data.user.user.username === video.username) {
-					new WHIPClient(video.liveInput.webRTC.url, videoElement, video.trackType)
-				} else {
-					new WHEPClient(video.liveInput.webRTCPlayback.url, videoElement)
-				}
-			}
 		}
 	})
 
-	const toggleMod = () => {
-		if (channel.mods.includes(sender.userData?.userId)) {
-			channel.mods = channel.mods.filter((mod: string) => mod !== sender.userData?.userId)
-		} else {
-			channel.mods.push(sender.userData?.userId)
-		}
-		emitChannelUpdate({ channel })
-	}
+	// const toggleMod = () => {
+	// 	if (channel.mods.includes(sender.userData?.userId)) {
+	// 		channel.mods = channel.mods.filter((mod: string) => mod !== sender.userData?.userId)
+	// 	} else {
+	// 		channel.mods.push(sender.userData?.userId)
+	// 	}
+	// 	emitChannelUpdate({ channel })
+	// }
 
-	const toggleGuest = () => {
-		if (channel.guests.includes(sender.userData?.userId)) {
-			channel.guests = channel.guests.filter((guest: string) => guest !== sender.userData?.userId)
-		} else {
-			channel.guests.push(sender.userData?.userId)
-		}
-		emitChannelUpdate({ channel })
-	}
+	// const toggleGuest = () => {
+	// 	if (channel.guests.includes(sender.userData?.userId)) {
+	// 		channel.guests = channel.guests.filter((guest: string) => guest !== sender.userData?.userId)
+	// 	} else {
+	// 		channel.guests.push(sender.userData?.userId)
+	// 	}
+	// 	emitChannelUpdate({ channel })
+	// }
 </script>
 
 <div class="w-[500px]">
 	<div class="bg-base-200 relative w-full h-full rounded-md">
-		<div class="flex items-center justify-center h-full">
-			{#if video.trackName === 'screen' || video.trackName === 'webcam'}
-				<video id={video.trackName} />
-			{:else}
-				<div
-					class="w-24 md:w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
-					<img src={video.avatar} alt="" />
-				</div>
-			{/if}
+		{#if !video.screen && !video.webcam}
+			<div
+				class="absolute w-24 md:w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2 right-0 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+				<img src={video.avatar} alt="" />
+			</div>
+		{/if}
+		<video id={`screen-${video._id}`} autoplay muted class="rounded-md" />
+		<div use:draggable={{ bounds: 'parent' }} class="absolute bottom-0 right-0 w-1/2 h-fit">
+			<video id={`webcam-${video._id}`} autoplay muted class="rounded-md" />
 		</div>
+		<video id={`audio-${video._id}`} autoplay muted class="rounded-md w-0 h-0" />
 		<div class="absolute left-2 bottom-2 rounded-md dropdown">
 			<label tabindex="0" class="btn btn-sm normal-case">@{video.username}</label>
 			<!-- <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
