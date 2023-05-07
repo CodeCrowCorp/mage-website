@@ -2,6 +2,9 @@ import { writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
 
 export const video_items: Writable<any> = writable([])
+export const is_sharing_screen: Writable<boolean | undefined> = writable(undefined)
+export const is_sharing_webcam: Writable<boolean | undefined> = writable(undefined)
+export const is_sharing_audio: Writable<boolean | undefined> = writable(undefined)
 
 const updateVideoItems = (videoItems: any, liveInputs: any[]) => {
 	const vidItems = [...videoItems]

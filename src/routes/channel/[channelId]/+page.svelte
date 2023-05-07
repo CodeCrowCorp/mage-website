@@ -18,7 +18,13 @@
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import DrawerEditChannel from '$lib/components/Channel/Chat/DrawerEditChannel.svelte'
-	import { updateVideoItems, video_items } from '$lib/stores/streamStore'
+	import {
+		is_sharing_screen,
+		is_sharing_webcam,
+		is_sharing_audio,
+		updateVideoItems,
+		video_items
+	} from '$lib/stores/streamStore'
 
 	let channel: any
 	let channelId = $page.params.channelId || ''
@@ -34,7 +40,13 @@
 
 	$: if (channel) {
 		if (channel._id !== channelId) {
+			channelSocket.close()
 			channelId = channel?._id
+			$channel_message = ''
+			$video_items = []
+			$is_sharing_screen = false
+			$is_sharing_webcam = false
+			$is_sharing_audio = false
 			handleWebsocket()
 		}
 	}
@@ -50,7 +62,12 @@
 		}, 600)
 	})
 
-	onDestroy(() => channelSocket?.close())
+	onDestroy(() => {
+		$is_sharing_screen = false
+		$is_sharing_webcam = false
+		$is_sharing_audio = false
+		channelSocket?.close()
+	})
 
 	const loadChannel = async () => {
 		channel = await get(`channel?channelId=${channelId}`)
@@ -68,7 +85,6 @@
 	}
 
 	const handleWebsocket = async () => {
-		channelSocket?.close()
 		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
 		initChannelSocket(channelSocketId)
 		channelSocket.addEventListener('open', async (data) => {
@@ -146,7 +162,11 @@
 			case `channel-streaming-action-${channelId}`:
 				switch (parsedMsg.data.action) {
 					case 'toggleTrack':
-						if ($page.data.user.userId !== parsedMsg.data.video._id) {
+						if ($page.data?.user?.userId) {
+							if ($page.data.user.userId !== parsedMsg.data.video._id) {
+								$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
+							}
+						} else {
 							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
 						}
 						break

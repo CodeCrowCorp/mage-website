@@ -8,6 +8,7 @@
 	// import { emitChannelUpdate } from '$lib/websocket'
 	// import { getColoredRole } from '$lib/utils'
 	import { draggable } from '@neodrag/svelte'
+	import { is_sharing_audio, is_sharing_screen, is_sharing_webcam } from '$lib/stores/streamStore'
 
 	export let video: any, channel: any, sender: any
 
@@ -23,13 +24,10 @@
 		audioWhip: WHIPClient,
 		audioWhep: WHEPClient
 
-	let wasCalled = false
-
 	$: if (video.screen) {
 		toggleClient({
 			trackType: 'screen'
 		})
-		wasCalled = true
 	}
 
 	$: if (video.webcam) {
@@ -45,19 +43,18 @@
 	}
 
 	const toggleClient = ({ trackType }: { trackType: string }) => {
-		if ($page.data.user.user.username === video.username) {
+		if ($page.data?.user?.userId === video._id) {
 			switch (trackType) {
 				case 'screen':
-					if (wasCalled) return
-					console.log('video.screen.webRTC.url', video.screen.webRTC.url)
-					console.log('screenElement', screenElement)
-					console.log('video.screen.trackType', video.screen.trackType)
 					screenWhip = new WHIPClient(
 						video.screen.webRTC.url,
 						screenElement,
 						video.screen.trackType
 					)
-					wasCalled = true
+					screenWhip.addEventListener(
+						`localStreamStopped-${trackType}`,
+						() => ($is_sharing_screen = false)
+					)
 					break
 				case 'webcam':
 					webcamWhip = new WHIPClient(
@@ -65,12 +62,20 @@
 						webcamElement,
 						video.webcam.trackType
 					)
+					webcamWhip.addEventListener(
+						`localStreamStopped-${trackType}`,
+						() => ($is_sharing_webcam = false)
+					)
 					break
 				case 'audio':
 					audioWhip = new WHIPClient(video.audio.webRTC.url, audioElement, video.audio.trackType)
+					audioWhip.addEventListener(
+						`localStreamStopped-${trackType}`,
+						() => ($is_sharing_audio = false)
+					)
 					break
 			}
-		} else if ($page.data.user.user.username !== video.username) {
+		} else {
 			switch (trackType) {
 				case 'screen':
 					screenWhep = new WHEPClient(video.screen.webRTCPlayback.url, screenElement)
@@ -100,14 +105,35 @@
 					screenElement.requestFullscreen()
 				}
 			})
-			screenElement.addEventListener(
-				'click',
-				(event: { preventDefault: () => void; stopPropagation: () => void }) => {
-					event.preventDefault()
-					event.stopPropagation()
-					screenElement.scrollIntoView()
+		}
+
+		if (webcamElement) {
+			webcamElement.addEventListener('dblclick', (event: any) => {
+				if (document.fullscreenElement) {
+					document.exitFullscreen()
+				} else {
+					webcamElement.requestFullscreen()
 				}
-			)
+			})
+		}
+	})
+
+	is_sharing_screen.subscribe((value) => {
+		//prevents duplicate calls from WHIPClient
+		if (value === false && screenElement?.srcObject) {
+			screenWhip?.disconnectStream()
+		}
+	})
+
+	is_sharing_webcam.subscribe((value) => {
+		if (value === false && webcamElement?.srcObject) {
+			webcamWhip?.disconnectStream()
+		}
+	})
+
+	is_sharing_audio.subscribe((value) => {
+		if (value === false && audioElement?.srcObject) {
+			audioWhip?.disconnectStream()
 		}
 	})
 
