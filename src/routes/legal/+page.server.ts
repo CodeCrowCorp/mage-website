@@ -1,6 +1,5 @@
 import { error } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
-import { getLegalDocs } from '$lib/stores/adminStore'
 
 export const load = (async () => {
 	// const post = await getLegalDocs()
