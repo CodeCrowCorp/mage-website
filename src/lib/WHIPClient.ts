@@ -63,6 +63,7 @@ export default class WHIPClient extends EventTarget {
 		if (trackType === 'screen') {
 			return navigator.mediaDevices.getDisplayMedia({ video: true, audio: true }).then((stream) => {
 				stream.getTracks().forEach((track) => {
+					console.log('track-------------------------', track)
 					const transceiver = this.peerConnection.addTransceiver(track, {
 						/** WHIP is only for sending streaming media */
 						direction: 'sendonly'
@@ -114,14 +115,8 @@ export default class WHIPClient extends EventTarget {
 							/** WHIP is only for sending streaming media */
 							direction: 'sendonly'
 						})
-						if (track.kind == 'video' && transceiver.sender.track) {
-							transceiver.sender.track.applyConstraints({
-								width: 1280,
-								height: 720
-							})
-						}
 					})
-					stream.getVideoTracks()[0].addEventListener('ended', () => {
+					stream.getAudioTracks()[0].addEventListener('ended', () => {
 						this.disconnectStream()
 					})
 					return stream

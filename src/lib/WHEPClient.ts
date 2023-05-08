@@ -9,7 +9,11 @@ export default class WHEPClient {
 	private peerConnection: RTCPeerConnection
 	private stream: MediaStream
 
-	constructor(private endpoint: string, private videoElement: HTMLVideoElement) {
+	constructor(
+		private endpoint: string,
+		private videoElement: HTMLVideoElement,
+		private trackType: string
+	) {
 		this.stream = new MediaStream()
 
 		/**
@@ -27,12 +31,17 @@ export default class WHEPClient {
 		})
 
 		/** https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/addTransceiver */
+		// if (trackType === 'screen' || trackType === 'webcam') {
 		this.peerConnection.addTransceiver('video', {
 			direction: 'recvonly'
 		})
+		// }
+		// if (trackType === 'audio') {
+		//TODO: or if system audio is sent
 		this.peerConnection.addTransceiver('audio', {
 			direction: 'recvonly'
 		})
+		// }
 
 		/**
 		 * When new tracks are received in the connection, store local references,

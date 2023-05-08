@@ -7,11 +7,15 @@
 	import { page } from '$app/stores'
 	import { createEventDispatcher } from 'svelte'
 	import { video_items } from '$lib/stores/streamStore'
+	import { channel_connection } from '$lib/stores/websocketStore'
 
 	const dispatch = createEventDispatcher()
-	export let userCount: number = 10,
+	export let userCount: number = 1,
 		channel: any,
-		channels: any = []
+		channels: any = [],
+		isHostOrGuest: boolean = false
+
+	$: isChannelSocketConnected = $channel_connection === 'open'
 
 	function autoActive(node: Element) {
 		const observer = new IntersectionObserver(callback, { threshold: 0.5 })
@@ -62,13 +66,23 @@
 						</div>
 					</div>
 					{#if channel && nextchannel?._id === $page.params.channelId}
-						<VideoGrid {channel} />{/if}
+						<VideoGrid {channel} />
+						{#if !$video_items?.length && isChannelSocketConnected}
+							<div
+								class="mockup-code absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all">
+								<pre data-prefix="$"><code>npm check streams</code></pre>
+								<pre data-prefix=">" class="text-warning"><code>pinging host...</code></pre>
+								<pre data-prefix=">" class="text-success"><code
+										>Streams not found for this channel</code></pre>
+							</div>
+						{/if}
+					{/if}
 				</div>
 			</div>
 		{/each}
 	</div>
 
 	<div class="absolute bottom-0 m-5">
-		<StreamControls isHost={channel?.user === $page?.data?.user?.userId} bind:channel />
+		<StreamControls {isHostOrGuest} />
 	</div>
 </div>

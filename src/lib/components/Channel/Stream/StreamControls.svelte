@@ -20,11 +20,9 @@
 	} from '$lib/stores/streamStore'
 	import { channel_connection } from '$lib/stores/websocketStore'
 
-	export let isHost: boolean = true,
-		channel: any
+	export let isHostOrGuest: boolean = false
 
 	$: isChannelSocketConnected = $channel_connection === 'open' && $page.data?.user?.userId
-	$: isHostOrGuest = isHost || channel.guests.includes($page.data?.user?.userId)
 	$: videoItemIsActive = $video_items.some((video: any) => video._id === $page.data?.user?.userId)
 
 	let screenUid: string = ''
@@ -52,8 +50,8 @@
 			`cloudflare/live-input?channelId=${$page.params.channelId}`,
 			JSON.stringify(trackData),
 			{
-				userId: $page.data.user.userId,
-				token: $page.data.user.token
+				userId: $page.data?.user?.userId,
+				token: $page.data?.user?.token
 			}
 		)
 	}
@@ -66,8 +64,8 @@
 		inputId: string
 	}) => {
 		return await del(`cloudflare/live-input?channelId=${channelId}&inputId=${inputId}`, {
-			userId: $page.data.user.userId,
-			token: $page.data.user.token
+			userId: $page.data?.user?.userId,
+			token: $page.data?.user?.token
 		})
 	}
 

@@ -8,8 +8,7 @@
 		initChannelSocket,
 		channelSocket,
 		emitChannelSubscribeByUser,
-		emitDeleteAllMessagesToChannel,
-		emitChannelUpdate
+		emitDeleteAllMessagesToChannel
 	} from '$lib/websocket'
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
@@ -29,6 +28,7 @@
 	let channel: any
 	let channelId = $page.params.channelId || ''
 	$: userCount = 0
+	$: isHostOrGuest = isHost || channel?.guests?.includes($page.data?.user?.userId)
 
 	let isDeleteModalOpen = false,
 		showEditChannelDrawer = false,
@@ -44,9 +44,15 @@
 			channelId = channel?._id
 			$channel_message = ''
 			$video_items = []
-			$is_sharing_screen = false
-			$is_sharing_webcam = false
-			$is_sharing_audio = false
+			if (isHostOrGuest) {
+				$is_sharing_screen = false
+				$is_sharing_webcam = false
+				$is_sharing_audio = false
+			} else {
+				$is_sharing_screen = undefined
+				$is_sharing_webcam = undefined
+				$is_sharing_audio = undefined
+			}
 			handleWebsocket()
 		}
 	}
@@ -63,9 +69,11 @@
 	})
 
 	onDestroy(() => {
-		$is_sharing_screen = false
-		$is_sharing_webcam = false
-		$is_sharing_audio = false
+		if (isHostOrGuest) {
+			$is_sharing_screen = false
+			$is_sharing_webcam = false
+			$is_sharing_audio = false
+		}
 		channelSocket?.close()
 	})
 
@@ -167,6 +175,7 @@
 								$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
 							}
 						} else {
+							console.log('parsedMsg.data.video', parsedMsg.data.video)
 							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
 						}
 						break
@@ -185,7 +194,12 @@
 				class="drawer-toggle"
 				bind:checked={$is_chat_drawer_open} />
 			<div class="drawer-content">
-				<StreamContainer bind:channel bind:userCount bind:channels on:loadMore={loadMoreChannels} />
+				<StreamContainer
+					bind:channel
+					bind:userCount
+					bind:channels
+					on:loadMore={loadMoreChannels}
+					bind:isHostOrGuest />
 
 				{#if showEditChannelDrawer}
 					<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />

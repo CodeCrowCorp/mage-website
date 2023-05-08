@@ -189,7 +189,7 @@
 				<IconSocialTwitter />
 			</a>
 		</div>
-		<p>Code Crow Corp © 2023</p>
+		<p>Code Corp © 2023</p>
 		<p class="text-gray-500">v{__VERSION__} [{env.PUBLIC_ENV}]</p>
 	</footer>
 </div>

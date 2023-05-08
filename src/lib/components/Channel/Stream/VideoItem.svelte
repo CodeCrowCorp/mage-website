@@ -24,19 +24,19 @@
 		audioWhip: WHIPClient,
 		audioWhep: WHEPClient
 
-	$: if (video.screen) {
+	$: if (video.screen || !video.screen) {
 		toggleClient({
 			trackType: 'screen'
 		})
 	}
 
-	$: if (video.webcam) {
+	$: if (video.webcam || !video.webcam) {
 		toggleClient({
 			trackType: 'webcam'
 		})
 	}
 
-	$: if (video.audio) {
+	$: if (video.audio || !video.audio) {
 		toggleClient({
 			trackType: 'audio'
 		})
@@ -46,45 +46,63 @@
 		if ($page.data?.user?.userId === video._id) {
 			switch (trackType) {
 				case 'screen':
-					screenWhip = new WHIPClient(
-						video.screen.webRTC.url,
-						screenElement,
-						video.screen.trackType
-					)
-					screenWhip.addEventListener(
-						`localStreamStopped-${trackType}`,
-						() => ($is_sharing_screen = false)
-					)
+					if (video.screen) {
+						screenWhip = new WHIPClient(
+							video.screen.webRTC.url,
+							screenElement,
+							video.screen.trackType
+						)
+						screenWhip.addEventListener(
+							`localStreamStopped-${trackType}`,
+							() => ($is_sharing_screen = false)
+						)
+					}
 					break
 				case 'webcam':
-					webcamWhip = new WHIPClient(
-						video.webcam.webRTC.url,
-						webcamElement,
-						video.webcam.trackType
-					)
-					webcamWhip.addEventListener(
-						`localStreamStopped-${trackType}`,
-						() => ($is_sharing_webcam = false)
-					)
+					if (video.webcam) {
+						webcamWhip = new WHIPClient(
+							video.webcam.webRTC.url,
+							webcamElement,
+							video.webcam.trackType
+						)
+						webcamWhip.addEventListener(
+							`localStreamStopped-${trackType}`,
+							() => ($is_sharing_webcam = false)
+						)
+					}
 					break
 				case 'audio':
-					audioWhip = new WHIPClient(video.audio.webRTC.url, audioElement, video.audio.trackType)
-					audioWhip.addEventListener(
-						`localStreamStopped-${trackType}`,
-						() => ($is_sharing_audio = false)
-					)
+					if (video.audio) {
+						audioWhip = new WHIPClient(video.audio.webRTC.url, audioElement, video.audio.trackType)
+						audioWhip.addEventListener(
+							`localStreamStopped-${trackType}`,
+							() => ($is_sharing_audio = false)
+						)
+					}
 					break
 			}
 		} else {
 			switch (trackType) {
 				case 'screen':
-					screenWhep = new WHEPClient(video.screen.webRTCPlayback.url, screenElement)
+					if (video.screen) {
+						screenWhep = new WHEPClient(video.screen.webRTCPlayback.url, screenElement, 'screen')
+					} else {
+						if (screenElement) screenElement.srcObject = null
+					}
 					break
 				case 'webcam':
-					webcamWhep = new WHEPClient(video.webcam.webRTCPlayback.url, webcamElement)
+					if (video.webcam) {
+						webcamWhep = new WHEPClient(video.webcam.webRTCPlayback.url, webcamElement, 'webcam')
+					} else {
+						if (webcamElement) webcamElement.srcObject = null
+					}
 					break
 				case 'audio':
-					audioWhep = new WHEPClient(video.audio.webRTCPlayback.url, audioElement)
+					if (video.audio) {
+						audioWhep = new WHEPClient(video.audio.webRTCPlayback.url, audioElement, 'audio')
+					} else {
+						if (audioElement) audioElement.srcObject = null
+					}
 					break
 			}
 		}
@@ -160,7 +178,7 @@
 	<div class="bg-base-200 relative w-full h-full rounded-md">
 		{#if !video.screen && !video.webcam}
 			<div
-				class="absolute w-24 md:w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2 right-0 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+				class="w-24 md:w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2 right-0 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
 				<img src={video.avatar} alt="" />
 			</div>
 		{/if}
