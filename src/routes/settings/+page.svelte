@@ -20,10 +20,6 @@
 		}
 		themeChange(false)
 	})
-
-	const setTheme = () => {
-		$app_theme = localStorage.getItem('theme') ?? 'light'
-	}
 </script>
 
 <div class="flex justify-center h-screen bg-base-200 py-10">
@@ -81,7 +77,6 @@
 					<label class="label cursor-pointer">
 						<span class="label-text">{theme}</span>
 						<input
-							on:change={setTheme}
 							type="radio"
 							name="radio-10"
 							class="radio radio-accent"
