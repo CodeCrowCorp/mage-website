@@ -85,21 +85,33 @@
 			switch (trackType) {
 				case 'screen':
 					if (video.screen) {
-						screenWhep = new WHEPClient(video.screen.webRTCPlayback.url, screenElement, 'screen')
+						screenWhep = new WHEPClient(
+							video.screen.webRTCPlayback.url,
+							screenElement,
+							video.screen.trackType
+						)
 					} else {
 						if (screenElement) screenElement.srcObject = null
 					}
 					break
 				case 'webcam':
 					if (video.webcam) {
-						webcamWhep = new WHEPClient(video.webcam.webRTCPlayback.url, webcamElement, 'webcam')
+						webcamWhep = new WHEPClient(
+							video.webcam.webRTCPlayback.url,
+							webcamElement,
+							video.webcam.trackType
+						)
 					} else {
 						if (webcamElement) webcamElement.srcObject = null
 					}
 					break
 				case 'audio':
 					if (video.audio) {
-						audioWhep = new WHEPClient(video.audio.webRTCPlayback.url, audioElement, 'audio')
+						audioWhep = new WHEPClient(
+							video.audio.webRTCPlayback.url,
+							audioElement,
+							video.audio.trackType
+						)
 					} else {
 						if (audioElement) audioElement.srcObject = null
 					}

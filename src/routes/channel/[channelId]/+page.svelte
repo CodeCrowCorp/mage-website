@@ -175,7 +175,6 @@
 								$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
 							}
 						} else {
-							console.log('parsedMsg.data.video', parsedMsg.data.video)
 							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
 						}
 						break
