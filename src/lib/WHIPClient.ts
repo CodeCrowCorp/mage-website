@@ -5,11 +5,16 @@ import negotiateConnectionWithClientOffer from '$lib/negotiateConnectionWithClie
  *
  * https://www.ietf.org/archive/id/draft-ietf-wish-whip-01.html
  */
-export default class WHIPClient {
+export default class WHIPClient extends EventTarget {
 	private peerConnection: RTCPeerConnection
-	private localStream?: MediaStream
+	public localStream?: MediaStream
 
-	constructor(private endpoint: string, private videoElement: HTMLVideoElement, trackType: string) {
+	constructor(
+		private endpoint: string,
+		private videoElement: HTMLVideoElement,
+		private trackType: string
+	) {
+		super()
 		/**
 		 * Create a new WebRTC connection, using public STUN servers with ICE,
 		 * allowing the client to disover its own IP address.
@@ -57,6 +62,39 @@ export default class WHIPClient {
 	private async accessLocalMediaSources(trackType: string) {
 		if (trackType === 'screen') {
 			return navigator.mediaDevices.getDisplayMedia({ video: true, audio: true }).then((stream) => {
+				if (!stream.getAudioTracks().length) {
+					const audioContext = new AudioContext()
+					const oscillator = audioContext.createOscillator()
+					const destination = audioContext.createMediaStreamDestination()
+					oscillator.connect(destination)
+					oscillator.start()
+					const audioTrack = destination.stream.getAudioTracks()[0]
+					audioTrack.enabled = true
+					// audioTrack.id = 'silent-audio-track'
+					// audioTrack.label = 'Silent Audio Track'
+					const audioTransceiver = this.peerConnection.addTransceiver(audioTrack, {
+						direction: 'sendonly'
+					})
+				}
+				stream.getTracks().forEach((track) => {
+					const transceiver = this.peerConnection.addTransceiver(track, {
+						/** WHIP is only for sending streaming media */
+						direction: 'sendonly'
+					})
+					if (track.kind == 'video' && transceiver.sender.track) {
+						transceiver.sender.track.applyConstraints({
+							width: 1920,
+							height: 1080
+						})
+					}
+				})
+				stream.getVideoTracks()[0].addEventListener('ended', () => {
+					this.disconnectStream()
+				})
+				return stream
+			})
+		} else if (trackType === 'webcam') {
+			return navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
 				stream.getTracks().forEach((track) => {
 					const transceiver = this.peerConnection.addTransceiver(track, {
 						/** WHIP is only for sending streaming media */
@@ -69,21 +107,8 @@ export default class WHIPClient {
 						})
 					}
 				})
-				return stream
-			})
-		} else if (trackType === 'webcam') {
-			return navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-				stream.getTracks().forEach((track) => {
-					const transceiver = this.peerConnection.addTransceiver(track, {
-						/** WHIP is only for sending streaming media */
-						direction: 'sendonly'
-					})
-					if (track.kind == 'video' && transceiver.sender.track) {
-						transceiver.sender.track.applyConstraints({
-							width: 1280,
-							height: 720
-						})
-					}
+				stream.getVideoTracks()[0].addEventListener('ended', () => {
+					this.disconnectStream()
 				})
 				return stream
 			})
@@ -103,12 +128,9 @@ export default class WHIPClient {
 							/** WHIP is only for sending streaming media */
 							direction: 'sendonly'
 						})
-						if (track.kind == 'video' && transceiver.sender.track) {
-							transceiver.sender.track.applyConstraints({
-								width: 1280,
-								height: 720
-							})
-						}
+					})
+					stream.getAudioTracks()[0].addEventListener('ended', () => {
+						this.disconnectStream()
 					})
 					return stream
 				})
@@ -124,11 +146,14 @@ export default class WHIPClient {
 	 * Note that once you call this method, this instance of this WHIPClient cannot be reused.
 	 */
 	public async disconnectStream() {
-		const response = await fetch(this.endpoint, {
-			method: 'DELETE',
-			mode: 'cors'
-		})
+		// const response = await fetch(this.endpoint, {
+		// 	method: 'DELETE',
+		// 	mode: 'cors'
+		// })
 		this.peerConnection.close()
 		this.localStream?.getTracks().forEach((track) => track.stop())
+		this.videoElement.srcObject = null
+		this.dispatchEvent(new CustomEvent(`localStreamStopped-${this.trackType}`))
+		console.log('Disconnected')
 	}
 }

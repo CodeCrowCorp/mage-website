@@ -41,12 +41,12 @@
 			progressBarLevel = levelAndBarValue.level
 			progressBarValue = levelAndBarValue.barValue
 			progressBarColor = colorFromLevel(progressBarLevel)
-			streakCount = await get(`/stats/stream/streak`, {
+			streakCount = await get(`stats/stream/streak`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
 			console.log('streakCount', streakCount)
-			hoursStreamed = await get(`/stats/stream/total-hours`, {
+			hoursStreamed = await get(`stats/stream/total-hours`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
@@ -189,7 +189,7 @@
 				<IconSocialTwitter />
 			</a>
 		</div>
-		<p>Code Crow Corp © 2023</p>
+		<p>Code Corp © 2023</p>
 		<p class="text-gray-500">v{__VERSION__} [{env.PUBLIC_ENV}]</p>
 	</footer>
 </div>

@@ -12,3 +12,8 @@ coverage/
 e2eresults.json
 package-lock.json
 src/lib/assets/styles/tailwind-output.css
+src/lib/stores/adminStore.ts
+src/lib/stores/chatStore.ts
+src/lib/stores/sfxStore.ts
+src/lib/stores/funFactStore.ts
+/static/sfx/

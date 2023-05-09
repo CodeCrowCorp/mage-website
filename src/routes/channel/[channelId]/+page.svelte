@@ -8,8 +8,7 @@
 		initChannelSocket,
 		channelSocket,
 		emitChannelSubscribeByUser,
-		emitDeleteAllMessagesToChannel,
-		emitChannelUpdate
+		emitDeleteAllMessagesToChannel
 	} from '$lib/websocket'
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
@@ -18,11 +17,18 @@
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import DrawerEditChannel from '$lib/components/Channel/Chat/DrawerEditChannel.svelte'
-	import { updateVideoItems, video_items } from '$lib/stores/streamStore'
+	import {
+		is_sharing_screen,
+		is_sharing_webcam,
+		is_sharing_audio,
+		updateVideoItems,
+		video_items
+	} from '$lib/stores/streamStore'
 
 	let channel: any
 	let channelId = $page.params.channelId || ''
 	$: userCount = 0
+	$: isHostOrGuest = isHost || channel?.guests?.includes($page.data?.user?.userId)
 
 	let isDeleteModalOpen = false,
 		showEditChannelDrawer = false,
@@ -34,7 +40,19 @@
 
 	$: if (channel) {
 		if (channel._id !== channelId) {
+			channelSocket.close()
 			channelId = channel?._id
+			$channel_message = ''
+			$video_items = []
+			if (isHostOrGuest) {
+				$is_sharing_screen = false
+				$is_sharing_webcam = false
+				$is_sharing_audio = false
+			} else {
+				$is_sharing_screen = undefined
+				$is_sharing_webcam = undefined
+				$is_sharing_audio = undefined
+			}
 			handleWebsocket()
 		}
 	}
@@ -50,7 +68,14 @@
 		}, 600)
 	})
 
-	onDestroy(() => channelSocket?.close())
+	onDestroy(() => {
+		if (isHostOrGuest) {
+			$is_sharing_screen = false
+			$is_sharing_webcam = false
+			$is_sharing_audio = false
+		}
+		channelSocket?.close()
+	})
 
 	const loadChannel = async () => {
 		channel = await get(`channel?channelId=${channelId}`)
@@ -68,7 +93,6 @@
 	}
 
 	const handleWebsocket = async () => {
-		channelSocket?.close()
 		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
 		initChannelSocket(channelSocketId)
 		channelSocket.addEventListener('open', async (data) => {
@@ -146,7 +170,11 @@
 			case `channel-streaming-action-${channelId}`:
 				switch (parsedMsg.data.action) {
 					case 'toggleTrack':
-						if ($page.data.user.userId !== parsedMsg.data.video._id) {
+						if ($page.data?.user?.userId) {
+							if ($page.data.user.userId !== parsedMsg.data.video._id) {
+								$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
+							}
+						} else {
 							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
 						}
 						break
@@ -165,7 +193,12 @@
 				class="drawer-toggle"
 				bind:checked={$is_chat_drawer_open} />
 			<div class="drawer-content">
-				<StreamContainer bind:channel bind:userCount bind:channels on:loadMore={loadMoreChannels} />
+				<StreamContainer
+					bind:channel
+					bind:userCount
+					bind:channels
+					on:loadMore={loadMoreChannels}
+					bind:isHostOrGuest />
 
 				{#if showEditChannelDrawer}
 					<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />
