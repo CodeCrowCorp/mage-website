@@ -5,7 +5,6 @@
 	import type { ActionData } from './$types'
 	import Toast from '$lib/components/Global/Toast.svelte'
 	import { enhance } from '$app/forms'
-	import { app_theme } from '$lib/stores/profileStore'
 
 	export let form: ActionData
 
