@@ -30,18 +30,19 @@ export default class WHEPClient {
 			bundlePolicy: 'max-bundle'
 		})
 
+		const trackOrKind = trackType === 'screen' || trackType === 'webcam' ? 'video' : 'audio'
+
 		/** https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/addTransceiver */
-		// if (trackType === 'screen' || trackType === 'webcam') {
-		this.peerConnection.addTransceiver('video', {
+		this.peerConnection.addTransceiver(trackOrKind, {
 			direction: 'recvonly'
 		})
-		// }
-		// if (trackType === 'audio') {
-		//TODO: or if system audio is sent
-		this.peerConnection.addTransceiver('audio', {
-			direction: 'recvonly'
-		})
-		// }
+
+		//NOTE: used for system audio
+		if (this.trackType === 'screen') {
+			this.peerConnection.addTransceiver('audio', {
+				direction: 'recvonly'
+			})
+		}
 
 		/**
 		 * When new tracks are received in the connection, store local references,

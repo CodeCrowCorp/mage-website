@@ -62,16 +62,29 @@ export default class WHIPClient extends EventTarget {
 	private async accessLocalMediaSources(trackType: string) {
 		if (trackType === 'screen') {
 			return navigator.mediaDevices.getDisplayMedia({ video: true, audio: true }).then((stream) => {
+				if (!stream.getAudioTracks().length) {
+					const audioContext = new AudioContext()
+					const oscillator = audioContext.createOscillator()
+					const destination = audioContext.createMediaStreamDestination()
+					oscillator.connect(destination)
+					oscillator.start()
+					const audioTrack = destination.stream.getAudioTracks()[0]
+					audioTrack.enabled = true
+					// audioTrack.id = 'silent-audio-track'
+					// audioTrack.label = 'Silent Audio Track'
+					const audioTransceiver = this.peerConnection.addTransceiver(audioTrack, {
+						direction: 'sendonly'
+					})
+				}
 				stream.getTracks().forEach((track) => {
-					console.log('track-------------------------', track)
 					const transceiver = this.peerConnection.addTransceiver(track, {
 						/** WHIP is only for sending streaming media */
 						direction: 'sendonly'
 					})
 					if (track.kind == 'video' && transceiver.sender.track) {
 						transceiver.sender.track.applyConstraints({
-							width: 1280,
-							height: 720
+							width: 1920,
+							height: 1080
 						})
 					}
 				})
@@ -81,7 +94,7 @@ export default class WHIPClient extends EventTarget {
 				return stream
 			})
 		} else if (trackType === 'webcam') {
-			return navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+			return navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
 				stream.getTracks().forEach((track) => {
 					const transceiver = this.peerConnection.addTransceiver(track, {
 						/** WHIP is only for sending streaming media */
