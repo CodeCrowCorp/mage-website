@@ -22,21 +22,28 @@
 		webcamWhip: WHIPClient,
 		webcamWhep: WHEPClient,
 		audioWhip: WHIPClient,
-		audioWhep: WHEPClient
+		audioWhep: WHEPClient,
+		prevScreen: any,
+		prevWebcam: any,
+		prevAudio: any,
+		isMounted: boolean = false
 
-	$: if (video.screen || !video.screen) {
+	$: if (isMounted && video.screen !== prevScreen) {
+		prevScreen = video.screen
 		toggleClient({
 			trackType: 'screen'
 		})
 	}
 
-	$: if (video.webcam || !video.webcam) {
+	$: if (isMounted && video.webcam !== prevWebcam) {
+		prevWebcam = video.webcam
 		toggleClient({
 			trackType: 'webcam'
 		})
 	}
 
-	$: if (video.audio || !video.audio) {
+	$: if (isMounted && video.audio !== prevAudio) {
+		prevAudio = video.audio
 		toggleClient({
 			trackType: 'audio'
 		})
@@ -46,7 +53,7 @@
 		if ($page.data?.user?.userId === video._id) {
 			switch (trackType) {
 				case 'screen':
-					if (video.screen) {
+					if (video.screen && $is_sharing_screen) {
 						screenWhip = new WHIPClient(
 							video.screen.webRTC.url,
 							screenElement,
@@ -59,7 +66,7 @@
 					}
 					break
 				case 'webcam':
-					if (video.webcam) {
+					if (video.webcam && $is_sharing_webcam) {
 						webcamWhip = new WHIPClient(
 							video.webcam.webRTC.url,
 							webcamElement,
@@ -72,7 +79,7 @@
 					}
 					break
 				case 'audio':
-					if (video.audio) {
+					if (video.audio && $is_sharing_audio) {
 						audioWhip = new WHIPClient(video.audio.webRTC.url, audioElement, video.audio.trackType)
 						audioWhip.addEventListener(
 							`localStreamStopped-${trackType}`,
@@ -146,6 +153,7 @@
 				}
 			})
 		}
+		isMounted = true
 	})
 
 	is_sharing_screen.subscribe((value) => {
@@ -188,29 +196,29 @@
 
 <div class="w-[500px]">
 	<div class="bg-base-200 relative w-full h-full rounded-md">
-		{#if !video.screen && !video.webcam}
-			<div
-				class="w-24 md:w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2 right-0 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-				<img src={video.avatar} alt="" />
+		<img
+			src={video.avatar}
+			alt=""
+			class="absolute inset-0 w-24 md:w-24 mask mask-squircle object-cover m-auto" />
+		<div class="absolute inset-0">
+			<video id={`screen-${video._id}`} autoplay muted class="rounded-md" />
+			<div use:draggable={{ bounds: 'parent' }} class="absolute bottom-0 right-0 w-1/2 h-fit">
+				<video id={`webcam-${video._id}`} autoplay muted class="rounded-md" />
 			</div>
-		{/if}
-		<video id={`screen-${video._id}`} autoplay muted class="rounded-md" />
-		<div use:draggable={{ bounds: 'parent' }} class="absolute bottom-0 right-0 w-1/2 h-fit">
-			<video id={`webcam-${video._id}`} autoplay muted class="rounded-md" />
-		</div>
-		<video id={`audio-${video._id}`} autoplay muted class="rounded-md w-0 h-0" />
-		<div class="absolute left-2 bottom-2 rounded-md dropdown">
-			<label tabindex="0" class="btn btn-sm normal-case">@{video.username}</label>
-			<!-- <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
-				<li>
-					<a on:click={() => toggleMod()}
-						><IconChatMod /> {sender?.role === 'Mod' ? 'Remove Mod' : 'Grant Mod'}
-					</a>
-				</li>
-				<li>
-					<a on:click={() => toggleGuest()}><IconChatGuest /> Revoke Guest </a>
-				</li>
-			</ul> -->
+			<video id={`audio-${video._id}`} autoplay muted class="rounded-md w-0 h-0" />
+			<div class="absolute left-2 bottom-2 rounded-md dropdown">
+				<label tabindex="0" class="btn btn-sm normal-case">@{video.username}</label>
+				<!-- <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+					<li>
+						<a on:click={() => toggleMod()}
+							><IconChatMod /> {sender?.role === 'Mod' ? 'Remove Mod' : 'Grant Mod'}
+						</a>
+					</li>
+					<li>
+						<a on:click={() => toggleGuest()}><IconChatGuest /> Revoke Guest </a>
+					</li>
+				</ul> -->
+			</div>
 		</div>
 	</div>
 </div>
