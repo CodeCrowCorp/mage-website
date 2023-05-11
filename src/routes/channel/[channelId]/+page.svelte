@@ -88,10 +88,6 @@
 		isHost = userId === $page?.data?.user?.userId
 	}
 
-	const getLiveInputs = async (channelId: string) => {
-		return await get(`cloudflare/live-input?channelId=${channelId}`)
-	}
-
 	const handleWebsocket = async () => {
 		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
 		initChannelSocket(channelSocketId)
@@ -161,9 +157,18 @@
 				} else {
 					const activeGuests = parsedMsg.activeGuests
 					if (activeGuests?.length) {
-						$video_items = [...activeGuests]
-						const liveInputs = await getLiveInputs(channelId)
-						$video_items = updateVideoItems($video_items, liveInputs)
+						if ($video_items.length) {
+							// for users that are in the channel and new users join
+							// add new users but dont overwrite the existing ones streaming
+							$video_items = activeGuests.map((guest: any) => {
+								const foundVideoItem = $video_items.find((video: any) => guest._id === video._id)
+								return foundVideoItem || guest
+							})
+						} else {
+							// for new users joining the channel
+							const liveInputs = await get(`cloudflare/live-inputs?channelId=${channelId}`)
+							$video_items = updateVideoItems([...activeGuests], liveInputs)
+						}
 					}
 				}
 				break

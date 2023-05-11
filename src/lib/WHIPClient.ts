@@ -50,7 +50,9 @@ export default class WHIPClient extends EventTarget {
 				this.localStream = stream
 				videoElement.srcObject = stream
 			})
-			.catch(console.error)
+			.catch((err: any) => {
+				this.disconnectStream()
+			})
 	}
 
 	/**
