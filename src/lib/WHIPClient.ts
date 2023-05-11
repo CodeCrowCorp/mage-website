@@ -9,11 +9,7 @@ export default class WHIPClient extends EventTarget {
 	private peerConnection: RTCPeerConnection
 	public localStream?: MediaStream
 
-	constructor(
-		private endpoint: string,
-		private videoElement: HTMLVideoElement,
-		private trackType: string
-	) {
+	constructor(private endpoint: string, private videoElement: any, private trackType: string) {
 		super()
 		/**
 		 * Create a new WebRTC connection, using public STUN servers with ICE,

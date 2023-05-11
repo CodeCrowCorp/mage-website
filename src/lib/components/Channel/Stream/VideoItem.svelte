@@ -16,7 +16,7 @@
 		isGuest = false,
 		screenElement: HTMLVideoElement,
 		webcamElement: HTMLVideoElement,
-		audioElement: HTMLVideoElement,
+		audioElement: HTMLAudioElement,
 		screenWhip: WHIPClient,
 		screenWhep: WHEPClient,
 		webcamWhip: WHIPClient,
@@ -97,6 +97,8 @@
 							screenElement,
 							video.screen.trackType
 						)
+						screenElement.muted = false
+						screenElement.play()
 					} else {
 						if (screenElement) screenElement.srcObject = null
 					}
@@ -119,6 +121,8 @@
 							audioElement,
 							video.audio.trackType
 						)
+						audioElement.muted = false
+						audioElement.play()
 					} else {
 						if (audioElement) audioElement.srcObject = null
 					}
@@ -132,7 +136,7 @@
 		// isGuest = channel?.guests?.includes(sender.userData?.userId)
 		screenElement = document.getElementById(`screen-${video._id}`) as HTMLVideoElement
 		webcamElement = document.getElementById(`webcam-${video._id}`) as HTMLVideoElement
-		audioElement = document.getElementById(`audio-${video._id}`) as HTMLVideoElement
+		audioElement = document.getElementById(`audio-${video._id}`) as HTMLAudioElement
 
 		if (screenElement) {
 			screenElement.addEventListener('dblclick', (event: any) => {
