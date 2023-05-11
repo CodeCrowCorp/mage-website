@@ -4,6 +4,8 @@ import { redirect } from '@sveltejs/kit'
 
 export const load = (async ({ locals }) => {
 	return {
+		// tableChannels: get(`channels?skip=${0}&limit=${100}`),
+		mostActiveChannels: get(`channels/most-active?skip=${0}&limit=${5}`),
 		lazy: {
 			mostActiveChannels: get(`channels/most-active?skip=${0}&limit=${5}`),
 			weeklyChannels: get(`channels/weekly?skip=${0}&limit=${10}`),

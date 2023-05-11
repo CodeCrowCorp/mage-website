@@ -5,6 +5,7 @@
 	import type { ActionData } from './$types'
 	import Toast from '$lib/components/Global/Toast.svelte'
 	import { enhance } from '$app/forms'
+
 	export let form: ActionData
 
 	// $: email = $page.data.user.user.email
