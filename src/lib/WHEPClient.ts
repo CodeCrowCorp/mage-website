@@ -9,11 +9,7 @@ export default class WHEPClient {
 	private peerConnection: RTCPeerConnection
 	private stream: MediaStream
 
-	constructor(
-		private endpoint: string,
-		private videoElement: HTMLVideoElement,
-		private trackType: string
-	) {
+	constructor(private endpoint: string, private videoElement: any, private trackType: string) {
 		this.stream = new MediaStream()
 
 		/**
@@ -79,6 +75,7 @@ export default class WHEPClient {
 			}
 			if (!this.videoElement.srcObject) {
 				this.videoElement.srcObject = this.stream
+				this.videoElement.play()
 			}
 		})
 
