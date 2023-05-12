@@ -29,20 +29,30 @@
 		isMounted: boolean = false
 
 	$: if (isMounted && video.screen !== prevScreen) {
+		handleScreenChanges()
+	}
+
+	$: if (isMounted && video.webcam !== prevWebcam) {
+		handleWebcamChanges()
+	}
+
+	$: if (isMounted && video.audio !== prevAudio) {
+		handleAudioChanges()
+	}
+
+	const handleScreenChanges = () => {
 		prevScreen = video.screen
 		toggleClient({
 			trackType: 'screen'
 		})
 	}
-
-	$: if (isMounted && video.webcam !== prevWebcam) {
+	const handleWebcamChanges = () => {
 		prevWebcam = video.webcam
 		toggleClient({
 			trackType: 'webcam'
 		})
 	}
-
-	$: if (isMounted && video.audio !== prevAudio) {
+	const handleAudioChanges = () => {
 		prevAudio = video.audio
 		toggleClient({
 			trackType: 'audio'
@@ -131,6 +141,21 @@
 		}
 	}
 
+	// const initializeAndHandleChanges = () => {
+	// 	if (!prevScreen) {
+	// 		prevScreen = video.screen
+	// 		handleScreenChanges()
+	// 	}
+	// 	if (!prevWebcam) {
+	// 		prevWebcam = video.webcam
+	// 		handleWebcamChanges()
+	// 	}
+	// 	if (!prevAudio) {
+	// 		prevAudio = video.audio
+	// 		handleAudioChanges()
+	// 	}
+	// }
+
 	onMount(() => {
 		// coloredRole = getColoredRole(sender.role)
 		// isGuest = channel?.guests?.includes(sender.userData?.userId)
@@ -146,6 +171,7 @@
 					screenElement.requestFullscreen()
 				}
 			})
+			handleScreenChanges()
 		}
 
 		if (webcamElement) {
@@ -156,6 +182,11 @@
 					webcamElement.requestFullscreen()
 				}
 			})
+			handleWebcamChanges()
+		}
+
+		if (webcamElement) {
+			handleAudioChanges()
 		}
 		isMounted = true
 	})

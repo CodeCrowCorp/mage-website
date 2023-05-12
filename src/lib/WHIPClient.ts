@@ -65,6 +65,7 @@ export default class WHIPClient extends EventTarget {
 					const oscillator = audioContext.createOscillator()
 					const destination = audioContext.createMediaStreamDestination()
 					oscillator.connect(destination)
+					oscillator.frequency.setValueAtTime(0, audioContext.currentTime)
 					oscillator.start()
 					const audioTrack = destination.stream.getAudioTracks()[0]
 					audioTrack.enabled = true

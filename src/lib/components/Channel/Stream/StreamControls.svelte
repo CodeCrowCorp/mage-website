@@ -8,7 +8,7 @@
 		is_chat_drawer_destroy,
 		was_chat_drawer_closed
 	} from '$lib/stores/channelStore'
-	import { del, post } from '$lib/api'
+	import { del, put } from '$lib/api'
 	import { page } from '$app/stores'
 	import { emitAction } from '$lib/websocket'
 	import {
@@ -46,9 +46,25 @@
 	}
 
 	const createLiveInput = async (trackData: any) => {
-		return await post(
-			`cloudflare/live-input?channelId=${$page.params.channelId}`,
-			JSON.stringify(trackData),
+		return await put(`cloudflare/live-input`, trackData, {
+			userId: $page.data?.user?.userId,
+			token: $page.data?.user?.token
+		})
+	}
+
+	const deleteLiveInput = async ({
+		channelId,
+		userId,
+		trackType,
+		inputId
+	}: {
+		channelId: string
+		userId: string
+		trackType: string
+		inputId: string
+	}) => {
+		return await del(
+			`cloudflare/live-input?channelId=${channelId}&userId=${userId}&trackType=${trackType}&inputId=${inputId}`,
 			{
 				userId: $page.data?.user?.userId,
 				token: $page.data?.user?.token
@@ -56,30 +72,18 @@
 		)
 	}
 
-	const deleteLiveInput = async ({
-		channelId,
-		inputId
-	}: {
-		channelId: string
-		inputId: string
-	}) => {
-		return await del(`cloudflare/live-input?channelId=${channelId}&inputId=${inputId}`, {
-			userId: $page.data?.user?.userId,
-			token: $page.data?.user?.token
-		})
-	}
-
 	const startScreenStream = async () => {
 		const liveInput = await createLiveInput({
-			meta: {
-				name: JSON.stringify({
-					channel: `${$page.params.channelId}`,
-					isTrackActive: true,
-					trackType: 'screen',
-					_id: $page.data.user.userId
-				})
-			},
-			recording: { mode: 'off' }
+			channelId: `${$page.params.channelId}`,
+			userId: $page.data.user.userId,
+			trackType: 'screen',
+			isTrackActive: true,
+			liveInput: {
+				meta: {
+					name: `${$page.params.channelId}-${$page.data.user.userId}-screen`
+				},
+				recording: { mode: 'off' }
+			}
 		})
 		screenUid = liveInput.uid
 		$video_items = updateVideoItems($video_items, [liveInput])
@@ -93,7 +97,12 @@
 	}
 
 	const stopScreenStream = async () => {
-		await deleteLiveInput({ channelId: $page.params.channelId, inputId: screenUid })
+		await deleteLiveInput({
+			channelId: $page.params.channelId,
+			userId: $page.data.user.userId,
+			trackType: 'screen',
+			inputId: screenUid
+		})
 		$video_items = updateVideoItems($video_items, [
 			{ _id: $page.data.user.userId, trackType: 'screen', isTrackActive: false }
 		])
@@ -113,15 +122,16 @@
 
 	const startWebcamStream = async () => {
 		const liveInput = await createLiveInput({
-			meta: {
-				name: JSON.stringify({
-					channel: `${$page.params.channelId}`,
-					isTrackActive: true,
-					trackType: 'webcam',
-					_id: $page.data.user.userId
-				})
-			},
-			recording: { mode: 'off' }
+			channelId: `${$page.params.channelId}`,
+			userId: $page.data.user.userId,
+			trackType: 'webcam',
+			isTrackActive: true,
+			liveInput: {
+				meta: {
+					name: `${$page.params.channelId}-${$page.data.user.userId}-webcam`
+				},
+				recording: { mode: 'off' }
+			}
 		})
 		webcamUid = liveInput.uid
 		$video_items = updateVideoItems($video_items, [liveInput])
@@ -135,7 +145,12 @@
 	}
 
 	const stopWebcamStream = async () => {
-		await deleteLiveInput({ channelId: $page.params.channelId, inputId: webcamUid })
+		await deleteLiveInput({
+			channelId: $page.params.channelId,
+			userId: $page.data.user.userId,
+			trackType: 'webcam',
+			inputId: webcamUid
+		})
 		$video_items = updateVideoItems($video_items, [
 			{ _id: $page.data.user.userId, trackType: 'webcam', isTrackActive: false }
 		])
@@ -155,15 +170,16 @@
 
 	const startAudioStream = async () => {
 		const liveInput = await createLiveInput({
-			meta: {
-				name: JSON.stringify({
-					channel: `${$page.params.channelId}`,
-					isTrackActive: true,
-					trackType: 'audio',
-					_id: $page.data.user.userId
-				})
-			},
-			recording: { mode: 'off' }
+			channelId: `${$page.params.channelId}`,
+			userId: $page.data.user.userId,
+			trackType: 'audio',
+			isTrackActive: true,
+			liveInput: {
+				meta: {
+					name: `${$page.params.channelId}-${$page.data.user.userId}-audio`
+				},
+				recording: { mode: 'off' }
+			}
 		})
 		audioUid = liveInput.uid
 		$video_items = updateVideoItems($video_items, [liveInput])
@@ -177,7 +193,12 @@
 	}
 
 	const stopAudioStream = async () => {
-		await deleteLiveInput({ channelId: $page.params.channelId, inputId: audioUid })
+		await deleteLiveInput({
+			channelId: $page.params.channelId,
+			userId: $page.data.user.userId,
+			trackType: 'audio',
+			inputId: audioUid
+		})
 		$video_items = updateVideoItems($video_items, [
 			{ _id: $page.data.user.userId, trackType: 'audio', isTrackActive: false }
 		])
