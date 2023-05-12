@@ -22,8 +22,8 @@
 
 	export let isHostOrGuest: boolean = false
 
-	$: isChannelSocketConnected = $channel_connection === 'open' && $page.data?.user?.userId
-	$: videoItemIsActive = $video_items.some((video: any) => video._id === $page.data?.user?.userId)
+	$: isChannelSocketConnected = $channel_connection === 'open' && $page.data.user?.userId
+	$: videoItemIsActive = $video_items.some((video: any) => video._id === $page.data.user?.userId)
 
 	let screenUid: string = ''
 	let webcamUid: string = ''
@@ -47,8 +47,8 @@
 
 	const createLiveInput = async (trackData: any) => {
 		return await put(`cloudflare/live-input`, trackData, {
-			userId: $page.data?.user?.userId,
-			token: $page.data?.user?.token
+			userId: $page.data.user?.userId,
+			token: $page.data.user?.token
 		})
 	}
 
@@ -66,8 +66,8 @@
 		return await del(
 			`cloudflare/live-input?channelId=${channelId}&userId=${userId}&trackType=${trackType}&inputId=${inputId}`,
 			{
-				userId: $page.data?.user?.userId,
-				token: $page.data?.user?.token
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
 			}
 		)
 	}

@@ -18,7 +18,7 @@
 		if (msg.user?.userId === 'AI') msg.role = 'AI-Mod'
 		else if (msg.user?.userId === channel?.user) msg.role = 'Host'
 		else if (channel?.mods?.includes(msg.user._id)) msg.role = 'Mod'
-		else if (msg.user?.userId === $page.data?.user?.userId) msg.role = 'You'
+		else if (msg.user?.userId === $page.data.user?.userId) msg.role = 'You'
 		else msg.role = 'Rando'
 		return msg
 	}

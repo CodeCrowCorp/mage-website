@@ -164,9 +164,9 @@
 								name="category"
 								required={!channel.category.length}
 								placeholder={channel?.category?.length ? '' : 'Category'}
-								class="input input-primary input-bordered mt-5 w-full " />
+								class="input input-primary input-bordered mt-5 w-full" />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
-							<span class="absolute flex flex-row gap-2 left-0 top-1/2  pl-5">
+							<span class="absolute flex flex-row gap-2 left-0 top-1/2 pl-5">
 								{#if channel?.category?.length}
 									{#each channel?.category as icon}
 										<img src={$category_list[icon]} alt="" class="h-5 w-5" />
