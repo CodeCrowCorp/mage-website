@@ -1,4 +1,7 @@
 <script lang="ts">
+	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
+	import IconBrowseItemPlay from '$lib/assets/icons/browse/IconBrowseItemPlay.svelte'
+
 	export let channel: any = {}
 
 	let bg_cover = channel.thumbnail || '/src/lib/assets/placeholder/programming-placeholder.jpg'
@@ -8,17 +11,37 @@
 	class="swiper-slide bg-slate-50 cursor-pointer rounded-md"
 	href="/channel/{channel._id}"
 	style="background-image: url({bg_cover});">
-	<div class="flex flex-row items-end w-full h-full">
-		<div class="flex flex-row items-center gap-2 ml-2 mb-2">
+	<div class="flex flex-col justify-between p-3 w-full h-full">
+		<div class="flex gap-2 mb-3">
+			<span
+				class="btn btn-sm rounded-md font-medium text-white border-none flex items-center bg-red-700 hover:bg-red-700">
+				LIVE
+			</span>
+			<div class="dropdown dropdown-bottom">
+				<label
+					for=""
+					class="btn btn-sm rounded-md font-medium gap-2 text-white border-none"
+					tabindex="-1">
+					<IconViewers /> 10
+				</label>
+			</div>
+		</div>
+		<div class="flex justify-center w-full">
+			<IconBrowseItemPlay />
+		</div>
+
+		<div class="flex flex-row items-center gap-2">
 			<div class="avatar">
 				<div class="w-14 mask mask-squircle">
 					<img src={channel.avatar} alt="" />
 				</div>
 			</div>
-			<div class="w-full">
-				<p class="text-2xl truncate font-semibold">{channel.title || ''}</p>
-				<p class="truncate">
-					{channel.username ? '@' + channel.username : channel.displayName || ''}
+			<div class="w-4/5">
+				<p class="text-2xl truncate text-white font-semibold">{channel.title || ''}</p>
+				<p class="truncate text-white">
+					{channel.createdByUsername
+						? '@' + channel.createdByUsername
+						: channel.createdByDisplayName || ''}
 				</p>
 			</div>
 		</div>
