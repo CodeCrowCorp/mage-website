@@ -28,7 +28,7 @@
 	let channel: any
 	let channelId = $page.params.channelId || ''
 	$: userCount = 0
-	$: isHostOrGuest = isHost || channel?.guests?.includes($page.data?.user?.userId)
+	$: isHostOrGuest = isHost || channel?.guests?.includes($page.data.user?.userId)
 
 	let isDeleteModalOpen = false,
 		showEditChannelDrawer = false,
@@ -148,7 +148,8 @@
 		var parsedMsg = JSON.parse(value)
 		switch (parsedMsg.eventName) {
 			case `channel-update-${channelId}`:
-				channel = parsedMsg.channels
+				console.log('channel-update', parsedMsg)
+				channel = parsedMsg.channel
 				break
 			case `channel-subscribe-${channelId}`:
 				userCount = parsedMsg.userCount
@@ -175,7 +176,7 @@
 			case `channel-streaming-action-${channelId}`:
 				switch (parsedMsg.data.action) {
 					case 'toggleTrack':
-						if ($page.data?.user?.userId) {
+						if ($page.data.user?.userId) {
 							if ($page.data.user.userId !== parsedMsg.data.video._id) {
 								$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
 							}
