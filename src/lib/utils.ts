@@ -103,6 +103,10 @@ export const hasOneHourPassed = (date: number) => {
 
 export const getColoredRole = (role: string) =>
 	({
+		'AI-Mod': {
+			tagColor: 'bg-transparent bg-clip bg-gradient-to-r to-emerald-600 from-sky-400',
+			textColor: 'text-accent'
+		},
 		Host: { tagColor: 'bg-secondary', textColor: 'text-pink-500' },
 		You: { tagColor: 'bg-gray-600' },
 		Mod: { tagColor: 'bg-green-700', textColor: 'text-success' },

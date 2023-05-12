@@ -15,7 +15,8 @@
 	let chatHistory: any[] = []
 
 	const setRole = (msg: any): any => {
-		if (msg.user?.userId === channel?.user) msg.role = 'Host'
+		if (msg.user?.userId === 'AI') msg.role = 'AI-Mod'
+		else if (msg.user?.userId === channel?.user) msg.role = 'Host'
 		else if (channel?.mods?.includes(msg.user._id)) msg.role = 'Mod'
 		else if (msg.user?.userId === $page.data?.user?.userId) msg.role = 'You'
 		else msg.role = 'Rando'
@@ -41,9 +42,9 @@
 				chatHistory = chatHistory.filter((item) => item.timestamp !== parsedMsg.data.timestamp)
 			} else {
 				parsedMsg = setRole(parsedMsg)
-				chatHistory.push(parsedMsg)
+				chatHistory.unshift(parsedMsg)
 			}
-			chatHistory = chatHistory.reverse()
+			chatHistory = chatHistory
 		}
 	})
 

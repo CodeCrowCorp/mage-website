@@ -64,12 +64,15 @@
 		<!--Host, Mod, You or Rando-->
 		<div class="p-1 border border-transparent rounded-lg flex gap-2 overflow-x-hidden">
 			<span>
-				{#if sender.role === 'Host' || sender.role === 'Mod' || sender.role === 'You'}
+				{#if sender.role === 'AI-Mod' || sender.role === 'Host' || sender.role === 'Mod' || sender.role === 'You'}
 					<span class="{coloredRole.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
 						>{sender.role}</span>
 				{/if}
-				<span data-popover-target="popover-user-profile" class="{coloredRole.textColor} font-medium"
-					>@{sender.user?.username}</span>
+				{#if sender.role !== 'AI-Mod'}
+					<span
+						data-popover-target="popover-user-profile"
+						class="{coloredRole.textColor} font-medium">@{sender.user?.username}</span>
+				{/if}
 				<span class="break-all">{sender.message}</span>
 			</span>
 			<div
