@@ -1,5 +1,6 @@
 <script lang="ts">
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
+	import IconBrowseItemPlay from '$lib/assets/icons/browse/IconBrowseItemPlay.svelte'
 
 	export let channel: any = {}
 
@@ -24,6 +25,9 @@
 					<IconViewers /> 10
 				</label>
 			</div>
+		</div>
+		<div class="flex justify-center w-full">
+			<IconBrowseItemPlay />
 		</div>
 
 		<div class="flex flex-row items-center gap-2">
