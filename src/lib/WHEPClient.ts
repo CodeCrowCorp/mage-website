@@ -73,10 +73,7 @@ export default class WHEPClient {
 			if (this.peerConnection.connectionState !== 'connected') {
 				return
 			}
-			if (!this.videoElement.srcObject) {
-				this.videoElement.srcObject = this.stream
-				this.videoElement.play()
-			}
+			this.videoElement.srcObject = this.stream
 		})
 
 		this.peerConnection.addEventListener('negotiationneeded', (ev) => {

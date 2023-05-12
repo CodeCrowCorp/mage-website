@@ -14,6 +14,7 @@ const updateVideoItems = (videoItems: any, liveInputs: any[]) => {
 				if (video._id === liveInput._id) {
 					switch (liveInput.trackType) {
 						case 'screen':
+							// isTrackActive required for real-time dismissal
 							video.screen = liveInput.isTrackActive ? liveInput : null
 							break
 						case 'webcam':
