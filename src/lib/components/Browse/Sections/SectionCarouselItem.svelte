@@ -36,10 +36,12 @@
 					<img src={channel.avatar} alt="" />
 				</div>
 			</div>
-			<div class="w-full">
+			<div class="w-4/5">
 				<p class="text-2xl truncate text-white font-semibold">{channel.title || ''}</p>
 				<p class="truncate text-white">
-					{channel.username ? '@' + channel.username : channel.displayName || ''}
+					{channel.createdByUsername
+						? '@' + channel.createdByUsername
+						: channel.createdByDisplayName || ''}
 				</p>
 			</div>
 		</div>
