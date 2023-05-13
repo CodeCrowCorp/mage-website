@@ -1,22 +1,18 @@
 <script lang="ts">
-	import { browser } from '$app/environment'
 	import { onMount } from 'svelte'
 	import { themeChange } from 'theme-change'
 	import type { ActionData } from './$types'
 	import Toast from '$lib/components/Global/Toast.svelte'
 	import { enhance } from '$app/forms'
+	import { current_theme } from '$lib/stores/helperStore'
 
 	export let form: ActionData
 
 	// $: email = $page.data.user.user.email
 
-	let currentTheme: string | null = 'dark'
 	let themes = ['dark', 'light'] //, 'cyberpunk', 'synthwave']
 
 	onMount(() => {
-		if (browser) {
-			currentTheme = localStorage.getItem('theme') || 'dark'
-		}
 		themeChange(false)
 	})
 </script>
@@ -59,18 +55,6 @@
 
 		<div class="flex flex-col border-opacity-50">
 			<div class="divider">Theming</div>
-			<!-- <div class="form-control w-96">
-				<label class="cursor-pointer label">
-					<span class="label-text">Enable dark mode</span>
-					<input
-						type="checkbox"
-						class="toggle toggle-accent"
-						id="theme-toggle"
-						data-toggle-theme="light,dark"
-						data-act-class="ACTIVECLASS"
-						checked={isDarkTheme} />
-				</label>
-			</div> -->
 			{#each themes as theme}
 				<div class="form-control">
 					<label class="label cursor-pointer">
@@ -79,51 +63,15 @@
 							type="radio"
 							name="radio-10"
 							class="radio radio-accent"
-							checked={currentTheme === theme}
+							checked={$current_theme === theme}
 							data-toggle-theme={theme}
-							data-act-class="ACTIVECLASS" />
+							data-act-class="ACTIVECLASS"
+							on:change={() => {
+								$current_theme = theme
+							}} />
 					</label>
 				</div>
 			{/each}
-
-			<!-- <div class="divider">1v1 chat</div>
-			<div class="form-control w-96">
-				<label class="cursor-pointer label">
-					<span class="label-text">Do Not Disturb - prevents chat window popup</span>
-					<input type="checkbox" class="toggle toggle-accent" checked />
-				</label>
-			</div>
-			<div class="form-control w-96">
-				<label class="cursor-pointer label">
-					<span class="label-text">Prevent messages from randos</span>
-					<input type="checkbox" class="toggle toggle-accent" checked />
-				</label>
-			</div>
-			<div class="divider">Sound Effects</div>
-			<div class="form-control w-96">
-				<label class="cursor-pointer label">
-					<span class="label-text">Mute all sfx</span>
-					<input type="checkbox" class="toggle toggle-accent" checked />
-				</label>
-			</div>
-			<div class="form-control w-96">
-				<label class="cursor-pointer label">
-					<span class="label-text">Mute channel updates sfx</span>
-					<input type="checkbox" class="toggle toggle-accent" checked />
-				</label>
-			</div>
-			<div class="form-control w-96">
-				<label class="cursor-pointer label">
-					<span class="label-text">Mute friend request received sfx</span>
-					<input type="checkbox" class="toggle toggle-accent" checked />
-				</label>
-			</div>
-			<div class="form-control w-96">
-				<label class="cursor-pointer label">
-					<span class="label-text">Mute sent and received message sfx</span>
-					<input type="checkbox" class="toggle toggle-accent" checked />
-				</label>
-			</div> -->
 		</div>
 	</div>
 </div>
