@@ -4,7 +4,7 @@
 	import LoadingItemCarousel from '$lib/components/Browse/Sections/LoadingItemCarousel.svelte'
 	import { onMount } from 'svelte'
 	import Swiper, { Navigation } from 'swiper'
-	import SectionCarouselItem from '$lib/components/Browse/Sections/SectionCarouselItem.svelte'
+	import ItemCarousel from '$lib/components/Browse/Sections/ItemCarousel.svelte'
 	import 'swiper/css'
 
 	export let channels: any = []
@@ -57,7 +57,7 @@
 		<div class="swiper carousel mt-10 mx-8">
 			<div class="swiper-wrapper">
 				{#each channels as channel}
-					<SectionCarouselItem {channel} />
+					<ItemCarousel {channel} />
 				{/each}
 			</div>
 		</div>

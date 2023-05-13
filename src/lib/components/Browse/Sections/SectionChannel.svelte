@@ -2,7 +2,7 @@
 	import IconDrawerLeft from '$lib/assets/icons/drawer/IconDrawerLeft.svelte'
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
 	import LoadingItemChannel from '$lib/components/Browse/Sections/LoadingItemChannel.svelte'
-	import SectionChannelItem from '$lib/components/Browse/Sections/SectionChannelItem.svelte'
+	import ItemChannel from '$lib/components/Browse/Sections/ItemChannel.svelte'
 
 	export let title: string = '',
 		channels: any = undefined,
@@ -44,8 +44,8 @@
 	{#if sectionId === 'weekly' ? value.channels?.length > 0 : value.length > 0}
 		<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide">
 			<div class="font-semibold m-3">
-				<a class="link link-secondary text-lg">{sectionId === 'weekly' ? value.title : title}</a>
-				<!-- href="/browse/{sectionId}" -->
+				<a class="link link-secondary text-lg" href="/search?section={sectionId}"
+					>{sectionId === 'weekly' ? value.title : title}</a>
 			</div>
 			<div class="flex flex-row">
 				<div class="relative flex items-center ml-3">
@@ -59,11 +59,11 @@
 					class="relative w-full flex gap-6 snap-x scrollbar-hide snap-mandatory overflow-x-auto flex-grow mx-14">
 					{#if sectionId === 'weekly'}
 						{#each value.channels as channel}
-							<SectionChannelItem {channel} />
+							<ItemChannel {channel} />
 						{/each}
 					{:else}
 						{#each value as channel}
-							<SectionChannelItem {channel} />
+							<ItemChannel {channel} />
 						{/each}
 					{/if}
 				</div>
