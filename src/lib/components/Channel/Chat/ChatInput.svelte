@@ -67,7 +67,7 @@
 	<div class="flex items-center py-2 rounded-lg">
 		{#if !isChannelSocketConnected || channel.bans?.includes($page.data.user.userId)}
 			<input
-				class="animate-pulse block mx-2 p-2.5 w-full text-sm textarea textarea-bordered textarea-secondary"
+				class="animate-pulse block mx-1 p-2.5 w-full text-sm textarea textarea-bordered textarea-secondary"
 				placeholder="Disabled"
 				disabled />
 		{:else}
@@ -80,7 +80,7 @@
 				}}
 				bind:value={chatMessage}
 				rows="1"
-				class="block mx-2 p-2.5 w-full text-sm textarea textarea-bordered textarea-secondary"
+				class="block mx-1 p-2.5 w-full text-sm textarea textarea-bordered textarea-secondary"
 				placeholder="Your message..." /><!--focus:h-32 -->
 			<button
 				on:click={() => sendMessage()}

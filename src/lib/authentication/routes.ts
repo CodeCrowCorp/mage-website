@@ -5,7 +5,6 @@ const routes: any = {
 	admin: [
 		{ path: '/admins', access: [ADMIN_COTEXT] },
 		{ path: '/channels', access: [ADMIN_COTEXT] },
-		{ path: '/fun-facts', access: [ADMIN_COTEXT] },
 		{ path: '/legal', access: [ADMIN_COTEXT] },
 		{ path: '/settings', access: [ADMIN_COTEXT] },
 		{ path: '/users', access: [ADMIN_COTEXT] }
