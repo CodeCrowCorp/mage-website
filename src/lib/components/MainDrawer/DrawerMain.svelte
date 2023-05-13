@@ -25,9 +25,7 @@
 	// 	is_feature_group_chat_enabled,
 	// 	is_feature_video_responses_enabled
 	// } from '$lib/stores/remoteConfigStore'
-	import IconMageText from '$lib/assets/icons/IconMageText.svg'
-	import IconMageTextDark from '$lib/assets/icons/IconMageTextDark.svg'
-
+	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
 	import { onMount } from 'svelte'
@@ -41,8 +39,8 @@
 	let progressBarLevel = 1
 	let progressBarValue = 0
 	let progressBarColor = colorFromLevel(1)
-	let streakCount = 0
-	let hoursStreamed = 0
+	let streakCount: number = 0
+	let hoursStreamed: number = 0
 	onMount(async () => {
 		if (currentUser) {
 			let exp = currentUser.exp
@@ -54,12 +52,10 @@
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
-			console.log('streakCount', streakCount)
 			hoursStreamed = await get(`stats/stream/total-hours`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
-			console.log('hoursStreamed', hoursStreamed)
 		}
 	})
 </script>
@@ -71,8 +67,7 @@
 			<ul>
 				<li>
 					<a href="/browse">
-						<img class="w-20 mage-text" src={IconMageText} alt="" />
-						<img class="w-20 mage-text-dark" src={IconMageTextDark} alt="" />
+						<IconMageText />
 					</a>
 				</li>
 			</ul>
@@ -248,5 +243,9 @@
 <style>
 	progress::-webkit-progress-value {
 		background-color: var(--progress-bar-color);
+	}
+
+	.icon-color {
+		color: var(--theme-text); /* This will set the color based on the current theme */
 	}
 </style>

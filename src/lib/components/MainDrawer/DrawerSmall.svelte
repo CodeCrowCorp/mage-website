@@ -14,10 +14,8 @@
 	import { env } from '$env/dynamic/public'
 	import { page } from '$app/stores'
 	import { user_role } from '$lib/stores/authStore'
-	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svg'
-	import IconMageLogoDark from '$lib/assets/icons/IconMageLogoDark.svg'
-	import IconMageText from '$lib/assets/icons/IconMageText.svg'
-	import IconMageTextDark from '$lib/assets/icons/IconMageTextDark.svg'
+	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svelte'
+	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
 
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
@@ -61,10 +59,8 @@
 			<ul>
 				<li>
 					<a href="/browse" class="md:justify-center">
-						<img class="w-20 md:w-7 mage-text hidden md:block" src={IconMageLogo} alt="" />
-						<img class="w-20 md:w-7 mage-text-dark hidden md:block" src={IconMageLogoDark} alt="" />
-						<img class="w-20 md:w-7 mage-text md:hidden" src={IconMageText} alt="" />
-						<img class="w-20 md:w-7 mage-text-dark md:hidden" src={IconMageTextDark} alt="" />
+						<IconMageLogo customClass={'w-20 md:w-7 mage-text hidden md:block'} />
+						<IconMageText customClass={'w-20 md:w-7 mage-text md:hidden'} />
 					</a>
 				</li>
 			</ul>
