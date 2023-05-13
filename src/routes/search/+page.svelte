@@ -4,30 +4,39 @@
 	import SearchBar from '$lib/components/Browse/SearchBar.svelte'
 	import ListSearch from '$lib/components/Search/ListSearch.svelte'
 	import { page } from '$app/stores'
+	import { getSectionUrl } from '$lib/utils'
 
 	let loadingMoreChannels = false
-	let loadChannels = 0
 	let query = ''
 	let searchList: any[] = []
+	let skip: number = 0
+	let limit: number = 20
+	let sectionId = ''
+	let title = ''
 
 	onMount(async () => {
-		const query = $page.url.searchParams.get('searchQuery')
-		searchList = await get(`channels?searchQuery=${query}&skip=${0}&limit=${20}`)
+		sectionId = $page.params.sectionId
+		const url = getSectionUrl({ sectionId, query, skip, limit })
+		searchList = await get(url)
 	})
 
 	async function loadMore(): Promise<void> {
 		loadingMoreChannels = true
-		loadChannels += 20
-		const moreChannels = await get(`channels?searchQuery=${query}&skip=${0}&limit=${20}`)
+		const url = getSectionUrl({ sectionId, query, skip, limit })
+		const moreChannels = await get(url, {
+			userId: $page.data.user?.userId,
+			token: $page.data.user?.token
+		})
 		searchList = [...searchList, ...moreChannels]
+		skip += limit
 		loadingMoreChannels = false
 	}
 </script>
 
 <SearchBar searchPage={true} searchQuery={query} />
 
-<ListSearch
-	channels={searchList}
-	{loadingMoreChannels}
-	on:loadMore={loadMore}
-	isSearchPage={true} />
+<div class="font-semibold m-3">
+	<a class="link link-secondary text-lg">{title}</a>
+</div>
+
+<ListSearch channels={searchList} on:loadMore={loadMore} />

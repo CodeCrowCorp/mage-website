@@ -2,7 +2,7 @@
 	// import IconLock from '$lib/assets/icons/IconLock.svelte'
 	// import VirtualList from '@sveltejs/svelte-virtual-list'
 	import LoadingItemTable from '$lib/components/Browse/Sections/LoadingItemTable.svelte'
-	import SectionTableRow from '$lib/components/Browse/Sections/SectionTableRow.svelte'
+	import ItemTable from '$lib/components/Browse/Sections/ItemTable.svelte'
 	import LastItemInViewport from '$lib/actions/LastItemInViewport'
 	import { get } from '$lib/api'
 
@@ -38,10 +38,10 @@
 			</thead>
 			<tbody>
 				{#each value as channel}
-					<SectionTableRow {channel} />
+					<ItemTable {channel} />
 				{/each}
 				{#each moreChannels as channel}
-					<SectionTableRow {channel} />
+					<ItemTable {channel} />
 				{/each}
 			</tbody>
 			<tfoot>

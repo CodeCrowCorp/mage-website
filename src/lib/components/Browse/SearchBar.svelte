@@ -1,6 +1,5 @@
 <script lang="ts">
 	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
-	import IconCross from '$lib/assets/icons/IconCross.svelte'
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
 	import DrawerCreateChannel from './DrawerCreateChannel.svelte'
 	import { is_login_modal_open } from '$lib/stores/helperStore'
