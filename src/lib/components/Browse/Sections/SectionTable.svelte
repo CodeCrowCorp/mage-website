@@ -26,7 +26,7 @@
 	</div>
 {:then value}
 	{#if value.length > 0}
-		<table class="table-auto w-full">
+		<table class="table-auto w-full overflow-hidden">
 			<thead>
 				<tr>
 					<th class="px-4 text-start">Host</th>

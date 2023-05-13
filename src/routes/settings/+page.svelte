@@ -5,6 +5,7 @@
 	import Toast from '$lib/components/Global/Toast.svelte'
 	import { enhance } from '$app/forms'
 	import { current_theme } from '$lib/stores/helperStore'
+
 	export let form: ActionData
 
 	// $: email = $page.data.user.user.email
