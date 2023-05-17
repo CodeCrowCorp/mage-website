@@ -5,18 +5,18 @@
 <ul class="menu shrink-0 bg-base-100 rounded-md">
 	<li>
 		<a
-			class="flex flex-col w-[300px] md:w-[400px] rounded-md items-stretch"
+			class="flex flex-col w-[20rem] md:w-[25rem] rounded-md items-stretch"
 			href="/channel/{channel._id}">
 			<div class="relative">
 				<div class="video-thumbnail">
 					<img
-						class="w-full h-full mask rounded-lg"
+						class="w-full h-full mask rounded-lg object-cover"
 						src={channel.thumbnail
 							? channel.thumbnail
 							: '/src/lib/assets/placeholder/programming-placeholder.jpg'} />
 				</div>
 			</div>
-			<div class="flex flex-row gap-3 max-w-[400px]">
+			<div class="flex flex-row gap-3 max-w-[25rem]">
 				<div class="avatar">
 					<div class="w-12 mask mask-squircle">
 						<img src={channel.avatar} alt="" />

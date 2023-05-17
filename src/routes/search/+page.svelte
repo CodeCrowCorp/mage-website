@@ -70,7 +70,7 @@
 	}
 </script>
 
-<div class="p-9">
+<div class="px-9 py-9 md:px-24">
 	<div class="flex flex-col md:flex-row gap-4 pb-10">
 		<div class="flex flex-col md:flex-row gap-4">
 			<form on:submit|preventDefault={loadMore}>
@@ -96,9 +96,11 @@
 		</div>
 	</div>
 
-	<div class="font-semibold py-5">
-		<a class="link link-secondary text-lg">{title}</a>
-	</div>
+	{#if title}
+		<div class="font-semibold py-5">
+			<a class="link link-secondary text-lg">{title}</a>
+		</div>
+	{/if}
 
 	<div class="flex flex-col gap-4 justify-around">
 		{#if initialLoad}
