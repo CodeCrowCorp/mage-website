@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let channel: any
+	export let item: any
 	function timeSince(date: string) {
 		let created: any = new Date(date)
 		let currentDate: any = new Date(Date.now())
@@ -29,52 +29,52 @@
 </script>
 
 <div class="flex flex-col md:flex-row gap-4">
-	<a href={`/channel/${channel._id}`} class=" md:w-96 bg-gray-200">
+	<a href={`/channel/${item._id}`} class=" md:w-96 bg-gray-200">
 		<img
 			loading="lazy"
-			src={channel.thumbnail || 'https://via.placeholder.com/300/09f/fff.png'}
+			src={item.thumbnail || 'https://via.placeholder.com/300/09f/fff.png'}
 			class="w-full max-h-64 border-none rounded shadow"
 			alt="" />
 	</a>
 
 	<div class="md:basis-96 flex-auto flex flex-col gap-2">
-		{#if Array.isArray(channel.category)}
+		{#if Array.isArray(item.category)}
 			<div class="flex flex-wrap gap-2">
-				{#each channel.category as cat}
+				{#each item.category as cat}
 					<div class="badge badge-primary">{cat}</div>
 				{/each}
 			</div>
 		{/if}
 
-		<a href={`/channel/${channel._id}`}>
+		<a href={`/channel/${item._id}`}>
 			<h2 class="text-xl font-semibold dark:text-white">
-				{channel.title || ''}
+				{item.title || ''}
 			</h2>
 		</a>
 
 		<p class="text-sm font-light">
-			{channel.memberCount || 0} Views - {timeSince(channel.createdAt)}
+			{item.memberCount || 0} Views - {timeSince(item.createdAt)}
 		</p>
 
-		<a href={`/channel/${channel._id}`} class="flex items-center">
+		<a href={`/channel/${item._id}`} class="flex items-center">
 			<div class="avatar">
 				<div class="w-8 rounded-full">
 					<img
 						loading="lazy"
-						src={channel.avatar || 'https://via.placeholder.com/300/09f/fff.png'}
+						src={item.avatar || 'https://via.placeholder.com/300/09f/fff.png'}
 						alt="avater" />
 				</div>
 			</div>
-			<p class="ml-2 text-sm font-light text-center">{channel.createdBy || ''}</p>
+			<p class="ml-2 text-sm font-light text-center">{item.createdBy || ''}</p>
 		</a>
 
 		<p class="text-sm font-light">
-			{channel.description ? channel.description.slice(0, 100) : ''}
+			{item.description ? item.description.slice(0, 100) : ''}
 		</p>
 
-		{#if Array.isArray(channel.tags)}
+		{#if Array.isArray(item.tags)}
 			<div class="flex flex-wrap gap-2">
-				{#each channel.tags as tag}
+				{#each item.tags as tag}
 					<div class="badge">{tag}</div>
 				{/each}
 			</div>

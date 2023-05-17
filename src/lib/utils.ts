@@ -71,14 +71,17 @@ export const getSectionUrl = ({
 	limit: number
 }): string => {
 	switch (sectionId) {
+		case 'most-active':
+			return `channels/most-active?skip=${skip}&limit=${limit}`
 		case 'weekly':
 			return `channels/weekly?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'highest-ranked':
 			return `users/highest-ranked?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'rising-stars':
+			//stats/stream/getRisingStars?skip=${0}&limit=${10}
 			return `users/rising-stars?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'my':
-			return `channels/me/hosted?searchQuery=${query}&skip=${skip}&limit=${limit}`
+			return `channels/user?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'fav':
 			return `channels/me/fav?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		default:
