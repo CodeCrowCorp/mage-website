@@ -5,8 +5,10 @@
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
 	import { onMount } from 'svelte'
 	import LastItemInViewport from '$lib/actions/LastItemInViewport'
-	import ItemSearch from '$lib/components/Search/ItemSearch.svelte'
-	import LoadingItemSearch from '$lib/components/Search/LoadingItemSearch.svelte'
+	import ItemSearchChannel from '$lib/components/Search/ItemSearchChannel.svelte'
+	import LoadingItemSearchChannel from '$lib/components/Search/LoadingItemSearchChannel.svelte'
+	import ItemSearchUser from '$lib/components/Search/ItemSearchUser.svelte'
+	import LoadingItemSearchUser from '$lib/components/Search/LoadingItemSearchUser.svelte'
 	// @ts-ignore
 	import NProgress from 'nprogress'
 	$: {
@@ -105,11 +107,19 @@
 	<div class="flex flex-col gap-4 justify-around">
 		{#if initialLoad}
 			{#each Array(10) as _}
-				<LoadingItemSearch />
+				{#if placeholderText === 'users'}
+					<LoadingItemSearchUser />
+				{:else}
+					<LoadingItemSearchChannel />
+				{/if}
 			{/each}
 		{:else}
 			{#each searchList as item}
-				<ItemSearch {item} />
+				{#if placeholderText === 'users'}
+					<ItemSearchUser {item} />
+				{:else}
+					<ItemSearchChannel {item} />
+				{/if}
 			{:else}
 				<h2>No {placeholderText} found</h2>
 			{/each}
