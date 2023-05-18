@@ -21,7 +21,6 @@
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
 	import { isOnline } from '$lib/stores/userStore'
 	import { current_theme } from '$lib/stores/helperStore'
-	import { browser } from '$app/environment'
 
 	NProgress.configure({
 		minimum: 0.75,

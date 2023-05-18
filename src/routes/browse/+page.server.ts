@@ -1,26 +1,39 @@
 import type { Actions, PageServerLoad } from './$types'
 import { get, post } from '$lib/api'
 import { redirect } from '@sveltejs/kit'
+import { getSectionUrl } from '$lib/utils'
 
 export const load = (async ({ locals }) => {
 	return {
 		// tableChannels: get(`channels?skip=${0}&limit=${100}`),
-		mostActiveChannels: get(`channels/most-active?skip=${0}&limit=${5}`),
+		mostActiveChannels: get(
+			getSectionUrl({ sectionId: 'most-active', query: '', skip: 0, limit: 5 })
+		),
 		lazy: {
-			mostActiveChannels: get(`channels/most-active?skip=${0}&limit=${5}`),
-			weeklyChannels: get(`channels/weekly?skip=${0}&limit=${10}`),
-			highestRankedUsers: get(`users/highest-ranked?skip=${0}&limit=${10}`),
-			risingStarUsers: get(`stats/stream/getRisingStars?skip=${0}&limit=${10}`),
+			mostActiveChannels: get(
+				getSectionUrl({ sectionId: 'most-active', query: '', skip: 0, limit: 5 })
+			),
+			weeklyChannels: get(getSectionUrl({ sectionId: 'weekly', query: '', skip: 0, limit: 10 })),
+			highestRankedUsers: get(
+				getSectionUrl({ sectionId: 'highest-ranked', query: '', skip: 0, limit: 10 })
+			),
+			risingStarUsers: get(
+				getSectionUrl({ sectionId: 'rising-stars', query: '', skip: 0, limit: 10 })
+			),
 			myChannels: locals.user
-				? get(`channels/user?userId=${locals.user.userId}&skip=${0}&limit=${10}`)
+				? get(
+						`${getSectionUrl({ sectionId: 'my', query: '', skip: 0, limit: 10 })}&userId=${
+							locals.user?.userId
+						}`
+				  )
 				: [],
 			favChannels: locals.user
-				? get(`channels/me/fav?skip=${0}&limit=${10}`, {
+				? get(getSectionUrl({ sectionId: 'fav', query: '', skip: 0, limit: 10 }), {
 						userId: locals.user.userId,
 						token: locals.user.token
 				  })
 				: [],
-			tableChannels: get(`channels?skip=${0}&limit=${100}`)
+			tableChannels: get(getSectionUrl({ sectionId: '', query: '', skip: 0, limit: 100 }))
 		}
 	}
 }) satisfies PageServerLoad

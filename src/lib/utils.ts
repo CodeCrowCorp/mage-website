@@ -71,14 +71,17 @@ export const getSectionUrl = ({
 	limit: number
 }): string => {
 	switch (sectionId) {
+		case 'most-active':
+			return `channels/most-active?skip=${skip}&limit=${limit}`
 		case 'weekly':
 			return `channels/weekly?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'highest-ranked':
 			return `users/highest-ranked?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'rising-stars':
+			//stats/stream/getRisingStars?skip=${0}&limit=${10}
 			return `users/rising-stars?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'my':
-			return `channels/me/hosted?searchQuery=${query}&skip=${skip}&limit=${limit}`
+			return `channels/user?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'fav':
 			return `channels/me/fav?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		default:
@@ -147,13 +150,29 @@ export const cardCounts: { [key: number]: number[] } = {
 	16: [4, 4, 4, 4]
 }
 
-// export const isDarkerTheme = (currentTheme: string): boolean => {
-// 	switch (currentTheme) {
-// 		case 'light' || 'cyberpunk':
-// 			return false
-// 		case 'dark' || 'synthwave':
-// 			return true
-// 		default:
-// 			return true
-// 	}
-// }
+export const timeSince = (date: string) => {
+	const created: any = new Date(date)
+	const currentDate: any = new Date(Date.now())
+	const seconds = Math.floor((currentDate - created) / 1000)
+	let interval = seconds / 31536000
+	if (interval > 1) {
+		return Math.floor(interval) + ' years ago'
+	}
+	interval = seconds / 2592000
+	if (interval > 1) {
+		return Math.floor(interval) + ' months ago'
+	}
+	interval = seconds / 86400
+	if (interval > 1) {
+		return Math.floor(interval) + ' days ago'
+	}
+	interval = seconds / 3600
+	if (interval > 1) {
+		return Math.floor(interval) + ' hours ago'
+	}
+	interval = seconds / 60
+	if (interval > 1) {
+		return Math.floor(interval) + ' minutes ago'
+	}
+	return Math.floor(seconds) + ' seconds ago'
+}

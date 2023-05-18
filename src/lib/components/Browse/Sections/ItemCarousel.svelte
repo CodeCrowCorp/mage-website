@@ -22,7 +22,8 @@
 					for=""
 					class="btn btn-sm rounded-md font-medium gap-2 text-white border-none"
 					tabindex="-1">
-					<IconViewers /> 10
+					<IconViewers />
+					{channel.memberCount || '0'}
 				</label>
 			</div>
 		</div>

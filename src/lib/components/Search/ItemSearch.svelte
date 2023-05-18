@@ -1,83 +1,87 @@
 <script lang="ts">
-	export let channel: any
-	function timeSince(date: string) {
-		let created: any = new Date(date)
-		let currentDate: any = new Date(Date.now())
-		var seconds = Math.floor((currentDate - created) / 1000)
-		var interval = seconds / 31536000
-		if (interval > 1) {
-			return Math.floor(interval) + ' years ago'
-		}
-		interval = seconds / 2592000
-		if (interval > 1) {
-			return Math.floor(interval) + ' months ago'
-		}
-		interval = seconds / 86400
-		if (interval > 1) {
-			return Math.floor(interval) + ' days ago'
-		}
-		interval = seconds / 3600
-		if (interval > 1) {
-			return Math.floor(interval) + ' hours ago'
-		}
-		interval = seconds / 60
-		if (interval > 1) {
-			return Math.floor(interval) + ' minutes ago'
-		}
-		return Math.floor(seconds) + ' seconds ago'
-	}
+	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
+	import { category_list } from '$lib/stores/channelStore'
+	import { timeSince } from '$lib/utils'
+
+	export let item: any
 </script>
 
-<div class="flex flex-col md:flex-row gap-4">
-	<a href={`/channel/${channel._id}`} class=" md:w-96 bg-gray-200">
-		<img
-			loading="lazy"
-			src={channel.thumbnail || 'https://via.placeholder.com/300/09f/fff.png'}
-			class="w-full max-h-64 border-none rounded shadow"
-			alt="" />
-	</a>
-
-	<div class="md:basis-96 flex-auto flex flex-col gap-2">
-		{#if Array.isArray(channel.category)}
-			<div class="flex flex-wrap gap-2">
-				{#each channel.category as cat}
-					<div class="badge badge-primary">{cat}</div>
-				{/each}
-			</div>
-		{/if}
-
-		<a href={`/channel/${channel._id}`}>
-			<h2 class="text-xl font-semibold dark:text-white">
-				{channel.title || ''}
-			</h2>
-		</a>
-
-		<p class="text-sm font-light">
-			{channel.memberCount || 0} Views - {timeSince(channel.createdAt)}
-		</p>
-
-		<a href={`/channel/${channel._id}`} class="flex items-center">
-			<div class="avatar">
-				<div class="w-8 rounded-full">
+<ul class="menu bg-base-100 rounded-md">
+	<li>
+		<a href={`/channel/${item._id}`}>
+			<div class="flex flex-col md:flex-row gap-4 w-full">
+				<div class="min-w-[20rem]">
+					<div class="absolute flex gap-2 m-2">
+						{#if item.isLive}
+							<span
+								class="btn btn-sm rounded-md font-medium text-white border-none flex items-center bg-red-700 hover:bg-red-700">
+								LIVE
+							</span>
+						{/if}
+						<div class="dropdown dropdown-bottom">
+							<label
+								for=""
+								class="btn btn-sm rounded-md font-medium gap-2 text-white border-none"
+								tabindex="-1">
+								<IconViewers />
+								{item.memberCount || '0'}
+							</label>
+						</div>
+					</div>
 					<img
 						loading="lazy"
-						src={channel.avatar || 'https://via.placeholder.com/300/09f/fff.png'}
-						alt="avater" />
+						src={item.thumbnail
+							? item.thumbnail
+							: '/src/lib/assets/placeholder/programming-placeholder.jpg'}
+						class="h-64 w-full object-cover rounded shadow"
+						alt="" />
+				</div>
+				<div class="flex-auto flex flex-col gap-2">
+					<div class="flex flex-wrap">
+						{#if item.category && item.category.length}
+							{#each item.category as category}
+								<div class="tooltip" data-tip={category}>
+									<img src={$category_list[category]} alt="" class="h-10 w-10 m-1" />
+								</div>
+							{/each}
+						{/if}
+					</div>
+
+					<h2 class="text-xl font-semibold">
+						{item.title || ''}
+					</h2>
+
+					<h2 class="text-md">
+						{item.description || ''}
+					</h2>
+
+					<div class="flex items-center">
+						<div class="avatar">
+							<div class="w-12 mask mask-squircle">
+								<img src={item.avatar} alt="" />
+							</div>
+						</div>
+						<a class="ml-2 link link-secondary" href="/profile/{item.createdByUsername}"
+							>@{item.createdByUsername || ''}</a>
+					</div>
+
+					<div class="flex flex-wrap gap-2 my-1">
+						{#if item.tags && item.tags.length}
+							{#each item.tags as tag}
+								<div>
+									<span
+										class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold border-none"
+										>{tag}</span>
+								</div>
+							{/each}
+						{/if}
+					</div>
+
+					<p class="text-sm font-light">
+						{item.viewCount || 0} Views - {timeSince(item.createdAt)}
+					</p>
 				</div>
 			</div>
-			<p class="ml-2 text-sm font-light text-center">{channel.createdBy || ''}</p>
 		</a>
-
-		<p class="text-sm font-light">
-			{channel.description ? channel.description.slice(0, 100) : ''}
-		</p>
-
-		{#if Array.isArray(channel.tags)}
-			<div class="flex flex-wrap gap-2">
-				{#each channel.tags as tag}
-					<div class="badge">{tag}</div>
-				{/each}
-			</div>
-		{/if}
-	</div>
-</div>
+	</li>
+</ul>
