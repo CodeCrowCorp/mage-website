@@ -87,8 +87,6 @@
 				action="?/edit-channel"
 				method="post"
 				use:enhance={({ data }) => {
-					data.append('category-selected', JSON.stringify(channel.category))
-					data.append('tags-selected', JSON.stringify(channel.tags))
 					return ({ result }) => {
 						if (result.type === 'success') {
 							console.log('channel', channel)
