@@ -151,6 +151,7 @@ export const cardCounts: { [key: number]: number[] } = {
 }
 
 export const timeSince = (date: string) => {
+	if (!date) return 'Date created unknown'
 	const created: any = new Date(date)
 	const currentDate: any = new Date(Date.now())
 	const seconds = Math.floor((currentDate - created) / 1000)

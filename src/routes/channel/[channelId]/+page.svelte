@@ -89,39 +89,55 @@
 	}
 
 	const handleWebsocket = async () => {
-		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
-		initChannelSocket(channelSocketId)
-		channelSocket.addEventListener('open', async (data) => {
-			console.log('channel socket connection open', channelSocketId)
-			$channel_connection = 'open'
-			$channel_message = ''
-			$video_items = []
-			emitChannelSubscribeByUser({
-				channelId,
-				userId: $page.data.user?.userId,
-				username: $page.data.user?.user?.username
+		try {
+			const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
+			initChannelSocket(channelSocketId)
+			channelSocket.addEventListener('open', async (data) => {
+				console.log('channel socket connection open', channelSocketId)
+				$channel_connection = 'open'
+				$channel_message = ''
+				$video_items = []
+				emitChannelSubscribeByUser({
+					channelId,
+					userId: $page.data.user?.userId,
+					username: $page.data.user?.user?.username
+				})
+				emitChatHistoryToChannel({ channelId, skip: 100 })
+				getHost(channel.user)
 			})
-			emitChatHistoryToChannel({ channelId, skip: 100 })
-			getHost(channel.user)
-		})
-		channelSocket.addEventListener('message', (data) => {
-			console.log('channel listening to messages')
-			if (isJsonString(data.data)) {
-				console.log('data.data', data.data)
-				$channel_message = data.data
-			}
-		})
-		channelSocket.addEventListener('error', (data) => {
-			console.log('channel socket connection error')
-			console.log(data)
-		})
-		channelSocket.addEventListener('close', (data) => {
-			console.log('channel socket connection close')
-			console.log(data)
-			$channel_connection = 'close'
-			$channel_message = ''
-			$video_items = []
-		})
+			channelSocket.addEventListener('message', (data) => {
+				console.log('channel listening to messages')
+				if (isJsonString(data.data)) {
+					console.log('data.data', data.data)
+					$channel_message = data.data
+				}
+			})
+			channelSocket.addEventListener('error', (data) => {
+				console.log('channel socket connection error')
+				console.log(data)
+			})
+			channelSocket.addEventListener('close', (data) => {
+				console.log('channel socket connection close')
+				console.log(data)
+				$channel_connection = 'close'
+				$channel_message = ''
+				$video_items = []
+
+				console.log('got here----', data.code)
+				//if manually closed, don't reconnect
+				if (data.code === 1005) return
+				attemptReconnect()
+			})
+		} catch (error) {
+			if (error) attemptReconnect()
+		}
+	}
+
+	const attemptReconnect = () => {
+		setTimeout(async () => {
+			console.log('Reconnecting to WebSocket...')
+			await handleWebsocket()
+		}, 4000)
 	}
 
 	const deleteChannelNoAction = () => {

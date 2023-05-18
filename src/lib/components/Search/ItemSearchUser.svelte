@@ -1,8 +1,6 @@
 <script lang="ts">
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
-	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
 	import { category_list } from '$lib/stores/channelStore'
-	import { timeSince } from '$lib/utils'
 
 	export let item: any
 </script>
