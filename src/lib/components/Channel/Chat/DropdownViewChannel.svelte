@@ -1,15 +1,61 @@
 <script lang="ts">
-	import { get } from '$lib/api'
 	import IconChatDownChevron from '$lib/assets/icons/chat/IconChatDownChevron.svelte'
 	import { category_list } from '$lib/stores/channelStore'
-	import { page } from '$app/stores'
 	import { copyToClipboard } from '$lib/utils'
 	import IconChatDelete from '$lib/assets/icons/chat/IconChatDelete.svelte'
+	import IconChatStar from '$lib/assets/icons/chat/IconChatStar.svelte'
+	import { onMount } from 'svelte'
+	import { page } from '$app/stores'
+	import { del, get, put } from '$lib/api'
 
 	export let channel: any = undefined,
 		showEditChannelDrawer: boolean = false,
 		host: any = {},
-		isHost: boolean = false
+		isHost: boolean = false,
+		isSubscribed: boolean = false,
+		isFavorite: boolean = false
+
+	onMount(async () => {
+		if (!$page.data.user?.userId) return
+		const relationship = await get(`subscribes/relationship?source=${channel.user}`, {
+			userId: $page.data.user?.userId,
+			token: $page.data.user?.token
+		})
+		isSubscribed = relationship?.isSubscribing
+		isFavorite = $page.data.user?.user?.favChannelIds?.includes(channel._id)
+	})
+
+	const toggleSubscribe = async () => {
+		isSubscribed = !isSubscribed
+		if (isSubscribed) {
+			await put(
+				`subscribes`,
+				{ source1: channel.user, source2: $page.data.user?.userId },
+				{ userId: $page.data.user?.userId, token: $page.data.user?.token }
+			)
+		} else {
+			await del(`subscribes?source1=${channel.user}&source2=${$page.data.user?.userId}`, {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
+		}
+	}
+
+	const toggleFavorite = async () => {
+		isFavorite = !isFavorite
+		if (isFavorite) {
+			await put(
+				`users/channel?channelId=${channel._id}`,
+				{},
+				{ userId: $page.data.user?.userId, token: $page.data.user?.token }
+			)
+		} else {
+			await del(`users/channel?channelId=${channel._id}`, {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
+		}
+	}
 </script>
 
 <div class="menu dropdown dropdown-bottom">
@@ -80,7 +126,6 @@
 		</li>
 		{#if isHost}
 			<div class="grid grid-cols-5 gap-2">
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<label
 					for="edit-channel-drawer"
 					class="btn col-span-4 border-none font-normal normal-case tooltip tooltip-top flex"
@@ -90,10 +135,31 @@
 				</label>
 				<label
 					for="modal-delete-channel"
-					class="btn col-span-1 bg-error text-white border-none font-normal normal-case tooltip tooltip-left tooltip-error flex"
+					class="btn col-span-1 bg-error text-black hover:text-white border-none font-normal normal-case tooltip tooltip-left tooltip-error flex"
 					data-tip="Delete channel">
 					<IconChatDelete />
 				</label>
+			</div>
+		{:else}
+			<div class="grid grid-cols-5 gap-2">
+				<button
+					disabled={!$page.data.user?.userId}
+					class="btn btn-secondary {isSubscribed
+						? 'btn-outline'
+						: ''} col-span-4 normal-case tooltip tooltip-top flex"
+					data-tip={isSubscribed ? 'Unsubscribe from host' : 'Subscribe to host'}
+					on:click={() => toggleSubscribe()}>
+					{isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+				</button>
+				<button
+					disabled={!$page.data.user?.userId}
+					class="btn col-span-1 {isFavorite
+						? 'bg-yellow-300 text-black hover:bg-yellow-500'
+						: ''} border-none font-normal normal-case tooltip tooltip-left flex"
+					data-tip="Fav channel"
+					on:click={() => toggleFavorite()}>
+					<IconChatStar />
+				</button>
 			</div>
 		{/if}
 	</ul>
