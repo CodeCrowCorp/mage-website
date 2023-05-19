@@ -13,10 +13,12 @@
 			<div class="relative">
 				<div class="flex flex-row justify-between">
 					<div class="flex gap-2 mb-3">
-						<span
-							class="btn btn-sm rounded-md font-medium text-white border-none flex items-center bg-red-700 hover:bg-red-700">
-							LIVE
-						</span>
+						{#if channel.isLive}
+							<span
+								class="btn btn-sm rounded-md font-medium text-white border-none flex items-center bg-red-700 hover:bg-red-700">
+								LIVE
+							</span>
+						{/if}
 						<div class="dropdown dropdown-bottom">
 							<label
 								for=""
