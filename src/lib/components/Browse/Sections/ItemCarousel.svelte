@@ -9,7 +9,7 @@
 </script>
 
 <a
-	class="swiper-slide bg-slate-50 cursor-pointer rounded-md"
+	class="swiper-slide rounded-md"
 	href="/channel/{channel._id}"
 	style="background-image: url({bg_cover});">
 	<div class="flex flex-col justify-between p-3 w-full h-full">
