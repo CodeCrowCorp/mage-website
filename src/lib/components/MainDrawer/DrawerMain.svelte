@@ -43,19 +43,19 @@
 	let hoursStreamed: number = 0
 	onMount(async () => {
 		if (currentUser) {
-			let exp = currentUser.exp
+			let exp = currentUser.exp || 0
 			let levelAndBarValue = levelAndBarValueFromExp(exp)
 			progressBarLevel = levelAndBarValue.level
 			progressBarValue = levelAndBarValue.barValue
 			progressBarColor = colorFromLevel(progressBarLevel)
-			streakCount = await get(`stats/stream/streak`, {
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			})
-			hoursStreamed = await get(`stats/stream/total-hours`, {
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			})
+			// streakCount = await get(`stats/stream/streak`, {
+			// 	userId: $page.data.user?.userId,
+			// 	token: $page.data.user?.token
+			// })
+			// hoursStreamed = await get(`stats/stream/total-hours`, {
+			// 	userId: $page.data.user?.userId,
+			// 	token: $page.data.user?.token
+			// })
 		}
 	})
 </script>
