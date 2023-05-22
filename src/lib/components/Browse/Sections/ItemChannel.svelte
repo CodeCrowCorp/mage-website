@@ -44,7 +44,7 @@
 						class="w-full h-full mask rounded-lg object-cover"
 						src={channel.thumbnail
 							? channel.thumbnail
-							: '/placeholder/programming-placeholder.jpg'} />
+							: '/src/lib/assets/placeholder/programming-placeholder.jpg'} />
 				</div>
 			</div>
 			<p class="text-lg font-semibold truncate">{channel.title}</p>

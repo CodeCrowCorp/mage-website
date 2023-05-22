@@ -30,7 +30,9 @@
 					</div>
 					<img
 						loading="lazy"
-						src={item.thumbnail ? item.thumbnail : '/placeholder/programming-placeholder.jpg'}
+						src={item.thumbnail
+							? item.thumbnail
+							: '/src/lib/assets/placeholder/programming-placeholder.jpg'}
 						class="h-64 w-full object-cover rounded shadow"
 						alt="" />
 				</div>

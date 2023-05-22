@@ -5,7 +5,7 @@
 
 	export let channel: any = {}
 
-	let bg_cover = channel.thumbnail || '/placeholder/programming-placeholder.jpg'
+	let bg_cover = channel.thumbnail || '/src/lib/assets/placeholder/programming-placeholder.jpg'
 </script>
 
 <a
