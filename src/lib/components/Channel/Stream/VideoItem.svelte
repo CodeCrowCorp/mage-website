@@ -229,7 +229,7 @@
 	// }
 </script>
 
-<div class="w-[500px]">
+<div class="w-full h-full">
 	<div class="bg-base-200 relative w-full h-full rounded-md">
 		<img
 			src={video.avatar}

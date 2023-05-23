@@ -192,7 +192,7 @@ export 	const getVideoGrids = (list:any, limit:number) => {
 			result[j] = []
 			for(let k = 0; k < row[j]; k++){
 				if(pointer < list.length){
-					result[j].push({ ...list[pointer], idx: pointer})
+					result[j].push({ ...list[pointer]})
 					pointer++
 				}
 			}

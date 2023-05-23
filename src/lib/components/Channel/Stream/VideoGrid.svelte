@@ -13,10 +13,10 @@
 
 {#if $video_items?.length}
 	<div class="carousel h-full pb-6">
-		<div class="carousel-item w-full">
+		<div class="carousel-item w-full h-full">
 			<div class="flex flex-col h-full w-full">
 				{#each grid as row}
-					<div class="flex flex-row max-h-80 gap-4 justify-center h-full mt-3">
+					<div class="flex flex-row gap-4 justify-center h-full mt-3">
 						{#each row as video}
 							<VideoItem bind:video={video} {channel} {sender} />
 						{/each}
