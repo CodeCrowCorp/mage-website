@@ -229,16 +229,20 @@
 	// }
 </script>
 
-<div class="w-[500px]">
+<div class={$is_sharing_screen || $is_sharing_webcam ? 'w-full h-full' : 'w-[500px] max-h-80'}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
 		<img
 			src={video.avatar}
 			alt=""
 			class="absolute inset-0 w-24 md:w-24 mask mask-squircle object-cover m-auto" />
 		<div class="absolute inset-0">
-			<video id={`screen-${video._id}`} autoplay muted class="rounded-md" />
-			<div use:draggable={{ bounds: 'parent' }} class="absolute bottom-0 right-0 w-1/2 h-fit">
-				<video id={`webcam-${video._id}`} autoplay muted class="rounded-md" />
+			<video id={`screen-${video._id}`} autoplay muted class="rounded-md w-full h-full" />
+			<div
+				use:draggable={{ bounds: 'parent' }}
+				class={!$is_sharing_screen
+					? 'transition-all absolute w-full bottom-0 left-0 h-full'
+					: 'transition-all absolute w-1/4 bottom-0 right-0'}>
+				<video id={`webcam-${video._id}`} autoplay muted class="rounded-md h-full w-full" />
 			</div>
 			<video id={`audio-${video._id}`} autoplay muted class="rounded-md w-0 h-0" />
 			<div class="absolute left-2 bottom-2 rounded-md dropdown">
