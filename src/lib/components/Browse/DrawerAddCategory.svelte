@@ -142,14 +142,13 @@
 					</label>
 				{/each}
 			{:else if searchQuery != ''}
-				<div class="alert shadow-lg flex justify-center">
+				<div class="alert flex justify-center">
 					<IconInfo />
-
 					<p>No results for the search query</p>
 				</div>
 			{:else}
 				<div class="flex justify-center w-full">
-					<span class="btn btn-circle btn-outline btn-sm loading" />
+					<progress class="progress w-full" />
 				</div>
 			{/if}
 		</div>

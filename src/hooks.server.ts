@@ -14,7 +14,6 @@ import { user_role } from '$lib/stores/authStore'
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname
-
 	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
 	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
 	// const lastTimeTillLoadConfig = event.cookies.get('loadConfigTime') || '0'

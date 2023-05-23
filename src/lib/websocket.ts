@@ -178,15 +178,6 @@ function emitAction({ channelId, message }: { channelId: string; message: any })
 	)
 }
 
-// function listenToUserConnection({ userId }: { userId: string }) {
-// 	platformMessage.subscribe((value) => {
-// 		const parsedData = JSON.parse(value.data)
-// 		if (parsedData.eventName === `user-connection-${userId}`) {
-// 			//parsedData.user
-// 		}
-// 	})
-// }
-
 // function listenToChannelAccessRequest({ channelId }: { channelId: string }) {
 // 	platformMessage.subscribe((value) => {
 // 		const parsedData = JSON.parse(value.data)

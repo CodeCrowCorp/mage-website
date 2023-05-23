@@ -2,7 +2,7 @@
 	// import IconLock from '$lib/assets/icons/IconLock.svelte'
 	// import VirtualList from '@sveltejs/svelte-virtual-list'
 	import LoadingItemTable from '$lib/components/Browse/Sections/LoadingItemTable.svelte'
-	import SectionTableRow from '$lib/components/Browse/Sections/SectionTableRow.svelte'
+	import ItemTable from '$lib/components/Browse/Sections/ItemTable.svelte'
 	import LastItemInViewport from '$lib/actions/LastItemInViewport'
 	import { get } from '$lib/api'
 
@@ -26,7 +26,7 @@
 	</div>
 {:then value}
 	{#if value.length > 0}
-		<table class="table-auto w-full">
+		<table class="table-auto w-full overflow-hidden">
 			<thead>
 				<tr>
 					<th class="px-4 text-start">Host</th>
@@ -38,10 +38,10 @@
 			</thead>
 			<tbody>
 				{#each value as channel}
-					<SectionTableRow {channel} />
+					<ItemTable {channel} />
 				{/each}
 				{#each moreChannels as channel}
-					<SectionTableRow {channel} />
+					<ItemTable {channel} />
 				{/each}
 			</tbody>
 			<tfoot>

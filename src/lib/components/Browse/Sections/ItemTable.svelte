@@ -32,9 +32,6 @@
 	</td>
 	<td>
 		<div class="flex gap-2 my-3">
-			<!-- {#if channel.isPrivate}
-										<IconLock />
-									{/if} -->
 			<IconViewers />
 			<span>{channel.memberCount || '0'}</span>
 		</div>

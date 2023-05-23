@@ -8,8 +8,7 @@
 		initChannelSocket,
 		channelSocket,
 		emitChannelSubscribeByUser,
-		emitDeleteAllMessagesToChannel,
-		emitChannelUpdate
+		emitDeleteAllMessagesToChannel
 	} from '$lib/websocket'
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
@@ -18,11 +17,18 @@
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import DrawerEditChannel from '$lib/components/Channel/Chat/DrawerEditChannel.svelte'
-	import { updateVideoItems, video_items } from '$lib/stores/streamStore'
+	import {
+		is_sharing_screen,
+		is_sharing_webcam,
+		is_sharing_audio,
+		updateVideoItems,
+		video_items
+	} from '$lib/stores/streamStore'
 
 	let channel: any
 	let channelId = $page.params.channelId || ''
 	$: userCount = 0
+	$: isHostOrGuest = isHost || channel?.guests?.includes($page.data.user?.userId)
 
 	let isDeleteModalOpen = false,
 		showEditChannelDrawer = false,
@@ -34,7 +40,19 @@
 
 	$: if (channel) {
 		if (channel._id !== channelId) {
+			channelSocket.close()
 			channelId = channel?._id
+			$channel_message = ''
+			$video_items = []
+			if (isHostOrGuest) {
+				$is_sharing_screen = false
+				$is_sharing_webcam = false
+				$is_sharing_audio = false
+			} else {
+				$is_sharing_screen = undefined
+				$is_sharing_webcam = undefined
+				$is_sharing_audio = undefined
+			}
 			handleWebsocket()
 		}
 	}
@@ -50,7 +68,14 @@
 		}, 600)
 	})
 
-	onDestroy(() => channelSocket?.close())
+	onDestroy(() => {
+		if (isHostOrGuest) {
+			$is_sharing_screen = false
+			$is_sharing_webcam = false
+			$is_sharing_audio = false
+		}
+		channelSocket?.close()
+	})
 
 	const loadChannel = async () => {
 		channel = await get(`channel?channelId=${channelId}`)
@@ -63,45 +88,56 @@
 		isHost = userId === $page?.data?.user?.userId
 	}
 
-	const getLiveInputs = async (channelId: string) => {
-		return await get(`cloudflare/live-input?channelId=${channelId}`)
+	const handleWebsocket = async () => {
+		try {
+			const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
+			initChannelSocket(channelSocketId)
+			channelSocket.addEventListener('open', async (data) => {
+				console.log('channel socket connection open', channelSocketId)
+				$channel_connection = 'open'
+				$channel_message = ''
+				$video_items = []
+				emitChannelSubscribeByUser({
+					channelId,
+					userId: $page.data.user?.userId,
+					username: $page.data.user?.user?.username
+				})
+				emitChatHistoryToChannel({ channelId, skip: 100 })
+				getHost(channel.user)
+			})
+			channelSocket.addEventListener('message', (data) => {
+				console.log('channel listening to messages')
+				if (isJsonString(data.data)) {
+					console.log('data.data', data.data)
+					$channel_message = data.data
+				}
+			})
+			channelSocket.addEventListener('error', (data) => {
+				console.log('channel socket connection error')
+				console.log(data)
+			})
+			channelSocket.addEventListener('close', (data) => {
+				console.log('channel socket connection close')
+				console.log(data)
+				$channel_connection = 'close'
+				$channel_message = ''
+				$video_items = []
+
+				console.log('got here----', data.code)
+				//if manually closed, don't reconnect
+				if (data.code === 1005) return
+				attemptReconnect()
+			})
+		} catch (error) {
+			if (error) attemptReconnect()
+		}
 	}
 
-	const handleWebsocket = async () => {
-		channelSocket?.close()
-		const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
-		initChannelSocket(channelSocketId)
-		channelSocket.addEventListener('open', async (data) => {
-			console.log('channel socket connection open', channelSocketId)
-			$channel_connection = 'open'
-			$channel_message = ''
-			$video_items = []
-			emitChannelSubscribeByUser({
-				channelId,
-				userId: $page.data.user?.userId,
-				username: $page.data.user?.user?.username
-			})
-			emitChatHistoryToChannel({ channelId, skip: 100 })
-			getHost(channel.user)
-		})
-		channelSocket.addEventListener('message', (data) => {
-			console.log('channel listening to messages')
-			if (isJsonString(data.data)) {
-				console.log('data.data', data.data)
-				$channel_message = data.data
-			}
-		})
-		channelSocket.addEventListener('error', (data) => {
-			console.log('channel socket connection error')
-			console.log(data)
-		})
-		channelSocket.addEventListener('close', (data) => {
-			console.log('channel socket connection close')
-			console.log(data)
-			$channel_connection = 'close'
-			$channel_message = ''
-			$video_items = []
-		})
+	const attemptReconnect = () => {
+		setTimeout(async () => {
+			console.log('Reconnecting to WebSocket...')
+			await handleWebsocket()
+		}, 4000)
 	}
 
 	const deleteChannelNoAction = () => {
@@ -128,7 +164,8 @@
 		var parsedMsg = JSON.parse(value)
 		switch (parsedMsg.eventName) {
 			case `channel-update-${channelId}`:
-				channel = parsedMsg.channels
+				console.log('channel-update', parsedMsg)
+				channel = parsedMsg.channel
 				break
 			case `channel-subscribe-${channelId}`:
 				userCount = parsedMsg.userCount
@@ -137,24 +174,29 @@
 				} else {
 					const activeGuests = parsedMsg.activeGuests
 					if (activeGuests?.length) {
-						$video_items = [...activeGuests]
-						const liveInputs = await getLiveInputs(channelId)
-						$video_items = updateVideoItems($video_items, liveInputs)
+						if ($video_items.length) {
+							// for users that are in the channel and new users join
+							// add new users but dont overwrite the existing ones streaming
+							$video_items = activeGuests.map((guest: any) => {
+								const foundVideoItem = $video_items.find((video: any) => guest._id === video._id)
+								return foundVideoItem || guest
+							})
+						} else {
+							// for new users joining the channel
+							const liveInputs = await get(`cloudflare/live-inputs?channelId=${channelId}`)
+							$video_items = updateVideoItems([...activeGuests], liveInputs)
+						}
 					}
 				}
 				break
 			case `channel-streaming-action-${channelId}`:
 				switch (parsedMsg.data.action) {
-					case 'toggleTrack-start':
-						console.log('VIDEOOOOOO', $video_items)
-						console.log('start parsedMsg.data', parsedMsg.data)
-						if ($page.data.user.userId !== parsedMsg.data.video._id) {
-							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
-						}
-						break
-					case 'toggleTrack-stop':
-						console.log('stop parsedMsg.data', parsedMsg.data)
-						if ($page.data.user.userId !== parsedMsg.data.video._id) {
+					case 'toggleTrack':
+						if ($page.data.user?.userId) {
+							if ($page.data.user.userId !== parsedMsg.data.video._id) {
+								$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
+							}
+						} else {
 							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
 						}
 						break
@@ -164,7 +206,7 @@
 	})
 </script>
 
-{#if channel}
+{#if channel && channel._id === channelId}
 	<div class="flex flex-auto">
 		<div class="drawer drawer-end">
 			<input
@@ -173,7 +215,12 @@
 				class="drawer-toggle"
 				bind:checked={$is_chat_drawer_open} />
 			<div class="drawer-content">
-				<StreamContainer bind:channel bind:userCount bind:channels on:loadMore={loadMoreChannels} />
+				<StreamContainer
+					bind:channel
+					bind:userCount
+					bind:channels
+					on:loadMore={loadMoreChannels}
+					bind:isHostOrGuest />
 
 				{#if showEditChannelDrawer}
 					<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />

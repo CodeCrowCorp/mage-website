@@ -1,7 +1,7 @@
 <script lang="ts">
 	import IconDrawerLeft from '$lib/assets/icons/drawer/IconDrawerLeft.svelte'
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
-	import SectionUserItem from '$lib/components/Browse/Sections/SectionUserItem.svelte'
+	import ItemUser from '$lib/components/Browse/Sections/ItemUser.svelte'
 	import LoadingItemChannel from '$lib/components/Browse/Sections/LoadingItemChannel.svelte'
 
 	export let title: string = '',
@@ -29,7 +29,6 @@
 	}
 </script>
 
-<!--class:hidden-->
 {#await users}
 	<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide">
 		<div class="font-semibold m-3">
@@ -45,7 +44,7 @@
 	{#if value.length > 0}
 		<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide">
 			<div class="font-semibold m-3">
-				<a class="link link-secondary text-lg" href="/browse/{sectionId}">{title}</a>
+				<a class="link link-secondary text-lg" href="/search?section={sectionId}">{title}</a>
 			</div>
 			<div class="flex flex-row">
 				<div class="relative flex items-center ml-3">
@@ -59,11 +58,11 @@
 					class="relative w-full flex gap-6 snap-x scrollbar-hide snap-mandatory overflow-x-auto flex-grow mx-14">
 					{#if sectionId === 'rising-stars'}
 						{#each value.users as user}
-							<SectionUserItem {user} />
+							<ItemUser {user} />
 						{/each}
 					{:else}
 						{#each value as user}
-							<SectionUserItem {user} />
+							<ItemUser {user} />
 						{/each}
 					{/if}
 				</div>
@@ -79,10 +78,6 @@
 {/await}
 
 <style>
-	.video-thumbnail {
-		@apply bg-slate-400 w-full h-64 flex items-center justify-center text-white rounded-md cursor-pointer;
-	}
-
 	.scrollbar-hide::-webkit-scrollbar {
 		display: none;
 	}

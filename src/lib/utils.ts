@@ -71,14 +71,17 @@ export const getSectionUrl = ({
 	limit: number
 }): string => {
 	switch (sectionId) {
+		case 'most-active':
+			return `channels/most-active?skip=${skip}&limit=${limit}`
 		case 'weekly':
 			return `channels/weekly?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'highest-ranked':
 			return `users/highest-ranked?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'rising-stars':
+			//stats/stream/getRisingStars?skip=${0}&limit=${10}
 			return `users/rising-stars?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'my':
-			return `channels/me/hosted?searchQuery=${query}&skip=${skip}&limit=${limit}`
+			return `channels/user?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'fav':
 			return `channels/me/fav?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		default:
@@ -103,6 +106,10 @@ export const hasOneHourPassed = (date: number) => {
 
 export const getColoredRole = (role: string) =>
 	({
+		'🤖 AI': {
+			tagColor: 'bg-transparent bg-clip bg-gradient-to-r to-emerald-600 from-sky-400',
+			textColor: 'text-accent'
+		},
 		Host: { tagColor: 'bg-secondary', textColor: 'text-pink-500' },
 		You: { tagColor: 'bg-gray-600' },
 		Mod: { tagColor: 'bg-green-700', textColor: 'text-success' },
@@ -117,7 +124,7 @@ Input: 20, 16
 Output: [16, 4]
 */
 export const divideNumber = (number: number, divider: number): number[] => {
-	if (number < divider) {
+	if (number <= divider) {
 		return [number]
 	}
 	const quotient = Math.floor(number / divider)
@@ -143,13 +150,53 @@ export const cardCounts: { [key: number]: number[] } = {
 	16: [4, 4, 4, 4]
 }
 
-// export const isDarkerTheme = (currentTheme: string): boolean => {
-// 	switch (currentTheme) {
-// 		case 'light' || 'cyberpunk':
-// 			return false
-// 		case 'dark' || 'synthwave':
-// 			return true
-// 		default:
-// 			return true
-// 	}
-// }
+export const timeSince = (date: string) => {
+	if (!date) return 'Date created unknown'
+	const created: any = new Date(date)
+	const currentDate: any = new Date(Date.now())
+	const seconds = Math.floor((currentDate - created) / 1000)
+	let interval = seconds / 31536000
+	if (interval > 1) {
+		return Math.floor(interval) + ' years ago'
+	}
+	interval = seconds / 2592000
+	if (interval > 1) {
+		return Math.floor(interval) + ' months ago'
+	}
+	interval = seconds / 86400
+	if (interval > 1) {
+		return Math.floor(interval) + ' days ago'
+	}
+	interval = seconds / 3600
+	if (interval > 1) {
+		return Math.floor(interval) + ' hours ago'
+	}
+	interval = seconds / 60
+	if (interval > 1) {
+		return Math.floor(interval) + ' minutes ago'
+	}
+	return Math.floor(seconds) + ' seconds ago'
+}
+
+export const getVideoGrids = (list: any, limit: number) => {
+	if (!list.length) return []
+
+	const numList = divideNumber(list.length, limit)
+	const result: any[] = []
+	let pointer = 0
+
+	for (let i = 0; i < numList.length; i++) {
+		const row: any = cardCounts[numList[i]]
+		for (let j = 0; j < row.length; j++) {
+			result[j] = []
+			for (let k = 0; k < row[j]; k++) {
+				if (pointer < list.length) {
+					result[j].push({ ...list[pointer] })
+					pointer++
+				}
+			}
+		}
+	}
+
+	return result
+}

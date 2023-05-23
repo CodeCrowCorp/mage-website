@@ -18,8 +18,9 @@
 	import { emitUserConnection, initPlatformSocket, platformSocket } from '$lib/websocket'
 	import { platform_connection, platform_message } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
-	import IconMageText from '$lib/assets/icons/IconMageText.svg'
-	import IconMageTextDark from '$lib/assets/icons/IconMageTextDark.svg'
+	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
+	import { isOnline } from '$lib/stores/userStore'
+	import { current_theme } from '$lib/stores/helperStore'
 
 	NProgress.configure({
 		minimum: 0.75,
@@ -38,32 +39,57 @@
 	let nav_drawer: HTMLInputElement
 
 	onMount(async () => {
-		const platformSocketId = await get(`wsinit/wsid`)
-		initPlatformSocket(platformSocketId)
-		platformSocket.addEventListener('open', (data) => {
-			console.log('socket connection open')
-			console.log(data)
-			platform_connection.set('open')
-			if ($page.data.user?.userId)
-				emitUserConnection({ userId: $page.data.user?.userId, isOnline: true })
-		})
-		platformSocket.addEventListener('message', (data) => {
-			console.log('listening to messages')
-			console.log(data.data)
-			if (isJsonString(data.data)) platform_message.set(data.data)
-		})
-		platformSocket.addEventListener('error', (data) => {
-			console.log('socket connection error')
-			console.log(data)
-		})
-		platformSocket.addEventListener('close', (data) => {
-			console.log('socket connection close')
-			console.log(data)
-			platform_connection.set('close')
-		})
+		$current_theme = localStorage.getItem('theme') || 'dark'
 
+		await handleWebsocket()
 		if (!$category_list.length) {
 			$category_list = imageUrlsJson
+		}
+	})
+
+	const handleWebsocket = async () => {
+		try {
+			if ($page.data.user?.userId) {
+				const platformSocketId = await get(`wsinit/wsid`)
+				initPlatformSocket(platformSocketId)
+				platformSocket.addEventListener('open', (data) => {
+					console.log('socket connection open')
+					console.log(data)
+					$platform_connection = 'open'
+				})
+				platformSocket.addEventListener('message', (data) => {
+					console.log('listening to messages')
+					console.log(data.data)
+					if (isJsonString(data.data)) platform_message.set(data.data)
+				})
+				platformSocket.addEventListener('error', (data) => {
+					console.log('socket connection error')
+					console.log(data)
+				})
+				platformSocket.addEventListener('close', (data) => {
+					console.log('socket connection close')
+					console.log(data)
+					$platform_connection = 'close'
+					attemptReconnect()
+				})
+			}
+		} catch (error) {
+			attemptReconnect()
+		}
+	}
+
+	const attemptReconnect = () => {
+		setTimeout(async () => {
+			console.log('Reconnecting to WebSocket...')
+			await handleWebsocket()
+		}, 4000)
+	}
+
+	platform_connection.subscribe(async (value: any) => {
+		if (!value) return
+		$isOnline = value === 'open'
+		if ($page.data.user?.userId && value === 'open') {
+			emitUserConnection({ userId: $page.data.user?.userId, isOnline: $isOnline })
 		}
 	})
 </script>
@@ -84,8 +110,7 @@
 			<ul>
 				<li>
 					<label for="main-drawer" class="lg:hidden rounded-lg">
-						<img class="w-20 mage-text" src={IconMageText} alt="" />
-						<img class="w-20 mage-text-dark" src={IconMageTextDark} alt="" />
+						<IconMageText />
 					</label>
 				</li>
 			</ul>
@@ -113,15 +138,3 @@
 		{/if}
 	</div>
 </div>
-
-<style>
-	:global(html[data-theme='dark'] .mage-text),
-	:global(html[data-theme='synthwave'] .mage-text) {
-		display: none;
-	}
-
-	:global(html[data-theme='light'] .mage-text-dark),
-	:global(html[data-theme='cyberpunk'] .mage-text-dark) {
-		display: none;
-	}
-</style>

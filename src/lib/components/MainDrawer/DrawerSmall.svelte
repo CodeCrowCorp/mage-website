@@ -14,14 +14,14 @@
 	import { env } from '$env/dynamic/public'
 	import { page } from '$app/stores'
 	import { user_role } from '$lib/stores/authStore'
-	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svg'
-	import IconMageLogoDark from '$lib/assets/icons/IconMageLogoDark.svg'
-	import IconMageText from '$lib/assets/icons/IconMageText.svg'
-	import IconMageTextDark from '$lib/assets/icons/IconMageTextDark.svg'
+	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svelte'
+	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
 
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
 	import { onMount } from 'svelte'
+	import { isOnline } from '$lib/stores/userStore'
+	import { get } from '$lib/api'
 
 	export var nav_drawer: HTMLInputElement
 
@@ -30,17 +30,23 @@
 	let progressBarLevel = 1
 	let progressBarValue = 0
 	let progressBarColor = colorFromLevel(1)
-	let streamCount = 0
+	let streakCount = 0
 	let hoursStreamed = 0
 	onMount(async () => {
 		if (currentUser) {
-			let exp = currentUser.exp
+			let exp = currentUser.exp || 0
 			let levelAndBarValue = levelAndBarValueFromExp(exp)
 			progressBarLevel = levelAndBarValue.level
 			progressBarValue = levelAndBarValue.barValue
 			progressBarColor = colorFromLevel(progressBarLevel)
-			streamCount = 0 //await get(`TODO: add endpoint here`)
-			hoursStreamed = 0 //await get(`TODO: add endpoint here`)
+			// streakCount = await get(`stats/stream/streak`, {
+			// 	userId: $page.data.user?.userId,
+			// 	token: $page.data.user?.token
+			// })
+			// hoursStreamed = await get(`stats/stream/total-hours`, {
+			// 	userId: $page.data.user?.userId,
+			// 	token: $page.data.user?.token
+			// })
 		}
 	})
 </script>
@@ -51,10 +57,8 @@
 			<ul>
 				<li>
 					<a href="/browse" class="md:justify-center">
-						<img class="w-20 md:w-7 mage-text hidden md:block" src={IconMageLogo} alt="" />
-						<img class="w-20 md:w-7 mage-text-dark hidden md:block" src={IconMageLogoDark} alt="" />
-						<img class="w-20 md:w-7 mage-text md:hidden" src={IconMageText} alt="" />
-						<img class="w-20 md:w-7 mage-text-dark md:hidden" src={IconMageTextDark} alt="" />
+						<IconMageLogo customClass={'w-20 md:w-7 mage-text hidden md:block'} />
+						<IconMageText customClass={'w-20 md:w-7 mage-text md:hidden'} />
 					</a>
 				</li>
 			</ul>
@@ -67,7 +71,7 @@
 					<div class="md:text-center">
 						<div class="hero-content">
 							<div class="max-w-md">
-								<div class="avatar {currentUser.isOnline ? 'online' : 'offline'}">
+								<div class="avatar {$isOnline ? 'online' : 'offline'}">
 									<div
 										class="w-24 md:w-12 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
 										<img src={currentUser.avatar} alt="" />
@@ -82,8 +86,8 @@
 									<p class=" text-pink-500 truncate">@{currentUser.username}</p>
 								</div>
 								<IconDrawerStreak />
-								<p class="col-span-2 tooltip text-start" data-tip="{streamCount} day streak">
-									{streamCount} d
+								<p class="col-span-2 tooltip text-start" data-tip="{streakCount} day streak">
+									{streakCount} d
 								</p>
 								<IconDrawerStreamDuration />
 								<p class="col-span-2 tooltip text-start" data-tip="{hoursStreamed} hours streamed">
@@ -179,7 +183,7 @@
 				<IconSocialTwitter />
 			</a>
 		</div>
-		<p>Code Crow Corp © 2023</p>
+		<p>Code Corp © 2023</p>
 		<p class="text-gray-500">v{__VERSION__} [{env.PUBLIC_ENV}]</p>
 	</footer>
 </div>

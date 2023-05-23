@@ -5,7 +5,7 @@
 		<slot />
 		<div class="relative h-screen w-full">
 			<div class="absolute top-0 right-0">
-				<label for="admin-drawer" class="btn btn-ghost normal-case text-xl drawer-button lg:hidden "
+				<label for="admin-drawer" class="btn btn-ghost normal-case text-xl drawer-button lg:hidden"
 					>Admin</label>
 			</div>
 		</div>
@@ -17,7 +17,6 @@
 			<li><a href="/admin/admins">Admins</a></li>
 			<li><a href="/admin/users">Users</a></li>
 			<li><a href="/admin/channels">Channels</a></li>
-			<li><a href="/admin/fun-facts">Fun Facts</a></li>
 			<li><a href="/admin/legal">Legal Policies</a></li>
 			<li><a href="/admin/settings">Site Settings</a></li>
 		</ul>

@@ -42,7 +42,9 @@
 					{#await isSubscribed}
 						<button class="btn btn-secondary" disabled>Unsubscribe</button>
 					{:then value}
-						<button class="btn btn-secondary" disabled={profile?._id === $page.data.user?.userId}
+						<button
+							class="btn btn-secondary"
+							disabled={profile?._id === $page.data.user?.userId || !currentUser}
 							>{value.isSubscriber ? 'Subscribe' : 'Unsubscribe'}</button>
 					{/await}
 					<!--TODO: open sponsor dialog-->
@@ -53,7 +55,7 @@
 				<button
 					class="btn btn-circle"
 					tabindex="0"
-					disabled={currentUser.username !== $page.params.username}>
+					disabled={currentUser?.username !== $page.params.username}>
 					<IconMore />
 				</button>
 				<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
