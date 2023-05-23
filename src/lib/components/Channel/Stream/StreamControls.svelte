@@ -82,7 +82,7 @@
 				meta: {
 					name: `${$page.params.channelId}-${$page.data.user.userId}-screen`
 				},
-				recording: { mode: 'off' }
+				recording: { mode: 'automatic' }
 			}
 		})
 		screenUid = liveInput.uid
@@ -130,7 +130,7 @@
 				meta: {
 					name: `${$page.params.channelId}-${$page.data.user.userId}-webcam`
 				},
-				recording: { mode: 'off' }
+				recording: { mode: 'automatic' }
 			}
 		})
 		webcamUid = liveInput.uid
@@ -178,7 +178,7 @@
 				meta: {
 					name: `${$page.params.channelId}-${$page.data.user.userId}-audio`
 				},
-				recording: { mode: 'off' }
+				recording: { mode: 'automatic' }
 			}
 		})
 		audioUid = liveInput.uid

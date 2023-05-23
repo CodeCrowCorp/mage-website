@@ -48,10 +48,10 @@
 	}
 
 	const toggleGuest = () => {
-		if (channel.guests.includes(sender.user?.userId)) {
-			channel.guests = channel.guests.filter((guest: string) => guest !== sender.user?.userId)
-		} else {
+		if (!channel.guests.includes(sender.user?.userId) && channel.guests.length < 9) {
 			channel.guests.push(sender.user?.userId)
+		} else {
+			channel.guests = channel.guests.filter((guest: string) => guest !== sender.user?.userId)
 		}
 		emitChannelUpdate({ channel })
 	}
@@ -64,11 +64,11 @@
 		<!--Host, Mod, You or Rando-->
 		<div class="p-1 border border-transparent rounded-lg flex gap-2 overflow-x-hidden">
 			<span>
-				{#if sender.role === 'AI-Mod' || sender.role === 'Host' || sender.role === 'Mod' || sender.role === 'You'}
+				{#if sender.role === '🤖 AI' || sender.role === 'Host' || sender.role === 'Mod' || sender.role === 'You'}
 					<span class="{coloredRole.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
 						>{sender.role}</span>
 				{/if}
-				{#if sender.role !== 'AI-Mod'}
+				{#if sender.role !== '🤖 AI'}
 					<span
 						data-popover-target="popover-user-profile"
 						class="{coloredRole.textColor} font-medium">@{sender.user?.username}</span>
