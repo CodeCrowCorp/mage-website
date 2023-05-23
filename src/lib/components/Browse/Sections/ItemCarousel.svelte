@@ -1,6 +1,6 @@
 <script lang="ts">
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
-	import IconBrowseItemPlay from '$lib/assets/icons/browse/IconBrowseItemPlay.svelte'
+	// import IconBrowseItemPlay from '$lib/assets/icons/browse/IconBrowseItemPlay.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 
 	export let channel: any = {}
@@ -59,9 +59,3 @@
 		</div>
 	</div>
 </a>
-
-<style>
-	.video-thumbnail {
-		@apply w-full h-full;
-	}
-</style>
