@@ -229,7 +229,7 @@
 	// }
 </script>
 
-<div class={ $is_sharing_screen || $is_sharing_webcam ? "w-full h-full" : "w-[500px]"}>
+<div class={ $is_sharing_screen || $is_sharing_webcam ? "w-full h-full" : "w-[500px] max-h-80"}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
 		<img
 			src={video.avatar}
