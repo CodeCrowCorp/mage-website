@@ -150,7 +150,7 @@
 								{/each}
 							{:else}
 								<div class="flex justify-center w-full">
-									<span class="btn btn-circle btn-outline btn-sm loading" />
+									<progress class="progress w-full" />
 								</div>
 							{/if}
 						</div>
