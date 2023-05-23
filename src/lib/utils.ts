@@ -124,7 +124,7 @@ Input: 20, 16
 Output: [16, 4]
 */
 export const divideNumber = (number: number, divider: number): number[] => {
-	if (number < divider) {
+	if (number <= divider) {
 		return [number]
 	}
 	const quotient = Math.floor(number / divider)
@@ -178,21 +178,20 @@ export const timeSince = (date: string) => {
 	return Math.floor(seconds) + ' seconds ago'
 }
 
-export 	const getVideoGrids = (list:any, limit:number) => {
+export const getVideoGrids = (list: any, limit: number) => {
+	if (!list.length) return []
 
-	if(!list.length)return []
-
-	let numList = divideNumber(list.length, limit)
-	let result:any[] = []
+	const numList = divideNumber(list.length, limit)
+	const result: any[] = []
 	let pointer = 0
 
-	for(let i =0; i < numList.length; i++){
-		let row:any = cardCounts[numList[i]]
-		for(let j = 0; j < row.length; j++){
+	for (let i = 0; i < numList.length; i++) {
+		const row: any = cardCounts[numList[i]]
+		for (let j = 0; j < row.length; j++) {
 			result[j] = []
-			for(let k = 0; k < row[j]; k++){
-				if(pointer < list.length){
-					result[j].push({ ...list[pointer]})
+			for (let k = 0; k < row[j]; k++) {
+				if (pointer < list.length) {
+					result[j].push({ ...list[pointer] })
 					pointer++
 				}
 			}

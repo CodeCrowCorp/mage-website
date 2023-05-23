@@ -4,11 +4,9 @@
 	import { video_items } from '$lib/stores/streamStore'
 
 	export let channel: any
-	
+
 	const sender: any = {}
-
 	$: grid = getVideoGrids($video_items, 9)
-
 </script>
 
 {#if $video_items?.length}
@@ -18,7 +16,7 @@
 				{#each grid as row}
 					<div class="flex flex-row gap-4 justify-center h-full mt-3">
 						{#each row as video}
-							<VideoItem bind:video={video} {channel} {sender} />
+							<VideoItem bind:video {channel} {sender} />
 						{/each}
 					</div>
 				{/each}
