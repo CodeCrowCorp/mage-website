@@ -22,16 +22,14 @@
 <div class="flex flex-wrap justify-center">
 	<div class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
 		<div class="relative">
-			{#if profile?.avatar}
+			{#if profile.avatar}
 				<div class="w-32 h-32">
-					<div class="avatar -top-16 {profile?.isOnline ? 'online' : 'offline'}">
+					<div class="avatar -top-16 {profile.isOnline ? 'online' : 'offline'}">
 						<div class="mask mask-squircle h-auto align-middle max-w-150-px">
-							<img src={profile?.avatar} alt="" />
+							<img src={profile.avatar} alt="" />
 						</div>
 					</div>
 				</div>
-			{:else}
-				<AvatarLoader />
 			{/if}
 		</div>
 	</div>
@@ -44,7 +42,7 @@
 					{:then value}
 						<button
 							class="btn btn-secondary"
-							disabled={profile?._id === $page.data.user?.userId || !currentUser}
+							disabled={profile._id === $page.data.user?.userId || !currentUser}
 							>{value.isSubscriber ? 'Subscribe' : 'Unsubscribe'}</button>
 					{/await}
 					<!--TODO: open sponsor dialog-->
@@ -77,9 +75,10 @@
 				<span class="text-xl font-bold block uppercase tracking-wide">{$interest_count || 0}</span
 				><span class="text-sm">Interests</span>
 			</div>
-			<div class="lg:mr-4 p-3 text-center tooltip" data-tip="2045 unique profile views">
-				<span class="text-xl font-bold block uppercase tracking-wide">2045</span><span
-					class="text-sm">Views</span>
+			<div class="lg:mr-4 p-3 text-center tooltip" data-tip="coming soon...">
+				<!--{profile.views || 0} unique profile views-->
+				<span class="text-xl font-bold block uppercase tracking-wide">{profile.views || 0}</span
+				><span class="text-sm">Views</span>
 			</div>
 		</div>
 	</div>
