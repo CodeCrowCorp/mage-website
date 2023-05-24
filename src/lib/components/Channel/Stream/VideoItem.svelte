@@ -27,6 +27,7 @@
 		prevWebcam: any,
 		prevAudio: any,
 		isMounted: boolean = false,
+		isWebcamFocused: boolean = false
 		speakingValue: number = 0
 
 	$: if (isMounted && video.screen !== prevScreen) {
@@ -149,6 +150,14 @@
 		}
 	}
 
+	const onMouseDown = () => {
+		isWebcamFocused = true
+	}
+
+	const onMouseUp = () => {
+		isWebcamFocused = false
+	}
+
 	// const initializeAndHandleChanges = () => {
 	// 	if (!prevScreen) {
 	// 		prevScreen = video.screen
@@ -235,9 +244,15 @@
 	// 	}
 	// 	emitChannelUpdate({ channel })
 	// }
+	
+
+	
+
+	$: animate = isWebcamFocused ? '' : 'transition-all'
+
 </script>
 
-<div class={$is_sharing_screen || $is_sharing_webcam ? 'w-full h-full' : 'w-[500px] max-h-80'}>
+<div class={ $is_sharing_screen || $is_sharing_webcam ? "w-full h-full" : "w-[500px] max-h-80"}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
 		<img
 			src={video.avatar}
@@ -245,11 +260,7 @@
 			class="absolute inset-0 w-24 md:w-24 mask mask-squircle object-cover m-auto" />
 		<div class="absolute inset-0">
 			<video id={`screen-${video._id}`} autoplay muted class="rounded-md w-full h-full" />
-			<div
-				use:draggable={{ bounds: 'parent' }}
-				class={!$is_sharing_screen
-					? 'transition-all absolute w-full bottom-0 left-0 h-full'
-					: 'transition-all absolute w-1/4 bottom-0 right-0'}>
+			<div use:draggable={{ bounds: 'parent' }} on:mousedown={onMouseDown} on:mouseup={onMouseUp} class={ animate + " absolute " +(!$is_sharing_screen ? "w-full bottom-0 left-0 h-full" : "w-1/4 bottom-0 right-0")}>
 				<video id={`webcam-${video._id}`} autoplay muted class="rounded-md h-full w-full" />
 			</div>
 			<video id={`audio-${video._id}`} autoplay muted class="rounded-md w-0 h-0" />
