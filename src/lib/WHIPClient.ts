@@ -1,4 +1,5 @@
 import negotiateConnectionWithClientOffer from '$lib/negotiateConnectionWithClientOffer'
+import { getAudioIndicator } from '$lib/utils'
 
 /**
  * Example implementation of a client that uses WHIP to broadcast video over WebRTC
@@ -131,6 +132,7 @@ export default class WHIPClient extends EventTarget {
 					stream.getAudioTracks()[0].addEventListener('ended', () => {
 						this.disconnectStream()
 					})
+					getAudioIndicator(stream, this)
 					return stream
 				})
 		}
