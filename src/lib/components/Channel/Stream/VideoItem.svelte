@@ -26,7 +26,8 @@
 		prevScreen: any,
 		prevWebcam: any,
 		prevAudio: any,
-		isMounted: boolean = false
+		isMounted: boolean = false,
+		speakingValue: number = 0
 
 	$: if (isMounted && video.screen !== prevScreen) {
 		handleScreenChanges()
@@ -91,10 +92,13 @@
 				case 'audio':
 					if (video.audio && $is_sharing_audio) {
 						audioWhip = new WHIPClient(video.audio.webRTC.url, audioElement, video.audio.trackType)
-						audioWhip.addEventListener(
-							`localStreamStopped-${trackType}`,
-							() => ($is_sharing_audio = false)
-						)
+						audioWhip.addEventListener(`localStreamStopped-${trackType}`, () => {
+							$is_sharing_audio = false
+							audioWhip.removeEventListener(`localAudioSpeakingValue`, () => {})
+						})
+						audioWhip.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
+							speakingValue = ev.detail
+						})
 					}
 					break
 			}
@@ -131,10 +135,14 @@
 							audioElement,
 							video.audio.trackType
 						)
+						audioWhep.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
+							speakingValue = ev.detail
+						})
 						audioElement.muted = false
 						audioElement.play()
 					} else {
 						if (audioElement) audioElement.srcObject = null
+						audioWhep?.removeEventListener(`localAudioSpeakingValue`, () => {})
 					}
 					break
 			}
@@ -246,7 +254,8 @@
 			</div>
 			<video id={`audio-${video._id}`} autoplay muted class="rounded-md w-0 h-0" />
 			<div class="absolute left-2 bottom-2 rounded-md dropdown">
-				<label tabindex="0" class="btn btn-sm normal-case">@{video.username}</label>
+				<label tabindex="0" class="btn btn-sm normal-case {speakingValue > 10 ? 'btn-outline' : ''}"
+					>@{video.username}</label>
 				<!-- <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li>
 						<a on:click={() => toggleMod()}
