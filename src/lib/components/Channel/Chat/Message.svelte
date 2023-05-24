@@ -84,14 +84,14 @@
 				<ul tabindex="1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li class="disabled"><a><IconChatReact /> React </a></li>
 					<li class="disabled"><a><IconChatQuote /> Quote </a></li>
-					{#if sender.user?.userId === hostId && sender.user?.userId !== $page.data.user?.userId && channel?.mods?.includes($page.data.user?.userId)}
+					{#if hostId === $page.data.user?.userId && sender.user?.userId !== $page.data.user?.userId && channel?.mods?.includes($page.data.user?.userId)}
 						<li>
 							<a on:click={() => toggleBan()}
 								><IconChatBan /> {channel.bans?.includes(sender.user?.userId) ? 'Unban' : 'Ban'}
 							</a>
 						</li>
 					{/if}
-					{#if sender.user?.userId === hostId && sender.user?.userId !== $page.data.user?.userId}
+					{#if hostId === $page.data.user?.userId && sender.user?.userId !== $page.data.user?.userId}
 						<li>
 							<a on:click={() => toggleMod()}
 								><IconChatMod /> {sender.role === 'Mod' ? 'Remove Mod' : 'Grant Mod'}
@@ -103,7 +103,7 @@
 							</a>
 						</li>
 					{/if}
-					{#if sender.user?.userId === hostId || sender.user?.userId === $page.data.user?.userId}
+					{#if hostId === $page.data.user?.userId || sender.user?.userId === $page.data.user?.userId}
 						<li>
 							<a on:click={() => deleteMessage()}><IconChatDelete /> Delete</a>
 						</li>
