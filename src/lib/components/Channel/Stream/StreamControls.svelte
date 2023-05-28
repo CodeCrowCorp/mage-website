@@ -20,9 +20,11 @@
 	} from '$lib/stores/streamStore'
 	import { channel_connection } from '$lib/stores/websocketStore'
 
-	export let isHostOrGuest: boolean = false
+	export let isHostOrGuest: boolean = false,
+		channel: any
 
-	$: isChannelSocketConnected = $channel_connection === 'open' && $page.data.user?.userId
+	$: isChannelSocketConnected =
+		$channel_connection === `open-${$page.params.channelId}` && $page.data.user?.userId
 	$: videoItemIsActive = $video_items.some((video: any) => video._id === $page.data.user?.userId)
 
 	let screenUid: string = ''
@@ -63,13 +65,15 @@
 		trackType: string
 		inputId: string
 	}) => {
-		return await del(
-			`cloudflare/live-input?channelId=${channelId}&userId=${userId}&trackType=${trackType}&inputId=${inputId}`,
-			{
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			}
-		)
+		if (inputId) {
+			return await del(
+				`cloudflare/live-input?channelId=${channelId}&userId=${userId}&trackType=${trackType}&inputId=${inputId}`,
+				{
+					userId: $page.data.user?.userId,
+					token: $page.data.user?.token
+				}
+			)
+		}
 	}
 
 	const startScreenStream = async () => {
@@ -88,6 +92,7 @@
 		screenUid = liveInput.uid
 		$video_items = updateVideoItems($video_items, [liveInput])
 		emitAction({
+			channelSocket: channel?.socket,
 			channelId: $page.params.channelId,
 			message: {
 				action: 'toggleTrack',
@@ -107,6 +112,7 @@
 			{ _id: $page.data.user.userId, trackType: 'screen', isTrackActive: false }
 		])
 		emitAction({
+			channelSocket: channel?.socket,
 			channelId: $page.params.channelId,
 			message: {
 				action: 'toggleTrack',
@@ -136,6 +142,7 @@
 		webcamUid = liveInput.uid
 		$video_items = updateVideoItems($video_items, [liveInput])
 		emitAction({
+			channelSocket: channel?.socket,
 			channelId: $page.params.channelId,
 			message: {
 				action: 'toggleTrack',
@@ -155,6 +162,7 @@
 			{ _id: $page.data.user.userId, trackType: 'webcam', isTrackActive: false }
 		])
 		emitAction({
+			channelSocket: channel?.socket,
 			channelId: $page.params.channelId,
 			message: {
 				action: 'toggleTrack',
@@ -184,6 +192,7 @@
 		audioUid = liveInput.uid
 		$video_items = updateVideoItems($video_items, [liveInput])
 		emitAction({
+			channelSocket: channel?.socket,
 			channelId: $page.params.channelId,
 			message: {
 				action: 'toggleTrack',
@@ -203,6 +212,7 @@
 			{ _id: $page.data.user.userId, trackType: 'audio', isTrackActive: false }
 		])
 		emitAction({
+			channelSocket: channel?.socket,
 			channelId: $page.params.channelId,
 			message: {
 				action: 'toggleTrack',

@@ -22,7 +22,11 @@
 			var updatedSender: any = { ...sender }
 			delete updatedSender.user
 			delete updatedSender.role
-			emitDeleteMessageToChannel({ channelId, message: JSON.stringify(updatedSender) })
+			emitDeleteMessageToChannel({
+				channelSocket: channel.socket,
+				channelId,
+				message: JSON.stringify(updatedSender)
+			})
 		}
 	}
 
@@ -35,7 +39,7 @@
 			channel.mods = channel.mods.filter((mod: string) => mod !== sender.user?.userId)
 			isGuest = false
 		}
-		emitChannelUpdate({ channel })
+		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 
 	const toggleMod = () => {
@@ -44,7 +48,7 @@
 		} else {
 			channel.mods.push(sender.user?.userId)
 		}
-		emitChannelUpdate({ channel })
+		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 
 	const toggleGuest = () => {
@@ -53,7 +57,7 @@
 		} else {
 			channel.guests = channel.guests.filter((guest: string) => guest !== sender.user?.userId)
 		}
-		emitChannelUpdate({ channel })
+		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 </script>
 

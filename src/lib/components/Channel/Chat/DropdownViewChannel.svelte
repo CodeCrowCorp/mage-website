@@ -9,25 +9,36 @@
 	import { del, get, put } from '$lib/api'
 
 	export let channel: any = undefined,
-		showEditChannelDrawer: boolean = false,
-		host: any = {},
+		showEditChannelDrawer: boolean = false
+
+	let host: any = {},
 		isHost: boolean = false,
-		isSubscribed: boolean = false,
+		isSubscribing: boolean = false,
 		isFavorite: boolean = false
 
-	onMount(async () => {
-		if (!$page.data.user?.userId) return
+	$: if (channel) {
+		getHostAndRelationship()
+	}
+
+	const getHostAndRelationship = async () => {
+		host = await get(`users/search/id?userId=${channel.user}`)
+		isHost = channel.user === $page?.data?.user?.userId
 		const relationship = await get(`subscribes/relationship?source=${channel.user}`, {
 			userId: $page.data.user?.userId,
 			token: $page.data.user?.token
 		})
-		isSubscribed = relationship?.isSubscribing
+		isSubscribing = relationship?.isSubscribing
+	}
+
+	onMount(async () => {
+		if (!$page.data.user?.userId) return
+		await getHostAndRelationship()
 		isFavorite = $page.data.user?.user?.favChannelIds?.includes(channel._id)
 	})
 
 	const toggleSubscribe = async () => {
-		isSubscribed = !isSubscribed
-		if (isSubscribed) {
+		isSubscribing = !isSubscribing
+		if (isSubscribing) {
 			await put(
 				`subscribes`,
 				{ source1: channel.user, source2: $page.data.user?.userId },
@@ -144,12 +155,12 @@
 			<div class="grid grid-cols-5 gap-2">
 				<button
 					disabled={!$page.data.user?.userId}
-					class="btn btn-secondary {isSubscribed
+					class="btn btn-secondary {isSubscribing
 						? 'btn-outline'
 						: ''} col-span-4 normal-case tooltip tooltip-top flex"
-					data-tip={isSubscribed ? 'Unsubscribe from host' : 'Subscribe to host'}
+					data-tip={isSubscribing ? 'Unsubscribe from host' : 'Subscribe to host'}
 					on:click={() => toggleSubscribe()}>
-					{isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+					{isSubscribing ? 'Unsubscribe' : 'Subscribe'}
 				</button>
 				<button
 					disabled={!$page.data.user?.userId}

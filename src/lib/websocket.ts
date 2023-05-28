@@ -1,88 +1,44 @@
 import { env } from '$env/dynamic/public'
 
 let platformSocket: WebSocket
-let channelSocket: WebSocket
 
-function initPlatformSocket(websocketId: string) {
+const initPlatformSocket = ({ websocketId }: { websocketId: string }) => {
 	platformSocket = new WebSocket(`${env.PUBLIC_WEBSOCKET_URL}/wsinit/wsid/${websocketId}/connect`)
 }
 
-function initChannelSocket(websocketId: string) {
-	channelSocket = new WebSocket(
-		`${env.PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${websocketId}/connect`
-	)
-}
-
-function emitUserConnection({ userId, isOnline }: { userId: string; isOnline: boolean }) {
+const emitUserConnection = ({ userId, isOnline }: { userId: string; isOnline: boolean }) => {
 	platformSocket.send(
 		JSON.stringify({ eventName: isOnline ? 'user-connect' : 'user-disconnect', userId: userId })
 	)
 }
 
-// function emitChannelAccessRequest({ channelId, userId }: { channelId: string; userId: string }) {
-// 	platformSocket.send(
-// 		JSON.stringify({ eventName: `channel-access-request`, channel: channelId, user: userId })
-// 	)
-// }
-
-// function emitChannelAccessResponse({
-// 	channelId,
-// 	userId,
-// 	isGrantedAccess
-// }: {
-// 	channelId: string
-// 	userId: string
-// 	isGrantedAccess: boolean
-// }) {
-// 	platformSocket.send(
-// 		JSON.stringify({
-// 			eventName: `channel-access-response`,
-// 			channel: channelId,
-// 			user: userId,
-// 			isGrantedAccess
-// 		})
-// 	)
-// }
-
-/************ Chat ****************/
-
-// function emitChatMessage({
-// 	source1,
-// 	source2,
-// 	message
-// }: {
-// 	source1: string
-// 	source2: string
-// 	message: any
-// }) {
-// 	platformSocket.send(JSON.stringify({ eventName: `message-sent`, source1, source2, message }))
-// }
-
-// function emitChatTypingByUser({ userId }: { userId: string }) {
-// 	platformSocket.send(
-// 		JSON.stringify({
-// 			eventName: `chat-typing`,
-// 			user: userId,
-// 			isTyping: true
-// 		})
-// 	)
-// }
-
-/************ Channel chat ****************/
-
-function emitChannelUpdate({ channel }: { channel: any }) {
-	channelSocket.send(JSON.stringify({ eventName: `channel-update`, channel }))
+const initChannelSocket = ({ websocketId }: { websocketId: string }) => {
+	return new WebSocket(`${env.PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${websocketId}/connect`)
 }
 
-function emitChannelSubscribeByUser({
+const emitChannelUpdate = ({
+	channelSocket,
+	channel
+}: {
+	channelSocket: WebSocket
+	channel: any
+}) => {
+	const noSocketChannel = { ...channel }
+	delete noSocketChannel.socket
+	channelSocket.send(JSON.stringify({ eventName: `channel-update`, channel: noSocketChannel }))
+}
+
+const emitChannelSubscribeByUser = ({
+	channelSocket,
 	channelId,
 	userId,
 	username
 }: {
+	channelSocket: WebSocket
 	channelId: string
 	userId: string
 	username: string
-}) {
+}) => {
 	channelSocket.send(
 		JSON.stringify({
 			eventName: `channel-subscribe`,
@@ -92,17 +48,27 @@ function emitChannelSubscribeByUser({
 	)
 }
 
-function emitMessageToChannel({ channelId, message }: { channelId: string; message: any }) {
-	channelSocket.send(JSON.stringify({ eventName: `channel-message`, channel: channelId, message }))
-}
-
-function emitDeleteMessageToChannel({
+const emitMessageToChannel = ({
+	channelSocket,
 	channelId,
 	message
 }: {
+	channelSocket: WebSocket
+	channelId: string
+	message: any
+}) => {
+	channelSocket.send(JSON.stringify({ eventName: `channel-message`, channel: channelId, message }))
+}
+
+const emitDeleteMessageToChannel = ({
+	channelSocket,
+	channelId,
+	message
+}: {
+	channelSocket: WebSocket
 	channelId: string
 	message: string
-}) {
+}) => {
 	channelSocket.send(
 		JSON.stringify({
 			eventName: `delete-channel-message`,
@@ -112,13 +78,27 @@ function emitDeleteMessageToChannel({
 	)
 }
 
-function emitDeleteAllMessagesToChannel({ channelId }: { channelId: string }) {
+const emitDeleteAllMessagesToChannel = ({
+	channelSocket,
+	channelId
+}: {
+	channelSocket: WebSocket
+	channelId: string
+}) => {
 	channelSocket.send(
 		JSON.stringify({ eventName: `delete-all-channel-messages`, channel: channelId })
 	)
 }
 
-function emitChatHistoryToChannel({ channelId, skip }: { channelId: string; skip: number }) {
+const emitChatHistoryToChannel = ({
+	channelSocket,
+	channelId,
+	skip
+}: {
+	channelSocket: WebSocket
+	channelId: string
+	skip: number
+}) => {
 	channelSocket.send(
 		JSON.stringify({
 			eventName: `channel-message-history`,
@@ -128,33 +108,19 @@ function emitChatHistoryToChannel({ channelId, skip }: { channelId: string; skip
 	)
 }
 
-// function emitChannelChatTypingByUser({
-// 	channelId,
-// 	typingUser
-// }: {
-// 	channelId: string
-// 	typingUser: string
-// }) {
-// 	channelSocket.send(
-// 		JSON.stringify({
-// 			eventName: `channel-chat-typing`,
-// 			channel: channelId,
-// 			typingUser
-// 		})
-// 	)
-// }
-
-function emitReactToMessage({
+const emitReactToMessage = ({
+	channelSocket,
 	channelId,
 	message,
 	user,
 	reaction
 }: {
+	channelSocket: WebSocket
 	channelId: string
 	message: any
 	user: any
 	reaction: string
-}) {
+}) => {
 	channelSocket.send(
 		JSON.stringify({
 			eventName: `react-to-message`,
@@ -166,10 +132,16 @@ function emitReactToMessage({
 	)
 }
 
-/************ Channel streaming ****************/
-
-function emitAction({ channelId, message }: { channelId: string; message: any }) {
-	channelSocket.send(
+const emitAction = ({
+	channelSocket,
+	channelId,
+	message
+}: {
+	channelSocket: WebSocket
+	channelId: string
+	message: any
+}) => {
+	channelSocket?.send(
 		JSON.stringify({
 			eventName: `channel-streaming-action`,
 			channel: channelId,
@@ -178,34 +150,11 @@ function emitAction({ channelId, message }: { channelId: string; message: any })
 	)
 }
 
-// function listenToChannelAccessRequest({ channelId }: { channelId: string }) {
-// 	platformMessage.subscribe((value) => {
-// 		const parsedData = JSON.parse(value.data)
-// 		if (parsedData.eventName === `channel-access-request` && parsedData.channelId === channelId) {
-// 			console.log('parsedData', parsedData)
-// 		}
-// 	})
-// }
-
-// function listenToChannelAccessResponse({ channelId }: { channelId: string }) {
-// 	platformMessage.subscribe((value) => {
-// 		const parsedData = JSON.parse(value.data)
-// 		if (parsedData.eventName === `channel-access-response` && parsedData.channelId === channelId) {
-// 			console.log('parsedData', parsedData)
-// 		}
-// 	})
-// }
-
 export {
-	channelSocket,
 	platformSocket,
 	initPlatformSocket,
 	initChannelSocket,
 	emitUserConnection,
-	// emitChannelAccessRequest,
-	// emitChannelAccessResponse,
-	// emitChatMessage,
-	// emitChatTypingByUser,
 	emitChannelUpdate,
 	emitChannelSubscribeByUser,
 	emitMessageToChannel,
