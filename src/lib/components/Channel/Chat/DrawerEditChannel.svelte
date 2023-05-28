@@ -90,7 +90,7 @@
 					return ({ result }) => {
 						if (result.type === 'success') {
 							console.log('channel', channel)
-							emitChannelUpdate({ channel })
+							emitChannelUpdate({ channelSocket: channel.socket, channel })
 							toggleDrawer()
 						}
 					}

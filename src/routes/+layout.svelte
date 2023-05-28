@@ -51,7 +51,7 @@
 		try {
 			if ($page.data.user?.userId) {
 				const platformSocketId = await get(`wsinit/wsid`)
-				initPlatformSocket(platformSocketId)
+				initPlatformSocket({ websocketId: platformSocketId })
 				platformSocket.addEventListener('open', (data) => {
 					console.log('socket connection open')
 					console.log(data)

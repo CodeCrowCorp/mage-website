@@ -6,7 +6,6 @@
 	import {
 		emitChatHistoryToChannel,
 		initChannelSocket,
-		channelSocket,
 		emitChannelSubscribeByUser,
 		emitDeleteAllMessagesToChannel
 	} from '$lib/websocket'
@@ -25,40 +24,35 @@
 		video_items
 	} from '$lib/stores/streamStore'
 
-	let channel: any
-	let channelId = $page.params.channelId || ''
-	$: userCount = 0
-	$: isHostOrGuest = isHost || channel?.guests?.includes($page.data.user?.userId)
-
-	let isDeleteModalOpen = false,
+	let channel: any,
+		isDeleteModalOpen = false,
 		showEditChannelDrawer = false,
 		channels: any = [],
 		skip = 0,
 		limit = 10,
-		host = {},
 		isHost = false
 
+	$: userCount = 0
+	$: isHostOrGuest = isHost || channel?.guests?.includes($page.data.user?.userId)
+
 	$: if (channel) {
-		if (channel._id !== channelId) {
-			channelSocket.close()
-			channelId = channel?._id
-			$channel_message = ''
-			$video_items = []
+		if (channel._id !== $page.params.channelId) {
 			if (isHostOrGuest) {
-				$is_sharing_screen = false
-				$is_sharing_webcam = false
-				$is_sharing_audio = false
+				if ($is_sharing_screen) $is_sharing_screen = false
+				if ($is_sharing_webcam) $is_sharing_webcam = false
+				if ($is_sharing_audio) $is_sharing_audio = false
 			} else {
 				$is_sharing_screen = undefined
 				$is_sharing_webcam = undefined
 				$is_sharing_audio = undefined
 			}
 			handleWebsocket()
+			//TODO iterate through all channels and check timestamp
+			//if timestamp is more than 10 seconds, disconnect websocket
 		}
 	}
 
 	onMount(async () => {
-		channelId = $page.params.channelId || ''
 		await loadChannel()
 		await handleWebsocket()
 		await loadMoreChannels()
@@ -70,65 +64,83 @@
 
 	onDestroy(() => {
 		if (isHostOrGuest) {
-			$is_sharing_screen = false
-			$is_sharing_webcam = false
-			$is_sharing_audio = false
+			if ($is_sharing_screen) $is_sharing_screen = false
+			if ($is_sharing_webcam) $is_sharing_webcam = false
+			if ($is_sharing_audio) $is_sharing_audio = false
+		} else {
+			$is_sharing_screen = undefined
+			$is_sharing_webcam = undefined
+			$is_sharing_audio = undefined
 		}
-		channelSocket?.close()
+		channels.forEach((ch: any) => {
+			if (ch.socket && ch.socket.constructor === WebSocket) ch.socket.close()
+		})
 	})
 
 	const loadChannel = async () => {
-		channel = await get(`channel?channelId=${channelId}`)
-		await getHost(channel.user)
-		channels.push(channel)
+		const chan = await get(`channel?channelId=${$page.params.channelId}`)
+		channels.push(chan)
 	}
 
-	const getHost = async (userId: string) => {
-		host = await get(`users/search/id?userId=${userId}`)
-		isHost = userId === $page?.data?.user?.userId
+	const initChannel = (chan: any) => {
+		$channel_connection = `open-${$page.params.channelId}`
+		$channel_message = ''
+		$video_items = []
+		if (chan.socket.readyState === WebSocket.OPEN) {
+			emitChannelSubscribeByUser({
+				channelSocket: chan.socket,
+				channelId: $page.params.channelId,
+				userId: $page.data.user?.userId,
+				username: $page.data.user?.user?.username
+			})
+			emitChatHistoryToChannel({
+				channelSocket: chan.socket,
+				channelId: $page.params.channelId,
+				skip: 100
+			})
+		}
 	}
 
 	const handleWebsocket = async () => {
 		try {
-			const channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
-			initChannelSocket(channelSocketId)
-			channelSocket.addEventListener('open', async (data) => {
-				console.log('channel socket connection open', channelSocketId)
-				$channel_connection = 'open'
-				$channel_message = ''
-				$video_items = []
-				emitChannelSubscribeByUser({
-					channelId,
-					userId: $page.data.user?.userId,
-					username: $page.data.user?.user?.username
+			channel = channels.find((ch: any) => ch._id === $page.params.channelId)
+			let channelSocketId = ''
+			if (!channel.socket) {
+				channelSocketId = await get(`wsinit/channelid?channelId=${$page.params.channelId}`)
+				channel.socket = initChannelSocket({ websocketId: channelSocketId })
+			} else {
+				initChannel(channel)
+			}
+			if (channel.socket && channel.socket.constructor === WebSocket) {
+				channel.socket.addEventListener('open', async (data: any) => {
+					console.log('channel socket connection open', channelSocketId)
+					initChannel(channel)
 				})
-				emitChatHistoryToChannel({ channelId, skip: 100 })
-				getHost(channel.user)
-			})
-			channelSocket.addEventListener('message', (data) => {
-				console.log('channel listening to messages')
-				if (isJsonString(data.data)) {
-					console.log('data.data', data.data)
-					$channel_message = data.data
-				}
-			})
-			channelSocket.addEventListener('error', (data) => {
-				console.log('channel socket connection error')
-				console.log(data)
-			})
-			channelSocket.addEventListener('close', (data) => {
-				console.log('channel socket connection close')
-				console.log(data)
-				$channel_connection = 'close'
-				$channel_message = ''
-				$video_items = []
+				channel.socket.addEventListener('message', (data: any) => {
+					console.log('channel listening to messages')
+					if (isJsonString(data.data)) {
+						console.log('data.data', data.data)
+						$channel_message = data.data
+					}
+				})
+				channel.socket.addEventListener('error', (data: any) => {
+					console.log('channel socket connection error')
+					console.log(data)
+				})
+				channel.socket.addEventListener('close', (data: any) => {
+					console.log('channel socket connection close')
+					console.log(data)
+					$channel_connection = 'close'
+					$channel_message = ''
+					$video_items = []
 
-				console.log('got here----', data.code)
-				//if manually closed, don't reconnect
-				if (data.code === 1005) return
-				attemptReconnect()
-			})
+					//if manually closed, don't reconnect
+					if (data.code === 1005) return
+					attemptReconnect()
+				})
+			}
 		} catch (error) {
+			console.log('got here----', error)
 			if (error) attemptReconnect()
 		}
 	}
@@ -145,11 +157,14 @@
 	}
 
 	const deleteChannelYesAction = async () => {
-		await del(`channels?channelId=${channelId}&bucketName=attachments`, {
+		await del(`channels?channelId=${$page.params.channelId}&bucketName=attachments`, {
 			userId: $page.data.user?.userId,
 			token: $page.data.user?.token
 		})
-		emitDeleteAllMessagesToChannel({ channelId })
+		emitDeleteAllMessagesToChannel({
+			channelSocket: channel.socket,
+			channelId: $page.params.channelId
+		})
 		goto('/browse')
 	}
 
@@ -163,11 +178,11 @@
 		if (!value) return
 		var parsedMsg = JSON.parse(value)
 		switch (parsedMsg.eventName) {
-			case `channel-update-${channelId}`:
+			case `channel-update-${$page.params.channelId}`:
 				console.log('channel-update', parsedMsg)
 				channel = parsedMsg.channel
 				break
-			case `channel-subscribe-${channelId}`:
+			case `channel-subscribe-${$page.params.channelId}`:
 				userCount = parsedMsg.userCount
 				if (parsedMsg.quitUserId) {
 					$video_items = $video_items.filter((video: any) => video._id !== parsedMsg.quitUserId)
@@ -183,13 +198,15 @@
 							})
 						} else {
 							// for new users joining the channel
-							const liveInputs = await get(`cloudflare/live-inputs?channelId=${channelId}`)
+							const liveInputs = await get(
+								`cloudflare/live-inputs?channelId=${$page.params.channelId}`
+							)
 							$video_items = updateVideoItems([...activeGuests], liveInputs)
 						}
 					}
 				}
 				break
-			case `channel-streaming-action-${channelId}`:
+			case `channel-streaming-action-${$page.params.channelId}`:
 				switch (parsedMsg.data.action) {
 					case 'toggleTrack':
 						if ($page.data.user?.userId) {
@@ -206,7 +223,7 @@
 	})
 </script>
 
-{#if channel && channel._id === channelId}
+{#if channel && channel._id === $page.params.channelId}
 	<div class="flex flex-auto">
 		<div class="drawer drawer-end">
 			<input
@@ -232,7 +249,7 @@
 					class:!hidden={showEditChannelDrawer}>
 					<label for="chat-drawer" class="drawer-overlay" />
 
-					<DrawerChat bind:channel bind:showEditChannelDrawer bind:host bind:isHost />
+					<DrawerChat bind:channel bind:showEditChannelDrawer />
 				</div>
 			{/if}
 		</div>

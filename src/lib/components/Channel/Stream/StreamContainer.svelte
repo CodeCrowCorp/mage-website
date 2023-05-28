@@ -15,7 +15,7 @@
 		channels: any = [],
 		isHostOrGuest: boolean = false
 
-	$: isChannelSocketConnected = $channel_connection === 'open'
+	$: isChannelSocketConnected = $channel_connection === `open-${channel._id}`
 
 	function autoActive(node: Element) {
 		const observer = new IntersectionObserver(callback, { threshold: 0.5 })
@@ -83,6 +83,6 @@
 	</div>
 
 	<div class="absolute bottom-0 m-5">
-		<StreamControls {isHostOrGuest} />
+		<StreamControls {isHostOrGuest} {channel} />
 	</div>
 </div>

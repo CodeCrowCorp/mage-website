@@ -9,9 +9,7 @@
 	import { emitChatHistoryToChannel } from '$lib/websocket'
 
 	export let channel: any = undefined,
-		showEditChannelDrawer: boolean = false,
-		host = {},
-		isHost = false
+		showEditChannelDrawer: boolean = false
 	let chatHistory: any[] = []
 
 	const setRole = (msg: any): any => {
@@ -49,8 +47,12 @@
 	})
 
 	onMount(() => {
-		if ($was_chat_drawer_closed && !chatHistory?.length && $channel_connection === 'open') {
-			emitChatHistoryToChannel({ channelId: channel._id, skip: 100 })
+		if (
+			$was_chat_drawer_closed &&
+			!chatHistory?.length &&
+			$channel_connection === `open-${channel._id}`
+		) {
+			emitChatHistoryToChannel({ channelSocket: channel.socket, channelId: channel._id, skip: 100 })
 		}
 	})
 
@@ -60,7 +62,7 @@
 </script>
 
 <div class="bg-base-100 flex flex-col overflow-y-hidden w-72 md:w-full">
-	<DropdownViewChannel bind:channel bind:showEditChannelDrawer bind:host bind:isHost />
+	<DropdownViewChannel bind:channel bind:showEditChannelDrawer />
 	<div class="flex flex-col-reverse p-3 grow overflow-y-scroll w-96">
 		{#each chatHistory as sender}
 			<Message bind:sender bind:hostId={channel.user} bind:channel />
