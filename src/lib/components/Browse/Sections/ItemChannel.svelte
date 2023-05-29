@@ -5,10 +5,10 @@
 	export let channel: any = {}
 </script>
 
-<ul class="menu shrink-0 bg-base-100 rounded-md">
-	<li>
+<ul class="menu shrink-0 rounded-md">
+	<li class="pt-6">
 		<a
-			class="flex flex-col w-[20rem] md:w-[25rem] rounded-md items-stretch"
+			class="flex flex-col bg-base-100 w-[20rem] md:w-[25rem] rounded-md items-stretch"
 			href="/channel/{channel._id}">
 			<div class="relative">
 				<div class="flex flex-row justify-between">
