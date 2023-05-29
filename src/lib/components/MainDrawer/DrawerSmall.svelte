@@ -51,142 +51,143 @@
 	})
 </script>
 
-<div class="menu p-4 w-80 md:w-24 bg-base-100 text-base-content flex flex-col">
-	<ul class="md:flex md:flex-col items-center md:w-full">
-		<div class="menu w-full">
-			<ul>
-				<li>
-					<a href="/browse" class="md:justify-center">
-						<IconMageLogo customClass={'w-20 md:w-7 mage-text hidden md:block'} />
-						<IconMageText customClass={'w-20 md:w-7 mage-text md:hidden'} />
-					</a>
-				</li>
-			</ul>
-		</div>
-		{#if currentUser}
-			<li class="md:w-full">
-				<a
-					href="/profile/{currentUser.username}"
-					class="rounded-md justify-center cursor-pointer md:w-full">
-					<div class="md:text-center">
-						<div class="hero-content">
-							<div class="max-w-md">
-								<div class="avatar {$isOnline ? 'online' : 'offline'}">
-									<div
-										class="w-24 md:w-12 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
-										<img src={currentUser.avatar} alt="" />
-									</div>
-								</div>
-							</div>
-							<div class="grid grid-cols-3 gap-1 md:hidden">
-								<div class="col-span-3 tooltip flex" data-tip={currentUser.displayName}>
-									<p class="truncate">{currentUser.displayName}</p>
-								</div>
-								<div class="col-span-3 tooltip flex" data-tip="@{currentUser.username}">
-									<p class=" text-pink-500 truncate">@{currentUser.username}</p>
-								</div>
-								<IconDrawerStreak />
-								<p class="col-span-2 tooltip text-start" data-tip="{streakCount} day streak">
-									{streakCount} d
-								</p>
-								<IconDrawerStreamDuration />
-								<p class="col-span-2 tooltip text-start" data-tip="{hoursStreamed} hours streamed">
-									{hoursStreamed} h
-								</p>
-							</div>
-						</div>
-						<div class="tooltip" data-tip="level {progressBarLevel}">
-							<progress
-								class="progress w-64 md:w-12"
-								style="--progress-bar-color: {progressBarColor}"
-								value={progressBarValue}
-								max="100" />
-						</div>
-					</div>
-				</a>
-			</li>
-		{/if}
 
-		{#if currentUser && $user_role === 'admin'}
-			<li>
-				<a href="/admin">
-					<IconDrawerAdmin />
-					<span class="md:hidden">Admin</span>
-				</a>
-			</li>
-		{/if}
-		<li>
-			<a href="/browse">
-				<IconDrawerHome />
-				<span class="md:hidden">Browse</span>
-			</a>
-		</li>
-		<li>
-			<a href="/careers">
-				<IconDrawerCareers />
-				<span class="md:hidden"> Careers </span>
-			</a>
-		</li>
-		<li>
-			<div class="dropdown dropdown-bottom" tabindex="-1">
-				<IconDrawerHelpAndLegal />
-
-				<span class="md:hidden flex flex-row gap-4">
-					Help & Legal
-					<IconDrawerChevron /></span>
-				<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
-					<li><a href="/contact">Contact</a></li>
-					<li><a href="/legal">Legal</a></li>
+	<div class="menu p-4 w-80 md:w-24 bg-base-100 text-base-content flex flex-col fixed">
+		<ul class="md:flex md:flex-col items-center md:w-full">
+			<div class="menu w-full">
+				<ul>
+					<li>
+						<a href="/browse" class="md:justify-center">
+							<IconMageLogo customClass={'w-20 md:w-7 mage-text hidden md:block'} />
+							<IconMageText customClass={'w-20 md:w-7 mage-text md:hidden'} />
+						</a>
+					</li>
 				</ul>
 			</div>
-		</li>
-		<li>
-			<a href="/settings">
-				<IconDrawerSettings />
-				<span class="md:hidden"> Settings </span>
-			</a>
-		</li>
-		{#if currentUser}
-			<form action="/logout" method="POST">
+			{#if currentUser}
+				<li class="md:w-full">
+					<a
+						href="/profile/{currentUser.username}"
+						class="rounded-md justify-center cursor-pointer md:w-full">
+						<div class="md:text-center">
+							<div class="hero-content">
+								<div class="max-w-md">
+									<div class="avatar {$isOnline ? 'online' : 'offline'}">
+										<div
+											class="w-24 md:w-12 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
+											<img src={currentUser.avatar} alt="" />
+										</div>
+									</div>
+								</div>
+								<div class="grid grid-cols-3 gap-1 md:hidden">
+									<div class="col-span-3 tooltip flex" data-tip={currentUser.displayName}>
+										<p class="truncate">{currentUser.displayName}</p>
+									</div>
+									<div class="col-span-3 tooltip flex" data-tip="@{currentUser.username}">
+										<p class=" text-pink-500 truncate">@{currentUser.username}</p>
+									</div>
+									<IconDrawerStreak />
+									<p class="col-span-2 tooltip text-start" data-tip="{streakCount} day streak">
+										{streakCount} d
+									</p>
+									<IconDrawerStreamDuration />
+									<p class="col-span-2 tooltip text-start" data-tip="{hoursStreamed} hours streamed">
+										{hoursStreamed} h
+									</p>
+								</div>
+							</div>
+							<div class="tooltip" data-tip="level {progressBarLevel}">
+								<progress
+									class="progress w-64 md:w-12"
+									style="--progress-bar-color: {progressBarColor}"
+									value={progressBarValue}
+									max="100" />
+							</div>
+						</div>
+					</a>
+				</li>
+			{/if}
+	
+			{#if currentUser && $user_role === 'admin'}
 				<li>
-					<button type="submit">
+					<a href="/admin">
+						<IconDrawerAdmin />
+						<span class="md:hidden">Admin</span>
+					</a>
+				</li>
+			{/if}
+			<li>
+				<a href="/browse">
+					<IconDrawerHome />
+					<span class="md:hidden">Browse</span>
+				</a>
+			</li>
+			<li>
+				<a href="/careers">
+					<IconDrawerCareers />
+					<span class="md:hidden"> Careers </span>
+				</a>
+			</li>
+			<li>
+				<div class="dropdown dropdown-bottom" tabindex="-1">
+					<IconDrawerHelpAndLegal />
+	
+					<span class="md:hidden flex flex-row gap-4">
+						Help & Legal
+						<IconDrawerChevron /></span>
+					<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+						<li><a href="/contact">Contact</a></li>
+						<li><a href="/legal">Legal</a></li>
+					</ul>
+				</div>
+			</li>
+			<li>
+				<a href="/settings">
+					<IconDrawerSettings />
+					<span class="md:hidden"> Settings </span>
+				</a>
+			</li>
+			{#if currentUser}
+				<form action="/logout" method="POST">
+					<li>
+						<button type="submit">
+							<IconDrawerLogOut />
+							<span class="md:hidden">Log out </span>
+						</button>
+					</li>
+				</form>
+			{:else}
+				<li>
+					<button
+						on:click={() => {
+							$is_login_modal_open = true
+							if (nav_drawer.checked) {
+								nav_drawer.checked = false
+							}
+						}}>
 						<IconDrawerLogOut />
-						<span class="md:hidden">Log out </span>
+						<span class="md:hidden">Log In </span>
 					</button>
 				</li>
-			</form>
-		{:else}
-			<li>
-				<button
-					on:click={() => {
-						$is_login_modal_open = true
-						if (nav_drawer.checked) {
-							nav_drawer.checked = false
-						}
-					}}>
-					<IconDrawerLogOut />
-					<span class="md:hidden">Log In </span>
-				</button>
-			</li>
-		{/if}
-	</ul>
-
-	<footer class="mt-auto p-4 md:hidden">
-		<div class="flex gap-4">
-			<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
-				<IconSocialGitHub />
-			</a>
-			<a href="https://discord.gg/CodeCrow" target="_blank" rel="noreferrer">
-				<img src={IconSocialDiscord} alt="" />
-			</a>
-			<a href="https://twitter.com/CodeCrowCorp" target="_blank" rel="noreferrer">
-				<IconSocialTwitter />
-			</a>
-		</div>
-		<p>Code Corp © 2023</p>
-		<p class="text-gray-500">v{__VERSION__} [{env.PUBLIC_ENV}]</p>
-	</footer>
-</div>
+			{/if}
+		</ul>
+	
+		<footer class="mt-auto p-4 md:hidden">
+			<div class="flex gap-4">
+				<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
+					<IconSocialGitHub />
+				</a>
+				<a href="https://discord.gg/CodeCrow" target="_blank" rel="noreferrer">
+					<img src={IconSocialDiscord} alt="" />
+				</a>
+				<a href="https://twitter.com/CodeCrowCorp" target="_blank" rel="noreferrer">
+					<IconSocialTwitter />
+				</a>
+			</div>
+			<p>Code Corp © 2023</p>
+			<p class="text-gray-500">v{__VERSION__} [{env.PUBLIC_ENV}]</p>
+		</footer>
+	</div>
 
 <style>
 	progress::-webkit-progress-value {
