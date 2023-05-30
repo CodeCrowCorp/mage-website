@@ -23,11 +23,13 @@
 	const getHostAndRelationship = async () => {
 		host = await get(`users/search/id?userId=${channel.user}`)
 		isHost = channel.user === $page?.data?.user?.userId
-		const relationship = await get(`subscribes/relationship?source=${channel.user}`, {
-			userId: $page.data.user?.userId,
-			token: $page.data.user?.token
-		})
-		isSubscribing = relationship?.isSubscribing
+		if ($page.data.user?.userId) {
+			const relationship = await get(`subscribes/relationship?source=${channel.user}`, {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
+			isSubscribing = relationship?.isSubscribing
+		}
 	}
 
 	onMount(async () => {
