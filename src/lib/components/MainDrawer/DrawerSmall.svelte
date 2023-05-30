@@ -52,7 +52,7 @@
 </script>
 
 
-	<div class="menu p-4 w-80 md:w-24 bg-base-100 text-base-content flex flex-col fixed">
+	<div class="menu p-4 w-80 md:w-24 bg-base-100 text-base-content flex flex-col fixed h-full">
 		<ul class="md:flex md:flex-col items-center md:w-full">
 			<div class="menu w-full">
 				<ul>
