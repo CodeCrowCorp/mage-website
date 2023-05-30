@@ -46,8 +46,7 @@
 				$is_sharing_audio = undefined
 			}
 			handleWebsocket()
-			//TODO iterate through all channels and check timestamp
-			//if timestamp is more than 10 seconds, disconnect websocket
+			timeoutConnection()
 		}
 	}
 
@@ -132,9 +131,6 @@
 				channel.socket.addEventListener('close', (data: any) => {
 					console.log('channel socket connection close')
 					console.log(data)
-					$channel_connection = 'close'
-					$channel_message = ''
-					$video_items = []
 
 					//if manually closed, don't reconnect
 					if (data.code === 1005) return
@@ -152,6 +148,19 @@
 			console.log('Reconnecting to WebSocket...')
 			await handleWebsocket()
 		}, 4000)
+	}
+
+	const timeoutConnection = () => {
+		const currentChannelIndex = channels.findIndex((ch: any) => ch._id === $page.params.channelId)
+		channels.forEach((channel: any, index: number) => {
+			if (
+				Math.abs(index - currentChannelIndex) > 10 &&
+				channel.socket &&
+				channel.socket.constructor === WebSocket
+			) {
+				channel.socket.close()
+			}
+		})
 	}
 
 	const deleteChannelNoAction = () => {
