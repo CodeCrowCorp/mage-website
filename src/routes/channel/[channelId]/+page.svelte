@@ -244,7 +244,7 @@
 				type="checkbox"
 				class="drawer-toggle"
 				bind:checked={$is_chat_drawer_open} />
-			<div class="drawer-content">
+			<div class="drawer-content lg:ml-24">
 				<StreamContainer
 					bind:channel
 					bind:userCount

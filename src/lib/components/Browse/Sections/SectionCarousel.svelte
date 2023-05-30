@@ -54,7 +54,7 @@
 		<div class="btn btn-square p-2 btn-prev absolute top-2/4 left-1 z-10 ml-3">
 			<IconDrawerLeft />
 		</div>
-		<div class="swiper carousel mt-10 mx-8">
+		<div class="swiper carousel !pt-10 mx-8">
 			<div class="swiper-wrapper">
 				{#each channels as channel}
 					<ItemCarousel {channel} />
