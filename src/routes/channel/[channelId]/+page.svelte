@@ -138,7 +138,7 @@
 				})
 			}
 		} catch (error) {
-			console.log('got here----', error)
+			console.log(error)
 			if (error) attemptReconnect()
 		}
 	}
