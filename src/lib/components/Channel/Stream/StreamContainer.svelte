@@ -83,6 +83,6 @@
 	</div>
 
 	<div class="absolute bottom-0 m-5">
-		<StreamControls {isHostOrGuest} {channel} />
+		<StreamControls bind:isHostOrGuest {channel} />
 	</div>
 </div>
