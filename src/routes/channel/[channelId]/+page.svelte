@@ -83,7 +83,6 @@
 	const initChannel = (chan: any) => {
 		$channel_connection = `open-${$page.params.channelId}`
 		$channel_message = ''
-		$video_items = []
 		if (chan.socket.readyState === WebSocket.OPEN) {
 			emitChannelSubscribeByUser({
 				channelSocket: chan.socket,
