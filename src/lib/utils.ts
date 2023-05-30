@@ -200,3 +200,40 @@ export const getVideoGrids = (list: any, limit: number) => {
 
 	return result
 }
+
+export const getAudioIndicator = (
+	stream: MediaStream,
+	eventDispatcher: { dispatchEvent: (arg0: CustomEvent<number>) => void }
+) => {
+	const audioContext = new AudioContext()
+	const analyser = audioContext.createAnalyser()
+	const microphone = audioContext.createMediaStreamSource(stream)
+	const javascriptNode = audioContext.createScriptProcessor(2048, 1, 1)
+
+	// Connect nodes
+	analyser.smoothingTimeConstant = 0.8
+	analyser.fftSize = 1024
+
+	microphone.connect(analyser)
+	analyser.connect(javascriptNode)
+	javascriptNode.connect(audioContext.destination)
+
+	// Create audio indicator
+	javascriptNode.onaudioprocess = () => {
+		const array = new Uint8Array(analyser.frequencyBinCount)
+		analyser.getByteFrequencyData(array)
+		let values = 0
+
+		const length = array.length
+		for (let i = 0; i < length; i++) {
+			values += array[i]
+		}
+
+		const average = values / length
+
+		// Visualize the audio indicator, e.g. through console or manipulating the DOM
+		// console.log(average)
+
+		eventDispatcher.dispatchEvent(new CustomEvent('localAudioSpeakingValue', { detail: average }))
+	}
+}

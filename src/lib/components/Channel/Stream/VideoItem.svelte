@@ -26,7 +26,9 @@
 		prevScreen: any,
 		prevWebcam: any,
 		prevAudio: any,
-		isMounted: boolean = false
+		isMounted: boolean = false,
+		isWebcamFocused: boolean = false,
+		speakingValue: number = 0
 
 	$: if (isMounted && video.screen !== prevScreen) {
 		handleScreenChanges()
@@ -91,10 +93,13 @@
 				case 'audio':
 					if (video.audio && $is_sharing_audio) {
 						audioWhip = new WHIPClient(video.audio.webRTC.url, audioElement, video.audio.trackType)
-						audioWhip.addEventListener(
-							`localStreamStopped-${trackType}`,
-							() => ($is_sharing_audio = false)
-						)
+						audioWhip.addEventListener(`localStreamStopped-${trackType}`, () => {
+							$is_sharing_audio = false
+							audioWhip.removeEventListener(`localAudioSpeakingValue`, () => {})
+						})
+						audioWhip.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
+							speakingValue = ev.detail
+						})
 					}
 					break
 			}
@@ -131,14 +136,26 @@
 							audioElement,
 							video.audio.trackType
 						)
+						audioWhep.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
+							speakingValue = ev.detail
+						})
 						audioElement.muted = false
 						audioElement.play()
 					} else {
 						if (audioElement) audioElement.srcObject = null
+						audioWhep?.removeEventListener(`localAudioSpeakingValue`, () => {})
 					}
 					break
 			}
 		}
+	}
+
+	const onMouseDown = () => {
+		isWebcamFocused = true
+	}
+
+	const onMouseUp = () => {
+		isWebcamFocused = false
 	}
 
 	// const initializeAndHandleChanges = () => {
@@ -227,6 +244,8 @@
 	// 	}
 	// 	emitChannelUpdate({ channel })
 	// }
+
+	$: animate = isWebcamFocused ? '' : 'transition-all'
 </script>
 
 <div class={$is_sharing_screen || $is_sharing_webcam ? 'w-full h-full' : 'w-[500px] max-h-80'}>
@@ -239,14 +258,17 @@
 			<video id={`screen-${video._id}`} autoplay muted class="rounded-md w-full h-full" />
 			<div
 				use:draggable={{ bounds: 'parent' }}
-				class={!$is_sharing_screen
-					? 'transition-all absolute w-full bottom-0 left-0 h-full'
-					: 'transition-all absolute w-1/4 bottom-0 right-0'}>
+				on:mousedown={onMouseDown}
+				on:mouseup={onMouseUp}
+				class={animate +
+					' absolute ' +
+					(!$is_sharing_screen ? 'w-full bottom-0 left-0 h-full' : 'w-1/4 bottom-0 right-0')}>
 				<video id={`webcam-${video._id}`} autoplay muted class="rounded-md h-full w-full" />
 			</div>
 			<video id={`audio-${video._id}`} autoplay muted class="rounded-md w-0 h-0" />
 			<div class="absolute left-2 bottom-2 rounded-md dropdown">
-				<label tabindex="0" class="btn btn-sm normal-case">@{video.username}</label>
+				<label tabindex="0" class="btn btn-sm normal-case {speakingValue > 10 ? 'btn-outline' : ''}"
+					>@{video.username}</label>
 				<!-- <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li>
 						<a on:click={() => toggleMod()}

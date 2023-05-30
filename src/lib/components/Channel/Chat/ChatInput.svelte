@@ -12,7 +12,8 @@
 	export let channel: any
 
 	$: chatMessage = ''
-	$: isChannelSocketConnected = $channel_connection === 'open' && $page.data.user?.userId
+	$: isChannelSocketConnected =
+		$channel_connection === `open-${channel._id}` && $page.data.user?.userId
 	$: isHost = channel.user === $page.data.user?.userId
 
 	const sendMessage = () => {
@@ -26,13 +27,17 @@
 				username: $page.data.user?.user?.username || ''
 			}
 		}
-		emitMessageToChannel({ channelId: channel._id, message: JSON.stringify(completeMessage) })
+		emitMessageToChannel({
+			channelSocket: channel.socket,
+			channelId: channel._id,
+			message: JSON.stringify(completeMessage)
+		})
 		chatMessage = ''
 	}
 
 	const toggleAIChat = async () => {
 		channel.isAiChatEnabled = !channel.isAiChatEnabled
-		emitChannelUpdate({ channel })
+		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 </script>
 
