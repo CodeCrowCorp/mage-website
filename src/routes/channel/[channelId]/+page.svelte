@@ -146,6 +146,8 @@
 	const attemptReconnect = () => {
 		setTimeout(async () => {
 			console.log('Reconnecting to WebSocket...')
+			const chan = channels.find((ch: any) => ch._id === $page.params.channelId)
+			delete chan.socket
 			await handleWebsocket()
 		}, 4000)
 	}
