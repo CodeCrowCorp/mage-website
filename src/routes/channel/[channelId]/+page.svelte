@@ -29,11 +29,10 @@
 		showEditChannelDrawer = false,
 		channels: any = [],
 		skip = 0,
-		limit = 10,
-		isHost = false
+		limit = 10
 
 	$: userCount = 0
-	$: isHostOrGuest = isHost || channel?.guests?.includes($page.data.user?.userId)
+	$: isHostOrGuest = false
 
 	$: if (channel) {
 		if (channel._id !== $page.params.channelId) {
@@ -104,6 +103,9 @@
 	const handleWebsocket = async () => {
 		try {
 			channel = channels.find((ch: any) => ch._id === $page.params.channelId)
+			isHostOrGuest =
+				channel.user === $page.data.user?.userId ||
+				channel.guests?.includes($page.data.user?.userId)
 			let channelSocketId = ''
 			if (!channel.socket) {
 				channelSocketId = await get(`wsinit/channelid?channelId=${$page.params.channelId}`)
