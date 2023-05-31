@@ -5,10 +5,6 @@ import { getSectionUrl } from '$lib/utils'
 
 export const load = (async ({ locals }) => {
 	return {
-		// tableChannels: get(`channels?skip=${0}&limit=${100}`),
-		mostActiveChannels: get(
-			getSectionUrl({ sectionId: 'most-active', query: '', skip: 0, limit: 5 })
-		),
 		lazy: {
 			mostActiveChannels: get(
 				getSectionUrl({ sectionId: 'most-active', query: '', skip: 0, limit: 5 })
