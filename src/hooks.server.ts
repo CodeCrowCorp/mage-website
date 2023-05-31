@@ -1,48 +1,18 @@
 import { redirect, type Handle } from '@sveltejs/kit'
 import { get as getWritableVal } from 'svelte/store'
-import {
-	is_maintenance_mode_enabled,
-	is_feature_video_responses_enabled,
-	is_feature_group_chat_enabled,
-	is_feature_mint_page_enabled,
-	is_feature_premium_page_enabled
-} from '$lib/stores/remoteConfigStore'
 import { Authenticate } from '$lib/authentication/authentication'
 import { get } from '$lib/api'
 import { user_role } from '$lib/stores/authStore'
-// import { hasOneHourPassed } from '$lib/utils'
+import { env } from '$env/dynamic/public'
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname
 	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
 	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
-	// const lastTimeTillLoadConfig = event.cookies.get('loadConfigTime') || '0'
 
 	let user: any = event.locals.user?.user || ''
 	const role = getWritableVal(user_role)
-	let maintenance_mode
-	// if (hasOneHourPassed(+lastTimeTillLoadConfig)) {
-	const remoteConfigs = await get('remote-configs', { userId, token })
-	event.cookies.set('loadConfigTime', Date.now().toString(), {
-		path: '/',
-		maxAge: 60 * 60 * 24 * 30
-	})
-	if (remoteConfigs && remoteConfigs.length) {
-		remoteConfigs.map((config: { flagKey: string; flagValue: boolean }) => {
-			if (config.flagKey === 'maintenance-mode') {
-				is_maintenance_mode_enabled.set(config.flagValue)
-				maintenance_mode = config.flagValue
-			}
-			if (config.flagKey === 'feature-video-responses')
-				is_feature_video_responses_enabled.set(config.flagValue)
-			if (config.flagKey === 'feature-group-chat')
-				is_feature_group_chat_enabled.set(config.flagValue)
-			if (config.flagKey === 'feature-mint-page') is_feature_mint_page_enabled.set(config.flagValue)
-			if (config.flagKey === 'feature-premium-page')
-				is_feature_premium_page_enabled.set(config.flagValue)
-		})
-	}
-	// }
+	const maintenanceMode: boolean = env.PUBLIC_MAINTENANCE_MODE === 'true'
 
 	if (token && userId) {
 		if (!user) {
@@ -62,20 +32,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 						expires: new Date(0)
 					})
 				})
-			}
-		}
-
-		if (!role) {
-			const allRoles = await get('roles', { userId, token })
-			if (Array.isArray(allRoles)) {
-				const userRole = await get('roles/role-mapping', { userId, token })
-				if (userRole && userRole.role) {
-					const usersRoleName = allRoles.find((item) => {
-						return item._id == userRole.role
-					})?.name
-
-					user_role.set(usersRoleName)
-				}
 			}
 		}
 
@@ -100,19 +56,22 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	if (Authenticate({ pathname, user_role: role || 'user' })) {
-		if (maintenance_mode && !['/contact', '/legal', '/careers'].includes(pathname)) {
+		if (maintenanceMode && !['/contact', '/legal', '/careers'].includes(pathname)) {
 			if (pathname === '/maintenance') {
 				return await resolve(event)
 			} else {
 				throw redirect(302, '/maintenance')
 			}
 		} else {
-			return await resolve(event)
+			if (pathname === '/maintenance') {
+				throw redirect(302, '/browse')
+			} else {
+				return await resolve(event)
+			}
 		}
 	} else {
 		return await resolve(event)
 	}
-	// throw redirect(302, '/browse')
 }
 
 export const handleError = ({ error }: { error: any }) => {
