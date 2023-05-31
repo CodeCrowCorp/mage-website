@@ -98,12 +98,6 @@ export const copyToClipboard = async (text: string) => {
 	}
 }
 
-export const hasOneHourPassed = (date: number) => {
-	const hour = 1000 * 60 * 60
-	const hourago = Date.now() - hour
-	return hourago > date
-}
-
 export const getColoredRole = (role: string) =>
 	({
 		'🤖 AI': {

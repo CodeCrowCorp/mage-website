@@ -17,7 +17,6 @@
 			<li><a href="/admin/admins">Admins</a></li>
 			<li><a href="/admin/users">Users</a></li>
 			<li><a href="/admin/channels">Channels</a></li>
-			<li><a href="/admin/legal">Legal Policies</a></li>
 			<li><a href="/admin/settings">Site Settings</a></li>
 		</ul>
 	</div>
