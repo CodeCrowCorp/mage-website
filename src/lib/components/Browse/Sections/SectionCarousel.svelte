@@ -7,7 +7,7 @@
 	import ItemCarousel from '$lib/components/Browse/Sections/ItemCarousel.svelte'
 	import 'swiper/css'
 
-	export let channels: any = []
+	export let channels: any = undefined
 
 	let swiper: Swiper
 	let isMounted = false
@@ -43,7 +43,6 @@
 	})
 
 	$: swiperClass = isMounted ? 'opacity-1' : 'opacity-0'
-	
 </script>
 
 {#await channels}
@@ -54,15 +53,15 @@
 			{/each}
 		</div>
 	</div>
-{:then}
-	{#if channels?.length > 0 }
-		<div class={"relative p-1 transition-opacity ease-in duration-100 " + swiperClass}>
+{:then value}
+	{#if value?.length > 0}
+		<div class={'relative p-1 transition-opacity ease-in duration-100 ' + swiperClass}>
 			<div class="btn btn-square p-2 btn-prev absolute top-2/4 left-1 z-10 ml-3">
 				<IconDrawerLeft />
 			</div>
 			<div class="swiper carousel !pt-10 mx-8">
 				<div class="swiper-wrapper">
-					{#each channels as channel}
+					{#each value as channel}
 						<ItemCarousel {channel} />
 					{/each}
 				</div>
@@ -72,7 +71,7 @@
 			</div>
 		</div>
 	{:else}
-		<div></div>
+		<div />
 	{/if}
 {/await}
 
