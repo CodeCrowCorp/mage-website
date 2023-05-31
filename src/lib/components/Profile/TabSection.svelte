@@ -30,7 +30,7 @@
 					<SectionTable channels={value} />
 				{/await}
 			</div>
-			<!-- <div class="flex-auto h-full" class:hidden={activeTab != 2}>
+			<!-- <div class="flex-auto h-full" class:hidden={activeTab != 1}>
 				<ListSubscribe {subscribers} {interests} />
 			</div> -->
 		</div>
