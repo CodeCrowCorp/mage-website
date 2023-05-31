@@ -9,7 +9,7 @@
 		<div class="video-thumbnail">
 			<img
 				class="w-full h-full mask rounded-lg"
-				src={user.banner ? user.banner : '/src/lib/assets/placeholder/gaming-placeholder.jpg'} />
+				src={user.banner ? user.banner : '/src/lib/assets/placeholder/gaming-placeholder.jpg'} alt="user banner"/>
 		</div>
 	</div>
 	<div class="flex flex-row gap-3 max-w-[400px]">

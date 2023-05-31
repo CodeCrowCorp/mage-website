@@ -3,14 +3,14 @@ import { get, post } from '$lib/api'
 import { redirect } from '@sveltejs/kit'
 
 export const load = (async ({ locals }) => {
-	const risingStars = await get(`stats/stream/getRisingStars?skip=${0}&limit=${10}`)
-	console.log(risingStars.users)
+	const risingStars = await get(`stats/stream/getRisingStars?skip=${0}&limit=${150}`)
+	console.log(risingStars)
 	return {
 		lazy: {
 			mostActiveChannels: await get(`channels/most-active?skip=${0}&limit=${5}`),
 			weeklyChannels: await get(`channels/weekly?skip=${0}&limit=${10}`),
 			highestRankedUsers: await get(`users/highest-ranked?skip=${0}&limit=${10}`),
-			risingStarUsers: await get(`stats/stream/getRisingStars?skip=${0}&limit=${10}`),
+			risingStarUsers: await get(`stats/stream/getRisingStars?skip=${0}&limit=${150}`),
 			myChannels: locals.user
 				? await get(`channels/user?userId=${locals.user.userId}&skip=${0}&limit=${10}`)
 				: [],
