@@ -1,7 +1,7 @@
 <div class="hero min-h-screen bg-base-200">
 	<div class="hero-content text-center">
 		<div class="max-w-md">
-            <div class="flex justify-center">
+			<div class="flex justify-center">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"

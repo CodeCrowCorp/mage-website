@@ -42,11 +42,16 @@
 					{#await isSubscribed}
 						<button class="btn btn-secondary" disabled>Unsubscribe</button>
 					{:then value}
-					<input type="hidden" name="isSubscribing" value={value.isSubscribing}/>
-					<input type="hidden" name="source1" value={profile?._id}/>
-					<input type="hidden" name="source2" value={$page.data.user?.userId}/>
-					<button class="btn btn-secondary" disabled={profile?._id === $page.data.user?.userId}
-							>{ (()=>{ console.log("isbuz"+value?.isSubscribing); return value?.isSubscribing === false})() ? 'Subscribe' : 'Unsubscribe'}</button>
+						<input type="hidden" name="isSubscribing" value={value.isSubscribing} />
+						<input type="hidden" name="source1" value={profile?._id} />
+						<input type="hidden" name="source2" value={$page.data.user?.userId} />
+						<button class="btn btn-secondary" disabled={profile?._id === $page.data.user?.userId}
+							>{(() => {
+								console.log('isbuz' + value?.isSubscribing)
+								return value?.isSubscribing === false
+							})()
+								? 'Subscribe'
+								: 'Unsubscribe'}</button>
 					{/await}
 					<!--TODO: open sponsor dialog-->
 					<button class="btn btn-primary" formaction="?/sponsor" disabled>Sponsor</button>

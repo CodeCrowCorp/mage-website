@@ -5,7 +5,6 @@ import { redirect } from '@sveltejs/kit'
 export const load = (async ({ params, locals }) => {
 	const profile = await get(`users/search/username?username=${params.username}`)
 
-
 	return {
 		profile: profile,
 		lazy: {
@@ -14,10 +13,13 @@ export const load = (async ({ params, locals }) => {
 				`subscribes?source=${profile._id}&sourceType=source1&skip=${0}&limit=${10}`,
 				{ userId: locals.user?.userId, token: locals.user?.token }
 			),
-			interests: await get(`subscribes?source=${profile._id}&sourceType=source2&skip=${0}&limit=${10}`, {
-				userId: locals.user?.userId,
-				token: locals.user?.token
-			}),
+			interests: await get(
+				`subscribes?source=${profile._id}&sourceType=source2&skip=${0}&limit=${10}`,
+				{
+					userId: locals.user?.userId,
+					token: locals.user?.token
+				}
+			),
 			subscriberCount: await get(`subscribes/count?source=${profile._id}&sourceType=source1`),
 			interestCount: await get(`subscribes/count?source=${profile._id}&sourceType=source2`),
 			isSubscribed: await get(`subscribes/relationship?source=${profile._id}`, {
@@ -52,7 +54,7 @@ export const actions = {
 		console.log(data)
 		const source1 = data.get('source1')
 		const source2 = data.get('source2')
-		if (isSubscribing=='false') {
+		if (isSubscribing == 'false') {
 			console.log('its not')
 
 			const sub = await put(

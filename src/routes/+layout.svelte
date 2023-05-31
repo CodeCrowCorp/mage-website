@@ -38,7 +38,6 @@
 	let nav_drawer: HTMLInputElement
 
 	onMount(async () => {
-
 		const platformSocketId = await get(`wsinit/wsid`)
 		initPlatformSocket(platformSocketId)
 		platformSocket.addEventListener('open', (data) => {
@@ -60,7 +59,7 @@
 		platformSocket.addEventListener('close', (data) => {
 			console.log('socket connection close')
 			console.log(data)
-			setTimeout(async function() {
+			setTimeout(async function () {
 				const platformSocketId = await get(`wsinit/wsid`)
 				initPlatformSocket(platformSocketId)
 				platformSocket.addEventListener('open', (data) => {
@@ -68,14 +67,14 @@
 					console.log(data)
 					platform_connection.set('open')
 					if ($page.data.user?.userId)
-					emitUserConnection({ userId: $page.data.user?.userId, isOnline: true })
+						emitUserConnection({ userId: $page.data.user?.userId, isOnline: true })
 				})
 				platformSocket.addEventListener('message', (data) => {
-				console.log('listening to messages')
-				console.log(data.data)
-				if (isJsonString(data.data)) platform_message.set(data.data)
+					console.log('listening to messages')
+					console.log(data.data)
+					if (isJsonString(data.data)) platform_message.set(data.data)
 				})
-   			}, 1000);
+			}, 1000)
 			platform_connection.set('close')
 		})
 
