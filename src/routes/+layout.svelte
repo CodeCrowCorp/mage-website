@@ -5,14 +5,13 @@
 
 	// @ts-ignore
 	import NProgress from 'nprogress'
-	import { navigating } from '$app/stores'
+	import { page, navigating } from '$app/stores'
 
 	// NProgress Loading bar
 	import '$lib/assets/styles/nprogress.css'
 	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
 	import DrawerMain from '$lib/components/MainDrawer/DrawerMain.svelte'
 	import DrawerSmall from '$lib/components/MainDrawer/DrawerSmall.svelte'
-	import { page } from '$app/stores'
 	import { onMount } from 'svelte'
 	import { get } from '$lib/api'
 	import { emitUserConnection, initPlatformSocket, platformSocket } from '$lib/websocket'
@@ -21,6 +20,12 @@
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
 	import { isOnline } from '$lib/stores/userStore'
 	import { current_theme } from '$lib/stores/helperStore'
+	import {
+		is_feature_premium_page_enabled,
+		is_feature_video_responses_enabled
+	} from '$lib/stores/remoteConfigStore'
+	import { env } from '$env/dynamic/public'
+	import { user_role } from '$lib/stores/authStore'
 
 	NProgress.configure({
 		minimum: 0.75,
@@ -40,12 +45,35 @@
 
 	onMount(async () => {
 		$current_theme = localStorage.getItem('theme') || 'dark'
-
+		$is_feature_premium_page_enabled = env.PUBLIC_FEATURE_PREMIUM_PAGE === 'true'
+		$is_feature_video_responses_enabled = env.PUBLIC_FEATURE_VIDEO_RESPONSES === 'true'
 		await handleWebsocket()
 		if (!$category_list.length) {
 			$category_list = imageUrlsJson
 		}
+		getUserRole()
 	})
+
+	const getUserRole = async () => {
+		if ($page.data.user?.userId && !$user_role) {
+			const allRoles = await get('roles', {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
+			if (Array.isArray(allRoles)) {
+				const userRole = await get('roles/role-mapping', {
+					userId: $page.data.user?.userId,
+					token: $page.data.user?.token
+				})
+				if (userRole && userRole.role) {
+					const usersRoleName = allRoles.find((item) => {
+						return item._id == userRole.role
+					})?.name
+					$user_role = usersRoleName
+				}
+			}
+		}
+	}
 
 	const handleWebsocket = async () => {
 		try {
