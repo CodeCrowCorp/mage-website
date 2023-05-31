@@ -38,8 +38,12 @@
 	}
 
 	onMount(async () => {
-		initSwiper()
-		isMounted = true
+		channels.then((data: any) => {
+			if(data.length){
+				initSwiper()
+				isMounted = true
+			}
+		})
 	})
 
 	$: swiperClass = isMounted ? 'opacity-1' : 'opacity-0'
