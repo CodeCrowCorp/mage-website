@@ -14,7 +14,19 @@
 	export let sender: any, hostId: string, channel: any
 
 	$: coloredRole = getColoredRole(sender.role)
+
 	$: isGuest = channel?.guests?.includes(sender.user?.userId)
+
+	$: showBanItem =
+		hostId === $page.data.user?.userId &&
+		sender.user?.userId !== $page.data.user?.userId &&
+		channel?.mods?.includes($page.data.user?.userId) &&
+		sender.role !== '🤖 AI'
+
+	$: showRoleItem =
+		hostId === $page.data.user?.userId &&
+		sender.user?.userId !== $page.data.user?.userId &&
+		sender.role !== '🤖 AI'
 
 	const deleteMessage = () => {
 		if (sender.user?.userId === hostId || sender.user?.userId === $page.data.user?.userId) {
@@ -88,22 +100,22 @@
 				<ul tabindex="1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li class="disabled"><a><IconChatReact /> React </a></li>
 					<li class="disabled"><a><IconChatQuote /> Quote </a></li>
-					{#if hostId === $page.data.user?.userId && sender.user?.userId !== $page.data.user?.userId && channel?.mods?.includes($page.data.user?.userId)}
+					{#if showBanItem}
 						<li>
 							<a on:click={() => toggleBan()}
 								><IconChatBan /> {channel.bans?.includes(sender.user?.userId) ? 'Unban' : 'Ban'}
 							</a>
 						</li>
 					{/if}
-					{#if hostId === $page.data.user?.userId && sender.user?.userId !== $page.data.user?.userId}
+					{#if showRoleItem}
 						<li>
 							<a on:click={() => toggleMod()}
-								><IconChatMod /> {sender.role === 'Mod' ? 'Remove Mod' : 'Grant Mod'}
+								><IconChatMod /> {sender.role === 'Mod' ? 'Revoke Mod' : 'Grant Mod'}
 							</a>
 						</li>
 						<li>
 							<a on:click={() => toggleGuest()}
-								><IconChatGuest /> {isGuest ? 'Revoke Guest' : 'Guest'}
+								><IconChatGuest /> {isGuest ? 'Revoke Guest' : 'Grant Guest'}
 							</a>
 						</li>
 					{/if}

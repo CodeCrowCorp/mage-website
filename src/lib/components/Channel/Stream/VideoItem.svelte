@@ -3,16 +3,18 @@
 	import WHIPClient from '$lib/WHIPClient'
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
-	// import IconChatMod from '$lib/assets/icons/chat/IconChatMod.svelte'
-	// import IconChatGuest from '$lib/assets/icons/chat/IconChatGuest.svelte'
-	// import { emitChannelUpdate } from '$lib/websocket'
-	// import { getColoredRole } from '$lib/utils'
+	import IconChatMod from '$lib/assets/icons/chat/IconChatMod.svelte'
+	import IconChatGuest from '$lib/assets/icons/chat/IconChatGuest.svelte'
 	import { draggable } from '@neodrag/svelte'
 	import { is_sharing_audio, is_sharing_screen, is_sharing_webcam } from '$lib/stores/streamStore'
+	import { emitChannelUpdate } from '$lib/websocket'
+	import { getColoredRole, setRole } from '$lib/utils'
+	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 
-	export let video: any, channel: any, sender: any
+	export let video: any, channel: any
 
-	let coloredRole: any = {},
+	let role = '',
+		coloredRole: any = {},
 		isGuest = false,
 		screenElement: HTMLVideoElement,
 		webcamElement: HTMLVideoElement,
@@ -29,6 +31,17 @@
 		isMounted: boolean = false,
 		isWebcamFocused: boolean = false,
 		speakingValue: number = 0
+
+	$: showBanItem =
+		channel.user === $page.data.user?.userId &&
+		video._id !== $page.data.user?.userId &&
+		channel?.mods?.includes($page.data.user?.userId) &&
+		role !== '🤖 AI'
+
+	$: showRoleItem =
+		channel.user === $page.data.user?.userId &&
+		video._id !== $page.data.user?.userId &&
+		role !== '🤖 AI'
 
 	$: if (isMounted && video.screen !== prevScreen) {
 		handleScreenChanges()
@@ -158,24 +171,10 @@
 		isWebcamFocused = false
 	}
 
-	// const initializeAndHandleChanges = () => {
-	// 	if (!prevScreen) {
-	// 		prevScreen = video.screen
-	// 		handleScreenChanges()
-	// 	}
-	// 	if (!prevWebcam) {
-	// 		prevWebcam = video.webcam
-	// 		handleWebcamChanges()
-	// 	}
-	// 	if (!prevAudio) {
-	// 		prevAudio = video.audio
-	// 		handleAudioChanges()
-	// 	}
-	// }
-
 	onMount(() => {
-		// coloredRole = getColoredRole(sender.role)
-		// isGuest = channel?.guests?.includes(sender.userData?.userId)
+		role = setRole({ userId: video._id, channel, currentUserId: $page.data.user?.userId })
+		coloredRole = getColoredRole(role)
+		isGuest = channel?.guests?.includes(video._id)
 		screenElement = document.getElementById(`screen-${video._id}`) as HTMLVideoElement
 		webcamElement = document.getElementById(`webcam-${video._id}`) as HTMLVideoElement
 		audioElement = document.getElementById(`audio-${video._id}`) as HTMLAudioElement
@@ -227,23 +226,35 @@
 		}
 	})
 
-	// const toggleMod = () => {
-	// 	if (channel.mods.includes(sender.userData?.userId)) {
-	// 		channel.mods = channel.mods.filter((mod: string) => mod !== sender.userData?.userId)
-	// 	} else {
-	// 		channel.mods.push(sender.userData?.userId)
-	// 	}
-	// 	emitChannelUpdate({ channel })
-	// }
+	const toggleBan = () => {
+		if (channel.bans.includes(video._id)) {
+			channel.bans = channel.bans.filter((ban: string) => ban !== video._id)
+		} else {
+			channel.bans.push(video._id)
+			channel.guests = channel.guests.filter((guest: string) => guest !== video._id)
+			channel.mods = channel.mods.filter((mod: string) => mod !== video._id)
+			isGuest = false
+		}
+		emitChannelUpdate({ channelSocket: channel.socket, channel })
+	}
 
-	// const toggleGuest = () => {
-	// 	if (channel.guests.includes(sender.userData?.userId)) {
-	// 		channel.guests = channel.guests.filter((guest: string) => guest !== sender.userData?.userId)
-	// 	} else {
-	// 		channel.guests.push(sender.userData?.userId)
-	// 	}
-	// 	emitChannelUpdate({ channel })
-	// }
+	const toggleMod = () => {
+		if (channel.mods.includes(video._id)) {
+			channel.mods = channel.mods.filter((mod: string) => mod !== video._id)
+		} else {
+			channel.mods.push(video._id)
+		}
+		emitChannelUpdate({ channelSocket: channel.socket, channel })
+	}
+
+	const toggleGuest = () => {
+		if (channel.guests.includes(video._id)) {
+			channel.guests = channel.guests.filter((guest: string) => guest !== video._id)
+		} else {
+			channel.guests.push(video._id)
+		}
+		emitChannelUpdate({ channelSocket: channel.socket, channel })
+	}
 
 	$: animate = isWebcamFocused ? '' : 'transition-all'
 </script>
@@ -267,18 +278,32 @@
 			</div>
 			<video id={`audio-${video._id}`} autoplay muted class="rounded-md w-0 h-0" />
 			<div class="absolute left-2 bottom-2 rounded-md dropdown">
-				<label tabindex="0" class="btn btn-sm normal-case {speakingValue > 10 ? 'btn-outline' : ''}"
-					>@{video.username}</label>
-				<!-- <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
-					<li>
-						<a on:click={() => toggleMod()}
-							><IconChatMod /> {sender?.role === 'Mod' ? 'Remove Mod' : 'Grant Mod'}
-						</a>
-					</li>
-					<li>
-						<a on:click={() => toggleGuest()}><IconChatGuest /> Revoke Guest </a>
-					</li>
-				</ul> -->
+				<label
+					tabindex="0"
+					class="{coloredRole.textColor} bg-base-100 btn btn-sm normal-case {speakingValue > 10
+						? 'btn-outline'
+						: 'border-transparent'}">@{video.username}</label>
+				{#if showBanItem || showRoleItem}
+					<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+						{#if showBanItem}
+							<li>
+								<a on:click={() => toggleBan()}
+									><IconChatBan /> {channel.bans?.includes(video._id) ? 'Unban' : 'Ban'}
+								</a>
+							</li>
+						{/if}
+						{#if showRoleItem}
+							<li>
+								<a on:click={() => toggleMod()}
+									><IconChatMod /> {role === 'Mod' ? 'Revoke Mod' : 'Grant Mod'}
+								</a>
+							</li>
+							<li>
+								<a on:click={() => toggleGuest()}><IconChatGuest /> Revoke Guest </a>
+							</li>
+						{/if}
+					</ul>
+				{/if}
 			</div>
 		</div>
 	</div>
