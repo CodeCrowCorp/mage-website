@@ -98,6 +98,22 @@ export const copyToClipboard = async (text: string) => {
 	}
 }
 
+export const setRole = ({
+	userId,
+	channel,
+	currentUserId
+}: {
+	userId: any
+	channel: any
+	currentUserId: string
+}): any => {
+	if (userId === 'AI') return '🤖 AI'
+	else if (userId === channel?.user) return 'Host'
+	else if (channel?.mods?.includes(userId)) return 'Mod'
+	else if (userId === currentUserId) return 'You'
+	else return 'Rando'
+}
+
 export const getColoredRole = (role: string) =>
 	({
 		'🤖 AI': {

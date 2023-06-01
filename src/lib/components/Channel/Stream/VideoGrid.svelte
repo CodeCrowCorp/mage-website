@@ -5,7 +5,6 @@
 
 	export let channel: any
 
-	const sender: any = {}
 	$: grid = getVideoGrids($video_items, 9)
 </script>
 
@@ -16,7 +15,7 @@
 				{#each grid as row}
 					<div class="flex flex-row gap-4 justify-center h-full mt-3">
 						{#each row as video}
-							<VideoItem bind:video {channel} {sender} />
+							<VideoItem bind:video {channel} />
 						{/each}
 					</div>
 				{/each}
