@@ -131,9 +131,11 @@
 							e.preventDefault()
 							slectCommandfromKey(e.key)
 						}
-						else if(e.key === 'Enter' && selectedCommand){
+						else if(e.key === 'Enter'){
 							e.preventDefault()
-							// execute selected command
+							if(selectedCommand){
+								// execute selected command
+							}
 						}
 					}
 					else if(e.key === 'Enter'){
