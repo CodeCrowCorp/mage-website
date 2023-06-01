@@ -73,13 +73,11 @@
 	}
 </script>
 
-<!-- <ProfileCard /> -->
-
 <ul class="menu">
 	<li class="group relative dropdown">
 		<!--Host, Mod, You or Rando-->
 		<div class="p-1 border border-transparent rounded-lg flex gap-2 overflow-x-hidden">
-			<span>
+			<label>
 				{#if sender.role === '🤖 AI' || sender.role === 'Host' || sender.role === 'Mod' || sender.role === 'You'}
 					<span class="{coloredRole.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
 						>{sender.role}</span>
@@ -90,7 +88,10 @@
 						class="{coloredRole.textColor} font-medium">@{sender.user?.username}</span>
 				{/if}
 				<span class="break-all">{sender.message}</span>
-			</span>
+			</label>
+			<!-- <ul class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+				<ProfileCard userId={sender.user?.userId} />
+			</ul> -->
 			<div
 				class="group-hover:block dropdown-menu absolute hidden right-0 dropdown dropdown-left dropdown-end"
 				tabindex="1">
