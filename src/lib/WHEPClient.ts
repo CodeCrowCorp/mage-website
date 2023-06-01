@@ -1,15 +1,17 @@
 import negotiateConnectionWithClientOffer from '$lib/negotiateConnectionWithClientOffer'
+import { getAudioIndicator } from '$lib/utils'
 
 /**
  * Example implementation of a client that uses WHEP to playback video over WebRTC
  *
  * https://www.ietf.org/id/draft-murillo-whep-00.html
  */
-export default class WHEPClient {
+export default class WHEPClient extends EventTarget {
 	private peerConnection: RTCPeerConnection
 	private stream: MediaStream
 
-	constructor(private endpoint: string, private videoElement: HTMLVideoElement) {
+	constructor(private endpoint: string, private videoElement: any, private trackType: string) {
+		super()
 		this.stream = new MediaStream()
 
 		/**
@@ -26,13 +28,19 @@ export default class WHEPClient {
 			bundlePolicy: 'max-bundle'
 		})
 
+		const trackOrKind = trackType === 'screen' || trackType === 'webcam' ? 'video' : 'audio'
+
 		/** https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/addTransceiver */
-		this.peerConnection.addTransceiver('video', {
+		this.peerConnection.addTransceiver(trackOrKind, {
 			direction: 'recvonly'
 		})
-		this.peerConnection.addTransceiver('audio', {
-			direction: 'recvonly'
-		})
+
+		//NOTE: used for system audio
+		if (this.trackType === 'screen') {
+			this.peerConnection.addTransceiver('audio', {
+				direction: 'recvonly'
+			})
+		}
 
 		/**
 		 * When new tracks are received in the connection, store local references,
@@ -45,21 +53,19 @@ export default class WHEPClient {
 			const currentTracks = this.stream.getTracks()
 			const streamAlreadyHasVideoTrack = currentTracks.some((track) => track.kind === 'video')
 			const streamAlreadyHasAudioTrack = currentTracks.some((track) => track.kind === 'audio')
-			switch (track.kind) {
-				case 'video':
-					if (streamAlreadyHasVideoTrack) {
-						break
-					}
-					this.stream.addTrack(track)
-					break
-				case 'audio':
-					if (streamAlreadyHasAudioTrack) {
-						break
-					}
-					this.stream.addTrack(track)
-					break
-				default:
-					console.log('got unknown track ' + track)
+			if (track.kind === 'video') {
+				if (streamAlreadyHasVideoTrack) {
+					return
+				}
+				this.stream.addTrack(track)
+			} else if (track.kind === 'audio') {
+				if (streamAlreadyHasAudioTrack) {
+					return
+				}
+				this.stream.addTrack(track)
+				getAudioIndicator(this.stream, this)
+			} else {
+				console.log('got unknown track ' + track)
 			}
 		}
 
@@ -67,9 +73,7 @@ export default class WHEPClient {
 			if (this.peerConnection.connectionState !== 'connected') {
 				return
 			}
-			if (!this.videoElement.srcObject) {
-				this.videoElement.srcObject = this.stream
-			}
+			this.videoElement.srcObject = this.stream
 		})
 
 		this.peerConnection.addEventListener('negotiationneeded', (ev) => {

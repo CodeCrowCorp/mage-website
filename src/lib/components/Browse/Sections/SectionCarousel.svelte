@@ -4,17 +4,20 @@
 	import LoadingItemCarousel from '$lib/components/Browse/Sections/LoadingItemCarousel.svelte'
 	import { onMount } from 'svelte'
 	import Swiper, { Navigation } from 'swiper'
+	import ItemCarousel from '$lib/components/Browse/Sections/ItemCarousel.svelte'
 	import 'swiper/css'
-	import SectionCarouselItem from '$lib/components/Browse/Sections/SectionCarouselItem.svelte'
 
-	export let channels: any = []
+	export let channels: any = undefined
+
 	let swiper: Swiper
+	let isMounted = false
 
-	onMount(() => {
+	const initSwiper = () => {
 		swiper = new Swiper('.carousel', {
 			slidesPerView: 3,
 			spaceBetween: 15,
 			loop: true,
+			centeredSlides: true,
 			modules: [Navigation],
 			navigation: {
 				nextEl: '.btn-next',
@@ -32,7 +35,18 @@
 				}
 			}
 		})
+	}
+
+	onMount(async () => {
+		channels.then((data: any) => {
+			if(data.length){
+				initSwiper()
+				isMounted = true
+			}
+		})
 	})
+
+	$: swiperClass = isMounted ? 'opacity-1' : 'opacity-0'
 </script>
 
 {#await channels}
@@ -44,30 +58,28 @@
 		</div>
 	</div>
 {:then value}
-	{#if value.length > 0}
-		<div class="relative p-1">
-			<div class="btn btn-circle p-3 btn-prev absolute top-2/4 left-1 z-10 ml-3">
+	{#if value?.length > 0}
+		<div class={'relative p-1 transition-opacity ease-in duration-100 ' + swiperClass}>
+			<div class="btn btn-square p-2 btn-prev absolute top-2/4 left-1 z-10 ml-3">
 				<IconDrawerLeft />
 			</div>
-			<div class="swiper carousel mt-10 mx-8">
+			<div class="swiper carousel !pt-10 mx-8">
 				<div class="swiper-wrapper">
 					{#each value as channel}
-						<SectionCarouselItem {channel} />
+						<ItemCarousel {channel} />
 					{/each}
 				</div>
 			</div>
-			<div class="btn btn-circle z-10 p-3 btn-next absolute top-2/4 right-1 mr-3">
+			<div class="btn btn-square z-10 p-2 btn-next absolute top-2/4 right-1 mr-3">
 				<IconDrawerChevron />
 			</div>
 		</div>
+	{:else}
+		<div />
 	{/if}
 {/await}
 
 <style>
-	.swiper-slide {
-		background: #fff;
-		display: flex;
-	}
 	:global(.swiper-slide) {
 		height: 20rem !important;
 	}

@@ -2,7 +2,7 @@ module.exports = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {},
 	daisyui: {
-		themes: ['dark', 'light'] //, 'cyberpunk', 'synthwave']
+		themes: ['dark', 'light', 'cyberpunk', 'synthwave']
 	},
 	plugins: [
 		require('@tailwindcss/aspect-ratio'),

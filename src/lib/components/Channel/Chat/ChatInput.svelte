@@ -1,23 +1,25 @@
 <script lang="ts">
-	import IconChatAttachment from '$lib/assets/icons/chat/IconChatAttachment.svelte'
+	// import IconChatAttachment from '$lib/assets/icons/chat/IconChatAttachment.svelte'
+	import IconChatAI from '$lib/assets/icons/chat/IconChatAI.svelte'
 	import IconChatEmoji from '$lib/assets/icons/chat/IconChatEmoji.svelte'
 	import IconChatGif from '$lib/assets/icons/chat/IconChatGif.svelte'
 	import IconChatCode from '$lib/assets/icons/chat/IconChatCode.svelte'
 	import IconChatSendMessage from '$lib/assets/icons/chat/IconChatSendMessage.svelte'
-	import { emitMessageToChannel } from '$lib/websocket'
+	import { emitChannelUpdate, emitMessageToChannel } from '$lib/websocket'
 	import { page } from '$app/stores'
 	import { channel_connection } from '$lib/stores/websocketStore'
 
 	export let channel: any
 
 	$: chatMessage = ''
-
 	$: isChannelSocketConnected =
-		$channel_connection === 'open' && $page.data?.user?.userId ? true : false
+		$channel_connection === `open-${channel._id}` && $page.data.user?.userId
+	$: isHost = channel.user === $page.data.user?.userId
 
 	const sendMessage = () => {
 		if (chatMessage === null || chatMessage.match(/^\s*$/) !== null) return
 		const completeMessage = {
+			isAiChatEnabled: channel.isAiChatEnabled,
 			body: chatMessage,
 			state: { timestamp: new Date().toISOString() },
 			user: {
@@ -25,40 +27,44 @@
 				username: $page.data.user?.user?.username || ''
 			}
 		}
-		emitMessageToChannel({ channelId: channel._id, message: JSON.stringify(completeMessage) })
+		emitMessageToChannel({
+			channelSocket: channel.socket,
+			channelId: channel._id,
+			message: JSON.stringify(completeMessage)
+		})
 		chatMessage = ''
+	}
+
+	const toggleAIChat = async () => {
+		channel.isAiChatEnabled = !channel.isAiChatEnabled
+		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 </script>
 
 <form class="rounded-lg bg-base-200 p-2 w-full">
 	<button
-		disabled
-		type="button"
-		class="btn border-none text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 tooltip font-normal normal-case"
-		data-tip="Attachment">
-		<IconChatAttachment />
-		<span class="sr-only">Upload attachment</span>
+		class="btn tooltip font-normal normal-case {!isHost
+			? 'no-animation'
+			: ''} {channel.isAiChatEnabled ? 'btn-primary' : ''}"
+		data-tip="AI"
+		on:click={() => {
+			if (isHost) toggleAIChat()
+		}}>
+		<IconChatAI />
+		<span class="sr-only">Enable AI</span>
 	</button>
-	<button
-		disabled
-		type="button"
-		class="btn border-none text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 tooltip font-normal normal-case"
-		data-tip="Emoji">
+	<button disabled type="button" class="btn tooltip font-normal normal-case" data-tip="Emoji">
 		<IconChatEmoji />
 		<span class="sr-only">Add emoji</span>
 	</button>
-	<button
-		disabled
-		type="button"
-		class="btn border-none text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 tooltip font-normal normal-case"
-		data-tip="GIF">
+	<button disabled type="button" class="btn tooltip font-normal normal-case" data-tip="GIF">
 		<IconChatGif />
 		<span class="sr-only">Add GIF</span>
 	</button>
 	<button
 		disabled
 		type="button"
-		class="btn border-none text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 tooltip font-normal normal-case"
+		class="btn tooltip font-normal normal-case"
 		data-tip="Code snippet">
 		<IconChatCode />
 		<span class="sr-only">Add code snippet</span>
@@ -66,7 +72,7 @@
 	<div class="flex items-center py-2 rounded-lg">
 		{#if !isChannelSocketConnected || channel.bans?.includes($page.data.user.userId)}
 			<input
-				class="animate-pulse block mx-2 p-2.5 w-full text-sm textarea textarea-bordered textarea-secondary"
+				class="animate-pulse block mx-1 p-2.5 w-full text-sm textarea textarea-bordered textarea-secondary"
 				placeholder="Disabled"
 				disabled />
 		{:else}
@@ -79,7 +85,7 @@
 				}}
 				bind:value={chatMessage}
 				rows="1"
-				class="block mx-2 p-2.5 w-full text-sm textarea textarea-bordered textarea-secondary"
+				class="block mx-1 p-2.5 w-full text-sm textarea textarea-bordered textarea-secondary"
 				placeholder="Your message..." /><!--focus:h-32 -->
 			<button
 				on:click={() => sendMessage()}

@@ -28,7 +28,8 @@
 		showThumbnail = false,
 		showAddCategory = false,
 		maxTag = 3,
-		maxCategory = 4
+		maxCategory = 4,
+		isLoadingChannel = false
 
 	$: maxTagLabel = newChannel.tags.length == maxTag ? 'max reached' : 'max ' + maxTag
 	$: maxCategoryLabel =
@@ -93,6 +94,7 @@
 				action="?/create-channel"
 				method="post"
 				use:enhance={({ data }) => {
+					isLoadingChannel = true
 					data.append('newChannel', JSON.stringify(newChannel))
 				}}>
 				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col rounded-lg">
@@ -148,7 +150,7 @@
 								{/each}
 							{:else}
 								<div class="flex justify-center w-full">
-									<span class="btn btn-circle btn-outline btn-sm loading" />
+									<progress class="progress w-full" />
 								</div>
 							{/if}
 						</div>
@@ -167,9 +169,9 @@
 								name="category"
 								required={!newChannel.category.length}
 								placeholder={newChannel?.category?.length ? '' : 'Category'}
-								class="input input-primary input-bordered mt-5 w-full " />
+								class="input input-primary input-bordered mt-5 w-full" />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
-							<span class="absolute flex flex-row gap-2 left-0 top-1/2  pl-5">
+							<span class="absolute flex flex-row gap-2 left-0 top-1/2 pl-5">
 								{#if newChannel?.category?.length}
 									{#each newChannel?.category as icon}
 										<img src={$category_list[icon]} alt="" class="h-5 w-5" />
@@ -188,7 +190,10 @@
 					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
 						<button type="button" class="btn btn-default grow" on:click={() => toggleDrawer()}
 							>Cancel</button>
-						<button type="submit" class="btn btn-primary grow">Add</button>
+						<button
+							type="submit"
+							disabled={isLoadingChannel}
+							class="btn btn-primary grow {isLoadingChannel ? 'loading' : ''}">Add</button>
 					</div>
 				</div>
 			</form>

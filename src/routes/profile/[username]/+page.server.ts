@@ -54,10 +54,8 @@ export const actions = {
 		console.log(data)
 		const source1 = data.get('source1')
 		const source2 = data.get('source2')
-		if (isSubscribing == 'false') {
-			console.log('its not')
-
-			const sub = await put(
+		if (isSubscribing === 'false') {
+			await put(
 				`subscribes?source1=${source1}&source2=${source2}`,
 				{},
 				{
@@ -65,7 +63,6 @@ export const actions = {
 					token: locals.user?.token
 				}
 			)
-			console.log(sub)
 		} else {
 			await del(`subscribes?source1=${source1}&source2=${source2}`, {
 				userId: locals.user?.userId,

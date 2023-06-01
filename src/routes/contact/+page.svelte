@@ -6,8 +6,8 @@
 <div class="m-10 lg:w-2/5 bg-primary p-16 rounded-md">
 	<h1 class="text-4xl pb-4 text-white font-bold">Get in touch</h1>
 	<p class="text-xl text-white pb-8 leading-relaxed font-normal pr-4">
-		Got a question about us? Are you interested in partnering with us? Have some suggestions or just
-		want to say hi? Just contact us. We are here to asset you.
+		If you have any inquiries about our organization or are interested in collaborating with us,
+		please do not hesitate to reach out
 	</p>
 	<div class="flex items-center">
 		<div aria-label="email icon" role="img">
@@ -35,7 +35,7 @@
 	<div class=" pt-16">
 		<a
 			href="/careers"
-			class="text-white font-bold tracking-wide underline focus:outline-none focus:ring-2 focus:ring-white ">
+			class="text-white font-bold tracking-wide underline focus:outline-none focus:ring-2 focus:ring-white">
 			View Job Openings</a>
 	</div>
 </div>

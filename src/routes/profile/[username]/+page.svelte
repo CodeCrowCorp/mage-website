@@ -11,7 +11,7 @@
 	let showDrawer = false
 </script>
 
-{#if data.profile?.length}
+{#if !data.profile}
 	<WholePageSkeleton />
 {:else}
 	<div class="relative block h-[31rem]">

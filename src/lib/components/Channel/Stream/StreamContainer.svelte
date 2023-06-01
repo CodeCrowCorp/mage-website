@@ -1,17 +1,22 @@
 <script lang="ts">
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
 	import StreamControls from '$lib/components/Channel/Stream/StreamControls.svelte'
-	import DropdownViewers from '$lib/components/Channel/Stream/DropdownViewers.svelte'
+	// import DropdownViewers from '$lib/components/Channel/Stream/DropdownViewers.svelte'
 	import VideoGrid from '$lib/components/Channel/Stream/VideoGrid.svelte'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { createEventDispatcher } from 'svelte'
 	import { video_items } from '$lib/stores/streamStore'
+	import { channel_connection } from '$lib/stores/websocketStore'
+	import CommandList from '$lib/components/Channel/Stream/CommandList.svelte'
 
 	const dispatch = createEventDispatcher()
-	export let userCount: number = 10,
+	export let userCount: number = 1,
 		channel: any,
-		channels: any = []
+		channels: any = [],
+		isHostOrGuest: boolean = false
+
+	$: isChannelSocketConnected = $channel_connection === `open-${channel._id}`
 
 	function autoActive(node: Element) {
 		const observer = new IntersectionObserver(callback, { threshold: 0.5 })
@@ -45,7 +50,7 @@
 				<div class="flex flex-col w-full">
 					<div class="flex gap-2 mb-3">
 						<span
-							class="btn btn-sm rounded-md font-medium text-white border-none flex items-center {$video_items.length
+							class="btn btn-sm rounded-md font-medium text-white border-none flex items-center {$video_items?.length
 								? 'bg-red-700 hover:bg-red-700'
 								: ''}">
 							LIVE
@@ -58,16 +63,21 @@
 								<IconViewers />
 								{userCount}
 							</label>
-							<DropdownViewers />
+							<!-- <DropdownViewers /> -->
 						</div>
 					</div>
-					<VideoGrid {channel} />
+					{#if channel && nextchannel?._id === $page.params.channelId}
+						<VideoGrid {channel} />
+						{#if !$video_items?.length && isChannelSocketConnected}
+							<CommandList />
+						{/if}
+					{/if}
 				</div>
 			</div>
 		{/each}
 	</div>
 
 	<div class="absolute bottom-0 m-5">
-		<StreamControls isHost={channel?.user === $page?.data?.user?.userId} bind:channel />
+		<StreamControls bind:isHostOrGuest {channel} />
 	</div>
 </div>
