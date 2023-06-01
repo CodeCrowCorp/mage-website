@@ -11,6 +11,23 @@
 
 	export let channel: any
 	let selectedCommand = 0
+	const specialCommands = [
+		{
+			id: 1,
+			label: "Toggle mod status",
+			cmd: "/mod @username"
+		},
+		{
+			id: 2,
+			label: "Toggle guest status",
+			cmd: "/guest @username"
+		},
+		{
+			id: 3,
+			label: "Ban user",
+			cmd: "/ban @username"
+		}
+	]
 
 	$: chatMessage = ''
 	$: isChannelSocketConnected =
@@ -82,33 +99,20 @@
 		<IconChatCode />
 		<span class="sr-only">Add code snippet</span>
 	</button>
-	<!-- Command drop-up -->
+
+	<!-- Special commands drop-up -->
 	<div class={"dropdown dropdown-top w-full rounded-box bg-white " + (showCommandOptions ? "dropdown-open" : "")}>
 		<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
-			<li class={selectedCommand == 1 ? " bg-gray-600" : ""}>
-				<span class="text-sm w-full">
-					Toggle mod status
-					<kbd class="kbd text-xs ml-2 font-semibold text-green-500">
-						/mod @username
-					</kbd>
-				</span>
-			</li>
-			<li class={selectedCommand == 2 ? " bg-gray-600" : ""}>
-				<span class="text-sm w-full">
-					Toggle guest status 
-					<kbd class="kbd text-xs ml-2 font-semibold text-green-500">
-						/guest @username
-					</kbd>
-				</span>
-			</li>
-			<li class={selectedCommand == 3 ? " bg-gray-600" : ""}>
-				<span class="text-sm w-full">
-					Ban user
-					<kbd class="kbd text-xs ml-2 font-semibold text-green-500">
-						/ban @username
-					</kbd>
-				</span>
-			</li>
+			{#each specialCommands as command }
+				<li>
+					<span class={"text-sm w-full" + (selectedCommand == command.id ? " bg-gray-600" : "")}>
+						{ command.label }
+						<kbd class="kbd text-xs ml-2 font-semibold text-green-500">
+							{ command.cmd }
+						</kbd>
+					</span>
+				</li>
+			{/each}
 		</ul>
 	</div>
 
