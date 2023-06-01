@@ -64,9 +64,9 @@
 		newChannel = newChannel
 	}
 
-	const onTagValidation = (evt:any) => {
-		if(Number(evt.target.value) < 1){
-			evt.target.setCustomValidity("Please add atleast 1 tag")
+	const onTagValidation = (evt: any) => {
+		if (Number(evt.target.value) < 1) {
+			evt.target.setCustomValidity('Please fill out this field.')
 		}
 	}
 
@@ -168,15 +168,14 @@
 								placeholder={newChannel.tags.length > 0 ? '' : 'Tag'} />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxTagLabel})</span>
 							{#if newChannel.tags.length === 0}
-								<input 
-									type="number" 
-									name="mintags" 
-									required 
-									min="1" 
-									class="opacity-0 pointer-events-none absolute left-0 right-0 mx-auto bottom-0" 
+								<input
+									type="number"
+									name="mintags"
+									required
+									min="1"
+									class="opacity-0 pointer-events-none absolute left-0 right-0 mx-auto bottom-0"
 									bind:value={newChannel.tags.length}
-									on:invalid={onTagValidation}
-								/>
+									on:invalid={onTagValidation} />
 							{/if}
 						</div>
 						<div class="relative">
