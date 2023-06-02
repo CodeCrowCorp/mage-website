@@ -14,7 +14,19 @@
 	export let sender: any, hostId: string, channel: any
 
 	$: coloredRole = getColoredRole(sender.role)
+
 	$: isGuest = channel?.guests?.includes(sender.user?.userId)
+
+	$: showBanItem =
+		hostId === $page.data.user?.userId &&
+		sender.user?.userId !== $page.data.user?.userId &&
+		channel?.mods?.includes($page.data.user?.userId) &&
+		sender.role !== '🤖 AI'
+
+	$: showRoleItem =
+		hostId === $page.data.user?.userId &&
+		sender.user?.userId !== $page.data.user?.userId &&
+		sender.role !== '🤖 AI'
 
 	const deleteMessage = () => {
 		if (sender.user?.userId === hostId || sender.user?.userId === $page.data.user?.userId) {
@@ -61,13 +73,11 @@
 	}
 </script>
 
-<!-- <ProfileCard /> -->
-
 <ul class="menu">
 	<li class="group relative dropdown">
 		<!--Host, Mod, You or Rando-->
 		<div class="p-1 border border-transparent rounded-lg flex gap-2 overflow-x-hidden">
-			<span>
+			<label>
 				{#if sender.role === '🤖 AI' || sender.role === 'Host' || sender.role === 'Mod' || sender.role === 'You'}
 					<span class="{coloredRole.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
 						>{sender.role}</span>
@@ -78,7 +88,10 @@
 						class="{coloredRole.textColor} font-medium">@{sender.user?.username}</span>
 				{/if}
 				<span class="break-all">{sender.message}</span>
-			</span>
+			</label>
+			<!-- <ul class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+				<ProfileCard userId={sender.user?.userId} />
+			</ul> -->
 			<div
 				class="group-hover:block dropdown-menu absolute hidden right-0 dropdown dropdown-left dropdown-end"
 				tabindex="1">
@@ -88,22 +101,22 @@
 				<ul tabindex="1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li class="disabled"><a><IconChatReact /> React </a></li>
 					<li class="disabled"><a><IconChatQuote /> Quote </a></li>
-					{#if hostId === $page.data.user?.userId && sender.user?.userId !== $page.data.user?.userId && channel?.mods?.includes($page.data.user?.userId)}
+					{#if showBanItem}
 						<li>
 							<a on:click={() => toggleBan()}
 								><IconChatBan /> {channel.bans?.includes(sender.user?.userId) ? 'Unban' : 'Ban'}
 							</a>
 						</li>
 					{/if}
-					{#if hostId === $page.data.user?.userId && sender.user?.userId !== $page.data.user?.userId}
+					{#if showRoleItem}
 						<li>
 							<a on:click={() => toggleMod()}
-								><IconChatMod /> {sender.role === 'Mod' ? 'Remove Mod' : 'Grant Mod'}
+								><IconChatMod /> {sender.role === 'Mod' ? 'Revoke Mod' : 'Grant Mod'}
 							</a>
 						</li>
 						<li>
 							<a on:click={() => toggleGuest()}
-								><IconChatGuest /> {isGuest ? 'Revoke Guest' : 'Guest'}
+								><IconChatGuest /> {isGuest ? 'Revoke Guest' : 'Grant Guest'}
 							</a>
 						</li>
 					{/if}
