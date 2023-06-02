@@ -6,15 +6,9 @@
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	import type { PageData } from './$types'
 	import { page } from '$app/stores'
-	import { get } from '$lib/api'
-	import { onMount } from 'svelte'
 
 	export let data: PageData
 	$: user = $page.data.user
-
-	onMount(async () => {
-		await get('channels/updateAllUsernamesInChannels')
-	})
 </script>
 
 <SectionCarousel bind:channels={data.lazy.mostActiveChannels} />
