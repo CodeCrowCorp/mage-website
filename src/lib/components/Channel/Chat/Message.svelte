@@ -48,17 +48,17 @@
 		} else {
 			channel.bans.push(sender.user?.userId)
 			channel.guests = channel.guests.filter((guest: string) => guest !== sender.user?.userId)
-			channel.mods = channel.mods.filter((mod: string) => mod !== sender.user?.userId)
+			channel.mods = channel.mods?.filter((mod: string) => mod !== sender.user?.userId)
 			isGuest = false
 		}
 		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 
 	const toggleMod = () => {
-		if (channel.mods.includes(sender.user?.userId)) {
-			channel.mods = channel.mods.filter((mod: string) => mod !== sender.user?.userId)
+		if (channel.mods?.includes(sender.user?.userId)) {
+			channel.mods = channel.mods?.filter((mod: string) => mod !== sender.user?.userId)
 		} else {
-			channel.mods.push(sender.user?.userId)
+			channel.mods?.push(sender.user?.userId)
 		}
 		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}

@@ -14,18 +14,18 @@
 	const specialCommands = [
 		{
 			id: 1,
-			label: "Toggle mod status",
-			cmd: "/mod @username"
+			label: 'Toggle mod status',
+			cmd: '/mod @username'
 		},
 		{
 			id: 2,
-			label: "Toggle guest status",
-			cmd: "/guest @username"
+			label: 'Toggle guest status',
+			cmd: '/guest @username'
 		},
 		{
 			id: 3,
-			label: "Ban user",
-			cmd: "/ban @username"
+			label: 'Ban user',
+			cmd: '/ban @username'
 		}
 	]
 
@@ -58,17 +58,18 @@
 		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 
-	const slectCommandfromKey = (key:string) => {
-		if(key === "ArrowDown" && selectedCommand < 3){
-			selectedCommand++			
-		}
-		else if(key === "ArrowUp" && selectedCommand >= 1){
+	const slectCommandfromKey = (key: string) => {
+		if (key === 'ArrowDown' && selectedCommand < 3) {
+			selectedCommand++
+		} else if (key === 'ArrowUp' && selectedCommand >= 1) {
 			selectedCommand--
 		}
 	}
 
-	$: showCommandOptions = chatMessage && chatMessage.startsWith("/")
-
+	$: showCommandOptions =
+		chatMessage &&
+		chatMessage.startsWith('/') &&
+		(channel.user === $page.data.user?.userId || channel.mods?.includes($page.data.user?.userId))
 </script>
 
 <form class="rounded-lg bg-base-200 p-2 w-full">
@@ -101,14 +102,16 @@
 	</button>
 
 	<!-- Special commands drop-up -->
-	<div class={"dropdown dropdown-top w-full rounded-box bg-white " + (showCommandOptions ? "dropdown-open" : "")}>
+	<div
+		class={'dropdown dropdown-top w-full rounded-box bg-white ' +
+			(showCommandOptions ? 'dropdown-open' : '')}>
 		<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
-			{#each specialCommands as command }
+			{#each specialCommands as command}
 				<li>
-					<span class={"text-sm w-full" + (selectedCommand == command.id ? " bg-gray-600" : "")}>
-						{ command.label }
+					<span class={'text-sm w-full' + (selectedCommand == command.id ? ' bg-gray-600' : '')}>
+						{command.label}
 						<kbd class="kbd text-xs ml-2 font-semibold text-green-500">
-							{ command.cmd }
+							{command.cmd}
 						</kbd>
 					</span>
 				</li>
@@ -125,30 +128,25 @@
 		{:else}
 			<textarea
 				on:keydown={(e) => {
-				
-					if(showCommandOptions){
-						if(e.key === "ArrowDown" || e.key === "ArrowUp"){
+					if (showCommandOptions) {
+						if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
 							e.preventDefault()
 							slectCommandfromKey(e.key)
-						}
-						else if(e.key === 'Enter'){
+						} else if (e.key === 'Enter') {
 							e.preventDefault()
-							if(selectedCommand){
+							if (selectedCommand) {
 								// execute selected command
 							}
 						}
-					}
-					else if(e.key === 'Enter'){
+					} else if (e.key === 'Enter') {
 						e.preventDefault()
 						sendMessage()
 					}
-														
 				}}
 				bind:value={chatMessage}
 				rows="1"
 				class="block mx-1 p-2.5 w-full text-sm textarea textarea-bordered textarea-secondary"
-				placeholder="Your message..." 
-			/><!--focus:h-32 -->
+				placeholder="Your message..." /><!--focus:h-32 -->
 			<button
 				on:click={() => !showCommandOptions && sendMessage()}
 				class="inline-flex justify-center p-2 text-secondary rounded-full cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:text-white dark:hover:bg-gray-600">
@@ -158,4 +156,3 @@
 		{/if}
 	</div>
 </form>
-
