@@ -7,19 +7,11 @@
 	import { onDestroy, onMount } from 'svelte'
 	import { is_chat_drawer_open, was_chat_drawer_closed } from '$lib/stores/channelStore'
 	import { emitChatHistoryToChannel } from '$lib/websocket'
+	import { setRole } from '$lib/utils'
 
 	export let channel: any = undefined,
 		showEditChannelDrawer: boolean = false
 	let chatHistory: any[] = []
-
-	const setRole = (msg: any): any => {
-		if (msg.user?.userId === 'AI') msg.role = '🤖 AI'
-		else if (msg.user?.userId === channel?.user) msg.role = 'Host'
-		else if (channel?.mods?.includes(msg.user._id)) msg.role = 'Mod'
-		else if (msg.user?.userId === $page.data.user?.userId) msg.role = 'You'
-		else msg.role = 'Rando'
-		return msg
-	}
 
 	channel_message.subscribe((value) => {
 		if (!value) return
@@ -29,8 +21,12 @@
 				chatHistory = []
 				// if (Array.isArray(parsedMsg.data)) {
 				parsedMsg.data.forEach((message: any) => {
-					const updatedMsgWithRole = setRole(message)
-					chatHistory.push(updatedMsgWithRole)
+					message.role = setRole({
+						userId: message.user.userId,
+						channel,
+						currentUserId: $page.data.user?.userId
+					})
+					chatHistory.push(message)
 				})
 				// } else {
 				// 	parsedMsg = setRole(JSON.parse(parsedMsg.data))
@@ -39,7 +35,11 @@
 			} else if (parsedMsg.isMessageDeleted) {
 				chatHistory = chatHistory.filter((item) => item.timestamp !== parsedMsg.data.timestamp)
 			} else {
-				parsedMsg = setRole(parsedMsg)
+				parsedMsg.role = setRole({
+					userId: parsedMsg.user.userId,
+					channel,
+					currentUserId: $page.data.user?.userId
+				})
 				chatHistory.unshift(parsedMsg)
 			}
 			chatHistory = chatHistory

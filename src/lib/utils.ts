@@ -79,7 +79,8 @@ export const getSectionUrl = ({
 			return `users/highest-ranked?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'rising-stars':
 			//stats/stream/getRisingStars?skip=${0}&limit=${10}
-			return `users/rising-stars?searchQuery=${query}&skip=${skip}&limit=${limit}`
+			//users/rising-stars?searchQuery=${query}&skip=${skip}&limit=${limit}
+			return `stats/stream/rising-stars?skip=${skip}&limit=${limit}`
 		case 'my':
 			return `channels/user?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'fav':
@@ -96,6 +97,22 @@ export const copyToClipboard = async (text: string) => {
 	} catch (err) {
 		console.error('Error copying text to clipboard:', err)
 	}
+}
+
+export const setRole = ({
+	userId,
+	channel,
+	currentUserId
+}: {
+	userId: any
+	channel: any
+	currentUserId: string
+}): any => {
+	if (userId === 'AI') return '🤖 AI'
+	else if (userId === channel?.user) return 'Host'
+	else if (channel?.mods?.includes(userId)) return 'Mod'
+	else if (userId === currentUserId) return 'You'
+	else return 'Rando'
 }
 
 export const getColoredRole = (role: string) =>

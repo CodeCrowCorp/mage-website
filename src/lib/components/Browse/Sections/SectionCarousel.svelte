@@ -7,9 +7,10 @@
 	import ItemCarousel from '$lib/components/Browse/Sections/ItemCarousel.svelte'
 	import 'swiper/css'
 
-	export let channels: any = []
+	export let channels: any = undefined
 
 	let swiper: Swiper
+	let isMounted = false
 
 	const initSwiper = () => {
 		swiper = new Swiper('.carousel', {
@@ -37,11 +38,18 @@
 	}
 
 	onMount(async () => {
-		initSwiper()
+		channels.then((data: any) => {
+			if(data.length){
+				initSwiper()
+				isMounted = true
+			}
+		})
 	})
+
+	$: swiperClass = isMounted ? 'opacity-1' : 'opacity-0'
 </script>
 
-{#if channels.length == 0}
+{#await channels}
 	<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide">
 		<div role="status" class="flex flex-row gap-1 animate-pulse">
 			{#each Array(5) as _, index (index)}
@@ -49,23 +57,27 @@
 			{/each}
 		</div>
 	</div>
-{:else}
-	<div class="relative p-1">
-		<div class="btn btn-square p-2 btn-prev absolute top-2/4 left-1 z-10 ml-3">
-			<IconDrawerLeft />
-		</div>
-		<div class="swiper carousel !pt-10 mx-8">
-			<div class="swiper-wrapper">
-				{#each channels as channel}
-					<ItemCarousel {channel} />
-				{/each}
+{:then value}
+	{#if value?.length > 0}
+		<div class={'relative p-1 transition-opacity ease-in duration-100 ' + swiperClass}>
+			<div class="btn btn-square p-2 btn-prev absolute top-2/4 left-1 z-10 ml-3">
+				<IconDrawerLeft />
+			</div>
+			<div class="swiper carousel !pt-10 mx-8">
+				<div class="swiper-wrapper">
+					{#each value as channel}
+						<ItemCarousel {channel} />
+					{/each}
+				</div>
+			</div>
+			<div class="btn btn-square z-10 p-2 btn-next absolute top-2/4 right-1 mr-3">
+				<IconDrawerChevron />
 			</div>
 		</div>
-		<div class="btn btn-square z-10 p-2 btn-next absolute top-2/4 right-1 mr-3">
-			<IconDrawerChevron />
-		</div>
-	</div>
-{/if}
+	{:else}
+		<div />
+	{/if}
+{/await}
 
 <style>
 	:global(.swiper-slide) {
