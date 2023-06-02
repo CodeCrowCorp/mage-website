@@ -78,7 +78,7 @@
 			channel.guests = channel.guests.filter((guest: string) => guest !== userId)
 			channel.mods = channel.mods?.filter((mod: string) => mod !== userId)
 		}
-		alert("toggleBan")
+		//alert("toggleBan")
 		//emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 
@@ -88,7 +88,7 @@
 		} else {
 			channel.mods?.push(userId)
 		}
-		alert("toggleMod")
+		//alert("toggleMod")
 		//emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 
@@ -98,7 +98,7 @@
 		} else {
 			channel.guests = channel.guests.filter((guest: string) => guest !== $page.data.user?.userId)
 		}
-		alert("toggleGuest")
+		//alert("toggleGuest")
 		//emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 
