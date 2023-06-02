@@ -65,6 +65,9 @@
 
 	const executeCommand = (id: number, userId: string) => {
 		specialCommands.find(i => i.id === id)?.action(userId)
+		selectedCommand = 0
+		selectedUser = 0
+		chatMessage = ""
 	}
 
 
@@ -78,8 +81,7 @@
 			channel.guests = channel.guests.filter((guest: string) => guest !== userId)
 			channel.mods = channel.mods?.filter((mod: string) => mod !== userId)
 		}
-		//alert("toggleBan")
-		//emitChannelUpdate({ channelSocket: channel.socket, channel })
+		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 
 	const toggleMod = (userId: string) => {
@@ -88,8 +90,7 @@
 		} else {
 			channel.mods?.push(userId)
 		}
-		//alert("toggleMod")
-		//emitChannelUpdate({ channelSocket: channel.socket, channel })
+		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 
 	const toggleGuest = (userId: string) => {
@@ -98,8 +99,7 @@
 		} else {
 			channel.guests = channel.guests.filter((guest: string) => guest !== $page.data.user?.userId)
 		}
-		//alert("toggleGuest")
-		//emitChannelUpdate({ channelSocket: channel.socket, channel })
+		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 
 	const specialCommands = [
@@ -107,29 +107,33 @@
 			id: 1,
 			label: 'Toggle mod status',
 			cmd: '/mod @username',
-			action: toggleBan
+			action: toggleMod
 		},
 		{
 			id: 2,
 			label: 'Toggle guest status',
 			cmd: '/guest @username',
-			action: toggleMod
+			action: toggleGuest
 		},
 		{
 			id: 3,
 			label: 'Ban user',
 			cmd: '/ban @username',
-			action: toggleGuest
+			action: toggleBan
 		}
 	]
 
-	
-	$: showUsers = chatMessage && chatMessage.startsWith('/') && chatMessage.includes('@username')
+	$: messageIsCommand = chatMessage && 
+	chatMessage.startsWith('/') &&
+	!chatMessage.includes("@username") && 
+	/[a-z] @[a-z]/.test(chatMessage.substr(1))
+
+	$: showUsers = chatMessage && chatMessage.startsWith('/') && chatMessage.includes('@username') && !messageIsCommand
 	$: showCommandOptions =
 		chatMessage &&
 		chatMessage.startsWith('/') &&
 		(channel.user === $page.data.user?.userId || channel.mods?.includes($page.data.user?.userId)) &&
-		!showUsers
+		!showUsers && !messageIsCommand
 
 
 </script>
@@ -163,6 +167,8 @@
 		<span class="sr-only">Add code snippet</span>
 	</button>
 
+	{#if showCommandOptions || showUsers}
+
 	<!-- Special commands drop-up -->
 	<div
 		class={'dropdown dropdown-top w-full rounded-box bg-white ' +
@@ -192,9 +198,8 @@
 			{#each users as user, idx}
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<li on:click={() =>{
-					 chatMessage = chatMessage.replace(/username/g, user.username)
+					 chatMessage = chatMessage.replace(/username/g, user.username)+ " "
 					 selectedUser = idx
-					 selectedCommand = 0
 					}} >
 					<span class={'text-sm w-full' + (selectedUser == idx ? ' bg-gray-600' : '')}>
 						@{user.username}
@@ -204,6 +209,7 @@
 		</ul>
 	</div>
 
+	{/if}
 	
 	<div class="flex items-center py-2 rounded-lg">
 		{#if !isChannelSocketConnected || channel.bans?.includes($page.data.user.userId)}
@@ -224,10 +230,8 @@
 							if(showUsers){
 								if(selectedUser >= 0){
 									const user = users[selectedUser]
-									chatMessage = chatMessage.replace(/username/, user.username)
+									chatMessage = chatMessage.replace(/username/, user.username) + " "
 									executeCommand(selectedCommand, user.userId)
-									chatMessage = ""
-									selectedCommand = 0
 								}
 							}
 							else {
@@ -247,13 +251,13 @@
 				placeholder="Your message..." /><!--focus:h-32 -->
 			<button
 				on:click={() => {
-					if(showCommandOptions || showUsers){
+					if(messageIsCommand){
 						if(selectedCommand && selectedUser >= 0){
 							const user = users[selectedUser]
 							executeCommand(selectedCommand, user.userId)
 						}
 					}
-					else {
+					else if(!chatMessage.startsWith("/")) {
 						sendMessage()
 					}
 				}}
