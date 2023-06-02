@@ -6,31 +6,9 @@
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	import type { PageData } from './$types'
 	import { page } from '$app/stores'
-	import { onMount } from 'svelte'
-	import { get, patch } from '$lib/api'
-	import { getSectionUrl } from '$lib/utils'
 
 	export let data: PageData
 	$: user = $page.data.user
-
-	onMount(async () => {
-		const allChannels = await get(getSectionUrl({ sectionId: '', query: '', skip: 0, limit: 500 }))
-		console.log('got here----', allChannels)
-		allChannels.forEach(async (element: any) => {
-			let created = ''
-			if (element?.createdOn) {
-				created = element?.createdOn
-			} else {
-				created = element?.createdAt
-			}
-			console.log('got here----createdAt', created)
-			element.createdAt = created
-			await patch(`channels`, element, {
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			})
-		})
-	})
 </script>
 
 <SectionCarousel bind:channels={data.lazy.mostActiveChannels} />
