@@ -69,7 +69,8 @@
 							id="username"
 							required
 							class="input input-primary input-bordered mt-5 w-full"
-							placeholder="Username" />
+							placeholder="Username"
+							disabled />
 
 						<input
 							bind:value={profile.website}
@@ -103,7 +104,7 @@
 								placeholder={profile?.category?.length ? '' : 'Category'}
 								class="input input-primary input-bordered mt-5 w-full" />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
-							<span class="absolute flex flex-row gap-2 left-0 top-1/2  pl-5">
+							<span class="absolute flex flex-row gap-2 left-0 top-1/2 pl-5">
 								{#if profile?.category?.length}
 									{#each profile?.category as icon}
 										<img src={$category_list[icon]} alt="" class="h-5 w-5" />
