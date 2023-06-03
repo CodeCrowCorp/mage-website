@@ -29,17 +29,15 @@
 		sender.role !== '🤖 AI'
 
 	const deleteMessage = () => {
-		if (sender.user?.userId === hostId || sender.user?.userId === $page.data.user?.userId) {
-			var channelId = sender.eventName.split('-').pop()
-			var updatedSender: any = { ...sender }
-			delete updatedSender.user
-			delete updatedSender.role
-			emitDeleteMessageToChannel({
-				channelSocket: channel.socket,
-				channelId,
-				message: JSON.stringify(updatedSender)
-			})
-		}
+		var channelId = sender.eventName.split('-').pop()
+		var updatedSender: any = { ...sender }
+		delete updatedSender.user
+		delete updatedSender.role
+		emitDeleteMessageToChannel({
+			channelSocket: channel.socket,
+			channelId,
+			message: JSON.stringify(updatedSender)
+		})
 	}
 
 	const toggleBan = () => {

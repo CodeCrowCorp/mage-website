@@ -10,7 +10,7 @@
 	import { channel_connection } from '$lib/stores/websocketStore'
 
 	export let channel: any
-	export let users:any[] = []
+	export let users: any[] = []
 	let selectedCommand = 0
 	let selectedUser = 0
 
@@ -60,16 +60,15 @@
 	}
 
 	const getCommand = (id: number) => {
-		return specialCommands.find(i => i.id === id)?.cmd || ""
+		return specialCommands.find((i) => i.id === id)?.cmd || ''
 	}
 
 	const executeCommand = (id: number, userId: string) => {
-		specialCommands.find(i => i.id === id)?.action(userId)
+		specialCommands.find((i) => i.id === id)?.action(userId)
 		selectedCommand = 0
 		selectedUser = 0
-		chatMessage = ""
+		chatMessage = ''
 	}
-
 
 	// toggle commands handlers
 
@@ -123,19 +122,23 @@
 		}
 	]
 
-	$: messageIsCommand = chatMessage && 
-	chatMessage.startsWith('/') &&
-	!chatMessage.includes("@username") && 
-	/[a-z] @[a-z]/.test(chatMessage.substr(1))
+	$: messageIsCommand =
+		chatMessage &&
+		chatMessage.startsWith('/') &&
+		!chatMessage.includes('@username') &&
+		/[a-z] @[a-z]/.test(chatMessage.substr(1))
 
-	$: showUsers = chatMessage && chatMessage.startsWith('/') && chatMessage.includes('@username') && !messageIsCommand
+	$: showUsers =
+		chatMessage &&
+		chatMessage.startsWith('/') &&
+		chatMessage.includes('@username') &&
+		!messageIsCommand
 	$: showCommandOptions =
 		chatMessage &&
 		chatMessage.startsWith('/') &&
 		(channel.user === $page.data.user?.userId || channel.mods?.includes($page.data.user?.userId)) &&
-		!showUsers && !messageIsCommand
-
-
+		!showUsers &&
+		!messageIsCommand
 </script>
 
 <form class="rounded-lg bg-base-200 p-2 w-full">
@@ -168,49 +171,51 @@
 	</button>
 
 	{#if showCommandOptions || showUsers}
+		<!-- Special commands drop-up -->
+		<div
+			class={'dropdown dropdown-top w-full rounded-box bg-white ' +
+				(showCommandOptions ? 'dropdown-open' : '')}>
+			<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
+				{#each specialCommands as command}
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<li
+						on:click={() => {
+							selectedCommand = command.id
+							chatMessage = command.cmd
+						}}>
+						<span
+							class={'text-sm w-full' +
+								(selectedCommand == command.id ? ' bg-gray-600 text-white' : '')}>
+							{command.label}
+							<kbd class="kbd text-xs font-semibold text-green-500 ml-auto">
+								{command.cmd}
+							</kbd>
+						</span>
+					</li>
+				{/each}
+			</ul>
+		</div>
 
-	<!-- Special commands drop-up -->
-	<div
-		class={'dropdown dropdown-top w-full rounded-box bg-white ' +
-			(showCommandOptions ? 'dropdown-open' : '')}>
-		<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
-			{#each specialCommands as command}
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<li on:click={() =>{
-						selectedCommand = command.id
-					 	chatMessage = command.cmd
-					 }} >
-					<span class={'text-sm w-full' + (selectedCommand == command.id ? ' bg-gray-600' : '')}>
-						{command.label}
-						<kbd class="kbd text-xs ml-2 font-semibold text-green-500">
-							{command.cmd}
-						</kbd>
-					</span>
-				</li>
-			{/each}
-		</ul>
-	</div>
-
-	<div
-		class={'dropdown dropdown-top w-full rounded-box bg-white ' +
-			(showUsers ? 'dropdown-open' : '')}>
-		<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
-			{#each users as user, idx}
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<li on:click={() =>{
-					 chatMessage = chatMessage.replace(/username/g, user.username)+ " "
-					 selectedUser = idx
-					}} >
-					<span class={'text-sm w-full' + (selectedUser == idx ? ' bg-gray-600' : '')}>
-						@{user.username}
-					</span>
-				</li>
-			{/each}
-		</ul>
-	</div>
-
+		<div
+			class={'dropdown dropdown-top w-full rounded-box bg-white ' +
+				(showUsers ? 'dropdown-open' : '')}>
+			<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
+				{#each users as user, idx}
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<li
+						on:click={() => {
+							chatMessage = chatMessage.replace(/username/g, user.username) + ' '
+							selectedUser = idx
+						}}>
+						<span class={'text-sm w-full' + (selectedUser == idx ? ' bg-gray-600' : '')}>
+							@{user.username}
+						</span>
+					</li>
+				{/each}
+			</ul>
+		</div>
 	{/if}
-	
+
 	<div class="flex items-center py-2 rounded-lg">
 		{#if !isChannelSocketConnected || channel.bans?.includes($page.data.user.userId)}
 			<input
@@ -223,18 +228,17 @@
 					if (showCommandOptions || showUsers) {
 						if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
 							e.preventDefault()
-							if(showUsers)slectUserfromKey(e.key)
+							if (showUsers) slectUserfromKey(e.key)
 							else slectCommandfromKey(e.key)
 						} else if (e.key === 'Enter') {
 							e.preventDefault()
-							if(showUsers){
-								if(selectedUser >= 0){
+							if (showUsers) {
+								if (selectedUser >= 0) {
 									const user = users[selectedUser]
-									chatMessage = chatMessage.replace(/username/, user.username) + " "
+									chatMessage = chatMessage.replace(/username/, user.username) + ' '
 									executeCommand(selectedCommand, user.userId)
 								}
-							}
-							else {
+							} else {
 								if (selectedCommand) {
 									chatMessage = getCommand(selectedCommand)
 								}
@@ -251,13 +255,12 @@
 				placeholder="Your message..." /><!--focus:h-32 -->
 			<button
 				on:click={() => {
-					if(messageIsCommand){
-						if(selectedCommand && selectedUser >= 0){
+					if (messageIsCommand) {
+						if (selectedCommand && selectedUser >= 0) {
 							const user = users[selectedUser]
 							executeCommand(selectedCommand, user.userId)
 						}
-					}
-					else if(!chatMessage.startsWith("/")) {
+					} else if (!chatMessage.startsWith('/')) {
 						sendMessage()
 					}
 				}}
