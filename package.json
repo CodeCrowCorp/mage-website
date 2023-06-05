@@ -54,7 +54,7 @@
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/typography": "^0.5.9",
 		"animate.css": "^4.1.1",
-		"daisyui": "^2.52.0",
+		"daisyui": "^3.0.3",
 		"nprogress": "^0.2.0",
 		"playwright-e2e-coverage-report": "^1.0.28",
 		"theme-change": "^2.5.0"
