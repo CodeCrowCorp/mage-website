@@ -259,7 +259,7 @@
 	$: animate = isWebcamFocused ? '' : 'transition-all'
 </script>
 
-<div class={$is_sharing_screen || $is_sharing_webcam ? 'w-full h-full' : 'w-[500px] max-h-80'}>
+<div class={video.screen || video.webcam ? 'w-full h-full' : 'w-[500px] max-h-80'}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
 		<img
 			src={video.avatar}
@@ -273,7 +273,7 @@
 				on:mouseup={onMouseUp}
 				class={animate +
 					' absolute ' +
-					(!$is_sharing_screen ? 'w-full bottom-0 left-0 h-full' : 'w-1/4 bottom-0 right-0')}>
+					(!video.screen ? 'w-full bottom-0 left-0 h-full' : 'w-1/4 bottom-0 right-0')}>
 				<video id={`webcam-${video._id}`} autoplay muted class="rounded-md h-full w-full" />
 			</div>
 			<video id={`audio-${video._id}`} autoplay muted class="rounded-md w-0 h-0" />
