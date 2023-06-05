@@ -105,19 +105,19 @@
 		{
 			id: 1,
 			label: 'Toggle mod status',
-			cmd: '/mod @username',
+			cmd: '/mod @',
 			action: toggleMod
 		},
 		{
 			id: 2,
 			label: 'Toggle guest status',
-			cmd: '/guest @username',
+			cmd: '/guest @',
 			action: toggleGuest
 		},
 		{
 			id: 3,
 			label: 'Ban user',
-			cmd: '/ban @username',
+			cmd: '/ban @',
 			action: toggleBan
 		}
 	]
@@ -125,14 +125,10 @@
 	$: messageIsCommand =
 		chatMessage &&
 		chatMessage.startsWith('/') &&
-		!chatMessage.includes('@username') &&
 		/[a-z] @[a-z]/.test(chatMessage.substr(1))
 
 	$: showUsers =
-		chatMessage &&
-		chatMessage.startsWith('/') &&
-		chatMessage.includes('@username') &&
-		!messageIsCommand
+		chatMessage && chatMessage.endsWith('@')
 	$: showCommandOptions =
 		chatMessage &&
 		chatMessage.startsWith('/') &&
@@ -141,7 +137,7 @@
 		!messageIsCommand
 </script>
 
-<form class="rounded-lg bg-base-200 p-2 w-full">
+<form class="rounded-lg bg-base-200 p-2 w-full relative">
 	<button
 		class="btn tooltip font-normal normal-case {!isHost
 			? 'no-animation'
@@ -170,8 +166,9 @@
 		<span class="sr-only">Add code snippet</span>
 	</button>
 
-	{#if showCommandOptions || showUsers}
-		<!-- Special commands drop-up -->
+	<div class="absolute w-full -mt-4">
+
+	{#if showCommandOptions && !showUsers}
 		<div
 			class={'dropdown dropdown-top w-full rounded-box bg-white ' +
 				(showCommandOptions ? 'dropdown-open' : '')}>
@@ -195,7 +192,9 @@
 				{/each}
 			</ul>
 		</div>
+	{/if}
 
+	{#if users.length > 0 && showUsers}
 		<div
 			class={'dropdown dropdown-top w-full rounded-box bg-white ' +
 				(showUsers ? 'dropdown-open' : '')}>
@@ -204,7 +203,7 @@
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<li
 						on:click={() => {
-							chatMessage = chatMessage.replace(/username/g, user.username) + ' '
+							chatMessage = chatMessage.replace(/@/g, '@'+user.username) + ' '
 							selectedUser = idx
 						}}>
 						<span class={'text-sm w-full' + (selectedUser == idx ? ' bg-gray-600' : '')}>
@@ -215,6 +214,8 @@
 			</ul>
 		</div>
 	{/if}
+
+	</div>
 
 	<div class="flex items-center py-2 rounded-lg">
 		{#if !isChannelSocketConnected || channel.bans?.includes($page.data.user.userId)}
@@ -235,8 +236,7 @@
 							if (showUsers) {
 								if (selectedUser >= 0) {
 									const user = users[selectedUser]
-									chatMessage = chatMessage.replace(/username/, user.username) + ' '
-									executeCommand(selectedCommand, user.userId)
+									chatMessage = chatMessage.replace(/@/, '@'+user.username) + ' '
 								}
 							} else {
 								if (selectedCommand) {
