@@ -50,7 +50,8 @@
 		if (
 			$was_chat_drawer_closed &&
 			!chatHistory?.length &&
-			$channel_connection === `open-${channel._id}`
+			$channel_connection === `open-${channel._id}` &&
+			channel.socket?.readyState === WebSocket.OPEN
 		) {
 			emitChatHistoryToChannel({ channelSocket: channel.socket, channelId: channel._id, skip: 100 })
 		}
