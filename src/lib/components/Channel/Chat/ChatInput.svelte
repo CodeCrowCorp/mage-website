@@ -1,5 +1,4 @@
 <script lang="ts">
-	// import IconChatAttachment from '$lib/assets/icons/chat/IconChatAttachment.svelte'
 	import IconChatAI from '$lib/assets/icons/chat/IconChatAI.svelte'
 	import IconChatEmoji from '$lib/assets/icons/chat/IconChatEmoji.svelte'
 	import IconChatGif from '$lib/assets/icons/chat/IconChatGif.svelte'
@@ -10,7 +9,7 @@
 	import { channel_connection } from '$lib/stores/websocketStore'
 
 	export let channel: any
-	export let users: any[] = []
+	export let users: any
 	let selectedCommand = 0
 	let selectedUser = 0
 
@@ -20,21 +19,28 @@
 	$: isHost = channel.user === $page.data.user?.userId
 
 	const sendMessage = () => {
-		if (chatMessage === null || chatMessage.match(/^\s*$/) !== null) return
-		const completeMessage = {
-			isAiChatEnabled: channel.isAiChatEnabled,
-			body: chatMessage,
-			state: { timestamp: new Date().toISOString() },
-			user: {
-				userId: $page.data.user?.userId || '',
-				username: $page.data.user?.user?.username || ''
+		if (messageIsCommand) {
+			if (selectedCommand && selectedUser >= 0) {
+				const user = users[selectedUser]
+				executeCommand(selectedCommand, user.userId)
 			}
+		} else if (!chatMessage.startsWith('/')) {
+			if (chatMessage === null || chatMessage.match(/^\s*$/) !== null) return
+			const completeMessage = {
+				isAiChatEnabled: channel.isAiChatEnabled,
+				body: chatMessage,
+				state: { timestamp: Date.now() },
+				user: {
+					userId: $page.data.user?.userId || '',
+					username: $page.data.user?.user?.username || ''
+				}
+			}
+			emitMessageToChannel({
+				channelSocket: channel.socket,
+				channelId: channel._id,
+				message: JSON.stringify(completeMessage)
+			})
 		}
-		emitMessageToChannel({
-			channelSocket: channel.socket,
-			channelId: channel._id,
-			message: JSON.stringify(completeMessage)
-		})
 		chatMessage = ''
 	}
 
@@ -67,7 +73,6 @@
 		specialCommands.find((i) => i.id === id)?.action(userId)
 		selectedCommand = 0
 		selectedUser = 0
-		chatMessage = ''
 	}
 
 	// toggle commands handlers
@@ -123,12 +128,9 @@
 	]
 
 	$: messageIsCommand =
-		chatMessage &&
-		chatMessage.startsWith('/') &&
-		/[a-z] @[a-z]/.test(chatMessage.substr(1))
+		chatMessage && chatMessage.startsWith('/') && /[a-z] @[a-z]/.test(chatMessage.substr(1))
 
-	$: showUsers =
-		chatMessage && chatMessage.endsWith('@')
+	$: showUsers = chatMessage && chatMessage.endsWith('@')
 	$: showCommandOptions =
 		chatMessage &&
 		chatMessage.startsWith('/') &&
@@ -167,54 +169,52 @@
 	</button>
 
 	<div class="absolute w-full -mt-4">
+		{#if showCommandOptions && !showUsers}
+			<div
+				class={'dropdown dropdown-top w-full rounded-box bg-white ' +
+					(showCommandOptions ? 'dropdown-open' : '')}>
+				<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
+					{#each specialCommands as command}
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
+						<li
+							on:click={() => {
+								selectedCommand = command.id
+								chatMessage = command.cmd
+							}}>
+							<span
+								class={'text-sm w-full' +
+									(selectedCommand == command.id ? ' bg-gray-600 text-white' : '')}>
+								{command.label}
+								<kbd class="kbd text-xs font-semibold text-green-500 ml-auto">
+									{command.cmd}
+								</kbd>
+							</span>
+						</li>
+					{/each}
+				</ul>
+			</div>
+		{/if}
 
-	{#if showCommandOptions && !showUsers}
-		<div
-			class={'dropdown dropdown-top w-full rounded-box bg-white ' +
-				(showCommandOptions ? 'dropdown-open' : '')}>
-			<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
-				{#each specialCommands as command}
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					<li
-						on:click={() => {
-							selectedCommand = command.id
-							chatMessage = command.cmd
-						}}>
-						<span
-							class={'text-sm w-full' +
-								(selectedCommand == command.id ? ' bg-gray-600 text-white' : '')}>
-							{command.label}
-							<kbd class="kbd text-xs font-semibold text-green-500 ml-auto">
-								{command.cmd}
-							</kbd>
-						</span>
-					</li>
-				{/each}
-			</ul>
-		</div>
-	{/if}
-
-	{#if users.length > 0 && showUsers}
-		<div
-			class={'dropdown dropdown-top w-full rounded-box bg-white ' +
-				(showUsers ? 'dropdown-open' : '')}>
-			<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
-				{#each users as user, idx}
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					<li
-						on:click={() => {
-							chatMessage = chatMessage.replace(/@/g, '@'+user.username) + ' '
-							selectedUser = idx
-						}}>
-						<span class={'text-sm w-full' + (selectedUser == idx ? ' bg-gray-600' : '')}>
-							@{user.username}
-						</span>
-					</li>
-				{/each}
-			</ul>
-		</div>
-	{/if}
-
+		{#if users.length > 0 && showUsers}
+			<div
+				class={'dropdown dropdown-top w-full rounded-box bg-white ' +
+					(showUsers ? 'dropdown-open' : '')}>
+				<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
+					{#each users as user, idx}
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
+						<li
+							on:click={() => {
+								chatMessage = chatMessage.replace(/@/g, '@' + user.username) + ' '
+								selectedUser = idx
+							}}>
+							<span class={'text-sm w-full' + (selectedUser == idx ? ' bg-gray-600' : '')}>
+								@{user.username}
+							</span>
+						</li>
+					{/each}
+				</ul>
+			</div>
+		{/if}
 	</div>
 
 	<div class="flex items-center py-2 rounded-lg">
@@ -236,7 +236,7 @@
 							if (showUsers) {
 								if (selectedUser >= 0) {
 									const user = users[selectedUser]
-									chatMessage = chatMessage.replace(/@/, '@'+user.username) + ' '
+									chatMessage = chatMessage.replace(/@/, '@' + user.username) + ' '
 								}
 							} else {
 								if (selectedCommand) {
@@ -255,14 +255,7 @@
 				placeholder="Your message..." /><!--focus:h-32 -->
 			<button
 				on:click={() => {
-					if (messageIsCommand) {
-						if (selectedCommand && selectedUser >= 0) {
-							const user = users[selectedUser]
-							executeCommand(selectedCommand, user.userId)
-						}
-					} else if (!chatMessage.startsWith('/')) {
-						sendMessage()
-					}
+					sendMessage()
 				}}
 				class="inline-flex justify-center p-2 text-secondary rounded-full cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:text-white dark:hover:bg-gray-600">
 				<IconChatSendMessage />
