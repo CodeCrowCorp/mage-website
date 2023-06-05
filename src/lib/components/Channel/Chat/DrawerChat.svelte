@@ -60,6 +60,18 @@
 	onDestroy(() => {
 		$is_chat_drawer_open = false
 	})
+
+	const createuserList = (list: any[]) => {
+		let users: any = {}
+		list.forEach(chat =>{
+			if($page.data.user?.userId !== chat.user.userId)
+				users[chat.user.userId] = chat.user
+		})
+		return Object.keys(users).map(key => users[key])
+	}
+
+	$: users = createuserList(chatHistory)
+
 </script>
 
 <div class="bg-base-100 flex flex-col overflow-y-hidden w-72 md:w-full">
@@ -70,6 +82,6 @@
 		{/each}
 	</div>
 	<div class="flex flex-row mt-auto p-3 w-full">
-		<ChatInput bind:channel />
+		<ChatInput bind:channel bind:users />
 	</div>
 </div>

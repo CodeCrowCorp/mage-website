@@ -232,17 +232,17 @@
 		} else {
 			channel.bans.push(video._id)
 			channel.guests = channel.guests.filter((guest: string) => guest !== video._id)
-			channel.mods = channel.mods.filter((mod: string) => mod !== video._id)
+			channel.mods = channel.mods?.filter((mod: string) => mod !== video._id)
 			isGuest = false
 		}
 		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 
 	const toggleMod = () => {
-		if (channel.mods.includes(video._id)) {
-			channel.mods = channel.mods.filter((mod: string) => mod !== video._id)
+		if (channel.mods?.includes(video._id)) {
+			channel.mods = channel.mods?.filter((mod: string) => mod !== video._id)
 		} else {
-			channel.mods.push(video._id)
+			channel.mods?.push(video._id)
 		}
 		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}

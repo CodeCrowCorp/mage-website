@@ -193,7 +193,7 @@
 		switch (parsedMsg.eventName) {
 			case `channel-update-${$page.params.channelId}`:
 				console.log('channel-update', parsedMsg)
-				channel = parsedMsg.channel
+				channel = { ...parsedMsg.channel, socket: channel.socket }
 				break
 			case `channel-subscribe-${$page.params.channelId}`:
 				userCount = parsedMsg.userCount
