@@ -29,17 +29,15 @@
 		sender.role !== '🤖 AI'
 
 	const deleteMessage = () => {
-		if (sender.user?.userId === hostId || sender.user?.userId === $page.data.user?.userId) {
-			var channelId = sender.eventName.split('-').pop()
-			var updatedSender: any = { ...sender }
-			delete updatedSender.user
-			delete updatedSender.role
-			emitDeleteMessageToChannel({
-				channelSocket: channel.socket,
-				channelId,
-				message: JSON.stringify(updatedSender)
-			})
-		}
+		var channelId = sender.eventName.split('-').pop()
+		var updatedSender: any = { ...sender }
+		delete updatedSender.user
+		delete updatedSender.role
+		emitDeleteMessageToChannel({
+			channelSocket: channel.socket,
+			channelId,
+			message: JSON.stringify(updatedSender)
+		})
 	}
 
 	const toggleBan = () => {
@@ -48,17 +46,17 @@
 		} else {
 			channel.bans.push(sender.user?.userId)
 			channel.guests = channel.guests.filter((guest: string) => guest !== sender.user?.userId)
-			channel.mods = channel.mods.filter((mod: string) => mod !== sender.user?.userId)
+			channel.mods = channel.mods?.filter((mod: string) => mod !== sender.user?.userId)
 			isGuest = false
 		}
 		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 
 	const toggleMod = () => {
-		if (channel.mods.includes(sender.user?.userId)) {
-			channel.mods = channel.mods.filter((mod: string) => mod !== sender.user?.userId)
+		if (channel.mods?.includes(sender.user?.userId)) {
+			channel.mods = channel.mods?.filter((mod: string) => mod !== sender.user?.userId)
 		} else {
-			channel.mods.push(sender.user?.userId)
+			channel.mods?.push(sender.user?.userId)
 		}
 		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
