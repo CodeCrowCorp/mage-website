@@ -130,7 +130,7 @@
         </script>`}
 </svelte:head>
 
-<div class="drawer drawer-mobile">
+<div class="drawer drawer-open">
 	<input id="main-drawer" bind:this={nav_drawer} type="checkbox" class="drawer-toggle" />
 	<div class="drawer-content bg-base-200">
 		<!-- Page content here -->
