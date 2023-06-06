@@ -2,7 +2,7 @@
 	// import IconPhoto from '$lib/assets/icons/IconPhoto.svelte'
 	import { tags } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
-	import Tags from 'svelte-tags-input'
+	import Tags from '$lib/components/Browse/Tags.svelte'
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 	import { get } from '$lib/api'
 	import { enhance } from '$app/forms'
@@ -28,6 +28,7 @@
 		showThumbnail = false,
 		showAddCategory = false,
 		maxTag = 3,
+		maxTagChars = 18,
 		maxCategory = 4,
 		isLoadingChannel = false
 
@@ -164,6 +165,7 @@
 							<Tags
 								bind:tags={newChannel.tags}
 								maxTags={maxTag}
+								maxChars={maxTagChars}
 								id="tags"
 								placeholder={newChannel.tags.length > 0 ? '' : 'Tag'} />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxTagLabel})</span>
