@@ -23,5 +23,3 @@ declare namespace svelteHTML {
 }
 
 declare const __VERSION__: string
-
-declare module 'svelte-tags-input'
