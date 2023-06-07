@@ -1,5 +1,5 @@
 import type { Actions, PageServerLoad } from './$types'
-import { get, patch, put, del } from '$lib/api'
+import { get, patch, put, del, putImage } from '$lib/api'
 import { redirect } from '@sveltejs/kit'
 
 export const load = (async ({ params, locals }) => {
@@ -28,7 +28,7 @@ export const load = (async ({ params, locals }) => {
 
 export const actions = {
 	'update-profile': async ({ request, locals }: { request: any; locals: any }) => {
-		const data = await request.formData()
+		const data : FormData = await request.formData()
 		const newUser: any = {}
 		addPropertyIfDefined(data, 'displayName', newUser)
 		addPropertyIfDefined(data, 'username', newUser)
@@ -37,7 +37,8 @@ export const actions = {
 		addPropertyIfDefined(data, 'bio', newUser)
 
 		if(data.get('avatar')!==null){
-			const urlLocation = await put(`users/current/avatar?bucketName=avatars&originalName=${newUser.username}-avatar`, data.get('avatar'), {
+			const avatar = data.get('avatar');
+			const urlLocation = await putImage(`users/current/avatar?bucketName=avatars&originalName=${locals.user.userId}-avatar`, avatar, {
 				userId: locals.user.userId,
 				token: locals.user.token
 			})

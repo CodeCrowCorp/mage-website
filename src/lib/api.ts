@@ -7,18 +7,26 @@ async function send({
 	method,
 	path,
 	data,
-	headers
+	headers,
+	isImage
 }: {
 	method: string
 	path: string
 	data?: any
 	headers?: any
+	isImage?: boolean
 }) {
 	const opts: any = { method, headers: {} }
 
 	if (data) {
-		opts.headers['Content-Type'] = 'application/json'
-		opts.body = JSON.stringify(data)
+		if(isImage){
+			opts.headers['Content-Type'] = 'multipart/form-data'
+			opts.body = data
+		}
+		else{
+			opts.headers['Content-Type'] = 'application/json'
+			opts.body = JSON.stringify(data)
+		}
 	}
 
 	// if headers sent manually
@@ -62,4 +70,8 @@ export function patch(path: string, data: any, headers?: any) {
 
 export function put(path: string, data: any = {}, headers?: any) {
 	return send({ method: 'PUT', path, data, headers })
+}
+
+export function putImage(path: string, data: any = {}, headers?: any) {
+	return send({ method: 'PUT', path, data, headers, isImage: true })
 }
