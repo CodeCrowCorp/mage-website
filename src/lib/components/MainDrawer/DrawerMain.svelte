@@ -76,7 +76,7 @@
 			<li>
 				<a href="/profile/{currentUser.username}" class="hero rounded-md cursor-pointer">
 					<div>
-						<div class="hero-content my-2">
+						<div class="hero-content my-1">
 							<div class="max-w-md">
 								<div class="avatar {$isOnline ? 'online' : 'offline'}">
 									<div
@@ -104,7 +104,7 @@
 						</div>
 						<div class="tooltip" data-tip="level {progressBarLevel}">
 							<progress
-								class="progress w-64"
+								class="progress w-64 bg-neutral-focus mb-1"
 								style="--progress-bar-color: {progressBarColor}"
 								value={progressBarValue}
 								max="100" />
@@ -196,7 +196,7 @@
 		{#if currentUser}
 			<form action="/logout" method="POST">
 				<li>
-					<button type="submit">
+					<button class="custom-menu-item" type="submit">
 						<IconDrawerLogOut />
 						Log out</button>
 				</li>
