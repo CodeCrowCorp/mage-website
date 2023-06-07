@@ -25,7 +25,7 @@
 
 	$: isChannelSocketConnected =
 		$channel_connection === `open-${$page.params.channelId}` && $page.data.user?.userId
-	$: videoItemIsActive = $video_items.some((video: any) => video._id === $page.data.user?.userId)
+	$: videoItemIsActive = $video_items?.some((video: any) => video._id === $page.data.user?.userId)
 
 	let screenUid: string = ''
 	let webcamUid: string = ''

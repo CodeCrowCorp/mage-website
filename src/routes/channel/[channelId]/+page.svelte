@@ -194,6 +194,29 @@
 			case `channel-update-${$page.params.channelId}`:
 				console.log('channel-update', parsedMsg)
 				channel = { ...parsedMsg.channel, socket: channel.socket }
+
+				if (parsedMsg.roleUpdate) {
+					let videoItems = [...$video_items]
+					switch (parsedMsg.roleUpdate.roleEvent) {
+						case 'ban':
+							if (parsedMsg.roleUpdate.isEnabled) {
+								$video_items = videoItems.filter(
+									(video: any) => video._id !== parsedMsg.roleUpdate.userId
+								)
+							}
+							break
+						case 'guest':
+							if (parsedMsg.roleUpdate.isEnabled) {
+								videoItems.push(parsedMsg.roleUpdate.user)
+								$video_items = videoItems
+							} else {
+								$video_items = videoItems.filter(
+									(video: any) => video._id !== parsedMsg.roleUpdate.userId
+								)
+							}
+							break
+					}
+				}
 				break
 			case `channel-subscribe-${$page.params.channelId}`:
 				userCount = parsedMsg.userCount

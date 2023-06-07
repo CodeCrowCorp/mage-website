@@ -18,14 +18,18 @@ const initChannelSocket = ({ websocketId }: { websocketId: string }) => {
 
 const emitChannelUpdate = ({
 	channelSocket,
-	channel
+	channel,
+	roleUpdate
 }: {
 	channelSocket: WebSocket
 	channel: any
+	roleUpdate?: any
 }) => {
 	const noSocketChannel = { ...channel }
 	delete noSocketChannel.socket
-	channelSocket.send(JSON.stringify({ eventName: `channel-update`, channel: noSocketChannel }))
+	channelSocket.send(
+		JSON.stringify({ eventName: `channel-update`, channel: noSocketChannel, roleUpdate })
+	)
 }
 
 const emitChannelSubscribeByUser = ({
