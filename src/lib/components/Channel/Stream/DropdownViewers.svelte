@@ -1,39 +1,30 @@
 <script lang="ts">
 	import Viewer from '$lib/components/Channel/Stream/Viewer.svelte'
-	export let viewers: any = []
-	viewers = [
-		{ username: 'test', role: 'Host' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' },
-		{ username: 'test', role: 'Mod' }
-	]
+	import { channel_message } from '$lib/stores/websocketStore'
+	import LastItemInViewport from '$lib/actions/LastItemInViewport'
+	import { emitGetConnectedUsers } from '$lib/websocket'
+
+
+	export let viewers: any = [], channel: any
+
+	let cursor = 0;
+
+	channel_message.subscribe((value) => {
+		if (!value) return
+		var parsedMsg = JSON.parse(value)
+
+		if (parsedMsg.eventName === `channel-paginated-users-${channel?._id}`) {
+		
+			viewers.push(...parsedMsg.users)
+		}
+
+	})
+
+	async function loadMore(): Promise<void> {
+		emitGetConnectedUsers({channelSocket: channel.socket, cursor})
+		cursor+=100
+	}
+
 </script>
 
 <ul
@@ -42,4 +33,5 @@
 	{#each viewers as user}
 		<Viewer {user} />
 	{/each}
+	<li use:LastItemInViewport on:loadMore={loadMore}/>
 </ul>

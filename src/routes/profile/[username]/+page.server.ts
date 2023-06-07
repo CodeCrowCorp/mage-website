@@ -33,10 +33,25 @@ export const actions = {
 		addPropertyIfDefined(data, 'displayName', newUser)
 		addPropertyIfDefined(data, 'username', newUser)
 		addPropertyIfDefined(data, 'website', newUser)
-		addPropertyIfDefined(data, 'banner', newUser)
-		addPropertyIfDefined(data, 'avatar', newUser)
 		addPropertyIfDefined(data, 'category', newUser)
 		addPropertyIfDefined(data, 'bio', newUser)
+
+		if(data.get('avatar')!==null){
+			const urlLocation = await put(`users/current/avatar?bucketName=avatars&originalName=${newUser.username}-avatar`, data.get('avatar'), {
+				userId: locals.user.userId,
+				token: locals.user.token
+			})
+			console.log(urlLocation);
+		}
+/* 
+		if(data.get('banner')!==null){
+			const urlLocation = await put(`users/current/banner?bucketName=banners&originalName=${newUser.username}-banner`, data.get('banner'), {
+				userId: locals.user.userId,
+				token: locals.user.token
+			})
+			console.log(urlLocation);
+		} */
+
 		const updatedUser = await patch(`users`, newUser, {
 			userId: locals.user.userId,
 			token: locals.user.token

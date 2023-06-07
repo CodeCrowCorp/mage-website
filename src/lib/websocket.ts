@@ -150,6 +150,21 @@ const emitAction = ({
 	)
 }
 
+const emitGetConnectedUsers = ({
+	channelSocket,
+	cursor
+}: {
+	channelSocket: WebSocket
+	cursor: number
+}) => {
+	channelSocket?.send(
+		JSON.stringify({
+			eventName: `channel-get-users`,
+			cursor
+		})
+	)
+}
+
 export {
 	platformSocket,
 	initPlatformSocket,
@@ -162,5 +177,6 @@ export {
 	emitDeleteMessageToChannel,
 	emitDeleteAllMessagesToChannel,
 	emitChatHistoryToChannel,
-	emitAction
+	emitAction,
+	emitGetConnectedUsers
 }
