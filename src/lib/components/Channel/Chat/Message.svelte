@@ -11,7 +11,8 @@
 	import { page } from '$app/stores'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 
-	export let sender: any, hostId: string, channel: any, role: string, coloredRole: any
+	export let sender: any, hostId: string, channel: any
+	let role: string, coloredRole: any
 
 	$: isGuest = channel?.guests?.includes(sender.user?.userId)
 
