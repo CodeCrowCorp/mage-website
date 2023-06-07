@@ -60,10 +60,10 @@
 	})
 </script>
 
-<div class="menu p-4 w-80 bg-base-100 text-base-content flex flex-col">
+<div class="menu p-2 py-3 w-80 bg-base-200 text-base-content flex flex-col custom-menu-items h-screen">
 	<!-- <MessagesDrawer /> -->
-	<ul>
-		<div class="menu w-fit">
+	<ul class="py-2 px-2">
+		<div class="w-fit mb-1">
 			<ul>
 				<li>
 					<a href="/browse">
@@ -76,7 +76,7 @@
 			<li>
 				<a href="/profile/{currentUser.username}" class="hero rounded-md cursor-pointer">
 					<div>
-						<div class="hero-content">
+						<div class="hero-content my-2">
 							<div class="max-w-md">
 								<div class="avatar {$isOnline ? 'online' : 'offline'}">
 									<div
@@ -124,7 +124,7 @@
 			</li>
 		{/if}
 		<li>
-			<a href="/browse">
+			<a class="custom-menu-item" href="/browse">
 				<IconDrawerHome />
 				Browse
 			</a>
@@ -172,13 +172,13 @@
 			</li>
 		{/if} -->
 		<li>
-			<a href="/careers">
+			<a class="custom-menu-item" href="/careers">
 				<IconDrawerCareers />
 				Careers</a>
 		</li>
 		<li>
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-			<div class="dropdown dropdown-bottom dropdown-end" tabindex="0">
+			<div class="custom-menu-item dropdown dropdown-bottom dropdown-end justify-start py-3" tabindex="0">
 				<IconDrawerHelpAndLegal />
 				Help & Legal
 				<IconDrawerChevron />
@@ -189,7 +189,7 @@
 			</div>
 		</li>
 		<li>
-			<a href="/settings">
+			<a class="custom-menu-item" href="/settings">
 				<IconDrawerSettings />
 				Settings</a>
 		</li>
@@ -204,6 +204,7 @@
 		{:else}
 			<li>
 				<button
+					class="custom-menu-item"
 					on:click={() => {
 						$is_login_modal_open = true
 						if (nav_drawer.checked) {
@@ -216,7 +217,7 @@
 		{/if}
 	</ul>
 
-	<footer class="mt-auto p-4">
+	<footer class="mt-auto p-6 py-5">
 		<!-- <RisingStars /> -->
 		<div class="flex gap-4 items-center">
 			<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
@@ -247,5 +248,13 @@
 
 	.icon-color {
 		color: var(--theme-text); /* This will set the color based on the current theme */
+	}
+	.custom-menu-item {
+		gap: 0.75rem;
+		padding: 0.75rem 1rem;
+	}
+	.menu {
+		font-size: initial;
+		line-height: inherit;
 	}
 </style>
