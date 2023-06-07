@@ -104,7 +104,7 @@
 					isLoadingChannel = true
 					data.append('newChannel', JSON.stringify(newChannel))
 				}}>
-				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col rounded-lg">
+				<div class="bg-neutral w-80 md:w-[30rem] h-full flex flex-col rounded-lg">
 					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 						Create a new channel
 					</p>

@@ -14,7 +14,7 @@
 		Loading...
 	{:then value}
 		{#if value}
-			<div class="card flex flex-col w-2/4 gap-2 bg-base-200 py-4 px-8">
+			<div class="card flex flex-col w-2/4 gap-2 bg-neutral py-4 px-8">
 				<p class="text-start font-semibold">Subscribers ({$subscriber_count})</p>
 
 				<div class="input-group relative">
@@ -39,7 +39,7 @@
 		Loading...
 	{:then value}
 		{#if value}
-			<div class="card flex flex-col w-2/4 gap-2 bg-base-200 py-4 px-8">
+			<div class="card flex flex-col w-2/4 gap-2 bg-neutral py-4 px-8">
 				<p class="text-start font-semibold">Interests ({$interest_count})</p>
 				<div class="input-group relative">
 					<input

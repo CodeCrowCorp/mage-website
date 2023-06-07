@@ -1,7 +1,7 @@
 <div class="tooltip" data-tip="level 1">
 	<progress class="progress progress-accent w-64" value="30" max="100" />
 </div>
-<div class="stats shadow bg-base-200">
+<div class="stats shadow bg-neutral">
 	<div class="stat">
 		<div class="stat-figure text-primary">
 			<svg

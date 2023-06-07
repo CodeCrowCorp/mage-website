@@ -135,7 +135,7 @@
 					<span class="md:hidden flex flex-row gap-4">
 						Help & Legal
 						<IconDrawerChevron /></span>
-					<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+					<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-neutral rounded-box w-52">
 						<li><a href="/contact">Contact</a></li>
 						<li><a href="/legal">Legal</a></li>
 					</ul>

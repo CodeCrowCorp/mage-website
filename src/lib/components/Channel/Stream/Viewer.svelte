@@ -26,10 +26,10 @@
 			<span data-popover-target="popover-user-profile" class="{coloredRole?.textColor} font-medium"
 				>@{user.username}</span>
 			<div class="menu dropdown dropdown-right dropdown-end">
-				<label class="rounded-lg bg-base-200 m-1 border-base-100 border-2">
+				<label class="rounded-lg bg-neutral m-1 border-base-100 border-2">
 					<IconChatHorizontalMore />
 				</label>
-				<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-fit">
+				<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-neutral rounded-box w-fit">
 					<li><a on:click={async () => await banUser()}><IconChatDelete /> Ban </a></li>
 				</ul>
 			</div>

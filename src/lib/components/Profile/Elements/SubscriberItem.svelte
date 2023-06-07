@@ -29,7 +29,7 @@
 			<button class="btn btn-circle" tabindex="0">
 				<IconMore />
 			</button>
-			<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+			<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-neutral rounded-box w-52">
 				<li>
 					<a href="/profile/{subscriberItem.username}">Profile</a>
 				</li>

@@ -60,7 +60,7 @@
 	})
 </script>
 
-<div class="menu p-2 py-3 w-80 bg-base-200 text-base-content flex flex-col custom-menu-items h-screen">
+<div class="menu p-2 py-3 w-80 bg-neutral text-base-content flex flex-col custom-menu-items h-screen">
 	<!-- <MessagesDrawer /> -->
 	<ul class="py-2 px-2">
 		<div class="w-fit mb-1">
@@ -182,7 +182,7 @@
 				<IconDrawerHelpAndLegal />
 				Help & Legal
 				<IconDrawerChevron />
-				<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+				<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-neutral-focus rounded-box w-52">
 					<li><a href="/contact">Contact</a></li>
 					<li><a href="/legal">Legal</a></li>
 				</ul>

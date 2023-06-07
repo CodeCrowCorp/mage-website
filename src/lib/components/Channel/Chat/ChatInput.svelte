@@ -139,7 +139,7 @@
 		!messageIsCommand
 </script>
 
-<form class="rounded-lg bg-base-200 p-2 w-full relative">
+<form class="rounded-lg bg-neutral p-2 w-full relative">
 	<button
 		class="btn tooltip font-normal normal-case {!isHost
 			? 'no-animation'

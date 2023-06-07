@@ -56,7 +56,7 @@
 					disabled={currentUser?.username !== $page.params.username}>
 					<IconMore />
 				</button>
-				<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+				<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-neutral rounded-box w-52">
 					<li>
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<label for="edit-profile-drawer" on:click={() => (showDrawer = true)}>Edit</label>

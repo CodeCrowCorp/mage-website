@@ -95,7 +95,7 @@
 						}
 					}
 				}}>
-				<div class="bg-base-200 rounded-lg w-[415px] lg:w-[425px] h-full flex flex-col">
+				<div class="bg-neutral rounded-lg w-[415px] lg:w-[425px] h-full flex flex-col">
 					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 						Edit channel
 					</p>
