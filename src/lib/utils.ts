@@ -122,8 +122,8 @@ export const getColoredRole = (role: string) =>
 			textColor: 'text-accent'
 		},
 		Host: { tagColor: 'bg-secondary', textColor: 'text-pink-500' },
-		You: { tagColor: 'bg-gray-600' },
 		Mod: { tagColor: 'bg-green-700', textColor: 'text-success' },
+		You: { tagColor: 'bg-gray-600' },
 		Rando: { textColor: 'text-info' }
 	}[role] || {})
 

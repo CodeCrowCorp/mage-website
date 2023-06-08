@@ -78,32 +78,54 @@
 	// toggle commands handlers
 
 	const toggleBan = (userId: string) => {
-		if (channel.bans.includes(userId)) {
-			channel.bans = channel.bans.filter((ban: string) => ban !== userId)
-		} else {
+		let isEnabled = false
+		if (!channel.bans.includes(userId)) {
 			channel.bans.push(userId)
 			channel.guests = channel.guests.filter((guest: string) => guest !== userId)
-			channel.mods = channel.mods?.filter((mod: string) => mod !== userId)
+			channel.mods = channel.mods.filter((mod: string) => mod !== userId)
+			isEnabled = true
+		} else {
+			channel.bans = channel.bans.filter((ban: string) => ban !== userId)
 		}
-		emitChannelUpdate({ channelSocket: channel.socket, channel })
+		emitChannelUpdate({
+			channelSocket: channel.socket,
+			channel,
+			roleUpdate: { roleEvent: 'ban', isEnabled, userId: userId }
+		})
 	}
 
 	const toggleMod = (userId: string) => {
-		if (channel.mods?.includes(userId)) {
-			channel.mods = channel.mods?.filter((mod: string) => mod !== userId)
-		} else {
-			channel.mods?.push(userId)
+		if (!channel.bans.includes(userId)) {
+			let isEnabled = false
+			if (!channel.mods?.includes(userId)) {
+				channel.mods.push(userId)
+				isEnabled = true
+			} else {
+				channel.mods = channel.mods.filter((mod: string) => mod !== userId)
+			}
+			emitChannelUpdate({
+				channelSocket: channel.socket,
+				channel,
+				roleUpdate: { roleEvent: 'mod', isEnabled, userId: userId }
+			})
 		}
-		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 
 	const toggleGuest = (userId: string) => {
-		if (!channel.guests.includes(userId) && channel.guests.length < 9) {
-			channel.guests.push(userId)
-		} else {
-			channel.guests = channel.guests.filter((guest: string) => guest !== $page.data.user?.userId)
+		if (!channel.bans.includes(userId)) {
+			let isEnabled = false
+			if (!channel.guests.includes(userId) && channel.guests.length < 9) {
+				channel.guests.push(userId)
+				isEnabled = true
+			} else {
+				channel.guests = channel.guests.filter((guest: string) => guest !== userId)
+			}
+			emitChannelUpdate({
+				channelSocket: channel.socket,
+				channel,
+				roleUpdate: { roleEvent: 'guest', isEnabled, userId: userId }
+			})
 		}
-		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 
 	const specialCommands = [
@@ -175,7 +197,6 @@
 					(showCommandOptions ? 'dropdown-open' : '')}>
 				<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
 					{#each specialCommands as command}
-						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<li
 							on:click={() => {
 								selectedCommand = command.id
@@ -201,7 +222,6 @@
 					(showUsers ? 'dropdown-open' : '')}>
 				<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
 					{#each users as user, idx}
-						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<li
 							on:click={() => {
 								chatMessage = chatMessage.replace(/@/g, '@' + user.username) + ' '
@@ -252,7 +272,7 @@
 				bind:value={chatMessage}
 				rows="1"
 				class="block mx-1 p-2.5 w-full text-sm textarea textarea-bordered textarea-secondary"
-				placeholder="Your message..." /><!--focus:h-32 -->
+				placeholder="Your message..." />
 			<button
 				on:click={() => {
 					sendMessage()
