@@ -4,7 +4,7 @@
 	export let user: any = {}
 </script>
 
-<ul class="menu shrink-0 bg-base-100 rounded-md">
+<ul class="p-4 bg-neutral-focus hover:bg-neutral shrink-0 rounded-md">
 	<li>
 		<a class="rounded-md" href="/profile/{user.username}">
 			<div class="text-center space-y-3 w-[200px]">
