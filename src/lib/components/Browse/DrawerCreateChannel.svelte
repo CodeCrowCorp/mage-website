@@ -97,7 +97,7 @@
 			<DrawerAddCategory bind:showAddCategory bind:categories={newChannel.category} />
 		{:else}
 			<form
-				class="flex h-full py-5 px-2"
+				class="flex h-full p-5"
 				action="?/create-channel"
 				method="post"
 				use:enhance={({ data }) => {
