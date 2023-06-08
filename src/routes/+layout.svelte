@@ -130,9 +130,9 @@
         </script>`}
 </svelte:head>
 
-<div class="drawer lg:drawer-open bg-base-100">
+<div class="drawer lg:drawer-open">
 	<input id="main-drawer" bind:this={nav_drawer} type="checkbox" class="drawer-toggle" />
-	<div class="drawer-content overflow-y-auto h-screen">
+	<div class="drawer-content bg-base-200 h-screen overflow-y-auto">
 		<!-- Page content here -->
 		<div class="menu w-fit px-0 py-1 lg:-mb-2">
 			<ul>

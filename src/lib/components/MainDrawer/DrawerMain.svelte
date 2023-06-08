@@ -60,7 +60,7 @@
 	})
 </script>
 
-<div class="menu p-2 py-3 w-80 bg-neutral-focus text-base-content flex flex-col custom-menu-items h-screen">
+<div class="menu p-4 w-80 bg-base-100 text-base-content flex flex-col h-screen">
 	<!-- <MessagesDrawer /> -->
 	<ul class="py-2 px-2">
 		<div class="w-fit mb-1">
@@ -104,7 +104,7 @@
 						</div>
 						<div class="tooltip" data-tip="level {progressBarLevel}">
 							<progress
-								class="progress w-64 bg-neutral-focus mb-1"
+								class="progress w-64 mb-1"
 								style="--progress-bar-color: {progressBarColor}"
 								value={progressBarValue}
 								max="100" />

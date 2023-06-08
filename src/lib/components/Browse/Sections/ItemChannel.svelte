@@ -5,7 +5,7 @@
 	export let channel: any = {}
 </script>
 
-<ul class="p-4 bg-neutral-focus hover:bg-neutral shrink-0 mt-6 rounded-md">
+<ul class="p-4 bg-base-100 hover:bg-neutral-content shrink-0 mt-6 rounded-md">
 	<li>
 		<a
 			class="flex flex-col w-[20rem] md:w-[25rem] rounded-md items-stretch"
