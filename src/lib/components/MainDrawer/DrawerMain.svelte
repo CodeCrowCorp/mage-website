@@ -182,7 +182,7 @@
 				<IconDrawerHelpAndLegal />
 				Help & Legal
 				<IconDrawerChevron />
-				<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-neutral-focus rounded-box w-52">
+				<ul tabindex="0" class="dropdown-content menu p-2 shadow z-10 bg-neutral-focus rounded-box w-52">
 					<li><a href="/contact">Contact</a></li>
 					<li><a href="/legal">Legal</a></li>
 				</ul>

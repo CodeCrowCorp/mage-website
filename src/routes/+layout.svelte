@@ -157,7 +157,7 @@
 		<slot />
 		<LoginPrompt />
 	</div>
-	<div class="drawer-side">
+	<div class="drawer-side z-10">
 		<label for="main-drawer" class="drawer-overlay" />
 		{#if !$page.url.pathname.includes('/channel')}
 			<DrawerMain bind:nav_drawer />
