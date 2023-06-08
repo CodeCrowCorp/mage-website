@@ -260,7 +260,7 @@
 </script>
 
 <div class={video.screen || video.webcam ? 'w-full h-full' : 'w-[500px] max-h-80'}>
-	<div class="bg-neutral relative w-full h-full rounded-md">
+	<div class="bg-base-200 relative w-full h-full rounded-md">
 		<img
 			src={video.avatar}
 			alt=""
@@ -284,7 +284,7 @@
 						? 'btn-outline'
 						: 'border-transparent'}">@{video.username}</label>
 				{#if showBanItem || showRoleItem}
-					<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-neutral rounded-box w-52">
+					<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 						{#if showBanItem}
 							<li>
 								<a on:click={() => toggleBan()}

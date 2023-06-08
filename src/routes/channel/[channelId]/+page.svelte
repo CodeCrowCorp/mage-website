@@ -238,7 +238,7 @@
 
 {#if channel && channel._id === $page.params.channelId}
 	
-	<div class="relative h-full flex">
+	<div class="relative h-full flex bg-base-200">
 		<div class="lg:ml-24 h-full flex-1 transition-all delay-75 ">
 			<StreamContainer
 					bind:channel
@@ -252,7 +252,7 @@
 			{/if}
 		</div>
 		{#if !$is_chat_drawer_destroy}
-			<div class={ " transition-all delay-75 " + ($is_chat_drawer_open ? "w-96" : "w-0")}/>
+			<div class={ " transition-all delay-75 " + ($is_chat_drawer_open ? "fake-container" : "w-0")}/>
 			<div class="absolute right-0 top-0 bottom-0 drawer-container">
 				<div class="drawer drawer-end">
 					<input
@@ -292,6 +292,9 @@
 
 <style>
 	.drawer-container {
-		width: 400px;
+		width: 410px;
+	}
+	.fake-container {
+		width: 390px;
 	}
 </style>

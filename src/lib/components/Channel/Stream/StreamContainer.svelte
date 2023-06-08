@@ -58,7 +58,7 @@
 						<div class="dropdown dropdown-bottom">
 							<label
 								for=""
-								class="btn btn-sm rounded-md font-medium gap-2 text-white border-none"
+								class="btn btn-sm rounded-md font-medium gap-2 text-white border-none bg-neutral-focus"
 								tabindex="-1">
 								<IconViewers />
 								{userCount}

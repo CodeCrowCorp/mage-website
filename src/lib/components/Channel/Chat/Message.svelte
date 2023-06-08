@@ -87,16 +87,16 @@
 				{/if}
 				<span class="break-all">{sender.message}</span>
 			</label>
-			<!-- <ul class="dropdown-content menu p-2 shadow bg-neutral rounded-box w-52">
+			<!-- <ul class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 				<ProfileCard userId={sender.user?.userId} />
 			</ul> -->
 			<div
 				class="group-hover:block dropdown-menu absolute hidden right-0 dropdown dropdown-left dropdown-end"
 				tabindex="1">
-				<div class="rounded-lg bg-neutral m-1 border-base-100 border-2">
+				<div class="rounded-lg bg-base-200 m-1 border-base-100 border-2">
 					<IconChatHorizontalMore />
 				</div>
-				<ul tabindex="1" class="dropdown-content menu p-2 shadow bg-neutral rounded-box w-52">
+				<ul tabindex="1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li class="disabled"><a><IconChatReact /> React </a></li>
 					<li class="disabled"><a><IconChatQuote /> Quote </a></li>
 					{#if showBanItem}

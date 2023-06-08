@@ -88,7 +88,7 @@
 	})
 </script>
 
-<div class="bg-neutral rounded-lg w-80 md:w-[30rem] flex flex-col {classes}">
+<div class="bg-base-200 rounded-lg w-80 md:w-[30rem] flex flex-col {classes}">
 	<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">Select category</p>
 	<div class="flex flex-col p-3 h-full">
 		<div class="relative">

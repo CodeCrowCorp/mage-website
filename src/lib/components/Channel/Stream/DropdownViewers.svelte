@@ -38,7 +38,7 @@
 
 <ul
 	tabindex="-1"
-	class="dropdown-content p-2 shadow bg-neutral rounded-box m-3 flex flex-col h-96 overflow-y-scroll">
+	class="dropdown-content p-2 shadow bg-base-200 rounded-box m-3 flex flex-col h-96 overflow-y-scroll">
 	{#each viewers as user}
 		<Viewer {user} />
 	{/each}

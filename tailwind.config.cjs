@@ -8,6 +8,7 @@ module.exports = {
 					...require("daisyui/src/theming/themes")["[data-theme=dark]"],
 					"base-100": "#242733",
 					"neutral-content": "#2a3241",
+					
 				},
 			},
 			{
