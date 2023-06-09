@@ -7,13 +7,13 @@
 	import { get } from '$lib/api'
 
 	export let channels: any = [],
-		profile: any = null
+		profileId: string = ''
 
 	let skip = 100
 	let limit = 100
 	let moreChannels: any[] = []
 	const loadMore = async () => {
-		let endpoint = profile._id ? `channels/user?userId=${profile._id}?` : 'channels?'
+		let endpoint = profileId ? `channels/user?userId=${profileId}?` : 'channels?'
 		const infiniteChannels = await get(`${endpoint}skip=${skip}&limit=${limit}`)
 		if (infiniteChannels?.length) {
 			moreChannels = [...moreChannels, ...infiniteChannels]
