@@ -6,13 +6,15 @@
 	import LastItemInViewport from '$lib/actions/LastItemInViewport'
 	import { get } from '$lib/api'
 
-	export let channels: any = []
+	export let channels: any = [],
+		profile: any = null
 
 	let skip = 100
 	let limit = 100
 	let moreChannels: any[] = []
-	async function loadMore(): Promise<void> {
-		const infiniteChannels = await get(`channels?skip=${skip}&limit=${limit}`)
+	const loadMore = async () => {
+		let endpoint = profile._id ? `channels/user?userId=${profile._id}?` : 'channels?'
+		const infiniteChannels = await get(`${endpoint}skip=${skip}&limit=${limit}`)
 		if (infiniteChannels?.length) {
 			moreChannels = [...moreChannels, ...infiniteChannels]
 			skip += limit
