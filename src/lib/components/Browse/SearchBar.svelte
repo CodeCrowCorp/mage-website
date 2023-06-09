@@ -20,7 +20,7 @@
 					type="search"
 					placeholder="Search channels"
 					class="input input-bordered input-primary w-96" />
-				<button class="btn btn-square">
+				<button class="btn btn-square bg-neutral-content border-neutral-content border">
 					<IconSearch />
 				</button>
 			</div>
@@ -38,7 +38,8 @@
 				}
 			}}>
 			<IconCreate />
-			Create a channel</label>
+			Create a channel
+		</label>
 	</div>
 
 	{#if showDrawer}
