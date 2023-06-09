@@ -3,7 +3,10 @@
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	// import Stats from '$lib/components/Profile/Elements/Stats.svelte'
 
-	export let channels: Promise<any>, subscribers: Promise<any>, interests: Promise<any>
+	export let profile: any = null,
+		channels: Promise<any>,
+		subscribers: Promise<any>,
+		interests: Promise<any>
 
 	let tabs = ['Channels'] //['Stats', 'Channels', 'Subscribers']
 	let activeTab = 0
@@ -24,11 +27,7 @@
 				<Stats />
 			</div> -->
 			<div class="flex-auto h-full text-left" class:hidden={activeTab != 0}>
-				{#await channels}
-					<progress class="progress w-full" />
-				{:then value}
-					<SectionTable channels={value} />
-				{/await}
+				<SectionTable {channels} {profile} />
 			</div>
 			<!-- <div class="flex-auto h-full" class:hidden={activeTab != 1}>
 				<ListSubscribe {subscribers} {interests} />
