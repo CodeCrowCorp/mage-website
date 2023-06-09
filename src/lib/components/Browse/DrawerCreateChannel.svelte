@@ -2,7 +2,7 @@
 	// import IconPhoto from '$lib/assets/icons/IconPhoto.svelte'
 	import { tags } from '$lib/stores/channelStore'
 	import { onMount } from 'svelte'
-	import Tags from '$lib/components/Browse/Tags.svelte'
+	import Tags from 'svelte-tags-input'
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 	import { get } from '$lib/api'
 	import { enhance } from '$app/forms'
@@ -28,7 +28,6 @@
 		showThumbnail = false,
 		showAddCategory = false,
 		maxTag = 3,
-		maxTagChars = 18,
 		maxCategory = 4,
 		isLoadingChannel = false
 
@@ -65,7 +64,7 @@
 		newChannel = newChannel
 	}
 
-	const onTagValidation = (evt: any) => {
+	const onValidation = (evt: any) => {
 		if (Number(evt.target.value) < 1) {
 			evt.target.setCustomValidity('Please fill out this field.')
 		}
@@ -165,7 +164,6 @@
 							<Tags
 								bind:tags={newChannel.tags}
 								maxTags={maxTag}
-								maxChars={maxTagChars}
 								id="tags"
 								placeholder={newChannel.tags.length > 0 ? '' : 'Tag'} />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxTagLabel})</span>
@@ -177,7 +175,7 @@
 									min="1"
 									class="opacity-0 pointer-events-none absolute left-0 right-0 mx-auto bottom-0"
 									bind:value={newChannel.tags.length}
-									on:invalid={onTagValidation} />
+									on:invalid={onValidation} />
 							{/if}
 						</div>
 						<div class="relative">
@@ -185,7 +183,6 @@
 								on:click={() => (showAddCategory = true)}
 								type="text"
 								name="category"
-								required={!newChannel.category.length}
 								placeholder={newChannel?.category?.length ? '' : 'Category'}
 								class="input input-primary input-bordered mt-5 w-full" />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
@@ -196,6 +193,16 @@
 									{/each}
 								{/if}
 							</span>
+							{#if newChannel.category.length === 0}
+								<input
+									type="number"
+									name="mincats"
+									required
+									min="1"
+									class="opacity-0 pointer-events-none absolute left-0 right-0 mx-auto bottom-0"
+									bind:value={newChannel.category.length}
+									on:invalid={onValidation} />
+							{/if}
 						</div>
 						<!-- <div class="flex flex-row mt-5 ">
 							<input

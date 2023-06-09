@@ -7,26 +7,29 @@
 	import IconChatHorizontalMore from '$lib/assets/icons/chat/IconChatHorizontalMore.svelte'
 	import ProfileCard from '$lib/components/Channel/Chat/ProfileCard.svelte'
 	import { emitChannelUpdate, emitDeleteMessageToChannel } from '$lib/websocket'
-	import { getColoredRole } from '$lib/utils'
+	import { getColoredRole, setRole } from '$lib/utils'
 	import { page } from '$app/stores'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 
 	export let sender: any, hostId: string, channel: any
-
-	$: coloredRole = getColoredRole(sender.role)
+	let role: string, coloredRole: any
 
 	$: isGuest = channel?.guests?.includes(sender.user?.userId)
 
 	$: showBanItem =
-		hostId === $page.data.user?.userId &&
+		(hostId === $page.data.user?.userId || channel?.mods?.includes($page.data.user?.userId)) &&
 		sender.user?.userId !== $page.data.user?.userId &&
-		channel?.mods?.includes($page.data.user?.userId) &&
-		sender.role !== '🤖 AI'
+		role !== '🤖 AI'
 
 	$: showRoleItem =
 		hostId === $page.data.user?.userId &&
 		sender.user?.userId !== $page.data.user?.userId &&
-		sender.role !== '🤖 AI'
+		role !== '🤖 AI'
+
+	$: if (channel) {
+		role = setRole({ userId: sender.user?.userId, channel, currentUserId: $page.data.user?.userId })
+		coloredRole = getColoredRole(role)
+	}
 
 	const deleteMessage = () => {
 		var channelId = sender.eventName.split('-').pop()
@@ -41,33 +44,51 @@
 	}
 
 	const toggleBan = () => {
-		if (channel.bans.includes(sender.user?.userId)) {
-			channel.bans = channel.bans.filter((ban: string) => ban !== sender.user?.userId)
-		} else {
+		let isEnabled = false
+		if (!channel.bans.includes(sender.user?.userId)) {
 			channel.bans.push(sender.user?.userId)
 			channel.guests = channel.guests.filter((guest: string) => guest !== sender.user?.userId)
-			channel.mods = channel.mods?.filter((mod: string) => mod !== sender.user?.userId)
+			channel.mods = channel.mods.filter((mod: string) => mod !== sender.user?.userId)
 			isGuest = false
+			isEnabled = true
+		} else {
+			channel.bans = channel.bans.filter((ban: string) => ban !== sender.user?.userId)
 		}
-		emitChannelUpdate({ channelSocket: channel.socket, channel })
+		emitChannelUpdate({
+			channelSocket: channel.socket,
+			channel,
+			roleUpdate: { roleEvent: 'ban', isEnabled, userId: sender.user?.userId }
+		})
 	}
 
 	const toggleMod = () => {
-		if (channel.mods?.includes(sender.user?.userId)) {
-			channel.mods = channel.mods?.filter((mod: string) => mod !== sender.user?.userId)
-		} else {
+		let isEnabled = false
+		if (!channel.mods?.includes(sender.user?.userId)) {
 			channel.mods?.push(sender.user?.userId)
+			isEnabled = true
+		} else {
+			channel.mods = channel.mods?.filter((mod: string) => mod !== sender.user?.userId)
 		}
-		emitChannelUpdate({ channelSocket: channel.socket, channel })
+		emitChannelUpdate({
+			channelSocket: channel.socket,
+			channel,
+			roleUpdate: { roleEvent: 'mod', isEnabled, userId: sender.user?.userId }
+		})
 	}
 
 	const toggleGuest = () => {
+		let isEnabled = false
 		if (!channel.guests.includes(sender.user?.userId) && channel.guests.length < 9) {
 			channel.guests.push(sender.user?.userId)
+			isEnabled = true
 		} else {
 			channel.guests = channel.guests.filter((guest: string) => guest !== sender.user?.userId)
 		}
-		emitChannelUpdate({ channelSocket: channel.socket, channel })
+		emitChannelUpdate({
+			channelSocket: channel.socket,
+			channel,
+			roleUpdate: { roleEvent: 'guest', isEnabled, userId: sender.user?.userId }
+		})
 	}
 </script>
 
@@ -75,12 +96,13 @@
 	<li class="group relative dropdown">
 		<!--Host, Mod, You or Rando-->
 		<div class="p-1 border border-transparent rounded-lg flex gap-2 overflow-x-hidden">
+			<!-- svelte-ignore a11y-label-has-associated-control -->
 			<label>
-				{#if sender.role === '🤖 AI' || sender.role === 'Host' || sender.role === 'Mod' || sender.role === 'You'}
+				{#if role === '🤖 AI' || role === 'Host' || role === 'Mod' || role === 'You'}
 					<span class="{coloredRole.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
-						>{sender.role}</span>
+						>{role}</span>
 				{/if}
-				{#if sender.role !== '🤖 AI'}
+				{#if role !== '🤖 AI'}
 					<span
 						data-popover-target="popover-user-profile"
 						class="{coloredRole.textColor} font-medium">@{sender.user?.username}</span>
@@ -99,22 +121,22 @@
 				<ul tabindex="1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li class="disabled"><a><IconChatReact /> React </a></li>
 					<li class="disabled"><a><IconChatQuote /> Quote </a></li>
-					{#if showBanItem}
-						<li>
-							<a on:click={() => toggleBan()}
-								><IconChatBan /> {channel.bans?.includes(sender.user?.userId) ? 'Unban' : 'Ban'}
-							</a>
-						</li>
-					{/if}
-					{#if showRoleItem}
+					{#if showRoleItem && !channel.bans.includes(sender.user?.userId)}
 						<li>
 							<a on:click={() => toggleMod()}
-								><IconChatMod /> {sender.role === 'Mod' ? 'Revoke Mod' : 'Grant Mod'}
+								><IconChatMod /> {role === 'Mod' ? 'Revoke Mod' : 'Grant Mod'}
 							</a>
 						</li>
 						<li>
 							<a on:click={() => toggleGuest()}
 								><IconChatGuest /> {isGuest ? 'Revoke Guest' : 'Grant Guest'}
+							</a>
+						</li>
+					{/if}
+					{#if showBanItem}
+						<li>
+							<a on:click={() => toggleBan()}
+								><IconChatBan /> {channel.bans?.includes(sender.user?.userId) ? 'Unban' : 'Ban'}
 							</a>
 						</li>
 					{/if}

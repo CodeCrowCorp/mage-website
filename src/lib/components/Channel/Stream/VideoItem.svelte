@@ -33,9 +33,9 @@
 		speakingValue: number = 0
 
 	$: showBanItem =
-		channel.user === $page.data.user?.userId &&
+		(channel.user === $page.data.user?.userId ||
+			channel?.mods?.includes($page.data.user?.userId)) &&
 		video._id !== $page.data.user?.userId &&
-		channel?.mods?.includes($page.data.user?.userId) &&
 		role !== '🤖 AI'
 
 	$: showRoleItem =
@@ -171,9 +171,12 @@
 		isWebcamFocused = false
 	}
 
-	onMount(() => {
+	$: if (channel) {
 		role = setRole({ userId: video._id, channel, currentUserId: $page.data.user?.userId })
 		coloredRole = getColoredRole(role)
+	}
+
+	onMount(() => {
 		isGuest = channel?.guests?.includes(video._id)
 		screenElement = document.getElementById(`screen-${video._id}`) as HTMLVideoElement
 		webcamElement = document.getElementById(`webcam-${video._id}`) as HTMLVideoElement
@@ -227,33 +230,51 @@
 	})
 
 	const toggleBan = () => {
-		if (channel.bans.includes(video._id)) {
-			channel.bans = channel.bans.filter((ban: string) => ban !== video._id)
-		} else {
+		let isEnabled = false
+		if (!channel.bans.includes(video._id)) {
 			channel.bans.push(video._id)
 			channel.guests = channel.guests.filter((guest: string) => guest !== video._id)
-			channel.mods = channel.mods?.filter((mod: string) => mod !== video._id)
+			channel.mods = channel.mods.filter((mod: string) => mod !== video._id)
 			isGuest = false
+			isEnabled = true
+		} else {
+			channel.bans = channel.bans.filter((ban: string) => ban !== video._id)
 		}
-		emitChannelUpdate({ channelSocket: channel.socket, channel })
+		emitChannelUpdate({
+			channelSocket: channel.socket,
+			channel,
+			roleUpdate: { roleEvent: 'ban', isEnabled, userId: video._id }
+		})
 	}
 
 	const toggleMod = () => {
-		if (channel.mods?.includes(video._id)) {
-			channel.mods = channel.mods?.filter((mod: string) => mod !== video._id)
+		let isEnabled = false
+		if (!channel.mods.includes(video._id)) {
+			channel.mods.push(video._id)
+			isEnabled = true
 		} else {
-			channel.mods?.push(video._id)
+			channel.mods = channel.mods?.filter((mod: string) => mod !== video._id)
 		}
-		emitChannelUpdate({ channelSocket: channel.socket, channel })
+		emitChannelUpdate({
+			channelSocket: channel.socket,
+			channel,
+			roleUpdate: { roleEvent: 'mod', isEnabled, userId: video._id }
+		})
 	}
 
 	const toggleGuest = () => {
-		if (channel.guests.includes(video._id)) {
-			channel.guests = channel.guests.filter((guest: string) => guest !== video._id)
-		} else {
+		let isEnabled = false
+		if (!channel.guests.includes(video._id) && channel.guests.length < 9) {
 			channel.guests.push(video._id)
+			isEnabled = true
+		} else {
+			channel.guests = channel.guests.filter((guest: string) => guest !== video._id)
 		}
-		emitChannelUpdate({ channelSocket: channel.socket, channel })
+		emitChannelUpdate({
+			channelSocket: channel.socket,
+			channel,
+			roleUpdate: { roleEvent: 'guest', isEnabled, userId: video._id }
+		})
 	}
 
 	$: animate = isWebcamFocused ? '' : 'transition-all'
@@ -285,14 +306,7 @@
 						: 'border-transparent'}">@{video.username}</label>
 				{#if showBanItem || showRoleItem}
 					<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
-						{#if showBanItem}
-							<li>
-								<a on:click={() => toggleBan()}
-									><IconChatBan /> {channel.bans?.includes(video._id) ? 'Unban' : 'Ban'}
-								</a>
-							</li>
-						{/if}
-						{#if showRoleItem}
+						{#if showRoleItem && !channel.bans.includes(video._id)}
 							<li>
 								<a on:click={() => toggleMod()}
 									><IconChatMod /> {role === 'Mod' ? 'Revoke Mod' : 'Grant Mod'}
@@ -300,6 +314,13 @@
 							</li>
 							<li>
 								<a on:click={() => toggleGuest()}><IconChatGuest /> Revoke Guest </a>
+							</li>
+						{/if}
+						{#if showBanItem}
+							<li>
+								<a on:click={() => toggleBan()}
+									><IconChatBan /> {channel.bans?.includes(video._id) ? 'Unban' : 'Ban'}
+								</a>
 							</li>
 						{/if}
 					</ul>

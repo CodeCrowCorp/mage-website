@@ -237,7 +237,9 @@
 			</a> -->
 		</div>
 		<p>Code Crow © 2023</p>
-		<p class="text-gray-500">v{__VERSION__} [{env.PUBLIC_ENV}]</p>
+		<p class="text-gray-500">
+			v{__VERSION__} [{env.PUBLIC_ENV === 'production' ? 'beta' : env.PUBLIC_ENV}]
+		</p>
 	</footer>
 </div>
 
