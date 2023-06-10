@@ -60,9 +60,8 @@
 	})
 </script>
 
-<div class="menu p-4 w-80 bg-base-100 text-base-content flex flex-col h-screen">
-	<!-- <MessagesDrawer /> -->
-	<ul class="py-2 px-2">
+<div class="menu w-80 bg-base-100 text-base-content flex flex-col h-screen">
+	<ul>
 		<div class="w-fit mb-1">
 			<ul>
 				<li>
@@ -178,7 +177,9 @@
 		</li>
 		<li>
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-			<div class="custom-menu-item dropdown dropdown-bottom dropdown-end justify-start py-3" tabindex="0">
+			<div
+				class="custom-menu-item dropdown dropdown-bottom dropdown-end justify-start py-3"
+				tabindex="0">
 				<IconDrawerHelpAndLegal />
 				Help & Legal
 				<IconDrawerChevron />

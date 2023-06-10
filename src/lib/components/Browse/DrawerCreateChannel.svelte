@@ -204,21 +204,18 @@
 									on:invalid={onValidation} />
 							{/if}
 						</div>
-						<!-- <div class="flex flex-row mt-5 ">
-							<input
-								bind:checked={newChannel.isPrivate}
-								type="checkbox"
-								class="checkbox checkbox-primary mr-3" /> Private
-						</div> -->
 					</div>
 
 					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
-						<button type="button" class="btn btn-default grow" on:click={() => toggleDrawer()}
-							>Cancel</button>
+						<button
+							type="button"
+							class="btn btn-neutral text-white grow"
+							on:click={() => toggleDrawer()}>Cancel</button>
 						<button
 							type="submit"
 							disabled={isLoadingChannel}
-							class="btn btn-primary grow {isLoadingChannel ? 'loading' : ''}">Add</button>
+							class="btn btn-primary text-white grow {isLoadingChannel ? 'loading' : ''}"
+							>Add</button>
 					</div>
 				</div>
 			</form>

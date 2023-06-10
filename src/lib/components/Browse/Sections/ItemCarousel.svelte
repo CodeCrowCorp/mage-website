@@ -22,7 +22,7 @@
 				<div class="dropdown dropdown-bottom">
 					<label
 						for=""
-						class="btn btn-sm rounded-md font-medium gap-2 text-white border-none bg-neutral-focus"
+						class="btn btn-sm rounded-md font-medium gap-2 text-white border-none"
 						tabindex="-1">
 						<IconViewers />
 						{channel.memberCount || '0'}

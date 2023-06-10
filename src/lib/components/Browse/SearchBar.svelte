@@ -20,7 +20,7 @@
 					type="search"
 					placeholder="Search channels"
 					class="input input-bordered input-primary w-96" />
-				<button class="btn btn-square bg-neutral-content border-neutral-content border">
+				<button class="btn btn-square btn-neutral text-white">
 					<IconSearch />
 				</button>
 			</div>

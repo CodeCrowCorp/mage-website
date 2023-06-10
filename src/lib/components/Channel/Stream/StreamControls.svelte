@@ -253,7 +253,9 @@
 
 <div class="flex gap-4">
 	<button
-		class="btn tooltip font-normal normal-case {$is_sharing_screen ? 'btn-primary' : ''}"
+		class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_screen
+			? 'btn-primary'
+			: 'btn-neutral'}"
 		data-tip="Screen"
 		on:click={() => {
 			$is_sharing_screen = !$is_sharing_screen
@@ -263,7 +265,9 @@
 	</button>
 
 	<button
-		class="btn tooltip font-normal normal-case {$is_sharing_webcam ? 'btn-primary' : ''}"
+		class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_webcam
+			? 'btn-primary'
+			: 'btn-neutral'}"
 		data-tip="Webcam"
 		on:click={() => {
 			$is_sharing_webcam = !$is_sharing_webcam
@@ -273,7 +277,9 @@
 	</button>
 
 	<button
-		class="btn tooltip font-normal normal-case {$is_sharing_audio ? 'btn-primary' : ''}"
+		class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_audio
+			? 'btn-primary'
+			: 'btn-neutral'}"
 		data-tip="Audio"
 		on:click={() => {
 			$is_sharing_audio = !$is_sharing_audio
@@ -283,7 +289,9 @@
 	</button>
 
 	<button
-		class="btn tooltip font-normal normal-case {$is_chat_drawer_open ? 'btn-primary' : ''}"
+		class="btn text-white border-none tooltip font-normal normal-case {$is_chat_drawer_open
+			? 'btn-primary'
+			: 'btn-neutral'}"
 		data-tip="Chat"
 		on:click={() => handleChatDrawer()}>
 		<IconChatDrawer />

@@ -85,7 +85,7 @@
 							placeholder="Search {placeholderText}"
 							class="input input-bordered input-primary w-96" />
 						<button
-							class="btn btn-square"
+							class="btn btn-square btn-neutral text-white"
 							on:click={() => {
 								resetSkipLimit()
 								loadMore()

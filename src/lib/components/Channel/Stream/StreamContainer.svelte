@@ -58,7 +58,7 @@
 						<div class="dropdown dropdown-bottom">
 							<label
 								for=""
-								class="btn btn-sm rounded-md font-medium gap-2 text-white border-none bg-neutral-focus"
+								class="btn btn-sm rounded-md font-medium gap-2 text-white border-none"
 								tabindex="-1">
 								<IconViewers />
 								{userCount}
@@ -77,7 +77,7 @@
 		{/each}
 	</div>
 
-	<div class="absolute bottom-0 m-5">
+	<div class="absolute bottom-0 m-7">
 		<StreamControls bind:isHostOrGuest {channel} />
 	</div>
 </div>

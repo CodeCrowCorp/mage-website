@@ -134,7 +134,7 @@
 	<input id="main-drawer" bind:this={nav_drawer} type="checkbox" class="drawer-toggle" />
 	<div class="drawer-content bg-base-200 h-screen overflow-y-auto">
 		<!-- Page content here -->
-		<div class="menu w-fit px-0 py-1 lg:-mb-2">
+		<div class="menu w-fit">
 			<ul>
 				<li>
 					<label for="main-drawer" class="lg:hidden rounded-lg">
