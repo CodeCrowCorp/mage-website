@@ -49,7 +49,7 @@
 			</div>
 			<div class="flex flex-row">
 				<div class="relative flex items-center ml-3">
-					<div class="absolute btn btn-neutral text-white p-2 left-0 z-10" on:click={prev}>
+					<div class="absolute btn btn-neutral btn-prev btn-square text-white p-2 left-0 z-10" on:click={prev}>
 						<IconDrawerLeft />
 					</div>
 				</div>
@@ -69,7 +69,7 @@
 				</div>
 
 				<div class="relative flex items-center mr-3">
-					<div class="absolute btn btn-neutral text-white p-2 right-0 z-10" on:click={next}>
+					<div class="absolute btn btn-neutral btn-next btn-square text-white p-2 right-0 z-10" on:click={next}>
 						<IconDrawerChevron />
 					</div>
 				</div>
