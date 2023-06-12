@@ -28,7 +28,7 @@ export const load = (async ({ params, locals }) => {
 
 export const actions = {
 	'update-profile': async ({ request, locals }: { request: any; locals: any }) => {
-		const data = await request.formData()
+		const data: FormData = await request.formData()
 		const newUser: any = {}
 		addPropertyIfDefined(data, 'displayName', newUser)
 		addPropertyIfDefined(data, 'username', newUser)

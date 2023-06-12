@@ -84,9 +84,7 @@
 			</div>
 		</li>
 	</ul>
-	<ul
-		tabindex="-1"
-		class="dropdown-content menu p-2 shadow bg-base-200 rounded-box md:w-[23rem] md:m-3">
+	<ul tabindex="-1" class="dropdown-content menu shadow bg-base-200 rounded-box md:w-[23rem]">
 		<li on:click={() => copyToClipboard(channel.description)} on:keyup>
 			<a class="text-sm max-w-md">{channel.description || 'No description'}</a>
 		</li>
@@ -141,7 +139,7 @@
 			<div class="grid grid-cols-5 gap-2">
 				<label
 					for="edit-channel-drawer"
-					class="btn col-span-4 border-none font-normal normal-case tooltip tooltip-top flex"
+					class="btn btn-neutral text-white col-span-4 flex"
 					data-tip="Edit channel"
 					on:click={() => (showEditChannelDrawer = true)}>
 					Edit channel

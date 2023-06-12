@@ -34,6 +34,7 @@
 						bind:showDrawer />
 					<UserDetails profile={data.profile} />
 					<TabSection
+						profileId={data.profile?._id}
 						channels={data.lazy.channels}
 						subscribers={data.lazy.subscribers}
 						interests={data.lazy.interests} />

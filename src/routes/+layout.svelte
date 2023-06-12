@@ -130,19 +130,13 @@
         </script>`}
 </svelte:head>
 
-<div class="drawer drawer-mobile">
+<div class="drawer lg:drawer-open">
 	<input id="main-drawer" bind:this={nav_drawer} type="checkbox" class="drawer-toggle" />
-	<div class="drawer-content bg-base-200">
+	<div class="drawer-content bg-base-200 h-screen overflow-y-auto">
 		<!-- Page content here -->
-		<div class="menu w-fit">
-			<ul>
-				<li>
-					<label for="main-drawer" class="lg:hidden rounded-lg">
-						<IconMageText />
-					</label>
-				</li>
-			</ul>
-		</div>
+		<label for="main-drawer" class="menu w-fit lg:hidden rounded-lg">
+			<IconMageText />
+		</label>
 
 		{#if $page.data.user?.user?.isBanned}
 			<div class="alert alert-error shadow-lg">
@@ -157,7 +151,7 @@
 		<slot />
 		<LoginPrompt />
 	</div>
-	<div class="drawer-side">
+	<div class="drawer-side z-10">
 		<label for="main-drawer" class="drawer-overlay" />
 		{#if !$page.url.pathname.includes('/channel')}
 			<DrawerMain bind:nav_drawer />
