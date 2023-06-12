@@ -7,3 +7,7 @@
         font-family: 'Montserrat', sans-serif;
     }
 }
+/* temporary fix */
+.tooltip:before {
+    color: white;
+}

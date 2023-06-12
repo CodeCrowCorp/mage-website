@@ -60,10 +60,9 @@
 	})
 </script>
 
-<div class="menu p-4 w-80 bg-base-100 text-base-content flex flex-col">
-	<!-- <MessagesDrawer /> -->
+<div class="menu w-80 bg-base-100 text-base-content flex flex-col h-screen">
 	<ul>
-		<div class="menu w-fit">
+		<div class="w-fit mb-1">
 			<ul>
 				<li>
 					<a href="/browse">
@@ -76,7 +75,7 @@
 			<li>
 				<a href="/profile/{currentUser.username}" class="hero rounded-md cursor-pointer">
 					<div>
-						<div class="hero-content">
+						<div class="hero-content my-1">
 							<div class="max-w-md">
 								<div class="avatar {$isOnline ? 'online' : 'offline'}">
 									<div
@@ -104,7 +103,7 @@
 						</div>
 						<div class="tooltip" data-tip="level {progressBarLevel}">
 							<progress
-								class="progress w-64"
+								class="progress w-64 mb-1"
 								style="--progress-bar-color: {progressBarColor}"
 								value={progressBarValue}
 								max="100" />
@@ -124,7 +123,7 @@
 			</li>
 		{/if}
 		<li>
-			<a href="/browse">
+			<a class="custom-menu-item" href="/browse">
 				<IconDrawerHome />
 				Browse
 			</a>
@@ -172,31 +171,33 @@
 			</li>
 		{/if} -->
 		<li>
-			<a href="/careers">
+			<a class="custom-menu-item" href="/careers">
 				<IconDrawerCareers />
 				Careers</a>
 		</li>
 		<li>
 			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-			<div class="dropdown dropdown-bottom dropdown-end" tabindex="0">
+			<div
+				class="custom-menu-item dropdown dropdown-bottom dropdown-end justify-start py-3"
+				tabindex="0">
 				<IconDrawerHelpAndLegal />
 				Help & Legal
 				<IconDrawerChevron />
-				<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+				<ul tabindex="0" class="dropdown-content menu p-2 shadow z-10 bg-base-200 rounded-box w-52">
 					<li><a href="/contact">Contact</a></li>
 					<li><a href="/legal">Legal</a></li>
 				</ul>
 			</div>
 		</li>
 		<li>
-			<a href="/settings">
+			<a class="custom-menu-item" href="/settings">
 				<IconDrawerSettings />
 				Settings</a>
 		</li>
 		{#if currentUser}
 			<form action="/logout" method="POST">
 				<li>
-					<button type="submit">
+					<button class="custom-menu-item" type="submit">
 						<IconDrawerLogOut />
 						Log out</button>
 				</li>
@@ -204,6 +205,7 @@
 		{:else}
 			<li>
 				<button
+					class="custom-menu-item"
 					on:click={() => {
 						$is_login_modal_open = true
 						if (nav_drawer.checked) {
@@ -216,7 +218,7 @@
 		{/if}
 	</ul>
 
-	<footer class="mt-auto p-4">
+	<footer class="mt-auto p-6 py-5">
 		<!-- <RisingStars /> -->
 		<div class="flex gap-4 items-center">
 			<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
@@ -249,5 +251,13 @@
 
 	.icon-color {
 		color: var(--theme-text); /* This will set the color based on the current theme */
+	}
+	.custom-menu-item {
+		gap: 0.75rem;
+		padding: 0.75rem 1rem;
+	}
+	.menu {
+		font-size: initial;
+		line-height: inherit;
 	}
 </style>

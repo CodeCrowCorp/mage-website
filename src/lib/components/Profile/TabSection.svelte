@@ -3,7 +3,7 @@
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	// import Stats from '$lib/components/Profile/Elements/Stats.svelte'
 
-	export let profile: any = null,
+	export let profileId: string = '',
 		channels: Promise<any>,
 		subscribers: Promise<any>,
 		interests: Promise<any>
@@ -27,7 +27,7 @@
 				<Stats />
 			</div> -->
 			<div class="flex-auto h-full text-left" class:hidden={activeTab != 0}>
-				<SectionTable {channels} {profile} />
+				<SectionTable {channels} {profileId} />
 			</div>
 			<!-- <div class="flex-auto h-full" class:hidden={activeTab != 1}>
 				<ListSubscribe {subscribers} {interests} />
