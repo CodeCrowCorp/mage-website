@@ -68,7 +68,7 @@
 <div class="drawer drawer-end absolute right-0 z-10 top-0">
 	<input id="edit-channel-drawer" bind:this={refToggle} type="checkbox" class="drawer-toggle" />
 
-	<div class="drawer-side m-5 rounded-lg">
+	<div class="drawer-side">
 		<label
 			on:keyup
 			for="edit-channel-drawer"
@@ -84,6 +84,7 @@
 				bind:categories={channel.category} />
 		{:else}
 			<form
+				class="flex h-full p-5"
 				action="?/edit-channel"
 				method="post"
 				use:enhance={({ data }) => {
@@ -172,17 +173,13 @@
 								{/if}
 							</span>
 						</div>
-						<!-- <div class="flex flex-row mt-5 ">
-							<input
-								bind:checked={channel.isPrivate}
-								type="checkbox"
-								class="checkbox checkbox-primary mr-3" /> Private
-						</div> -->
 					</div>
 
 					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
-						<button type="button" class="btn btn-default grow" on:click={() => toggleDrawer()}
-							>Cancel</button>
+						<button
+							type="button"
+							class="btn btn-neutral text-white grow"
+							on:click={() => toggleDrawer()}>Cancel</button>
 						<button type="submit" class="btn btn-primary grow">Edit</button>
 					</div>
 				</div>

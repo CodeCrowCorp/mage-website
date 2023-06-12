@@ -10,7 +10,7 @@
 					type="text"
 					placeholder="Search admins"
 					class="input input-bordered input-primary w-80" />
-				<button class="btn btn-square">
+				<button class="btn btn-square btn-neutral text-white">
 					<IconSearch />
 				</button>
 			</div>

@@ -24,7 +24,7 @@
 						type="search"
 						placeholder="Search subscribers"
 						class="input input-bordered input-primary w-full" />
-					<button class="btn btn-square">
+					<button class="btn btn-square btn-neutral text-white">
 						<IconSearch />
 					</button>
 				</div>
@@ -48,7 +48,7 @@
 						type="search"
 						placeholder="Search interests"
 						class="input input-bordered input-primary w-full" />
-					<button class="btn btn-square">
+					<button class="btn btn-square btn-neutral text-white">
 						<IconSearch />
 					</button>
 				</div>
