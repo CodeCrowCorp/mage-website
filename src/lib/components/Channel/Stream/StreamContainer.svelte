@@ -77,7 +77,7 @@
 		{/each}
 	</div>
 
-	<div class="absolute bottom-0 m-5">
+	<div class="absolute lg:bottom-0 bottom-10 m-7">
 		<StreamControls bind:isHostOrGuest {channel} />
 	</div>
 </div>

@@ -5,7 +5,7 @@
 	export let channel: any = {}
 </script>
 
-<ul class="menu shrink-0 mt-6 bg-base-100 rounded-md">
+<ul class="p-4 bg-base-100 hover:bg-base-300 shrink-0 mt-6 rounded-md">
 	<li>
 		<a
 			class="flex flex-col w-[20rem] md:w-[25rem] rounded-md items-stretch"
@@ -22,7 +22,7 @@
 						<div class="dropdown dropdown-bottom">
 							<label
 								for=""
-								class="btn btn-sm rounded-md font-medium gap-2 text-white border-none"
+								class="btn btn-sm rounded-md font-medium gap-2 btn-neutral text-white border-none"
 								tabindex="-1">
 								<IconViewers />
 								{channel.memberCount || '0'}

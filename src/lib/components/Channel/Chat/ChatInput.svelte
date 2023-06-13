@@ -163,9 +163,9 @@
 
 <form class="rounded-lg bg-base-200 p-2 w-full relative">
 	<button
-		class="btn tooltip font-normal normal-case {!isHost
+		class="btn text-white border-none tooltip font-normal normal-case {!isHost
 			? 'no-animation'
-			: ''} {channel.isAiChatEnabled ? 'btn-primary' : ''}"
+			: ''} {channel.isAiChatEnabled ? 'btn-primary' : 'btn-neutral'}"
 		data-tip="AI"
 		on:click={() => {
 			if (isHost) toggleAIChat()
@@ -173,18 +173,26 @@
 		<IconChatAI />
 		<span class="sr-only">Enable AI</span>
 	</button>
-	<button disabled type="button" class="btn tooltip font-normal normal-case" data-tip="Emoji">
+	<button
+		disabled
+		type="button"
+		class="btn btn-neutral text-white border-none tooltip font-normal normal-case"
+		data-tip="Emoji">
 		<IconChatEmoji />
 		<span class="sr-only">Add emoji</span>
 	</button>
-	<button disabled type="button" class="btn tooltip font-normal normal-case" data-tip="GIF">
+	<button
+		disabled
+		type="button"
+		class="btn btn-neutral text-white border-none tooltip font-normal normal-case"
+		data-tip="GIF">
 		<IconChatGif />
 		<span class="sr-only">Add GIF</span>
 	</button>
 	<button
 		disabled
 		type="button"
-		class="btn tooltip font-normal normal-case"
+		class="btn btn-neutral text-white border-none tooltip font-normal normal-case"
 		data-tip="Code snippet">
 		<IconChatCode />
 		<span class="sr-only">Add code snippet</span>

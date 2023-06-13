@@ -28,7 +28,7 @@ export const load = (async ({ params, locals }) => {
 
 export const actions = {
 	'update-profile': async ({ request, locals }: { request: any; locals: any }) => {
-		const data : FormData = await request.formData()
+		const data: FormData = await request.formData()
 		const newUser: any = {}
 		addPropertyIfDefined(data, 'displayName', newUser)
 		addPropertyIfDefined(data, 'username', newUser)
@@ -36,15 +36,19 @@ export const actions = {
 		addPropertyIfDefined(data, 'category', newUser)
 		addPropertyIfDefined(data, 'bio', newUser)
 
-		if(data.get('avatar')!==null){
-			const avatar = data.get('avatar');
-			const urlLocation = await putImage(`users/current/avatar?bucketName=avatars&originalName=${locals.user.userId}-avatar`, avatar, {
-				userId: locals.user.userId,
-				token: locals.user.token
-			})
-			console.log(urlLocation);
+		if (data.get('avatar') !== null) {
+			const avatar = data.get('avatar')
+			const urlLocation = await putImage(
+				`users/current/avatar?bucketName=avatars&originalName=${locals.user.userId}-avatar`,
+				avatar,
+				{
+					userId: locals.user.userId,
+					token: locals.user.token
+				}
+			)
+			console.log(urlLocation)
 		}
-/* 
+		/* 
 		if(data.get('banner')!==null){
 			const urlLocation = await put(`users/current/banner?bucketName=banners&originalName=${newUser.username}-banner`, data.get('banner'), {
 				userId: locals.user.userId,
