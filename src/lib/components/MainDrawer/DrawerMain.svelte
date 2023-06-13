@@ -20,9 +20,7 @@
 	import { page } from '$app/stores'
 	import { user_role } from '$lib/stores/authStore'
 	// import {
-	// 	is_feature_mint_page_enabled,
 	// 	is_feature_premium_page_enabled,
-	// 	is_feature_group_chat_enabled,
 	// 	is_feature_video_responses_enabled
 	// } from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
@@ -128,15 +126,6 @@
 				Browse
 			</a>
 		</li>
-		<!-- {#if currentUser}
-			<li>
-				<a href="">
-					<IconDrawerMessages />
-					Messages
-					<IconDrawerChevron />
-				</a>
-			</li>
-		{/if} -->
 		<!-- {#if currentUser && $isFeatureVideoResponsesEnabled}
 			<li>
 				<a href="/videos">
@@ -148,18 +137,6 @@
 				<a href="/creator-space">
 					<IconDrawerCreatorSpace />
 					Creator Space</a>
-			</li>
-		{/if}
-		{#if currentUser && $isFeatureMintPageEnabled}
-			<li>
-				<a
-					href="https://mint.codecrow.io"
-					class="text-emerald-600"
-					target="_blank"
-					rel="noreferrer">
-					<IconDrawerMint />
-					Mint <span class="badge">New</span>
-				</a>
 			</li>
 		{/if}
 		{#if currentUser && $isFeaturePremiumPageEnabled}
@@ -219,7 +196,6 @@
 	</ul>
 
 	<footer class="mt-auto p-6 py-5">
-		<!-- <RisingStars /> -->
 		<div class="flex gap-4 items-center">
 			<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 				<IconSocialGitHub />
@@ -247,10 +223,6 @@
 <style>
 	progress::-webkit-progress-value {
 		background-color: var(--progress-bar-color);
-	}
-
-	.icon-color {
-		color: var(--theme-text); /* This will set the color based on the current theme */
 	}
 	.custom-menu-item {
 		gap: 0.75rem;

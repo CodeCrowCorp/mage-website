@@ -134,7 +134,7 @@
 	<input id="main-drawer" bind:this={nav_drawer} type="checkbox" class="drawer-toggle" />
 	<div class="drawer-content bg-base-200 h-screen overflow-y-auto">
 		<!-- Page content here -->
-		<label for="main-drawer" class="menu w-fit lg:hidden rounded-lg">
+		<label for="main-drawer" class="menu w-fit lg:hidden rounded-lg m-2">
 			<IconMageText />
 		</label>
 

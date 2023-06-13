@@ -29,7 +29,7 @@
 	<div class="form-control">
 		<label
 			for="create-channel-drawer"
-			class="btn w-[21rem] btn-primary gap-2 drawer-button"
+			class="btn btn-primary gap-2 drawer-button"
 			on:click={() => {
 				if ($page.data.user) {
 					showDrawer = true
