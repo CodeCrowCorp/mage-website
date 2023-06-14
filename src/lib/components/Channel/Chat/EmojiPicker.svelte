@@ -5,7 +5,6 @@
     export let onSelect:any
 
     let container: any;
-    let show = false
 
     onMount(async () => {
         
@@ -20,23 +19,30 @@
     picker.addEventListener('emoji-click', event => onSelect(event.detail.unicode));
   });
 
-  const onclick = () => {
-    show = !show
-  }
 
 </script>
 
-<div>
-  <div  class={"dropdown dropdown-top " + (show && "dropdown-open") }>
-    <ui class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52" bind:this={container}>
-    </ui>
+
+  <div class="dropdown dropdown-top">
+    <button
+      tabindex="0" 
+      type="button"
+      class="btn btn-neutral text-white border-none tooltip font-normal normal-case"
+      data-tip="Emoji"
+    >
+      <IconChatEmoji />
+      <span class="sr-only">Add emoji</span>
+    </button>
+    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+    <div 
+      bind:this={container} 
+      tabindex="0" 
+      class={"dropdown-content menu shadow bg-base-100 rounded-box emoji-container"} >
+    </div>
   </div>
-</div>
-<button
-  on:click={onclick}
-  type="button"
-  class="btn btn-neutral text-white border-none tooltip font-normal normal-case"
-  data-tip="Emoji">
-  <IconChatEmoji />
-  <span class="sr-only">Add emoji</span>
-</button>
+
+<style global>
+    emoji-picker {
+      margin-left: -70px;
+    }
+</style>

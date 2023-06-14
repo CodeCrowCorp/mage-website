@@ -178,7 +178,7 @@
 		<IconChatAI />
 		<span class="sr-only">Enable AI</span>
 	</button>
-	<EmojiPicker onSelect={onEmojiSelect}/>
+	<EmojiPicker onSelect={onEmojiSelect} />
 	<button
 		disabled
 		type="button"
