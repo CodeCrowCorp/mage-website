@@ -6,8 +6,7 @@
 	import { emitChannelUpdate, emitMessageToChannel } from '$lib/websocket'
 	import { page } from '$app/stores'
 	import { channel_connection } from '$lib/stores/websocketStore'
-	import EmojiPicker from './EmojiPicker.svelte'
-	
+	import EmojiPicker from '$lib/components/Channel/Chat/EmojiPicker.svelte'
 
 	export let channel: any
 	export let users: any
