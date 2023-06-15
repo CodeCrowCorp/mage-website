@@ -70,7 +70,7 @@
 			<div class="m-2">
 				<input 
 					type="text" 
-					placeholder="Type here" 
+					placeholder="Search here" 
 					class="input input-bordered input-sm w-full max-w-xs" 
 					on:input={onSearch}
 				/>
