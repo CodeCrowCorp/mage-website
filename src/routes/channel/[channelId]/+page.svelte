@@ -183,6 +183,10 @@
 
 	const loadMoreChannels = async () => {
 		let newchannels = await get(`channels?skip=${skip}&limit=${limit}`)
+		//Remove duplicate channels
+		newchannels = newchannels.filter(
+			(newChannel: any) => !channels.some((channel: any) => channel._id === newChannel._id)
+		)
 		channels = [...channels, ...newchannels]
 		skip += limit
 	}
@@ -260,33 +264,34 @@
 </script>
 
 {#if channel && channel._id === $page.params.channelId}
-	
 	<div class="relative h-full flex bg-base-200 overflow-hidden">
-		<div class="lg:ml-24 h-full flex-1 transition-all delay-75 ">
+		<div class="lg:ml-24 h-full flex-1 transition-all delay-75">
 			<StreamContainer
-					bind:channel
-					bind:userCount
-					bind:channels
-					on:loadMore={loadMoreChannels}
-					bind:isHostOrGuest />
+				bind:channel
+				bind:userCount
+				bind:channels
+				on:loadMore={loadMoreChannels}
+				bind:isHostOrGuest />
 
 			{#if showEditChannelDrawer}
 				<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />
 			{/if}
 		</div>
 		{#if !$is_chat_drawer_destroy}
-			<div class={ "lg: transition-all lg:delay-75 " + ($is_chat_drawer_open ? "lg:w-96 lg:ml-4" : "w-0")}/>
-			<div class={"absolute right-0 top-0 " + ($is_chat_drawer_open ? "drawer-container" : "w-0")}>
+			<div
+				class={'lg: transition-all lg:delay-75 ' +
+					($is_chat_drawer_open ? 'lg:w-96 lg:ml-4' : 'w-0')} />
+			<div class={'absolute right-0 top-0 ' + ($is_chat_drawer_open ? 'drawer-container' : 'w-0')}>
 				<div class="drawer drawer-end">
 					<input
 						id="chat-drawer"
 						type="checkbox"
 						class="drawer-toggle"
-						bind:checked={$is_chat_drawer_open} 
-					/>
+						bind:checked={$is_chat_drawer_open} />
 					<div class="drawer-side w-fit lg:absolute lg:right-0 lg:pb-0 pb-4">
 						<label for="chat-drawer" class="drawer-overlay lg:hidden" />
-						<div class="h-full pt-12 lg:p-5 md:w-fit lg:ml-0 md:ml-0 mobile-margin lg:drop-shadow-lg">
+						<div
+							class="h-full pt-12 lg:p-5 md:w-fit lg:ml-0 md:ml-0 mobile-margin lg:drop-shadow-lg">
 							<DrawerChat bind:channel bind:showEditChannelDrawer />
 						</div>
 					</div>
@@ -311,7 +316,6 @@
 		isError={true} />
 {/if}
 
-
 <style>
 	.drawer-container {
 		width: 410px;
@@ -319,6 +323,6 @@
 	}
 	/* for having space to touch to close drawer */
 	.mobile-margin {
-		margin-left: calc(100vw - 288px)
+		margin-left: calc(100vw - 288px);
 	}
 </style>
