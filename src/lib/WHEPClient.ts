@@ -67,6 +67,13 @@ export default class WHEPClient extends EventTarget {
 			} else {
 				console.log('got unknown track ' + track)
 			}
+
+			if (trackType === 'screen' && track.readyState === 'live') {
+				this.dispatchEvent(new CustomEvent(`isScreenLive`, { detail: true }))
+			}
+			if (trackType === 'webcam' && track.readyState === 'live') {
+				this.dispatchEvent(new CustomEvent(`isWebcamLive`, { detail: true }))
+			}
 		}
 
 		this.peerConnection.addEventListener('connectionstatechange', (ev) => {
