@@ -57,7 +57,7 @@
 		bind:this={btn}
 		type="button"
 		class={"btn text-white border-none tooltip font-normal normal-case " + btnClass}
-		data-tip="Emoji"
+		data-tip="GIF"
 		on:click={openPicker}
 	>
 		<IconChatGif />
