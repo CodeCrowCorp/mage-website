@@ -32,6 +32,14 @@
 		isWebcamFocused: boolean = false,
 		speakingValue: number = 0
 
+	$: isScreenLive = false
+	$: isWebcamLive = false
+
+	$: if (channel) {
+		role = setRole({ userId: video._id, channel, currentUserId: $page.data.user?.userId })
+		coloredRole = getColoredRole(role)
+	}
+
 	$: showBanItem =
 		(channel.user === $page.data.user?.userId ||
 			channel?.mods?.includes($page.data.user?.userId)) &&
@@ -84,10 +92,11 @@
 							screenElement,
 							video.screen.trackType
 						)
-						screenWhip.addEventListener(
-							`localStreamStopped-${trackType}`,
-							() => ($is_sharing_screen = false)
-						)
+						screenWhip.addEventListener(`localStreamStopped-${trackType}`, () => {
+							$is_sharing_screen = false
+							isScreenLive = false
+						})
+						screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 					}
 					break
 				case 'webcam':
@@ -97,10 +106,11 @@
 							webcamElement,
 							video.webcam.trackType
 						)
-						webcamWhip.addEventListener(
-							`localStreamStopped-${trackType}`,
-							() => ($is_sharing_webcam = false)
-						)
+						webcamWhip.addEventListener(`localStreamStopped-${trackType}`, () => {
+							$is_sharing_webcam = false
+							isWebcamLive = false
+						})
+						webcamWhip.addEventListener(`isWebcamLive`, (ev: any) => (isWebcamLive = ev.detail))
 					}
 					break
 				case 'audio':
@@ -127,8 +137,10 @@
 						)
 						screenElement.muted = false
 						screenElement.play()
+						screenWhep.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 					} else {
 						if (screenElement) screenElement.srcObject = null
+						isScreenLive = false
 					}
 					break
 				case 'webcam':
@@ -138,8 +150,10 @@
 							webcamElement,
 							video.webcam.trackType
 						)
+						webcamWhep.addEventListener(`isWebcamLive`, (ev: any) => (isWebcamLive = ev.detail))
 					} else {
 						if (webcamElement) webcamElement.srcObject = null
+						isWebcamLive = false
 					}
 					break
 				case 'audio':
@@ -169,11 +183,6 @@
 
 	const onMouseUp = () => {
 		isWebcamFocused = false
-	}
-
-	$: if (channel) {
-		role = setRole({ userId: video._id, channel, currentUserId: $page.data.user?.userId })
-		coloredRole = getColoredRole(role)
 	}
 
 	onMount(() => {
@@ -280,7 +289,7 @@
 	$: animate = isWebcamFocused ? '' : 'transition-all'
 </script>
 
-<div class={video.screen || video.webcam ? 'w-full h-full' : 'w-[500px] max-h-80'}>
+<div class={isScreenLive || isWebcamLive ? 'w-full h-full' : 'w-[500px] max-h-80'}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
 		<img
 			src={video.avatar}
@@ -294,7 +303,7 @@
 				on:mouseup={onMouseUp}
 				class={animate +
 					' absolute ' +
-					(!video.screen ? 'w-full bottom-0 left-0 h-full' : 'w-1/4 bottom-0 right-0')}>
+					(!isScreenLive ? 'w-full bottom-0 left-0 h-full' : 'w-1/4 bottom-0 right-0')}>
 				<video id={`webcam-${video._id}`} autoplay muted class="rounded-md h-full w-full" />
 			</div>
 			<video id={`audio-${video._id}`} autoplay muted class="rounded-md w-0 h-0" />

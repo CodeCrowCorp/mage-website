@@ -73,8 +73,8 @@
 			<li>
 				<a href="/profile/{currentUser.username}" class="hero rounded-md cursor-pointer">
 					<div>
-						<div class="hero-content my-1">
-							<div class="max-w-md">
+						<div class="hero-content my-1 w-64">
+							<div class="max-w-full">
 								<div class="avatar {$isOnline ? 'online' : 'offline'}">
 									<div
 										class="w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">

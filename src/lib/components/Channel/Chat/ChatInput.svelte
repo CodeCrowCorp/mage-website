@@ -1,12 +1,12 @@
 <script lang="ts">
 	import IconChatAI from '$lib/assets/icons/chat/IconChatAI.svelte'
-	import IconChatEmoji from '$lib/assets/icons/chat/IconChatEmoji.svelte'
 	import IconChatGif from '$lib/assets/icons/chat/IconChatGif.svelte'
 	import IconChatCode from '$lib/assets/icons/chat/IconChatCode.svelte'
 	import IconChatSendMessage from '$lib/assets/icons/chat/IconChatSendMessage.svelte'
 	import { emitChannelUpdate, emitMessageToChannel } from '$lib/websocket'
 	import { page } from '$app/stores'
 	import { channel_connection } from '$lib/stores/websocketStore'
+	import EmojiPicker from '$lib/components/Channel/Chat/EmojiPicker.svelte'
 
 	export let channel: any
 	export let users: any
@@ -73,6 +73,10 @@
 		specialCommands.find((i) => i.id === id)?.action(userId)
 		selectedCommand = 0
 		selectedUser = 0
+	}
+
+	const onEmojiSelect = (emoji: any) => {
+		chatMessage = chatMessage.concat(emoji)
 	}
 
 	// toggle commands handlers
@@ -173,14 +177,7 @@
 		<IconChatAI />
 		<span class="sr-only">Enable AI</span>
 	</button>
-	<button
-		disabled
-		type="button"
-		class="btn btn-neutral text-white border-none tooltip font-normal normal-case"
-		data-tip="Emoji">
-		<IconChatEmoji />
-		<span class="sr-only">Add emoji</span>
-	</button>
+	<EmojiPicker onSelect={onEmojiSelect} />
 	<button
 		disabled
 		type="button"
@@ -285,7 +282,7 @@
 				on:click={() => {
 					sendMessage()
 				}}
-				class="inline-flex justify-center p-2 text-secondary rounded-full cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:hover:text-white dark:hover:bg-gray-600">
+				class="btn btn-ghost btn-circle text-secondary">
 				<IconChatSendMessage />
 				<span class="sr-only">Send message</span>
 			</button>
