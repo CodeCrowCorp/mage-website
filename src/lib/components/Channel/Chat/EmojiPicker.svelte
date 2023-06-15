@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import IconChatEmoji from '$lib/assets/icons/chat/IconChatEmoji.svelte'
+	import { clickOutside } from '../../../utils.js';
 
 	export let onSelect: any
 
 	let container: any
+	let btn: any
+	let isFocused = false
 
 	onMount(async () => {
 		// Picker:
@@ -14,16 +17,33 @@
 		})
 
 		container.appendChild(picker)
-		if (onSelect) picker.addEventListener('emoji-click', (event) => onSelect(event.detail.unicode))
+		if (onSelect) picker.addEventListener('emoji-click', (event) =>{
+			onSelect(event.detail.unicode)
+		})
+
+		if(btn){
+			btn.addEventListener("focus", () => {
+				isFocused = true
+			})
+		}
 	})
+
+	const handleClickOutside = () =>{
+		isFocused = false
+	}
+
+	$: btnClass = isFocused ? "btn-primary" : "btn-neutral"
+
 </script>
 
-<div class="dropdown dropdown-top">
+<div use:clickOutside on:click_outside={handleClickOutside} class="dropdown dropdown-top">
 	<button
+		bind:this={btn}
 		tabindex="0"
 		type="button"
-		class="btn btn-neutral text-white border-none tooltip font-normal normal-case"
-		data-tip="Emoji">
+		class={"btn text-white border-none tooltip font-normal normal-case " + btnClass}
+		data-tip="Emoji"
+	>
 		<IconChatEmoji />
 		<span class="sr-only">Add emoji</span>
 	</button>
