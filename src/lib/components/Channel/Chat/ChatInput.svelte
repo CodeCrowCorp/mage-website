@@ -184,7 +184,7 @@
 		<span class="sr-only">Enable AI</span>
 	</button>
 	<EmojiPicker onSelect={onEmojiSelect} />
-	<GifPicker onSelect={onGifSelect}/>
+	<GifPicker onSelect={onGifSelect} />
 	<button
 		disabled
 		type="button"
@@ -199,7 +199,7 @@
 			<div
 				class={'dropdown dropdown-top w-full rounded-box bg-white ' +
 					(showCommandOptions ? 'dropdown-open' : '')}>
-				<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
+				<ul class="dropdown-content menu p-2 shadow bg-base-300 rounded-box w-full">
 					{#each specialCommands as command}
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<li
@@ -225,7 +225,7 @@
 			<div
 				class={'dropdown dropdown-top w-full rounded-box bg-white ' +
 					(showUsers ? 'dropdown-open' : '')}>
-				<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
+				<ul class="dropdown-content menu p-2 shadow bg-base-300 rounded-box w-full">
 					{#each users as user, idx}
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<li
