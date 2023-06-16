@@ -9,11 +9,11 @@
 </script>
 
 {#if $video_items?.length}
-	<div class="carousel h-full pb-6">
+	<div class="carousel h-full">
 		<div class="carousel-item w-full h-full">
 			<div class="flex flex-col h-full w-full">
 				{#each grid as row}
-					<div class="flex flex-row gap-4 justify-center h-full mt-3">
+					<div class="flex flex-row gap-4 justify-center h-full">
 						{#each row as video}
 							<VideoItem bind:video {channel} />
 						{/each}

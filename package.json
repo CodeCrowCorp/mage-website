@@ -1,6 +1,6 @@
 {
 	"name": "mage-website",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"license": "GPL-3.0",
 	"private": true,
 	"type": "module",
@@ -54,6 +54,7 @@
 		"@tailwindcss/typography": "^0.5.9",
 		"animate.css": "^4.1.1",
 		"daisyui": "^3.1.0",
+		"emoji-picker-element": "^1.18.1",
 		"nprogress": "^0.2.0",
 		"playwright-e2e-coverage-report": "^1.0.28",
 		"svelte-tags-input": "^5.0.0",

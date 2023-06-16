@@ -41,7 +41,7 @@
 			<DrawerAddCategory bind:showAddCategory bind:categories={profile.category} />
 		{:else}
 			<form
-				class="flex m-5"
+				class="flex h-full p-5"
 				action="?/update-profile"
 				method="post"
 				use:enhance={({ data }) => {
@@ -121,8 +121,10 @@
 					</div>
 
 					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
-						<button type="button" class="btn btn-default grow" on:click={() => toggleDrawer()}
-							>Cancel</button>
+						<button
+							type="button"
+							class="btn btn-neutral text-white grow"
+							on:click={() => toggleDrawer()}>Cancel</button>
 						<button type="submit" class="btn btn-primary grow" on:click={() => toggleDrawer()}
 							>Save</button>
 					</div>
