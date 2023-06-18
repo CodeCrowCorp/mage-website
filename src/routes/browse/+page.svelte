@@ -6,9 +6,15 @@
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	import type { PageData } from './$types'
 	import { page } from '$app/stores'
+	import { onMount } from 'svelte'
+	import { video_items } from '$lib/stores/streamStore'
 
 	export let data: PageData
 	$: user = $page.data.user
+
+	onMount(() => {
+		$video_items = []
+	})
 </script>
 
 <SectionCarousel bind:channels={data.lazy.mostActiveChannels} />
