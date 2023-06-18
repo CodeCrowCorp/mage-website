@@ -9,7 +9,7 @@
 </script>
 
 {#if $video_items?.length}
-	<div class="carousel h-full">
+	<div class="carousel h-full pb-6">
 		<div class="carousel-item w-full h-full">
 			<div class="flex flex-col h-full w-full">
 				{#each grid as row}
