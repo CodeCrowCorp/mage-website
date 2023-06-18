@@ -213,7 +213,7 @@
 			handleWebcamChanges()
 		}
 
-		if (webcamElement) {
+		if (audioElement) {
 			handleAudioChanges()
 		}
 		isMounted = true
