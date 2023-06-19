@@ -4,7 +4,7 @@
 	export let subscriberItem: any
 </script>
 
-<div class="flex flex-row gap-2 px-4 py-2 rounded-md bg-base-100 justify-between">
+<div class="flex flex-row gap-2 px-4 py-2 card bg-base-100 justify-between">
 	<div class="flex">
 		<div class="avatar">
 			<div class="w-16 mask mask-squircle">
@@ -19,13 +19,13 @@
 	</div>
 
 	<div class="flex flex-row items-center gap-4">
-		<div>
+		<form action="?/subscribe" method="post">
 			<button
-				class="btn py-1 btn-sm btn-secondary"
-				disabled={subscriberItem?._id === $page.data.user?.userId}>Subscribe</button>
-		</div>
-
-		<div class="dropdown dropdown-end">
+				class="btn btn-sm btn-secondary text-white"
+				disabled={subscriberItem?._id === $page.data.user?.userId}
+				>{subscriberItem.isSubscriber ? 'Subscribe' : 'Unsubscribe'}</button>
+		</form>
+		<div class="dropdown dropdown-end z-20">
 			<button class="btn btn-circle" tabindex="0">
 				<IconMore />
 			</button>
