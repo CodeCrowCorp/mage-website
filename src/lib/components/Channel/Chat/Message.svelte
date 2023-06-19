@@ -90,6 +90,16 @@
 			roleUpdate: { roleEvent: 'guest', isEnabled, userId: sender.user?.userId }
 		})
 	}
+
+	const isImage = (message: string = '') => {
+		// if message is a url and url is of an image
+		const str = message.split('?')[0] || ''
+
+		return (
+			/(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/.test(message) &&
+			/\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(str)
+		)
+	}
 </script>
 
 <ul class="menu">
@@ -107,7 +117,11 @@
 						data-popover-target="popover-user-profile"
 						class="{coloredRole.textColor} font-medium">@{sender.user?.username}</span>
 				{/if}
-				<span class="break-all">{sender.message}</span>
+				{#if isImage(sender.message)}
+					<img class="py-2 pr-2" src={sender.message} alt="imgs" />
+				{:else}
+					<span class="break-all">{sender.message}</span>
+				{/if}
 			</label>
 			<!-- <ul class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 				<ProfileCard userId={sender.user?.userId} />
