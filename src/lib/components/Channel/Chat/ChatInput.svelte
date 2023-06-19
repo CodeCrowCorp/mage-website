@@ -7,6 +7,7 @@
 	import { page } from '$app/stores'
 	import { channel_connection } from '$lib/stores/websocketStore'
 	import EmojiPicker from '$lib/components/Channel/Chat/EmojiPicker.svelte'
+	import GifPicker from '$lib/components/Channel/Chat/GifPicker.svelte'
 
 	export let channel: any
 	export let users: any
@@ -77,6 +78,11 @@
 
 	const onEmojiSelect = (emoji: any) => {
 		chatMessage = chatMessage.concat(emoji)
+	}
+
+	const onGifSelect = (gifUrl: string) => {
+		chatMessage = gifUrl
+		sendMessage()
 	}
 
 	// toggle commands handlers
@@ -178,14 +184,7 @@
 		<span class="sr-only">Enable AI</span>
 	</button>
 	<EmojiPicker onSelect={onEmojiSelect} />
-	<button
-		disabled
-		type="button"
-		class="btn btn-neutral text-white border-none tooltip font-normal normal-case"
-		data-tip="GIF">
-		<IconChatGif />
-		<span class="sr-only">Add GIF</span>
-	</button>
+	<GifPicker onSelect={onGifSelect} />
 	<button
 		disabled
 		type="button"
@@ -200,8 +199,9 @@
 			<div
 				class={'dropdown dropdown-top w-full rounded-box bg-white ' +
 					(showCommandOptions ? 'dropdown-open' : '')}>
-				<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
+				<ul class="dropdown-content menu p-2 shadow bg-base-300 rounded-box w-full">
 					{#each specialCommands as command}
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<li
 							on:click={() => {
 								selectedCommand = command.id
@@ -225,8 +225,9 @@
 			<div
 				class={'dropdown dropdown-top w-full rounded-box bg-white ' +
 					(showUsers ? 'dropdown-open' : '')}>
-				<ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
+				<ul class="dropdown-content menu p-2 shadow bg-base-300 rounded-box w-full">
 					{#each users as user, idx}
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<li
 							on:click={() => {
 								chatMessage = chatMessage.replace(/@/g, '@' + user.username) + ' '

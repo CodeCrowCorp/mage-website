@@ -248,3 +248,24 @@ export const getAudioIndicator = (
 		eventDispatcher.dispatchEvent(new CustomEvent('localAudioSpeakingValue', { detail: average }))
 	}
 }
+
+/** Dispatch event on click outside of node */
+
+export const clickOutside = (element: any, callbackFunction: any) => {
+	const onClick = (event: any) => {
+		if (!element.contains(event.target)) {
+			callbackFunction();
+		}
+	}
+	
+	document.body.addEventListener('click', onClick);
+	
+	return {
+		update(newCallbackFunction: any) {
+			callbackFunction = newCallbackFunction;
+		},
+		destroy() {
+			document.body.removeEventListener('click', onClick);
+		}
+	}
+}
