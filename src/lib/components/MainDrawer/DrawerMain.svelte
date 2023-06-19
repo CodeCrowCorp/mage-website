@@ -172,13 +172,13 @@
 				Settings</a>
 		</li>
 		{#if currentUser}
-			<form action="/logout" method="POST">
-				<li>
+			<li>
+				<form action="/logout" method="POST">
 					<button class="custom-menu-item" type="submit">
 						<IconDrawerLogOut />
 						Log out</button>
-				</li>
-			</form>
+				</form>
+			</li>
 		{:else}
 			<li>
 				<button
