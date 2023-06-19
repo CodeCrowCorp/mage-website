@@ -19,6 +19,7 @@
 		video_items
 	} from '$lib/stores/streamStore'
 	import { channel_connection } from '$lib/stores/websocketStore'
+	import { onDestroy, onMount } from 'svelte';
 
 	export let isHostOrGuest: boolean = false,
 		channel: any
@@ -30,6 +31,8 @@
 	let screenUid: string = ''
 	let webcamUid: string = ''
 	let audioUid: string = ''
+
+	let subcriptions: any[] = []
 
 	const handleChatDrawer = () => {
 		if ($is_chat_drawer_open) {
@@ -226,29 +229,41 @@
 		audioUid = ''
 	}
 
-	is_sharing_screen.subscribe((value) => {
-		if (value) {
-			startScreenStream()
-		} else if (value === false) {
-			stopScreenStream()
-		}
+	onMount(() => {
+		const sub1 = is_sharing_screen.subscribe((value) => {
+			if (value) {
+				startScreenStream()
+			} else if (value === false) {
+				stopScreenStream()
+			}
+		})
+
+		const sub2 = is_sharing_webcam.subscribe((value) => {
+			if (value) {
+				startWebcamStream()
+			} else if (value === false) {
+				stopWebcamStream()
+			}
+		})
+
+		const sub3 = is_sharing_audio.subscribe((value) => {
+			if (value) {
+				startAudioStream()
+			} else if (value === false) {
+				stopAudioStream()
+			}
+		})
+
+		subcriptions.push(sub1, sub2, sub3)
 	})
 
-	is_sharing_webcam.subscribe((value) => {
-		if (value) {
-			startWebcamStream()
-		} else if (value === false) {
-			stopWebcamStream()
-		}
+	onDestroy(() => {
+		subcriptions.forEach((subs) => {
+			subs()
+		})
 	})
 
-	is_sharing_audio.subscribe((value) => {
-		if (value) {
-			startAudioStream()
-		} else if (value === false) {
-			stopAudioStream()
-		}
-	})
+	
 </script>
 
 <div class="flex gap-4">
