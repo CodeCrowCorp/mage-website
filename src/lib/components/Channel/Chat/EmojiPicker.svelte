@@ -36,7 +36,7 @@
 
 </script>
 
-<div use:clickOutside on:click_outside={handleClickOutside} class="dropdown dropdown-top">
+<div use:clickOutside={handleClickOutside} class="dropdown dropdown-top">
 	<button
 		bind:this={btn}
 		tabindex="0"

@@ -52,7 +52,7 @@
 
 </script>
 
-<div use:clickOutside on:click_outside={handleClickOutside} class={"dropdown dropdown-top " + dropdownClass}>
+<div use:clickOutside={handleClickOutside} class={"dropdown dropdown-top " + dropdownClass}>
 	<button
 		bind:this={btn}
 		type="button"
