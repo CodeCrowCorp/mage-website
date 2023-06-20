@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
+	import FloatingMenu from './FloatingMenu.svelte'
 	import IconChatEmoji from '$lib/assets/icons/chat/IconChatEmoji.svelte'
-	import { clickOutside } from '../../../utils.js';
 
 	export let onSelect: any
 
@@ -28,34 +28,13 @@
 		}
 	})
 
-	const handleClickOutside = () =>{
-		isFocused = false
-	}
-
-	$: btnClass = isFocused ? "btn-primary" : "btn-neutral"
-
 </script>
 
-<div use:clickOutside={handleClickOutside} class="dropdown dropdown-top">
-	<button
-		bind:this={btn}
-		tabindex="0"
-		type="button"
-		class={"btn text-white border-none tooltip font-normal normal-case " + btnClass}
-		data-tip="Emoji"
-	>
-		<IconChatEmoji />
-		<span class="sr-only">Add emoji</span>
-	</button>
-	<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-	<div
-		bind:this={container}
-		tabindex="0"
-		class={'dropdown-content menu shadow bg-base-100 rounded-box emoji-container'} />
-</div>
+<FloatingMenu 
+	id='emoji-picker'
+	icon={IconChatEmoji}
+	label="Emoji"
+>
+	<div bind:this={container} />
+</FloatingMenu>
 
-<style global>
-	emoji-picker {
-		margin-left: -70px;
-	}
-</style>
