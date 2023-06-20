@@ -86,15 +86,14 @@
 							type="file"
 							name="banner"
 							id="banner"
-							class="file-input file-input-bordered file-input-primary w-full" />
+							class="file-input file-input-bordered file-input-primary w-full" /> -->
 
 						<label for="avatar" class="block my-2 text-sm font-medium ">Avatar</label>
 						<input
-							bind:value={profile.avatar}
 							type="file"
 							name="avatar"
 							id="avatar"
-							class="file-input file-input-bordered file-input-primary w-full" /> -->
+							class="file-input file-input-bordered file-input-primary w-full" /> 
 
 						<div class="relative">
 							<input
