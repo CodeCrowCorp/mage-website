@@ -3,25 +3,24 @@
 	import { channel_message } from '$lib/stores/websocketStore'
 	import LastItemInViewport from '$lib/actions/LastItemInViewport'
 	import { emitGetConnectedUsers } from '$lib/websocket'
-
 	export let viewers: any = [],
 		channel: any
-
 	let cursor = 0
+	
+	async function loadMore(): Promise<void> {
+		emitGetConnectedUsers({ channelSocket: channel.socket, cursor })
+	}
 
 	channel_message.subscribe((value) => {
 		if (!value) return
 		var parsedMsg = JSON.parse(value)
-
 		if (parsedMsg.eventName === `channel-paginated-users-${channel?._id}`) {
-			viewers.push(...parsedMsg.users)
+			console.log(parsedMsg);
+			viewers = viewers.concat(parsedMsg.users)
+			cursor = parsedMsg.cursor;
 		}
 	})
 
-	async function loadMore(): Promise<void> {
-		emitGetConnectedUsers({ channelSocket: channel.socket, cursor })
-		cursor += 100
-	}
 </script>
 
 <ul
