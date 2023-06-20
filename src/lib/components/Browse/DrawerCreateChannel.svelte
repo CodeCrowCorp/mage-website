@@ -96,14 +96,14 @@
 			<DrawerAddCategory bind:showAddCategory bind:categories={newChannel.category} />
 		{:else}
 			<form
-				class="flex h-full p-5"
+				class="flex lg:h-full p-5"
 				action="?/create-channel"
 				method="post"
 				use:enhance={({ data }) => {
 					isLoadingChannel = true
 					data.append('newChannel', JSON.stringify(newChannel))
 				}}>
-				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col rounded-lg">
+				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col rounded-lg lg:mb-0 mb-20">
 					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 						Create a new channel
 					</p>
@@ -151,7 +151,7 @@
 							{#if $tags && $tags.length > 0}
 								{#each $tags as tag}
 									<span
-										class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold mx-1 cursor-pointer border-none"
+										class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold mx-1 cursor-pointer border-none my-1"
 										on:click={() => addTag(tag.name)}>{tag.name}</span>
 								{/each}
 							{:else}
