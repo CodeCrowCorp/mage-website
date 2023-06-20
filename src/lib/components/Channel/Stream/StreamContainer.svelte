@@ -1,7 +1,7 @@
 <script lang="ts">
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
 	import StreamControls from '$lib/components/Channel/Stream/StreamControls.svelte'
-	// import DropdownViewers from '$lib/components/Channel/Stream/DropdownViewers.svelte'
+	import DropdownViewers from '$lib/components/Channel/Stream/DropdownViewers.svelte'
 	import VideoGrid from '$lib/components/Channel/Stream/VideoGrid.svelte'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
@@ -63,7 +63,7 @@
 								<IconViewers />
 								{userCount}
 							</label>
-							<!-- <DropdownViewers /> -->
+							 <DropdownViewers channel={channel} /> 
 						</div>
 					</div>
 					{#if channel && nextchannel?._id === $page.params.channelId}
