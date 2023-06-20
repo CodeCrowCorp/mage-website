@@ -14,7 +14,7 @@ export const load = (async ({ locals }) => {
 				getSectionUrl({ sectionId: 'highest-ranked', query: '', skip: 0, limit: 10 })
 			),
 			risingStarUsers: get(
-				getSectionUrl({ sectionId: 'rising-stars', query: '', skip: 0, limit: 10 })
+				getSectionUrl({ sectionId: 'rising-stars', query: '', skip: 0, limit: 150 })
 			),
 			myChannels: locals.user
 				? get(

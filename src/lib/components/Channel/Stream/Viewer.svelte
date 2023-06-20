@@ -8,7 +8,7 @@
 	let coloredRole: any = {}
 
 	onMount(() => {
-		coloredRole = getColoredRole(user)
+		coloredRole = getColoredRole(user.role)
 	})
 
 	const banUser = () => {
@@ -16,7 +16,7 @@
 	}
 </script>
 
-<ul class="menu flex w-fit">
+<ul class="menu flex w-full">
 	<li class="dropdown">
 		<div class="p-1 border border-transparent rounded-lg flex gap-2">
 			{#if user.role === 'Host' || user.role === 'Mod'}
@@ -25,14 +25,14 @@
 			{/if}
 			<span data-popover-target="popover-user-profile" class="{coloredRole?.textColor} font-medium"
 				>@{user.username}</span>
-			<div class="menu dropdown dropdown-right dropdown-end">
+			<!-- <div class="menu dropdown dropdown-right dropdown-end">
 				<label class="rounded-lg bg-base-200 m-1 border-base-100 border-2">
 					<IconChatHorizontalMore />
 				</label>
 				<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-fit">
 					<li><a on:click={async () => await banUser()}><IconChatDelete /> Ban </a></li>
 				</ul>
-			</div>
+			</div> -->
 		</div>
 	</li>
 </ul>

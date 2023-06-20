@@ -26,7 +26,7 @@
 			<!-- <div class="grid h-full" class:hidden={activeTab != 0}>
 				<Stats />
 			</div> -->
-			<div class="flex-auto h-full text-left" class:hidden={activeTab != 1}>
+			<div class="flex-auto h-full text-left" class:hidden={activeTab != 0}>
 				<SectionTable {channels} {profileId} />
 			</div>
 			<!-- <div class="flex-auto h-full" class:hidden={activeTab != 2}>
