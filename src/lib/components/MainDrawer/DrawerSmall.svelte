@@ -149,14 +149,14 @@
 			</a>
 		</li>
 		{#if currentUser}
-			<form action="/logout" method="POST">
-				<li>
+			<li>
+				<form action="/logout" method="POST">
 					<button type="submit">
 						<IconDrawerLogOut />
 						<span class="md:hidden">Log out </span>
 					</button>
-				</li>
-			</form>
+				</form>
+			</li>
 		{:else}
 			<li>
 				<button

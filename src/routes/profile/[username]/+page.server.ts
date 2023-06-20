@@ -87,6 +87,9 @@ export const actions = {
 	},
 	sponsor: async ({ request, locals }: { request: any; locals: any }) => {
 		await new Promise<any>((resolve) => setTimeout(resolve, 1000))
+	},
+	search: async ({ request, locals }: { request: any; locals: any }) => {
+		await new Promise<any>((resolve) => setTimeout(resolve, 1000))
 	}
 } satisfies Actions
 
