@@ -37,10 +37,9 @@ export const actions = {
 		addPropertyIfDefined(data, 'bio', newUser)
 
 		if (data.get('avatar') !== null) {
-			const avatar = data.get('avatar')
 			const urlLocation = await putImage(
 				`users/current/avatar?bucketName=avatars&originalName=${locals.user.userId}-avatar`,
-				avatar,
+				data.get('avatar'),
 				{
 					userId: locals.user.userId,
 					token: locals.user.token
@@ -48,14 +47,18 @@ export const actions = {
 			)
 			console.log(urlLocation)
 		}
-		/* 
-		if(data.get('banner')!==null){
-			const urlLocation = await put(`users/current/banner?bucketName=banners&originalName=${newUser.username}-banner`, data.get('banner'), {
-				userId: locals.user.userId,
-				token: locals.user.token
-			})
-			console.log(urlLocation);
-		} */
+
+		if (data.get('banner') !== null) {
+			const urlLocation = await putImage(
+				`users/current/banner?bucketName=banners&originalName=${locals.user.userId}-banner`,
+				data.get('banner'),
+				{
+					userId: locals.user.userId,
+					token: locals.user.token
+				}
+			)
+			console.log(urlLocation)
+		}
 
 		const updatedUser = await patch(`users`, newUser, {
 			userId: locals.user.userId,

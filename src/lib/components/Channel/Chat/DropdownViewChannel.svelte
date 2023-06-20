@@ -71,7 +71,7 @@
 	}
 </script>
 
-<div class="menu dropdown dropdown-bottom">
+<div class="menu dropdown dropdown-bottom z-10">
 	<ul tabindex="-1">
 		<li>
 			<div class="p-3 text-xl mb-2 pb-2 border-purple-500 font-semibold border-b-2 flex">

@@ -3,11 +3,19 @@
 	import { channel_message } from '$lib/stores/websocketStore'
 	import LastItemInViewport from '$lib/actions/LastItemInViewport'
 	import { emitGetConnectedUsers } from '$lib/websocket'
+	import { onMount } from 'svelte'
+	import { page } from '$app/stores'
+	import { setRole } from '$lib/utils'
+
 	export let viewers: any = [],
 		channel: any
 	let cursor = 0
-	
-	async function loadMore(): Promise<void> {
+
+	onMount(() => {
+		emitGetConnectedUsers({ channelSocket: channel.socket, cursor })
+	})
+
+	const loadMore = () => {
 		emitGetConnectedUsers({ channelSocket: channel.socket, cursor })
 	}
 
@@ -15,17 +23,24 @@
 		if (!value) return
 		var parsedMsg = JSON.parse(value)
 		if (parsedMsg.eventName === `channel-paginated-users-${channel?._id}`) {
-			console.log(parsedMsg);
+			parsedMsg.users.forEach((user: any) => {
+				user.username = user.username || 'guest'
+				const role = setRole({
+					userId: user.userId,
+					channel,
+					currentUserId: $page.data.user?.userId
+				})
+				user.role = role
+			})
 			viewers = viewers.concat(parsedMsg.users)
-			cursor = parsedMsg.cursor;
+			cursor = parsedMsg.cursor
 		}
 	})
-
 </script>
 
 <ul
 	tabindex="-1"
-	class="dropdown-content p-2 shadow bg-base-200 rounded-box m-3 flex flex-col h-96 overflow-y-scroll">
+	class="dropdown-content p-2 shadow rounded-box m-3 flex flex-col h-fit w-52 z-20 bg-base-300">
 	{#each viewers as user}
 		<Viewer {user} />
 	{/each}

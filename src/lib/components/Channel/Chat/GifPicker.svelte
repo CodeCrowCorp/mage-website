@@ -4,6 +4,7 @@
 	import FloatingMenu from './FloatingMenu.svelte'
 
 	import { get } from '../../../api.js'
+	import { page } from '$app/stores'
 
 	export let onSelect: any
 
@@ -14,7 +15,10 @@
 
 	onMount(async () => {
 		loading = true
-		const resp = await get('giphy/trending')
+		const resp = await get('giphy/trending', {
+			userId: $page.data.user?.userId,
+			token: $page.data.user?.token
+		})
 		if (resp && Array.isArray(resp)) gifs = resp
 		loading = false
 	})
@@ -22,7 +26,10 @@
 	const onSearch = async (evt: any) => {
 		query = evt.target.value
 		loading = true
-		const resp = await get('giphy/search?query=' + query)
+		const resp = await get('giphy/search?query=' + query, {
+			userId: $page.data.user?.userId,
+			token: $page.data.user?.token
+		})
 		loading = false
 		if (resp && Array.isArray(resp)) searched = resp
 	}
@@ -30,11 +37,7 @@
 	$: list = query ? searched : gifs
 </script>
 
-<FloatingMenu 
-	let:forceClose id="gif-picker"
-	icon = {IconChatGif}
-	label="GIF"
->
+<FloatingMenu let:forceClose id="gif-picker" icon={IconChatGif} label="GIF">
 	<div class="gif-picker bg-base-300 flex flex-col rounded-md px-2">
 		<div class="m-2">
 			<input
