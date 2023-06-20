@@ -254,7 +254,7 @@ export const getAudioIndicator = (
 export const clickOutside = (element: any, callbackFunction: any) => {
 	const onClick = (event: any) => {
 		if (!element.contains(event.target)) {
-			callbackFunction();
+			callbackFunction(event);
 		}
 	}
 	
