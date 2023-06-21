@@ -1,6 +1,6 @@
 import type { Actions, PageServerLoad } from './$types'
 import { get, patch, put, del, putImage } from '$lib/api'
-import { redirect } from '@sveltejs/kit'
+import { redirect, fail } from '@sveltejs/kit'
 
 export const load = (async ({ params, locals }) => {
 	const profile = await get(`users/search/username?username=${params.username}`)
@@ -35,6 +35,8 @@ export const actions = {
 		addPropertyIfDefined(data, 'website', newUser)
 		addPropertyIfDefined(data, 'category', newUser)
 		addPropertyIfDefined(data, 'bio', newUser)
+		addPropertyIfDefined(data, 'avatar', newUser)
+		addPropertyIfDefined(data, 'banner', newUser)
 
 		if (data.get('avatar') !== null) {
 			const urlLocation = await putImage(
@@ -64,8 +66,17 @@ export const actions = {
 			userId: locals.user.userId,
 			token: locals.user.token
 		})
-		locals.user.user = updatedUser
-		throw redirect(303, `/profile/${updatedUser.username}`)
+		if (updatedUser.exists) {
+			const username = data.get('username')
+			return fail(422, { username, exists: true })
+		} else {
+			if (updatedUser._id) {
+				locals.user.user = updatedUser
+				throw redirect(303, `/profile/${updatedUser.username}`)
+			} else {
+				throw redirect(303, 'browse')
+			}
+		}
 	},
 	subscribe: async ({ request, locals }: { request: any; locals: any }) => {
 		const data = await request.formData()

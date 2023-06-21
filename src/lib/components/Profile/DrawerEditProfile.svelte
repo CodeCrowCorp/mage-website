@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
+	import { page } from '$app/stores'
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 
@@ -23,6 +24,11 @@
 			showDrawer = false
 		}, 200)
 	}
+
+	let username: HTMLInputElement
+	// $: if ($page.status === 422) {
+	// 	username.setCustomValidity('This username is already taken')
+	// }
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
@@ -61,6 +67,7 @@
 							required
 							class="input input-primary input-bordered w-full"
 							placeholder="Display name" />
+
 						<input
 							bind:value={profile.username}
 							type="text"
@@ -69,7 +76,7 @@
 							required
 							class="input input-primary input-bordered mt-5 w-full"
 							placeholder="Username"
-							disabled />
+							bind:this={username} />
 
 						<input
 							bind:value={profile.website}
