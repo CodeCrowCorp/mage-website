@@ -264,9 +264,9 @@
 </script>
 
 {#if channel && channel._id === $page.params.channelId}
-	<div class="relative h-full bg-base-200 overflow-hidden">
+	<div class="relative h-full bg-base-200 overflow-hidden flex">
 		<div
-			class={'lg:ml-24 h-full transition-all delay-75 ' +
+			class={'lg:ml-24 lg:mr-1 h-full transition-all delay-75 ' +
 				(!$is_chat_drawer_open ? 'w-full' : 'with-drawer')}>
 			<StreamContainer
 				bind:channel
