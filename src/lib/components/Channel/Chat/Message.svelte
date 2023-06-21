@@ -132,7 +132,7 @@
 				<div class="rounded-lg bg-base-200 m-1 border-base-100 border-2">
 					<IconChatHorizontalMore />
 				</div>
-				<ul tabindex="1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+				<ul tabindex="1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 z-10">
 					<li class="disabled"><a><IconChatReact /> React </a></li>
 					<li class="disabled"><a><IconChatQuote /> Quote </a></li>
 					{#if showRoleItem && !channel.bans.includes(sender.user?.userId)}

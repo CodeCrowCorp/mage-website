@@ -71,14 +71,21 @@
 		return Object.keys(users).map((key) => users[key])
 	}
 
-	const handleOnScroll = (event) => {
-		if (chatDrawerElement.scrollTop === 0) {
+	const handleOnScroll = (event: any) => {
+		if (
+			chatDrawerElement.scrollTop + chatDrawerElement.clientHeight ===
+			chatDrawerElement.scrollHeight
+		) {
 			console.log('got here----sheheh')
 			if (
 				$channel_connection === `open-${channel._id}` &&
 				channel.socket?.readyState === WebSocket.OPEN
 			) {
-				emitChatHistoryToChannel()
+				emitChatHistoryToChannel({
+					channelSocket: channel.socket,
+					channelId: channel._id,
+					skip: 100
+				})
 			}
 		}
 	}
@@ -91,7 +98,7 @@
 	<div
 		class="flex flex-col-reverse p-3 grow overflow-y-scroll w-96"
 		on:scroll={handleOnScroll}
-		id="chat_drawer">
+		bind:this={chatDrawerElement}>
 		{#each chatHistory as sender}
 			<Message bind:sender bind:hostId={channel.user} bind:channel />
 		{/each}
