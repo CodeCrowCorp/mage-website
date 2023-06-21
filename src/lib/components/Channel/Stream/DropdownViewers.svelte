@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Viewer from '$lib/components/Channel/Stream/Viewer.svelte'
-	import { channel_message } from '$lib/stores/websocketStore'
+	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import LastItemInViewport from '$lib/actions/LastItemInViewport'
 	import { emitGetConnectedUsers } from '$lib/websocket'
 	import { onMount } from 'svelte'
@@ -12,7 +12,12 @@
 	let cursor = 0
 
 	onMount(() => {
-		emitGetConnectedUsers({ channelSocket: channel.socket, cursor })
+		if (
+			$channel_connection === `open-${channel._id}` &&
+			channel.socket?.readyState === WebSocket.OPEN
+		) {
+			emitGetConnectedUsers({ channelSocket: channel.socket, cursor })
+		}
 	})
 
 	const loadMore = () => {
