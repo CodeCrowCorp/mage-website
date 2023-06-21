@@ -172,7 +172,7 @@
 
 <form class="rounded-lg bg-base-200 p-2 w-full relative">
 	<button
-		class="btn text-white border-none tooltip font-normal normal-case {!isHost
+		class="btn text-white border-none tooltip font-normal normal-case mr-1 {!isHost
 			? 'no-animation'
 			: ''} {channel.isAiChatEnabled ? 'btn-primary' : 'btn-neutral'}"
 		data-tip="AI"
