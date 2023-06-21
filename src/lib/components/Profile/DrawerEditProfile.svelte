@@ -61,6 +61,7 @@
 							required
 							class="input input-primary input-bordered w-full"
 							placeholder="Display name" />
+
 						<input
 							bind:value={profile.username}
 							type="text"
@@ -68,8 +69,7 @@
 							id="username"
 							required
 							class="input input-primary input-bordered mt-5 w-full"
-							placeholder="Username"
-							disabled />
+							placeholder="Username" />
 
 						<input
 							bind:value={profile.website}
