@@ -17,24 +17,19 @@
 		})
 
 		container.appendChild(picker)
-		if (onSelect) picker.addEventListener('emoji-click', (event) =>{
-			onSelect(event.detail.unicode)
-		})
+		if (onSelect)
+			picker.addEventListener('emoji-click', (event) => {
+				onSelect(event.detail.unicode)
+			})
 
-		if(btn){
-			btn.addEventListener("focus", () => {
+		if (btn) {
+			btn.addEventListener('focus', () => {
 				isFocused = true
 			})
 		}
 	})
-
 </script>
 
-<FloatingMenu 
-	id='emoji-picker'
-	icon={IconChatEmoji}
-	label="Emoji"
->
+<FloatingMenu id="emoji-picker" icon={IconChatEmoji} label="Emoji">
 	<div bind:this={container} />
 </FloatingMenu>
-

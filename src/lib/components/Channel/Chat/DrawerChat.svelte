@@ -8,6 +8,7 @@
 	import { is_chat_drawer_open, was_chat_drawer_closed } from '$lib/stores/channelStore'
 	import { emitChatHistoryToChannel } from '$lib/websocket'
 	import { setRole } from '$lib/utils'
+	import LastItemInViewport from '$lib/actions/LastItemInViewport'
 
 	export let channel: any = undefined,
 		showEditChannelDrawer: boolean = false
@@ -71,22 +72,16 @@
 		return Object.keys(users).map((key) => users[key])
 	}
 
-	const handleOnScroll = (event: any) => {
+	const loadMore = () => {
 		if (
-			chatDrawerElement.scrollTop + chatDrawerElement.clientHeight ===
-			chatDrawerElement.scrollHeight
+			$channel_connection === `open-${channel._id}` &&
+			channel.socket?.readyState === WebSocket.OPEN
 		) {
-			console.log('got here----sheheh')
-			if (
-				$channel_connection === `open-${channel._id}` &&
-				channel.socket?.readyState === WebSocket.OPEN
-			) {
-				emitChatHistoryToChannel({
-					channelSocket: channel.socket,
-					channelId: channel._id,
-					skip: 100
-				})
-			}
+			emitChatHistoryToChannel({
+				channelSocket: channel.socket,
+				channelId: channel._id,
+				skip: 100
+			})
 		}
 	}
 
@@ -95,13 +90,11 @@
 
 <div class="bg-base-100 flex flex-col overflow-y-hidden w-72 md:w-full h-full rounded-lg">
 	<DropdownViewChannel bind:channel bind:showEditChannelDrawer />
-	<div
-		class="flex flex-col-reverse p-3 grow overflow-y-scroll w-96"
-		on:scroll={handleOnScroll}
-		bind:this={chatDrawerElement}>
+	<div class="flex flex-col-reverse p-3 grow overflow-y-scroll w-96">
 		{#each chatHistory as sender}
 			<Message bind:sender bind:hostId={channel.user} bind:channel />
 		{/each}
+		<span use:LastItemInViewport on:loadMore={loadMore} />
 	</div>
 	<div class="flex flex-row mt-auto p-3 w-full">
 		<ChatInput bind:channel bind:users />

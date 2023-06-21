@@ -1,6 +1,5 @@
 <script lang="ts">
 	import IconChatAI from '$lib/assets/icons/chat/IconChatAI.svelte'
-	import IconChatGif from '$lib/assets/icons/chat/IconChatGif.svelte'
 	import IconChatCode from '$lib/assets/icons/chat/IconChatCode.svelte'
 	import IconChatSendMessage from '$lib/assets/icons/chat/IconChatSendMessage.svelte'
 	import { emitChannelUpdate, emitMessageToChannel } from '$lib/websocket'
