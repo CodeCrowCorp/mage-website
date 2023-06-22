@@ -10,14 +10,13 @@
 </script>
 
 <div class="flex flex-row justify-center gap-5 mt-8">
-	<form action="?/search" method="GET">
-		{#await subscribers}
-			Loading...
-		{:then value}
-			{#if value}
-				<div class="card flex flex-col w-2/4 gap-2 bg-base-200 py-4 px-8">
-					<p class="text-start font-semibold">Subscribers ({$subscriber_count})</p>
-
+	{#await subscribers}
+		Loading...
+	{:then value}
+		{#if value}
+			<div class="card flex flex-col w-1/2 gap-2 bg-base-200 py-4 px-8">
+				<p class="text-start font-semibold">Subscribers ({$subscriber_count})</p>
+				<form action="?/search" method="get">
 					<div class="input-group relative">
 						<input
 							name="query"
@@ -29,19 +28,21 @@
 							<IconSearch />
 						</button>
 					</div>
+				</form>
 
-					{#each value as subscriberItem}
-						<SubscriberItem {subscriberItem} />
-					{/each}
-				</div>
-			{/if}
-		{/await}
-		{#await interests}
-			Loading...
-		{:then value}
-			{#if value}
-				<div class="card flex flex-col w-2/4 gap-2 bg-base-200 py-4 px-8">
-					<p class="text-start font-semibold">Interests ({$interest_count})</p>
+				{#each value as subscriberItem}
+					<SubscriberItem {subscriberItem} />
+				{/each}
+			</div>
+		{/if}
+	{/await}
+	{#await interests}
+		Loading...
+	{:then value}
+		{#if value}
+			<div class="card flex flex-col w-1/2 gap-2 bg-base-200 py-4 px-8">
+				<p class="text-start font-semibold">Interests ({$interest_count})</p>
+				<form action="?/search" method="get">
 					<div class="input-group relative">
 						<input
 							name="query"
@@ -53,12 +54,12 @@
 							<IconSearch />
 						</button>
 					</div>
+				</form>
 
-					{#each value as subscriberItem}
-						<SubscriberItem {subscriberItem} />
-					{/each}
-				</div>
-			{/if}
-		{/await}
-	</form>
+				{#each value as subscriberItem}
+					<SubscriberItem {subscriberItem} />
+				{/each}
+			</div>
+		{/if}
+	{/await}
 </div>

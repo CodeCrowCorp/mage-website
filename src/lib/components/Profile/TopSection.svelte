@@ -4,6 +4,7 @@
 	import { page } from '$app/stores'
 	import { onMount } from 'svelte'
 	import { subscriber_count, interest_count } from '$lib/stores/profileStore'
+	import { enhance } from '$app/forms'
 
 	export let profile: any,
 		subscriberCount: Promise<any>,
@@ -35,7 +36,14 @@
 	</div>
 	<div class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
 		<div class="py-6 px-3 justify-center flex md:justify-end gap-4">
-			<form action="?/subscribe" method="post">
+			<form
+				action="?/subscribe"
+				method="post"
+				use:enhance={({ data }) => {
+					// data.append('isSubscribing', JSON.stringify(newChannel))
+					data.append('source1', profile._id)
+					data.append('source2', $page.data.user?.userId)
+				}}>
 				<div class="flex gap-4">
 					{#await isSubscribed}
 						<button class="btn btn-secondary" disabled>Unsubscribe</button>
@@ -43,7 +51,7 @@
 						<button
 							class="btn btn-secondary"
 							disabled={profile._id === $page.data.user?.userId || !currentUser}
-							>{value.isSubscriber ? 'Subscribe' : 'Unsubscribe'}</button>
+							>{value.isSubscriber ? 'Unsubscribe' : 'Subscribe'}</button>
 					{/await}
 					<!--TODO: open sponsor dialog-->
 					<button class="btn btn-primary" formaction="?/sponsor" disabled>Sponsor</button>
