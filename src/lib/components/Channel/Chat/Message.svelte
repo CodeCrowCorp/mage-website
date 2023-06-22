@@ -100,6 +100,32 @@
 			/\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(str)
 		)
 	}
+
+	const isCodeSnippet = (message: string = '') => {
+		if(message.includes("`")){
+			return true
+		}
+	}
+
+	const getCodeSnippet = (message: string = '') => {
+		if(message.includes("`")){
+			const s = message.indexOf("`");
+			const e = message.lastIndexOf("`")
+			
+			let code = message.substring(s, e)
+			let splitted = message.split(code)
+			let resp:any = {}
+			resp.startText = splitted[0]
+			resp.code = code.substr(1).split(";").map(i => i.trim() + ";")
+			resp.endText = splitted.pop()?.substr(1) || ""
+
+			return resp
+		}
+	}
+
+	$: codeSnippet = isCodeSnippet(sender.message) ? getCodeSnippet(sender.message) : false
+	$: console.log("codeSnippet: ", codeSnippet)
+
 </script>
 
 <ul class="menu">
@@ -119,6 +145,20 @@
 				{/if}
 				{#if isImage(sender.message)}
 					<img class="py-2 pr-2" src={sender.message} alt="imgs" />
+				{:else if codeSnippet}
+					{#if codeSnippet.startText}
+						<span class="break-all">{codeSnippet.startText}</span>
+					{/if}
+					{#if codeSnippet.code}
+					  <div class="mockup-code my-2">
+						{#each codeSnippet.code as line, idx}
+							<pre data-prefix={idx + 1}><code>{line}</code></pre> 
+						{/each}
+					  </div>
+					{/if}
+					{#if codeSnippet.endText}
+						<span class="break-all">{codeSnippet.endText}</span>
+					{/if}
 				{:else}
 					<span class="break-all">{sender.message}</span>
 				{/if}
