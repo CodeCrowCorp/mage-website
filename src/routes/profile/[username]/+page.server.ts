@@ -103,6 +103,9 @@ export const actions = {
 		await new Promise<any>((resolve) => setTimeout(resolve, 1000))
 	},
 	search: async ({ request, locals }: { request: any; locals: any }) => {
+		console.log('got here----324324234')
+		const data = await request.formData()
+		const search = data.get('query')
 		await new Promise<any>((resolve) => setTimeout(resolve, 1000))
 	}
 } satisfies Actions
