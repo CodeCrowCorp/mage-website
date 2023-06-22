@@ -12,11 +12,16 @@
 	export let users: any
 	let selectedCommand = 0
 	let selectedUser = 0
+	let inputBox:any = null
 
 	$: chatMessage = ''
 	$: isChannelSocketConnected =
 		$channel_connection === `open-${channel._id}` && $page.data.user?.userId
 	$: isHost = channel.user === $page.data.user?.userId
+
+	function insert(str:string, index:number, value:string) {
+		return str.substr(0, index) + value + str.substr(index);
+	}
 
 	const sendMessage = () => {
 		if (messageIsCommand) {
@@ -82,6 +87,25 @@
 	const onGifSelect = (gifUrl: string) => {
 		chatMessage = gifUrl
 		sendMessage()
+	}
+
+	const makeCodeSnippet = () => {
+		if(!chatMessage){
+			chatMessage = "``"
+			
+			inputBox.focus()
+			setTimeout(() => {
+				const pos = chatMessage.length - 1
+				inputBox.setSelectionRange(pos, pos)
+			}, 100)
+			
+		}
+		else {
+			const s = inputBox.selectionStart,
+			e = inputBox.selectionEnd;
+			chatMessage = insert(chatMessage, s, "`")
+			chatMessage = insert(chatMessage, e+1, "`")
+		}
 	}
 
 	// toggle commands handlers
@@ -185,10 +209,11 @@
 	<EmojiPicker onSelect={onEmojiSelect} />
 	<GifPicker onSelect={onGifSelect} />
 	<button
-		disabled
 		type="button"
 		class="btn btn-neutral text-white border-none tooltip font-normal normal-case"
-		data-tip="Code snippet">
+		data-tip="Code snippet"
+		on:click={makeCodeSnippet}
+	>
 		<IconChatCode />
 		<span class="sr-only">Add code snippet</span>
 	</button>
@@ -275,6 +300,7 @@
 					}
 				}}
 				bind:value={chatMessage}
+				bind:this={inputBox}
 				rows="1"
 				class="block mx-1 p-2.5 w-full text-sm textarea textarea-bordered textarea-secondary"
 				placeholder="Your message..." />

@@ -44,7 +44,14 @@
 				type="text"
 				placeholder="Search here"
 				class="input input-bordered input-sm w-full max-w-xs"
-				on:input={onSearch} />
+				on:input={onSearch}
+				on:keydown={(e) => {
+					if(e.key === 'Enter'){
+						e.preventDefault()
+						onSearch(e)
+					}
+				}} 
+			/>
 		</div>
 
 		{#if loading}
@@ -56,12 +63,12 @@
 				{#each list as gif}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<div
-						class="border cursor-pointer"
+						class="cursor-pointer"
 						on:click={() => {
 							onSelect(gif.downsized_large)
 							forceClose()
 						}}>
-						<img src={gif.downsized_large} alt="gif" class="w-full" />
+						<img src={gif.downsized_large} alt="gif" class="w-full border p-1" />
 					</div>
 				{/each}
 			</div>

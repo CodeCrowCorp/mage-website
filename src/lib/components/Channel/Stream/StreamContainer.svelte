@@ -50,7 +50,7 @@
 				<div class="flex flex-col w-full">
 					<div class="flex gap-2 mb-3">
 						<span
-							class="btn btn-sm rounded-md font-medium text-white border-none flex items-center {$video_items?.length
+							class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center {$video_items?.length
 								? 'bg-red-700 hover:bg-red-700'
 								: ''}">
 							LIVE
@@ -58,12 +58,12 @@
 						<div class="dropdown dropdown-bottom">
 							<label
 								for=""
-								class="btn btn-sm rounded-md font-medium gap-2 text-white border-none"
+								class="btn btn-sm btn-neutral font-medium gap-2 text-white border-none"
 								tabindex="-1">
 								<IconViewers />
 								{userCount}
 							</label>
-							 <DropdownViewers channel={channel} /> 
+							<DropdownViewers {channel} />
 						</div>
 					</div>
 					{#if channel && nextchannel?._id === $page.params.channelId}

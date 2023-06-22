@@ -63,7 +63,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 				throw redirect(302, '/maintenance')
 			}
 		} else {
-			if (pathname === '/maintenance') {
+			if (
+				pathname === '/maintenance' ||
+				(pathname === '/premium' && env.PUBLIC_FEATURE_PREMIUM_PAGE === 'false')
+			) {
 				throw redirect(302, '/browse')
 			} else {
 				return await resolve(event)
