@@ -3,11 +3,9 @@
 	import IconDrawerStreamDuration from '$lib/assets/icons/drawer/IconDrawerStreamDuration.svelte'
 	import IconDrawerHome from '$lib/assets/icons/drawer/IconDrawerHome.svelte'
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
-	// import IconDrawerMessages from '$lib/assets/icons/drawer/IconDrawerMessages.svelte'
-	// import IconDrawerVideos from '$lib/assets/icons/drawer/IconDrawerVideos.svelte'
-	// import IconDrawerCreatorSpace from '$lib/assets/icons/drawer/IconDrawerCreatorSpace.svelte'
-	// import IconDrawerMint from '$lib/assets/icons/drawer/IconDrawerMint.svelte'
-	// import IconDrawerPremium from '$lib/assets/icons/drawer/IconDrawerPremium.svelte'
+	import IconDrawerVideos from '$lib/assets/icons/drawer/IconDrawerVideos.svelte'
+	import IconDrawerCreatorSpace from '$lib/assets/icons/drawer/IconDrawerCreatorSpace.svelte'
+	import IconDrawerPremium from '$lib/assets/icons/drawer/IconDrawerPremium.svelte'
 	import IconDrawerCareers from '$lib/assets/icons/drawer/IconDrawerCareers.svelte'
 	import IconDrawerHelpAndLegal from '$lib/assets/icons/drawer/IconDrawerHelpAndLegal.svelte'
 	import IconDrawerSettings from '$lib/assets/icons/drawer/IconDrawerSettings.svelte'
@@ -19,10 +17,10 @@
 	import { env } from '$env/dynamic/public'
 	import { page } from '$app/stores'
 	import { user_role } from '$lib/stores/authStore'
-	// import {
-	// 	is_feature_premium_page_enabled,
-	// 	is_feature_video_responses_enabled
-	// } from '$lib/stores/remoteConfigStore'
+	import {
+		is_feature_premium_page_enabled,
+		is_feature_video_responses_enabled
+	} from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
@@ -46,14 +44,14 @@
 			progressBarLevel = levelAndBarValue.level
 			progressBarValue = levelAndBarValue.barValue
 			progressBarColor = colorFromLevel(progressBarLevel)
-			 streakCount = await get(`stats/stream/streak`, {
-			 	userId: $page.data.user?.userId,
-			 	token: $page.data.user?.token
-			 })
-			 hoursStreamed = await get(`stats/stream/total-hours`, {
-			 	userId: $page.data.user?.userId,
-			 	token: $page.data.user?.token
-			 })
+			streakCount = await get(`stats/stream/streak`, {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
+			hoursStreamed = await get(`stats/stream/total-hours`, {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
 		}
 	})
 </script>
@@ -76,8 +74,7 @@
 						<div class="hero-content my-1 w-64">
 							<div class="max-w-full">
 								<div class="avatar {$isOnline ? 'online' : 'offline'}">
-									<div
-										class="w-24 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
+									<div class="w-24 mask mask-squircle">
 										<img src={currentUser.avatar} alt="" />
 									</div>
 								</div>
@@ -126,7 +123,7 @@
 				Browse
 			</a>
 		</li>
-		<!-- {#if currentUser && $isFeatureVideoResponsesEnabled}
+		{#if currentUser && $is_feature_video_responses_enabled}
 			<li>
 				<a href="/videos">
 					<IconDrawerVideos />
@@ -139,32 +136,29 @@
 					Creator Space</a>
 			</li>
 		{/if}
-		{#if currentUser && $isFeaturePremiumPageEnabled}
+		{#if currentUser && $is_feature_premium_page_enabled}
 			<li>
-				<a href="/premium" class="text-pink-500">
+				<a href="/premium" class="custom-menu-item text-accent hover:text-accent font-medium">
 					<IconDrawerPremium />
-					Premium <span class="badge">New</span>
+					Premium <span class="badge badge-accent text-black">New</span>
 				</a>
 			</li>
-		{/if} -->
+		{/if}
 		<li>
 			<a class="custom-menu-item" href="/careers">
 				<IconDrawerCareers />
 				Careers</a>
 		</li>
 		<li>
-			<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-			<div
-				class="custom-menu-item dropdown dropdown-bottom dropdown-end justify-start py-3"
-				tabindex="0">
-				<IconDrawerHelpAndLegal />
-				Help & Legal
-				<IconDrawerChevron />
-				<ul tabindex="0" class="dropdown-content menu p-2 shadow z-10 bg-base-200 rounded-box w-52">
+			<details>
+				<summary class="custom-menu-item"
+					><IconDrawerHelpAndLegal />
+					Help & Legal</summary>
+				<ul class="p-2 ml-5">
 					<li><a href="/contact">Contact</a></li>
 					<li><a href="/legal">Legal</a></li>
 				</ul>
-			</div>
+			</details>
 		</li>
 		<li>
 			<a class="custom-menu-item" href="/settings">
