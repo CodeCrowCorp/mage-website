@@ -83,7 +83,7 @@ export const actions = {
 		const isSubscribing = data.get('isSubscribing')
 		const source1 = data.get('source1')
 		const source2 = data.get('source2')
-		if (isSubscribing === 'false') {
+		if (isSubscribing === 'true') {
 			await put(
 				`subscribes?source1=${source1}&source2=${source2}`,
 				{},
