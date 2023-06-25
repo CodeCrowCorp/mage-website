@@ -14,22 +14,26 @@
 		showEditChannelDrawer: boolean = false
 	let chatHistory: any[] = [],
 		chatDrawerElement: HTMLElement
+	let cursor = "";
 
 	channel_message.subscribe((value) => {
 		if (!value) return
 		var parsedMsg = JSON.parse(value)
 		if (parsedMsg.eventName === `channel-message-${channel?._id}`) {
 			if (parsedMsg.isMessageHistory) {
-				chatHistory = []
+				cursor = parsedMsg.cursor
+				//chatHistory = []
 				// if (Array.isArray(parsedMsg.data)) {
-				parsedMsg.data.forEach((message: any) => {
+				let messages = parsedMsg.data.map((message: any) => {
 					message.role = setRole({
 						userId: message.user.userId,
 						channel,
 						currentUserId: $page.data.user?.userId
 					})
-					chatHistory.push(message)
+					return message;
 				})
+
+				chatHistory = [...chatHistory, ...messages]
 				// } else {
 				// 	parsedMsg = setRole(JSON.parse(parsedMsg.data))
 				// 	chatHistory.push(parsedMsg)
@@ -80,7 +84,8 @@
 			emitChatHistoryToChannel({
 				channelSocket: channel.socket,
 				channelId: channel._id,
-				skip: 100
+				skip: 100,
+				cursor: cursor || "none"
 			})
 		}
 	}

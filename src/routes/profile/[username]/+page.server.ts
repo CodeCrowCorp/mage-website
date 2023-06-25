@@ -35,10 +35,15 @@ export const actions = {
 		addPropertyIfDefined(data, 'website', newUser)
 		addPropertyIfDefined(data, 'category', newUser)
 		addPropertyIfDefined(data, 'bio', newUser)
-		addPropertyIfDefined(data, 'avatar', newUser)
-		addPropertyIfDefined(data, 'banner', newUser)
 
-		if (data.get('avatar') !== null) {
+
+		const avatar =  data.get('avatar') as File
+
+		const banner =  data.get('banner') as File
+		
+
+
+		if (data.get('avatar') !== null && avatar.size > 0) {
 			const urlLocation = await putImage(
 				`users/current/avatar?bucketName=avatars&originalName=${locals.user.userId}-avatar`,
 				data.get('avatar'),
@@ -50,7 +55,7 @@ export const actions = {
 			console.log(urlLocation)
 		}
 
-		if (data.get('banner') !== null) {
+		if (data.get('banner') !== null && banner.size > 0) {
 			const urlLocation = await putImage(
 				`users/current/banner?bucketName=banners&originalName=${locals.user.userId}-banner`,
 				data.get('banner'),

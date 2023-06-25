@@ -170,7 +170,7 @@
 	}
 
 	const deleteChannelYesAction = async () => {
-		await del(`channels?channelId=${$page.params.channelId}&bucketName=attachments`, {
+		await del(`channels?channelId=${$page.params.channelId}&bucketName=`, {
 			userId: $page.data.user?.userId,
 			token: $page.data.user?.token
 		})
