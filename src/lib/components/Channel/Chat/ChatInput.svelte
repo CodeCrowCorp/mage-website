@@ -12,15 +12,15 @@
 	export let users: any
 	let selectedCommand = 0
 	let selectedUser = 0
-	let inputBox:any = null
+	let inputBox: any = null
 
 	$: chatMessage = ''
 	$: isChannelSocketConnected =
 		$channel_connection === `open-${channel._id}` && $page.data.user?.userId
 	$: isHost = channel.user === $page.data.user?.userId
 
-	function insert(str:string, index:number, value:string) {
-		return str.substr(0, index) + value + str.substr(index);
+	function insert(str: string, index: number, value: string) {
+		return str.substr(0, index) + value + str.substr(index)
 	}
 
 	const sendMessage = () => {
@@ -90,21 +90,19 @@
 	}
 
 	const makeCodeSnippet = () => {
-		if(!chatMessage){
-			chatMessage = "``"
-			
+		if (!chatMessage) {
+			chatMessage = '``'
+
 			inputBox.focus()
 			setTimeout(() => {
 				const pos = chatMessage.length - 1
 				inputBox.setSelectionRange(pos, pos)
 			}, 100)
-			
-		}
-		else {
+		} else {
 			const s = inputBox.selectionStart,
-			e = inputBox.selectionEnd;
-			chatMessage = insert(chatMessage, s, "`")
-			chatMessage = insert(chatMessage, e+1, "`")
+				e = inputBox.selectionEnd
+			chatMessage = insert(chatMessage, s, '`')
+			chatMessage = insert(chatMessage, e + 1, '`')
 		}
 	}
 
@@ -202,18 +200,19 @@
 		data-tip="AI"
 		on:click={() => {
 			if (isHost) toggleAIChat()
-		}}>
+		}}
+		disabled={!isChannelSocketConnected}>
 		<IconChatAI />
 		<span class="sr-only">Enable AI</span>
 	</button>
-	<EmojiPicker onSelect={onEmojiSelect} />
-	<GifPicker onSelect={onGifSelect} />
+	<EmojiPicker onSelect={onEmojiSelect} {isChannelSocketConnected} />
+	<GifPicker onSelect={onGifSelect} {isChannelSocketConnected} />
 	<button
 		type="button"
 		class="btn btn-neutral text-white border-none tooltip font-normal normal-case"
 		data-tip="Code snippet"
 		on:click={makeCodeSnippet}
-	>
+		disabled={!isChannelSocketConnected}>
 		<IconChatCode />
 		<span class="sr-only">Add code snippet</span>
 	</button>
