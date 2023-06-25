@@ -40,6 +40,10 @@
 			viewers = viewers.concat(parsedMsg.users)
 			cursor = parsedMsg.cursor
 		}
+
+		if(parsedMsg.eventName === `channel-subscribe-${channel?.id}`){
+			emitGetConnectedUsers({channelSocket: channel.socket, cursor})
+		}
 	})
 </script>
 
