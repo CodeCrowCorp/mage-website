@@ -3,7 +3,7 @@
 	import FloatingMenu from './FloatingMenu.svelte'
 	import IconChatEmoji from '$lib/assets/icons/chat/IconChatEmoji.svelte'
 
-	export let onSelect: any
+	export let onSelect: any, isChannelSocketConnected: any
 
 	let container: any
 	let btn: any
@@ -30,6 +30,6 @@
 	})
 </script>
 
-<FloatingMenu id="emoji-picker" icon={IconChatEmoji} label="Emoji">
+<FloatingMenu id="emoji-picker" icon={IconChatEmoji} label="Emoji" {isChannelSocketConnected}>
 	<div bind:this={container} />
 </FloatingMenu>
