@@ -110,7 +110,7 @@
 				</p>
 				<div class="flex justify-center items-baseline my-8">
 					<span class="mr-2 text-5xl font-extrabold">$99</span>
-					<span class="text-gray-500 dark:text-gray-400" dark:text-gray-400>/month</span>
+					<span class="text-gray-500 dark:text-gray-400">/month</span>
 				</div>
 				<!-- List -->
 				<ul role="list" class="mb-8 space-y-4 text-left">
