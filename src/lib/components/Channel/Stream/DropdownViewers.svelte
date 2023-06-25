@@ -28,7 +28,7 @@
 		if (!value) return
 		var parsedMsg = JSON.parse(value)
 		if (parsedMsg.eventName === `channel-paginated-users-${channel?._id}`) {
-			parsedMsg.users.forEach((user: any) => {
+			let users = parsedMsg.users.map((user: any) => {
 				user.username = user.username || 'guest'
 				const role = setRole({
 					userId: user.userId,
@@ -36,8 +36,9 @@
 					currentUserId: $page.data.user?.userId
 				})
 				user.role = role
+				return user
 			})
-			viewers = viewers.concat(parsedMsg.users)
+			viewers = users
 			cursor = parsedMsg.cursor
 		}
 
