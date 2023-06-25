@@ -11,8 +11,9 @@
 		subscriberCount: Promise<any>,
 		interestCount: Promise<any>,
 		isSubscribed: Promise<any>,
-		showDrawer = false,
-		isSubscribing = false,
+		showDrawer = false
+
+	let isSubscribing = false,
 		isSub: any
 
 	$: currentUser = $page.data.user?.user
