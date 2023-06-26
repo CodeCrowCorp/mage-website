@@ -1,8 +1,6 @@
 <script lang="ts">
 	import IconChatDelete from '$lib/assets/icons/chat/IconChatDelete.svelte'
 	import IconChatHorizontalMore from '$lib/assets/icons/chat/IconChatHorizontalMore.svelte'
-	import { getColoredRole } from '$lib/utils'
-	import { onMount } from 'svelte'
 
 	export let user: any
 
