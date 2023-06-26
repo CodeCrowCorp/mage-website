@@ -5,7 +5,7 @@
 	import { emitGetConnectedUsers } from '$lib/websocket'
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
-	import { setRole } from '$lib/utils'
+	import { getColoredRole, setRole } from '$lib/utils'
 
 	export let viewers: any = [],
 		channel: any
@@ -29,6 +29,7 @@
 		var parsedMsg = JSON.parse(value)
 		if (parsedMsg.eventName === `channel-paginated-users-${channel?._id}`) {
 			let users = parsedMsg.users.map((user: any) => {
+				user.userId = user.userId || 'guest'
 				user.username = user.username || 'guest'
 				const role = setRole({
 					userId: user.userId,
@@ -36,14 +37,15 @@
 					currentUserId: $page.data.user?.userId
 				})
 				user.role = role
+				user.coloredRole = getColoredRole(role)
 				return user
 			})
 			viewers = users
 			cursor = parsedMsg.cursor
 		}
 
-		if(parsedMsg.eventName === `channel-subscribe-${channel?.id}`){
-			emitGetConnectedUsers({channelSocket: channel.socket, cursor})
+		if (parsedMsg.eventName === `channel-subscribe-${channel?.id}`) {
+			emitGetConnectedUsers({ channelSocket: channel.socket, cursor })
 		}
 	})
 </script>
