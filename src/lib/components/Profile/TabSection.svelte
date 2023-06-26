@@ -1,14 +1,15 @@
 <script lang="ts">
-	import ListSubscribe from '$lib/components/Profile/ListSubscribe.svelte'
+	// import ListSubscribe from '$lib/components/Profile/ListSubscribe.svelte'
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
-	import Stats from '$lib/components/Profile/Elements/Stats.svelte'
+	// import Stats from '$lib/components/Profile/Elements/Stats.svelte'
 
 	export let profileId: string = '',
 		channels: Promise<any>,
 		subscribers: Promise<any>,
 		interests: Promise<any>
 
-	let tabs = ['Stats', 'Channels', 'Subscribers']
+	// let tabs = ['Stats', 'Channels', 'Subscribers']
+	let tabs = ['Channels']
 	let activeTab = 0
 </script>
 
@@ -23,15 +24,15 @@
 			{/each}
 		</div>
 		<div class="w-full px-4">
-			<div class="grid h-full" class:hidden={activeTab != 0}>
+			<!-- <div class="grid h-full" class:hidden={activeTab != 0}>
 				<Stats />
-			</div>
-			<div class="flex-auto h-full text-left" class:hidden={activeTab != 1}>
+			</div> -->
+			<div class="flex-auto h-full text-left" class:hidden={activeTab != 0}>
 				<SectionTable {channels} {profileId} />
 			</div>
-			<div class="flex-auto h-full" class:hidden={activeTab != 2}>
+			<!-- <div class="flex-auto h-full" class:hidden={activeTab != 2}>
 				<ListSubscribe {subscribers} {interests} />
-			</div>
+			</div> -->
 		</div>
 	</div>
 </div>
