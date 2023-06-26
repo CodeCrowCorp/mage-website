@@ -3,7 +3,7 @@
 	import FloatingMenu from './FloatingMenu.svelte'
 	import IconChatEmoji from '$lib/assets/icons/chat/IconChatEmoji.svelte'
 
-	export let onSelect: any
+	export let onSelect: any, isChannelSocketConnected: any
 
 	let container: any
 	let btn: any
@@ -17,24 +17,19 @@
 		})
 
 		container.appendChild(picker)
-		if (onSelect) picker.addEventListener('emoji-click', (event) =>{
-			onSelect(event.detail.unicode)
-		})
+		if (onSelect)
+			picker.addEventListener('emoji-click', (event) => {
+				onSelect(event.detail.unicode)
+			})
 
-		if(btn){
-			btn.addEventListener("focus", () => {
+		if (btn) {
+			btn.addEventListener('focus', () => {
 				isFocused = true
 			})
 		}
 	})
-
 </script>
 
-<FloatingMenu 
-	id='emoji-picker'
-	icon={IconChatEmoji}
-	label="Emoji"
->
+<FloatingMenu id="emoji-picker" icon={IconChatEmoji} label="Emoji" {isChannelSocketConnected}>
 	<div bind:this={container} />
 </FloatingMenu>
-

@@ -121,8 +121,8 @@ export const getColoredRole = (role: string) =>
 			tagColor: 'bg-transparent bg-clip bg-gradient-to-r to-emerald-600 from-sky-400',
 			textColor: 'text-accent'
 		},
-		Host: { tagColor: 'bg-secondary', textColor: 'text-pink-500' },
-		Mod: { tagColor: 'bg-green-700', textColor: 'text-success' },
+		Host: { tagColor: 'bg-pink-600', textColor: 'text-pink-500' },
+		Mod: { tagColor: 'bg-green-700', textColor: 'text-green-600' },
 		You: { tagColor: 'bg-gray-600' },
 		Rando: { textColor: 'text-info' }
 	}[role] || {})
@@ -254,18 +254,18 @@ export const getAudioIndicator = (
 export const clickOutside = (element: any, callbackFunction: any) => {
 	const onClick = (event: any) => {
 		if (!element.contains(event.target)) {
-			callbackFunction(event);
+			callbackFunction(event)
 		}
 	}
-	
-	document.body.addEventListener('click', onClick);
-	
+
+	document.body.addEventListener('click', onClick)
+
 	return {
 		update(newCallbackFunction: any) {
-			callbackFunction = newCallbackFunction;
+			callbackFunction = newCallbackFunction
 		},
 		destroy() {
-			document.body.removeEventListener('click', onClick);
+			document.body.removeEventListener('click', onClick)
 		}
 	}
 }

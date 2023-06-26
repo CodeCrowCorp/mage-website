@@ -97,19 +97,33 @@ const emitDeleteAllMessagesToChannel = ({
 const emitChatHistoryToChannel = ({
 	channelSocket,
 	channelId,
-	skip
+	skip,
+	cursor
 }: {
 	channelSocket: WebSocket
 	channelId: string
 	skip: number
+	cursor?: string
 }) => {
-	channelSocket.send(
-		JSON.stringify({
-			eventName: `channel-message-history`,
-			channel: channelId,
-			skip
-		})
-	)
+	if(!cursor){
+		channelSocket.send(
+			JSON.stringify({
+				eventName: `channel-message-history`,
+				channel: channelId,
+				skip
+			})
+		)
+	} else {
+		channelSocket.send(
+			JSON.stringify({
+				eventName: `channel-message-history`,
+				channel: channelId,
+				skip,
+				cursor
+			})
+		)
+	}
+
 }
 
 const emitReactToMessage = ({
@@ -154,6 +168,21 @@ const emitAction = ({
 	)
 }
 
+const emitGetConnectedUsers = ({
+	channelSocket,
+	cursor
+}: {
+	channelSocket: WebSocket
+	cursor: number
+}) => {
+	channelSocket?.send(
+		JSON.stringify({
+			eventName: `channel-get-users`,
+			cursor
+		})
+	)
+}
+
 export {
 	platformSocket,
 	initPlatformSocket,
@@ -166,5 +195,6 @@ export {
 	emitDeleteMessageToChannel,
 	emitDeleteAllMessagesToChannel,
 	emitChatHistoryToChannel,
-	emitAction
+	emitAction,
+	emitGetConnectedUsers
 }

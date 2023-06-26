@@ -8,26 +8,32 @@
 	import { is_chat_drawer_open, was_chat_drawer_closed } from '$lib/stores/channelStore'
 	import { emitChatHistoryToChannel } from '$lib/websocket'
 	import { setRole } from '$lib/utils'
+	import LastItemInViewport from '$lib/actions/LastItemInViewport'
 
 	export let channel: any = undefined,
 		showEditChannelDrawer: boolean = false
-	let chatHistory: any[] = []
+	let chatHistory: any[] = [],
+		chatDrawerElement: HTMLElement
+	let cursor = "";
 
 	channel_message.subscribe((value) => {
 		if (!value) return
 		var parsedMsg = JSON.parse(value)
 		if (parsedMsg.eventName === `channel-message-${channel?._id}`) {
 			if (parsedMsg.isMessageHistory) {
-				chatHistory = []
+				cursor = parsedMsg.cursor
+				//chatHistory = []
 				// if (Array.isArray(parsedMsg.data)) {
-				parsedMsg.data.forEach((message: any) => {
+				let messages = parsedMsg.data.map((message: any) => {
 					message.role = setRole({
 						userId: message.user.userId,
 						channel,
 						currentUserId: $page.data.user?.userId
 					})
-					chatHistory.push(message)
+					return message;
 				})
+
+				chatHistory = [...chatHistory, ...messages]
 				// } else {
 				// 	parsedMsg = setRole(JSON.parse(parsedMsg.data))
 				// 	chatHistory.push(parsedMsg)
@@ -54,6 +60,7 @@
 			channel.socket?.readyState === WebSocket.OPEN
 		) {
 			emitChatHistoryToChannel({ channelSocket: channel.socket, channelId: channel._id, skip: 100 })
+			chatDrawerElement = document.getElementById(`chat_drawer`) as HTMLElement
 		}
 	})
 
@@ -63,15 +70,27 @@
 
 	const createuserList = (list: any[]) => {
 		let users: any = {}
-		list.forEach(chat =>{
-			if($page.data.user?.userId !== chat.user.userId)
-				users[chat.user.userId] = chat.user
+		list.forEach((chat) => {
+			if ($page.data.user?.userId !== chat.user.userId) users[chat.user.userId] = chat.user
 		})
-		return Object.keys(users).map(key => users[key])
+		return Object.keys(users).map((key) => users[key])
+	}
+
+	const loadMore = () => {
+		if (
+			$channel_connection === `open-${channel._id}` &&
+			channel.socket?.readyState === WebSocket.OPEN
+		) {
+			emitChatHistoryToChannel({
+				channelSocket: channel.socket,
+				channelId: channel._id,
+				skip: 100,
+				cursor: cursor || "none"
+			})
+		}
 	}
 
 	$: users = createuserList(chatHistory)
-
 </script>
 
 <div class="bg-base-100 flex flex-col overflow-y-hidden w-72 md:w-full h-full rounded-lg">
@@ -80,6 +99,7 @@
 		{#each chatHistory as sender}
 			<Message bind:sender bind:hostId={channel.user} bind:channel />
 		{/each}
+		<span use:LastItemInViewport on:loadMore={loadMore} />
 	</div>
 	<div class="flex flex-row mt-auto p-3 w-full">
 		<ChatInput bind:channel bind:users />

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
 	import StreamControls from '$lib/components/Channel/Stream/StreamControls.svelte'
-	// import DropdownViewers from '$lib/components/Channel/Stream/DropdownViewers.svelte'
+	import DropdownViewers from '$lib/components/Channel/Stream/DropdownViewers.svelte'
 	import VideoGrid from '$lib/components/Channel/Stream/VideoGrid.svelte'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
@@ -50,7 +50,7 @@
 				<div class="flex flex-col w-full">
 					<div class="flex gap-2 mb-3">
 						<span
-							class="btn btn-sm rounded-md font-medium text-white border-none flex items-center {$video_items?.length
+							class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center {$video_items?.length
 								? 'bg-red-700 hover:bg-red-700'
 								: ''}">
 							LIVE
@@ -58,12 +58,12 @@
 						<div class="dropdown dropdown-bottom">
 							<label
 								for=""
-								class="btn btn-sm rounded-md font-medium gap-2 text-white border-none"
+								class="btn btn-sm btn-neutral font-medium gap-2 text-white border-none"
 								tabindex="-1">
 								<IconViewers />
 								{userCount}
 							</label>
-							<!-- <DropdownViewers /> -->
+							<DropdownViewers {channel} />
 						</div>
 					</div>
 					{#if channel && nextchannel?._id === $page.params.channelId}

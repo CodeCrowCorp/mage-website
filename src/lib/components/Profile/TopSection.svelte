@@ -4,6 +4,8 @@
 	import { page } from '$app/stores'
 	import { onMount } from 'svelte'
 	import { subscriber_count, interest_count } from '$lib/stores/profileStore'
+	import { enhance } from '$app/forms'
+	import { get } from '$lib/api'
 
 	export let profile: any,
 		subscriberCount: Promise<any>,
@@ -11,11 +13,19 @@
 		isSubscribed: Promise<any>,
 		showDrawer = false
 
+	let isSubscribing = false,
+		isSub: any
+
 	$: currentUser = $page.data.user?.user
 
 	onMount(async () => {
 		$subscriber_count = await subscriberCount
 		$interest_count = await interestCount
+		// isSub = await get(`subscribes/relationship?source=${profile._id}`, {
+		// 	userId: $page.data.user?.userId,
+		// 	token: $page.data.user?.token
+		// })
+		// isSubscribing = isSub.isSubscriber
 	})
 </script>
 
@@ -26,7 +36,7 @@
 				<div class="w-32 h-32">
 					<div class="avatar -top-16 {profile.isOnline ? 'online' : 'offline'}">
 						<div class="mask mask-squircle h-auto align-middle max-w-150-px">
-							<img src={profile.avatar} alt="" />
+							<img src={profile.avatar} alt="" class="!w-32 !h-32" />
 						</div>
 					</div>
 				</div>
@@ -35,7 +45,14 @@
 	</div>
 	<div class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
 		<div class="py-6 px-3 justify-center flex md:justify-end gap-4">
-			<form action="?/subscribe" method="post">
+			<form
+				action="?/subscribe"
+				method="post"
+				use:enhance={({ data }) => {
+					data.append('isSubscribing', isSubscribing.toString())
+					data.append('source1', profile._id)
+					data.append('source2', $page.data.user?.userId)
+				}}>
 				<div class="flex gap-4">
 					{#await isSubscribed}
 						<button class="btn btn-secondary" disabled>Unsubscribe</button>
@@ -43,7 +60,9 @@
 						<button
 							class="btn btn-secondary"
 							disabled={profile._id === $page.data.user?.userId || !currentUser}
-							>{value.isSubscriber ? 'Subscribe' : 'Unsubscribe'}</button>
+							on:click={() => {
+								isSubscribing = !value.isSubscribed
+							}}>{value.isSubscribed ? 'Unsubscribe' : 'Subscribe'}</button>
 					{/await}
 					<!--TODO: open sponsor dialog-->
 					<button class="btn btn-primary" formaction="?/sponsor" disabled>Sponsor</button>

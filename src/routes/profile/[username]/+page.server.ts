@@ -1,6 +1,6 @@
 import type { Actions, PageServerLoad } from './$types'
-import { get, patch, put, del } from '$lib/api'
-import { redirect } from '@sveltejs/kit'
+import { get, patch, put, del, putImage } from '$lib/api'
+import { redirect, fail } from '@sveltejs/kit'
 
 export const load = (async ({ params, locals }) => {
 	const profile = await get(`users/search/username?username=${params.username}`)
@@ -33,23 +33,62 @@ export const actions = {
 		addPropertyIfDefined(data, 'displayName', newUser)
 		addPropertyIfDefined(data, 'username', newUser)
 		addPropertyIfDefined(data, 'website', newUser)
-		addPropertyIfDefined(data, 'banner', newUser)
-		addPropertyIfDefined(data, 'avatar', newUser)
 		addPropertyIfDefined(data, 'category', newUser)
 		addPropertyIfDefined(data, 'bio', newUser)
+
+
+		const avatar =  data.get('avatar') as File
+
+		const banner =  data.get('banner') as File
+		
+
+
+		if (data.get('avatar') !== null && avatar.size > 0) {
+			const urlLocation = await putImage(
+				`users/current/avatar?bucketName=avatars&originalName=${locals.user.userId}-avatar`,
+				data.get('avatar'),
+				{
+					userId: locals.user.userId,
+					token: locals.user.token
+				}
+			)
+			console.log(urlLocation)
+		}
+
+		if (data.get('banner') !== null && banner.size > 0) {
+			const urlLocation = await putImage(
+				`users/current/banner?bucketName=banners&originalName=${locals.user.userId}-banner`,
+				data.get('banner'),
+				{
+					userId: locals.user.userId,
+					token: locals.user.token
+				}
+			)
+			console.log(urlLocation)
+		}
+
 		const updatedUser = await patch(`users`, newUser, {
 			userId: locals.user.userId,
 			token: locals.user.token
 		})
-		locals.user.user = updatedUser
-		throw redirect(303, `/profile/${updatedUser.username}`)
+		if (updatedUser.exists) {
+			const username = data.get('username')
+			return fail(422, { username, exists: true })
+		} else {
+			if (updatedUser._id) {
+				locals.user.user = updatedUser
+				throw redirect(303, `/profile/${updatedUser.username}`)
+			} else {
+				throw redirect(303, 'browse')
+			}
+		}
 	},
 	subscribe: async ({ request, locals }: { request: any; locals: any }) => {
 		const data = await request.formData()
 		const isSubscribing = data.get('isSubscribing')
 		const source1 = data.get('source1')
 		const source2 = data.get('source2')
-		if (isSubscribing === 'false') {
+		if (isSubscribing === 'true') {
 			await put(
 				`subscribes?source1=${source1}&source2=${source2}`,
 				{},
@@ -69,6 +108,9 @@ export const actions = {
 		await new Promise<any>((resolve) => setTimeout(resolve, 1000))
 	},
 	search: async ({ request, locals }: { request: any; locals: any }) => {
+		console.log('got here----324324234')
+		const data = await request.formData()
+		const search = data.get('query')
 		await new Promise<any>((resolve) => setTimeout(resolve, 1000))
 	}
 } satisfies Actions

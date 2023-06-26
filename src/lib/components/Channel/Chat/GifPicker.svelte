@@ -4,8 +4,9 @@
 	import FloatingMenu from './FloatingMenu.svelte'
 
 	import { get } from '../../../api.js'
+	import { page } from '$app/stores'
 
-	export let onSelect: any
+	export let onSelect: any, isChannelSocketConnected: any
 
 	let gifs: { downsized_large: string; original: string; title: string }[] = []
 	let searched: { downsized_large: string; original: string; title: string }[] = []
@@ -14,15 +15,23 @@
 
 	onMount(async () => {
 		loading = true
-		const resp = await get('giphy/trending')
-		if (resp && Array.isArray(resp)) gifs = resp
+		if (isChannelSocketConnected) {
+			const resp = await get('giphy/trending', {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
+			if (resp && Array.isArray(resp)) gifs = resp
+		}
 		loading = false
 	})
 
 	const onSearch = async (evt: any) => {
 		query = evt.target.value
 		loading = true
-		const resp = await get('giphy/search?query=' + query)
+		const resp = await get('giphy/search?query=' + query, {
+			userId: $page.data.user?.userId,
+			token: $page.data.user?.token
+		})
 		loading = false
 		if (resp && Array.isArray(resp)) searched = resp
 	}
@@ -30,18 +39,25 @@
 	$: list = query ? searched : gifs
 </script>
 
-<FloatingMenu 
-	let:forceClose id="gif-picker"
-	icon = {IconChatGif}
+<FloatingMenu
+	let:forceClose
+	id="gif-picker"
+	icon={IconChatGif}
 	label="GIF"
->
+	{isChannelSocketConnected}>
 	<div class="gif-picker bg-base-300 flex flex-col rounded-md px-2">
 		<div class="m-2">
 			<input
 				type="text"
 				placeholder="Search here"
 				class="input input-bordered input-sm w-full max-w-xs"
-				on:input={onSearch} />
+				on:input={onSearch}
+				on:keydown={(e) => {
+					if (e.key === 'Enter') {
+						e.preventDefault()
+						onSearch(e)
+					}
+				}} />
 		</div>
 
 		{#if loading}
@@ -53,12 +69,12 @@
 				{#each list as gif}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<div
-						class="border cursor-pointer"
+						class="cursor-pointer"
 						on:click={() => {
 							onSelect(gif.downsized_large)
 							forceClose()
 						}}>
-						<img src={gif.downsized_large} alt="gif" class="w-full" />
+						<img src={gif.downsized_large} alt="gif" class="w-full border p-1" />
 					</div>
 				{/each}
 			</div>

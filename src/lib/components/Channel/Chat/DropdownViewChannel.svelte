@@ -71,7 +71,7 @@
 	}
 </script>
 
-<div class="menu dropdown dropdown-bottom">
+<div class="menu dropdown dropdown-bottom z-10">
 	<ul tabindex="-1">
 		<li>
 			<div class="p-3 text-xl mb-2 pb-2 border-purple-500 font-semibold border-b-2 flex">
@@ -119,8 +119,7 @@
 			<a href="/profile/{host?.username}">
 				<div class="flex flex-wrap gap-2">
 					<div class="avatar online">
-						<div
-							class="w-12 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
+						<div class="w-12 mask mask-squircle">
 							<img src={host?.avatar} alt="" />
 						</div>
 					</div>

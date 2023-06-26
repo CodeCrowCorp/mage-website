@@ -22,6 +22,8 @@
 	import { onMount } from 'svelte'
 	import { isOnline } from '$lib/stores/userStore'
 	import { get } from '$lib/api'
+	import IconDrawerPremium from '$lib/assets/icons/drawer/IconDrawerPremium.svelte'
+	import { is_feature_premium_page_enabled } from '$lib/stores/remoteConfigStore'
 
 	export var nav_drawer: HTMLInputElement
 
@@ -39,14 +41,14 @@
 			progressBarLevel = levelAndBarValue.level
 			progressBarValue = levelAndBarValue.barValue
 			progressBarColor = colorFromLevel(progressBarLevel)
-			// streakCount = await get(`stats/stream/streak`, {
-			// 	userId: $page.data.user?.userId,
-			// 	token: $page.data.user?.token
-			// })
-			// hoursStreamed = await get(`stats/stream/total-hours`, {
-			// 	userId: $page.data.user?.userId,
-			// 	token: $page.data.user?.token
-			// })
+			streakCount = await get(`stats/stream/streak`, {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
+			hoursStreamed = await get(`stats/stream/total-hours`, {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
 		}
 	})
 </script>
@@ -72,8 +74,7 @@
 						<div class="hero-content">
 							<div class="max-w-md">
 								<div class="avatar {$isOnline ? 'online' : 'offline'}">
-									<div
-										class="w-24 md:w-12 mask mask-squircle ring ring-primary ring-offset-base-100 ring-offset-2">
+									<div class="w-24 md:w-12 mask mask-squircle">
 										<img src={currentUser.avatar} alt="" />
 									</div>
 								</div>
@@ -121,6 +122,14 @@
 				<span class="md:hidden">Browse</span>
 			</a>
 		</li>
+		{#if currentUser && $is_feature_premium_page_enabled}
+			<li>
+				<a href="/premium" class="text-accent hover:text-accent">
+					<IconDrawerPremium />
+					<span class="md:hidden">Premium</span>
+				</a>
+			</li>
+		{/if}
 		<li>
 			<a href="/careers">
 				<IconDrawerCareers />

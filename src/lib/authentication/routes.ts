@@ -30,7 +30,8 @@ const routes: any = {
 	careers: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
 	contact: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
 	legal: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
-	logout: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }]
+	logout: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
+	premium: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }]
 }
 
 export default routes

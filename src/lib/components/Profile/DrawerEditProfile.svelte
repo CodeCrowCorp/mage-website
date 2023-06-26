@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
+	import { page } from '$app/stores'
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 
@@ -7,7 +8,6 @@
 	export let profile: any
 
 	let showAddCategory = false,
-		categoryIcons: any = [],
 		maxCategory = 4
 
 	$: maxCategoryLabel =
@@ -24,6 +24,11 @@
 			showDrawer = false
 		}, 200)
 	}
+
+	let username: HTMLInputElement
+	// $: if ($page.status === 422) {
+	// 	username.setCustomValidity('This username is already taken')
+	// }
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
@@ -60,8 +65,9 @@
 							name="displayName"
 							id="displayName"
 							required
-							class="input input-primary input-bordered mt-5 w-full"
+							class="input input-primary input-bordered w-full"
 							placeholder="Display name" />
+
 						<input
 							bind:value={profile.username}
 							type="text"
@@ -70,7 +76,7 @@
 							required
 							class="input input-primary input-bordered mt-5 w-full"
 							placeholder="Username"
-							disabled />
+							bind:this={username} />
 
 						<input
 							bind:value={profile.website}
@@ -80,21 +86,27 @@
 							class="input input-primary input-bordered mt-5 w-full"
 							placeholder="Your website URL" />
 
-						<!-- <label for="banner" class="block my-2 text-sm font-medium ">Banner</label>
-						<input
-							bind:value={profile.banner}
-							type="file"
-							name="banner"
-							id="banner"
-							class="file-input file-input-bordered file-input-primary w-full" />
+						<div class="form-control mt-5 w-full">
+							<label class="label">
+								<span class="label-text">Banner</span>
+							</label>
+							<input
+								type="file"
+								name="banner"
+								id="banner"
+								class="file-input file-input-bordered file-input-primary w-full" />
+						</div>
 
-						<label for="avatar" class="block my-2 text-sm font-medium ">Avatar</label>
-						<input
-							bind:value={profile.avatar}
-							type="file"
-							name="avatar"
-							id="avatar"
-							class="file-input file-input-bordered file-input-primary w-full" /> -->
+						<div class="form-control mt-5 w-full">
+							<label class="label">
+								<span class="label-text">Avatar</span>
+							</label>
+							<input
+								type="file"
+								name="avatar"
+								id="avatar"
+								class="file-input file-input-bordered file-input-primary w-full" />
+						</div>
 
 						<div class="relative">
 							<input
