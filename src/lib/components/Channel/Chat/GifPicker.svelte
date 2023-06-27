@@ -8,22 +8,26 @@
 
 	export let onSelect: any, isChannelSocketConnected: any
 
+	$: if (isChannelSocketConnected) {
+		getTrending()
+	}
+
 	let gifs: { downsized_large: string; original: string; title: string }[] = []
 	let searched: { downsized_large: string; original: string; title: string }[] = []
 	let query: string = ''
 	let loading = false
 
-	onMount(async () => {
+	onMount(async () => {})
+
+	const getTrending = async () => {
 		loading = true
-		if (isChannelSocketConnected) {
-			const resp = await get('giphy/trending', {
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			})
-			if (resp && Array.isArray(resp)) gifs = resp
-		}
+		const resp = await get('giphy/trending', {
+			userId: $page.data.user?.userId,
+			token: $page.data.user?.token
+		})
+		if (resp && Array.isArray(resp)) gifs = resp
 		loading = false
-	})
+	}
 
 	const onSearch = async (evt: any) => {
 		query = evt.target.value
@@ -65,7 +69,7 @@
 				<span class="loading loading-dots loading-sm" />
 			</div>
 		{:else if list.length}
-			<div class="grid grid-cols-4 gap-2 flex-1 overflow-auto mt-2">
+			<div class="grid grid-cols-2 gap-2 flex-1 overflow-auto mt-2">
 				{#each list as gif}
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<div
@@ -74,7 +78,7 @@
 							onSelect(gif.downsized_large)
 							forceClose()
 						}}>
-						<img src={gif.downsized_large} alt="gif" class="w-full border p-1" />
+						<img src={gif.downsized_large} alt="gif" class="w-full p-1" />
 					</div>
 				{/each}
 			</div>

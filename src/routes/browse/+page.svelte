@@ -15,26 +15,6 @@
 
 	onMount(async () => {
 		$video_items = []
-
-		// const newUsers = await get('/api/users')
-		// newUsers.forEach(async (user: any) => {
-		// 	if (user.avatar.includes('ui-avatars')) {
-		// 		const newChannel = {
-		// 			title: '',
-		// 			description: '',
-		// 			category: '',
-		// 			tags: '',
-		// 			createdByDisplayName: user.displayName,
-		// 			createdByUsername: user.username,
-		// 			avatar: user.avatar,
-		// 			channelType: 'channel'
-		// 		}
-		// 		await post('channel', newChannel, {
-		// 			userId: user._id,
-		// 			token: $page.data.user.token
-		// 		})
-		// 	}
-		// })
 	})
 </script>
 
