@@ -163,7 +163,7 @@
 				</button>
 				<button
 					disabled={!$page.data.user?.userId}
-					class="btn col-span-1 {isFavorite
+					class="btn btn-neutral col-span-1 {isFavorite
 						? 'bg-yellow-300 text-black hover:bg-yellow-500'
 						: ''} border-none font-normal normal-case tooltip tooltip-left flex"
 					data-tip="Fav channel"
