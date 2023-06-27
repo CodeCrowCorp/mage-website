@@ -86,7 +86,7 @@
 	</ul>
 	<ul tabindex="-1" class="dropdown-content menu shadow bg-base-200 rounded-box md:w-[23rem]">
 		<li on:click={() => copyToClipboard(channel.description)} on:keyup>
-			<a class="text-sm max-w-md">{channel.description || 'No description'}</a>
+			<a class="text-sm max-w-md flex">{channel.description || 'No description'}</a>
 		</li>
 		<li on:click={() => copyToClipboard(channel.category)} on:keyup>
 			<a
