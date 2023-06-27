@@ -36,12 +36,9 @@ export const actions = {
 		addPropertyIfDefined(data, 'category', newUser)
 		addPropertyIfDefined(data, 'bio', newUser)
 
+		const avatar = data.get('avatar') as File
 
-		const avatar =  data.get('avatar') as File
-
-		const banner =  data.get('banner') as File
-		
-
+		const banner = data.get('banner') as File
 
 		if (data.get('avatar') !== null && avatar.size > 0) {
 			const urlLocation = await putImage(
@@ -108,7 +105,6 @@ export const actions = {
 		await new Promise<any>((resolve) => setTimeout(resolve, 1000))
 	},
 	search: async ({ request, locals }: { request: any; locals: any }) => {
-		console.log('got here----324324234')
 		const data = await request.formData()
 		const search = data.get('query')
 		await new Promise<any>((resolve) => setTimeout(resolve, 1000))
