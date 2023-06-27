@@ -3,9 +3,14 @@
 	import { page } from '$app/stores'
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 	import { category_list } from '$lib/stores/channelStore'
+	import { createEffect } from '$lib/utils'
 
 	export let showDrawer: boolean
 	export let profile: any
+
+	let params = $page.params
+
+	const useOueryEffect = createEffect();
 
 	let showAddCategory = false,
 		maxCategory = 4
@@ -25,10 +30,34 @@
 		}, 200)
 	}
 
-	let username: HTMLInputElement
-	// $: if ($page.status === 422) {
-	// 	username.setCustomValidity('This username is already taken')
-	// }
+	let username: HTMLInputElement, submitBtn:any;
+	let prevUsername = ""
+	
+	$: useOueryEffect(() => {
+		if ($page.status === 422 && $page.form && $page.form.username !== prevUsername) {
+			submitBtn.disabled = false
+			let v = username.value
+			username.value = ""
+			username.setCustomValidity('This username is already taken')
+			submitBtn.click()
+			username.value = v
+			prevUsername = $page.form.username
+		}
+	}, [$page]);
+
+	$: useOueryEffect(() => {
+
+		for(let key in $page.params){
+			if($page.params[key] !== params[key]){
+				if(submitBtn)
+					submitBtn.disabled = false
+				toggleDrawer()
+				break;
+			}
+		}
+
+	}, [$page.params])
+
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
@@ -53,7 +82,11 @@
 					if (profile?.category?.length) {
 						data.append('category', JSON.stringify(profile?.category))
 					}
-				}}>
+				}}
+				on:submit={() => {
+					submitBtn.disabled = true
+				}}
+			>
 				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col rounded-lg">
 					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 						Update Profile
@@ -76,8 +109,12 @@
 							required
 							class="input input-primary input-bordered mt-5 w-full"
 							placeholder="Username"
-							bind:this={username} />
-
+							bind:this={username}
+							on:input={() =>{
+								username.setCustomValidity('')
+							}}
+						/>
+						
 						<input
 							bind:value={profile.website}
 							type="url"
@@ -87,6 +124,7 @@
 							placeholder="Your website URL" />
 
 						<div class="form-control mt-5 w-full">
+							<!-- svelte-ignore a11y-label-has-associated-control -->
 							<label class="label">
 								<span class="label-text">Banner</span>
 							</label>
@@ -98,6 +136,7 @@
 						</div>
 
 						<div class="form-control mt-5 w-full">
+							<!-- svelte-ignore a11y-label-has-associated-control -->
 							<label class="label">
 								<span class="label-text">Avatar</span>
 							</label>
@@ -138,8 +177,12 @@
 							type="button"
 							class="btn btn-neutral text-white grow"
 							on:click={() => toggleDrawer()}>Cancel</button>
-						<button type="submit" class="btn btn-primary grow" on:click={() => toggleDrawer()}
-							>Save</button>
+						<button 
+							type="submit" 
+							class="btn btn-primary grow"
+							bind:this={submitBtn}
+							
+						>Save</button>
 					</div>
 				</div>
 			</form>
