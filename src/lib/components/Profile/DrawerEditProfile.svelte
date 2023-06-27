@@ -8,6 +8,8 @@
 	export let showDrawer: boolean
 	export let profile: any
 
+	let params = $page.params
+
 	const useOueryEffect = createEffect();
 
 	let showAddCategory = false,
@@ -29,18 +31,32 @@
 	}
 
 	let username: HTMLInputElement, submitBtn:any;
+	let prevUsername = ""
 	
 	$: useOueryEffect(() => {
-		if ($page.status === 422) {
+		if ($page.status === 422 && $page.form && $page.form.username !== prevUsername) {
 			submitBtn.disabled = false
 			let v = username.value
 			username.value = ""
 			username.setCustomValidity('This username is already taken')
 			submitBtn.click()
 			username.value = v
+			prevUsername = $page.form.username
 		}
-		else if(submitBtn) submitBtn.disabled = false
-	}, [$page.status]);
+	}, [$page]);
+
+	$: useOueryEffect(() => {
+
+		for(let key in $page.params){
+			if($page.params[key] !== params[key]){
+				if(submitBtn)
+					submitBtn.disabled = false
+				toggleDrawer()
+				break;
+			}
+		}
+
+	}, [$page.params])
 
 </script>
 
