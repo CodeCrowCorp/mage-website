@@ -19,7 +19,7 @@
 		video_items
 	} from '$lib/stores/streamStore'
 	import { channel_connection } from '$lib/stores/websocketStore'
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte'
 
 	export let isHostOrGuest: boolean = false,
 		channel: any
@@ -262,8 +262,6 @@
 			subs()
 		})
 	})
-
-	
 </script>
 
 <div class="flex gap-4">

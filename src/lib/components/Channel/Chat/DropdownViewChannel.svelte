@@ -28,7 +28,7 @@
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
-			isSubscribing = relationship?.isSubscribing
+			isSubscribing = relationship?.isInterested
 		}
 	}
 

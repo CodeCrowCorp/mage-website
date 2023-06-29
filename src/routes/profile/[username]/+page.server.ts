@@ -87,8 +87,8 @@ export const actions = {
 		const source2 = data.get('source2')
 		if (isSubscribing === 'true') {
 			await put(
-				`subscribes?source1=${source1}&source2=${source2}`,
-				{},
+				`subscribes`,
+				{ source1, source2 },
 				{
 					userId: locals.user?.userId,
 					token: locals.user?.token
