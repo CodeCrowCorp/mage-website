@@ -293,7 +293,7 @@
 								}
 							}
 						}
-					} else if (e.key === 'Enter') {
+					} else if (e.key === 'Enter' && !e.shiftKey) {
 						e.preventDefault()
 						sendMessage()
 					}
