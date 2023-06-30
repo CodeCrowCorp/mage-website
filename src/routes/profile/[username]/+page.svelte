@@ -9,7 +9,9 @@
 	export let data: PageData
 
 	let showDrawer = false
-	let banner =  data.profile?.banner || 'https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2710&amp;q=80';
+	let banner =
+		data.profile?.banner ||
+		'https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2710&amp;q=80'
 </script>
 
 {#if !data.profile}
@@ -38,7 +40,10 @@
 						profileId={data.profile?._id}
 						channels={data.lazy.channels}
 						subscribers={data.lazy.subscribers}
-						interests={data.lazy.interests} />
+						interests={data.lazy.interests}
+						totalPageViews={data.lazy.totalPageViews}
+						highestAndCurrentStreak={data.lazy.highestAndCurrentStreak}
+						totalAndAvgHours={data.lazy.totalAndAvgHours} />
 				</div>
 			</div>
 		</div>

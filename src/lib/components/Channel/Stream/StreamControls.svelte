@@ -28,11 +28,10 @@
 		$channel_connection === `open-${$page.params.channelId}` && $page.data.user?.userId
 	$: videoItemIsActive = $video_items?.some((video: any) => video._id === $page.data.user?.userId)
 
-	let screenUid: string = ''
-	let webcamUid: string = ''
-	let audioUid: string = ''
-
-	let subcriptions: any[] = []
+	let screenUid: string = '',
+		webcamUid: string = '',
+		audioUid: string = '',
+		subcriptions: any[] = []
 
 	const handleChatDrawer = () => {
 		if ($is_chat_drawer_open) {
