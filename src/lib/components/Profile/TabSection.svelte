@@ -10,7 +10,10 @@
 	export let profileId: string = '',
 		channels: Promise<any>,
 		subscribers: Promise<any>,
-		interests: Promise<any>
+		interests: Promise<any>,
+		totalPageViews: Promise<any>,
+		highestAndCurrentStreak: Promise<any>,
+		totalAndAvgHours: Promise<any>
 
 	let tabs = ['Channels']
 	let activeTab = 0
@@ -32,7 +35,7 @@
 		<div class="w-full px-4">
 			{#if $is_feature_stats_enabled}
 				<div class="grid h-full" class:hidden={activeTab != tabs.indexOf('Stats')}>
-					<Stats />
+					<Stats {totalPageViews} {highestAndCurrentStreak} {totalAndAvgHours} />
 				</div>
 			{/if}
 			<div class="flex-auto h-full text-left" class:hidden={activeTab != tabs.indexOf('Channels')}>

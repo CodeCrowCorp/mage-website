@@ -91,7 +91,9 @@
 									{streakCount} d
 								</p>
 								<IconDrawerStreamDuration />
-								<p class="col-span-2 tooltip text-start" data-tip="{hoursStreamed} hours streamed">
+								<p
+									class="col-span-2 tooltip text-start"
+									data-tip="{hoursStreamed} hours streamed today">
 									{hoursStreamed} h
 								</p>
 							</div>

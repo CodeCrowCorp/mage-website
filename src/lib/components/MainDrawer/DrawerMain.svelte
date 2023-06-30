@@ -91,7 +91,9 @@
 									{streakCount} d
 								</p>
 								<IconDrawerStreamDuration />
-								<p class="col-span-2 tooltip text-start" data-tip="{hoursStreamed} hours streamed">
+								<p
+									class="col-span-2 tooltip text-start"
+									data-tip="{hoursStreamed} hours streamed today">
 									{hoursStreamed} h
 								</p>
 							</div>
@@ -200,12 +202,6 @@
 			<a href="https://twitter.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 				<IconSocialTwitter />
 			</a>
-			<!-- <a href="https://magiceden.io" target="_blank" rel="noreferrer">
-				<img src={IconSocialMagicEden} alt="" />
-			</a>
-			<a href="https://www.dexlab.space" target="_blank" rel="noreferrer">
-				<img src={IconSocialDexlab} alt="" />
-			</a> -->
 		</div>
 		<p>Code Crow © 2023</p>
 		<p class="text-gray-500">
