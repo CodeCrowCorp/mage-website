@@ -9,9 +9,8 @@
 
 	// NProgress Loading bar
 	import '$lib/assets/styles/nprogress.css'
-	import LoginPrompt from '$lib/components/MainDrawer/LoginPrompt.svelte'
-	import DrawerMain from '$lib/components/MainDrawer/DrawerMain.svelte'
-	import DrawerSmall from '$lib/components/MainDrawer/DrawerSmall.svelte'
+	import LoginPrompt from '$lib/components/Global/LoginPrompt.svelte'
+	import DrawerMain from '$lib/components/Global/DrawerMain.svelte'
 	import { onMount } from 'svelte'
 	import { get } from '$lib/api'
 	import { emitUserConnection, initPlatformSocket, platformSocket } from '$lib/websocket'
@@ -157,10 +156,6 @@
 	</div>
 	<div class="drawer-side z-10">
 		<label for="main-drawer" class="drawer-overlay" />
-		{#if !$page.url.pathname.includes('/channel')}
-			<DrawerMain bind:nav_drawer />
-		{:else}
-			<DrawerSmall bind:nav_drawer />
-		{/if}
+		<DrawerMain bind:nav_drawer />
 	</div>
 </div>
