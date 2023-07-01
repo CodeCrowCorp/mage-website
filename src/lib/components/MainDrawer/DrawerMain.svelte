@@ -74,7 +74,8 @@
 						<div class="hero-content my-1 w-64">
 							<div class="max-w-full">
 								<div class="avatar {$isOnline ? 'online' : 'offline'}">
-									<div class="w-24 mask mask-squircle">
+									<div
+										class="w-24 mask {currentUser.isPaidPlan ? 'mask-hexagon' : 'mask-squircle'}">
 										<img src={currentUser.avatar} alt="" />
 									</div>
 								</div>
