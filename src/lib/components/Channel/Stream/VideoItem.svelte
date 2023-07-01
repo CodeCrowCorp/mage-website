@@ -323,7 +323,9 @@
 		<img
 			src={video.avatar}
 			alt=""
-			class="absolute inset-0 w-24 md:w-24 mask mask-squircle object-cover m-auto" />
+			class="absolute inset-0 w-24 md:w-24 mask {video.isPaidPlan
+				? 'mask-hexagon'
+				: 'mask-squircle'} object-cover m-auto" />
 		<div class="absolute inset-0">
 			{#if $is_feature_stats_enabled && (isScreenLive || isWebcamLive)}
 				<span
