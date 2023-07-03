@@ -2,7 +2,6 @@
 	import IconDrawerStreak from '$lib/assets/icons/drawer/IconDrawerStreak.svelte'
 	import IconDrawerStreamDuration from '$lib/assets/icons/drawer/IconDrawerStreamDuration.svelte'
 	import IconDrawerHome from '$lib/assets/icons/drawer/IconDrawerHome.svelte'
-	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svg'
 	import IconDrawerVideos from '$lib/assets/icons/drawer/IconDrawerVideos.svelte'
 	import IconDrawerCreatorSpace from '$lib/assets/icons/drawer/IconDrawerCreatorSpace.svelte'
 	import IconDrawerPremium from '$lib/assets/icons/drawer/IconDrawerPremium.svelte'
