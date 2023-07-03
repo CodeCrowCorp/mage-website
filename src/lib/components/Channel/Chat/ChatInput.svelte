@@ -29,7 +29,7 @@
 				const user = users[selectedUser]
 				executeCommand(selectedCommand, user.userId)
 			}
-		} else if (!chatMessage.startsWith('/')) {
+		} else if (!chatMessage.startsWith('/') || chatMessage.startsWith('/ai')) {
 			if (chatMessage === null || chatMessage.match(/^\s*$/) !== null) return
 			const completeMessage = {
 				isAiChatEnabled: channel.isAiChatEnabled,
@@ -162,18 +162,24 @@
 	const specialCommands = [
 		{
 			id: 1,
+			label: 'Talk to AI',
+			cmd: '/ai ',
+			action: () => {}
+		},
+		{
+			id: 2,
 			label: 'Toggle mod status',
 			cmd: '/mod @',
 			action: toggleMod
 		},
 		{
-			id: 2,
+			id: 3,
 			label: 'Toggle guest status',
 			cmd: '/guest @',
 			action: toggleGuest
 		},
 		{
-			id: 3,
+			id: 4,
 			label: 'Ban user',
 			cmd: '/ban @',
 			action: toggleBan
@@ -181,15 +187,18 @@
 	]
 
 	$: messageIsCommand =
-		chatMessage && chatMessage.startsWith('/') && /[a-z] @[a-z]/.test(chatMessage.substr(1))
+		chatMessage &&
+		chatMessage.startsWith('/') &&
+		/[a-z] @[a-z]/.test(chatMessage.substr(1)) &&
+		chatMessage.startsWith('/ai ')
 
 	$: showUsers = chatMessage && chatMessage.endsWith('@')
 	$: showCommandOptions =
 		chatMessage &&
 		chatMessage.startsWith('/') &&
+		!chatMessage.startsWith('/ai ') &&
 		(channel.user === $page.data.user?.userId || channel.mods?.includes($page.data.user?.userId)) &&
-		!showUsers &&
-		!messageIsCommand
+		!showUsers
 </script>
 
 <form class="rounded-lg bg-base-200 p-2 w-full relative">
