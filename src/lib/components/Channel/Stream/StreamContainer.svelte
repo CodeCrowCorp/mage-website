@@ -9,21 +9,14 @@
 	import { video_items } from '$lib/stores/streamStore'
 	import { channel_connection } from '$lib/stores/websocketStore'
 	import CommandList from '$lib/components/Channel/Stream/CommandList.svelte'
-	import { is_feature_stats_enabled } from '$lib/stores/remoteConfigStore'
 
 	const dispatch = createEventDispatcher()
 	export let userCount: number = 1,
 		channel: any,
 		channels: any = [],
 		isHostOrGuest: boolean = false
-	let streamTime: number = 0,
-		timerInterval: any,
-		formattedTime: string = '00:00:00'
 
 	$: isChannelSocketConnected = $channel_connection === `open-${channel._id}`
-	$: if (is_feature_stats_enabled) {
-		toggleTimer()
-	}
 
 	function autoActive(node: Element) {
 		const observer = new IntersectionObserver(callback, { threshold: 0.5 })
@@ -47,23 +40,6 @@
 		}
 
 		return { destroy: () => observer.disconnect() }
-	}
-
-	const toggleTimer = () => {
-		if (timerInterval) {
-			clearInterval(timerInterval)
-			timerInterval = null
-		} else {
-			timerInterval = setInterval(() => {
-				streamTime++
-				const hours = Math.floor(streamTime / 3600)
-				const minutes = Math.floor((streamTime % 3600) / 60)
-				const seconds = streamTime % 60
-				formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
-					.toString()
-					.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-			}, 1000)
-		}
 	}
 </script>
 
@@ -89,12 +65,6 @@
 							</label>
 							<DropdownViewers {channel} />
 						</div>
-						{#if $is_feature_stats_enabled}
-							<span
-								class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center">
-								{formattedTime}
-							</span>
-						{/if}
 					</div>
 					{#if channel && nextchannel?._id === $page.params.channelId}
 						<VideoGrid {channel} />

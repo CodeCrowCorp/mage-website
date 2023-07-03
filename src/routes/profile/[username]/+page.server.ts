@@ -21,7 +21,10 @@ export const load = (async ({ params, locals }) => {
 			isSubscribed: get(`subscribes/relationship?source=${profile._id}`, {
 				userId: locals.user?.userId,
 				token: locals.user?.token
-			})
+			}),
+			totalPageViews: get(`stats`),
+			highestAndCurrentStreak: get(`stats`),
+			totalAndAvgHours: get(`stats`)
 		}
 	}
 }) satisfies PageServerLoad

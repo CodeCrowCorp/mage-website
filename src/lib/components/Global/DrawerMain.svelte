@@ -2,7 +2,6 @@
 	import IconDrawerStreak from '$lib/assets/icons/drawer/IconDrawerStreak.svelte'
 	import IconDrawerStreamDuration from '$lib/assets/icons/drawer/IconDrawerStreamDuration.svelte'
 	import IconDrawerHome from '$lib/assets/icons/drawer/IconDrawerHome.svelte'
-	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
 	import IconDrawerVideos from '$lib/assets/icons/drawer/IconDrawerVideos.svelte'
 	import IconDrawerCreatorSpace from '$lib/assets/icons/drawer/IconDrawerCreatorSpace.svelte'
 	import IconDrawerPremium from '$lib/assets/icons/drawer/IconDrawerPremium.svelte'
@@ -27,6 +26,7 @@
 	import { onMount } from 'svelte'
 	import { isOnline } from '$lib/stores/userStore'
 	import { get } from '$lib/api'
+	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svelte'
 
 	export var nav_drawer: HTMLInputElement
 
@@ -54,32 +54,47 @@
 			})
 		}
 	})
+	let isChannelPage = false
+	$: isChannelPage = $page.url.pathname.includes('/channel')
 </script>
 
-<div class="menu w-80 bg-base-100 text-base-content flex flex-col h-screen">
-	<ul>
-		<div class="w-fit mb-1">
+<div
+	class="menu w-80 {isChannelPage
+		? 'md:w-24 fixed h-full'
+		: 'h-screen'} bg-base-100 text-base-content flex flex-col">
+	<ul class={isChannelPage ? 'md:flex md:flex-col items-center md:w-full' : ''}>
+		<div class={isChannelPage ? 'menu w-full' : 'w-fit mb-1'}>
 			<ul>
 				<li>
-					<a href="/browse">
-						<IconMageText />
+					<a href="/browse" class={isChannelPage ? 'md:justify-center' : ''}>
+						{#if isChannelPage}
+							<IconMageLogo customClass={'w-20 md:w-7 mage-text hidden md:block'} />
+							<IconMageText customClass={'w-20 md:w-7 mage-text md:hidden'} />
+						{:else}
+							<IconMageText />
+						{/if}
 					</a>
 				</li>
 			</ul>
 		</div>
 		{#if currentUser}
-			<li>
-				<a href="/profile/{currentUser.username}" class="hero rounded-md cursor-pointer">
-					<div>
-						<div class="hero-content my-1 w-64">
-							<div class="max-w-full">
+			<li class={isChannelPage ? 'md:w-full' : ''}>
+				<a
+					href="/profile/{currentUser.username}"
+					class="{isChannelPage ? 'justify-center md:w-full' : 'hero'} rounded-md cursor-pointer">
+					<div class={isChannelPage ? 'md:text-center' : ''}>
+						<div class="hero-content {isChannelPage ? '' : 'my-1 w-64'}">
+							<div class={isChannelPage ? 'max-w-md' : 'max-w-full'}>
 								<div class="avatar {$isOnline ? 'online' : 'offline'}">
-									<div class="w-24 mask mask-squircle">
+									<div
+										class="w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser.isPaidPlan
+											? 'mask-hexagon'
+											: 'mask-squircle'}">
 										<img src={currentUser.avatar} alt="" />
 									</div>
 								</div>
 							</div>
-							<div class="grid grid-cols-3 gap-1">
+							<div class="grid grid-cols-3 gap-1 {isChannelPage ? 'md:hidden' : ''}">
 								<div class="col-span-3 tooltip flex" data-tip={currentUser.displayName}>
 									<p class="truncate">{currentUser.displayName}</p>
 								</div>
@@ -91,14 +106,16 @@
 									{streakCount} d
 								</p>
 								<IconDrawerStreamDuration />
-								<p class="col-span-2 tooltip text-start" data-tip="{hoursStreamed} hours streamed">
+								<p
+									class="col-span-2 tooltip text-start"
+									data-tip="{hoursStreamed} hours streamed today">
 									{hoursStreamed} h
 								</p>
 							</div>
 						</div>
 						<div class="tooltip" data-tip="level {progressBarLevel}">
 							<progress
-								class="progress w-64 mb-1"
+								class="progress w-64 {isChannelPage ? 'md:w-12' : 'mb-1'}"
 								style="--progress-bar-color: {progressBarColor}"
 								value={progressBarValue}
 								max="100" />
@@ -113,14 +130,14 @@
 			<li>
 				<a href="/admin">
 					<IconDrawerAdmin />
-					Admin
+					<span class={isChannelPage ? 'md:hidden' : ''}>Admin</span>
 				</a>
 			</li>
 		{/if}
 		<li>
 			<a class="custom-menu-item" href="/browse">
 				<IconDrawerHome />
-				Browse
+				<span class={isChannelPage ? 'md:hidden' : ''}>Browse</span>
 			</a>
 		</li>
 		{#if currentUser && $is_feature_video_responses_enabled}
@@ -140,21 +157,23 @@
 			<li>
 				<a href="/premium" class="custom-menu-item text-accent hover:text-accent font-medium">
 					<IconDrawerPremium />
-					Premium <span class="badge badge-accent text-black">New</span>
+					<span class={isChannelPage ? 'md:hidden' : ''}>Premium</span>
+					<span class="badge badge-accent text-black">New</span>
 				</a>
 			</li>
 		{/if}
 		<li>
 			<a class="custom-menu-item" href="/careers">
 				<IconDrawerCareers />
-				Careers</a>
+				<span class={isChannelPage ? 'md:hidden' : ''}> Careers </span>
+			</a>
 		</li>
 		<li>
 			<details>
 				<summary class="custom-menu-item"
 					><IconDrawerHelpAndLegal />
-					Help & Legal</summary>
-				<ul class="p-2 ml-5">
+					<span class={isChannelPage ? 'md:hidden' : ''}>Help & Legal</span></summary>
+				<ul class="p-2 {isChannelPage ? 'lg:menu-sm' : 'ml-5'}">
 					<li><a href="/contact">Contact</a></li>
 					<li><a href="/legal">Legal</a></li>
 				</ul>
@@ -163,14 +182,16 @@
 		<li>
 			<a class="custom-menu-item" href="/settings">
 				<IconDrawerSettings />
-				Settings</a>
+				<span class={isChannelPage ? 'md:hidden' : ''}> Settings </span>
+			</a>
 		</li>
 		{#if currentUser}
 			<form action="/logout" method="POST">
 				<li>
 					<button class="custom-menu-item" type="submit">
 						<IconDrawerLogOut />
-						Log out</button>
+						<span class={isChannelPage ? 'md:hidden' : ''}>Log out </span>
+					</button>
 				</li>
 			</form>
 		{:else}
@@ -184,12 +205,13 @@
 						}
 					}}>
 					<IconDrawerLogOut />
-					Log In</button>
+					<span class={isChannelPage ? 'md:hidden' : ''}>Log In </span>
+				</button>
 			</li>
 		{/if}
 	</ul>
 
-	<footer class="mt-auto p-6 py-5">
+	<footer class="mt-auto p-6 py-5 {isChannelPage ? 'md:hidden' : ''}">
 		<div class="flex gap-4 items-center">
 			<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 				<IconSocialGitHub />
@@ -200,12 +222,6 @@
 			<a href="https://twitter.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 				<IconSocialTwitter />
 			</a>
-			<!-- <a href="https://magiceden.io" target="_blank" rel="noreferrer">
-				<img src={IconSocialMagicEden} alt="" />
-			</a>
-			<a href="https://www.dexlab.space" target="_blank" rel="noreferrer">
-				<img src={IconSocialDexlab} alt="" />
-			</a> -->
 		</div>
 		<p>Code Crow © 2023</p>
 		<p class="text-gray-500">

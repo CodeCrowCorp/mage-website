@@ -10,6 +10,7 @@
 	import { emitChannelUpdate } from '$lib/websocket'
 	import { getColoredRole, setRole } from '$lib/utils'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
+	import { is_feature_stats_enabled } from '$lib/stores/remoteConfigStore'
 
 	export let video: any, channel: any
 
@@ -30,7 +31,11 @@
 		prevAudio: any,
 		isMounted: boolean = false,
 		isWebcamFocused: boolean = false,
-		speakingValue: number = 0
+		speakingValue: number = 0,
+		streamTime: number = 0,
+		timerInterval: any,
+		formattedTime: string = '00:00:00',
+		isHoverVideo: boolean = false
 
 	$: isScreenLive = false
 	$: isWebcamLive = false
@@ -62,6 +67,12 @@
 	$: if (isMounted && video.audio !== prevAudio) {
 		handleAudioChanges()
 	}
+
+	$: if ($is_feature_stats_enabled && (isScreenLive || isWebcamLive)) {
+		toggleTimer()
+	}
+
+	$: animate = isWebcamFocused ? '' : 'transition-all'
 
 	const handleScreenChanges = () => {
 		prevScreen = video.screen
@@ -286,16 +297,44 @@
 		})
 	}
 
-	$: animate = isWebcamFocused ? '' : 'transition-all'
+	const toggleTimer = () => {
+		if (timerInterval) {
+			clearInterval(timerInterval)
+			timerInterval = null
+		} else {
+			timerInterval = setInterval(() => {
+				streamTime++
+				const hours = Math.floor(streamTime / 3600)
+				const minutes = Math.floor((streamTime % 3600) / 60)
+				const seconds = streamTime % 60
+				formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
+					.toString()
+					.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+			}, 1000)
+		}
+	}
 </script>
 
-<div class={isScreenLive || isWebcamLive ? 'w-full h-full' : 'w-[500px] max-h-80'}>
+<div
+	class={isScreenLive || isWebcamLive ? 'w-full h-full' : 'w-[500px] max-h-80'}
+	on:mouseenter={() => (isHoverVideo = true)}
+	on:mouseleave={() => (isHoverVideo = false)}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
 		<img
 			src={video.avatar}
 			alt=""
-			class="absolute inset-0 w-24 md:w-24 mask mask-squircle object-cover m-auto" />
+			class="absolute inset-0 w-24 md:w-24 mask {video.isPaidPlan
+				? 'mask-hexagon'
+				: 'mask-squircle'} object-cover m-auto" />
 		<div class="absolute inset-0">
+			{#if $is_feature_stats_enabled && (isScreenLive || isWebcamLive)}
+				<span
+					class="btn btn-sm btn-neutral font-medium text-white border-none items-center w-fit absolute top-2 left-2 {isHoverVideo
+						? 'opacity-100'
+						: 'opacity-50'}">
+					{formattedTime}
+				</span>
+			{/if}
 			<video id={`screen-${video._id}`} autoplay muted class="rounded-md w-full h-full" />
 			<div
 				use:draggable={{ bounds: 'parent' }}
