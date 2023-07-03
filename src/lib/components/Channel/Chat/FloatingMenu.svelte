@@ -10,9 +10,9 @@
 
 	const handleClickOutside = (event: any) => {
 		const _id =
-			event.target.id ||
-			event.target.parentElement.id ||
-			event.target.parentElement.parentElement.id
+			event.target?.id ||
+			event.target.parentElement?.id ||
+			event.target.parentElement?.parentElement?.id
 
 		if (id !== _id) isFocused = false
 	}
