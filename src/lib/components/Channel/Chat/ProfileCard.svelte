@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores'
-	import { get } from '$lib/api'
+	import { get, post } from '$lib/api'
 	import { onMount } from 'svelte'
 	import { setProfile, getProfile } from '$lib/temp-store'
 	import { clickOutside } from '$lib/utils.js'
@@ -13,15 +13,27 @@
 
 	const toggle = async() => {
 		show = !show
+		if(show)loadProfile(false)
 	}
 
 	const handleClickOutside = (event: any) => {
 		show = false
 	}
 
-	onMount(async() => {
+	const doSubscribe = async() => {
 		loading = true
-		if(getProfile(userId)){
+		const resp = await post('subscribe', {
+			source1: profileData.profile._id,
+			source2: $page.data.user?.userId,
+			isSubscriber: true
+		})
+		loadProfile(true)
+		loading = false
+	}
+
+	const loadProfile = async(refresh: boolean) => {
+		loading = true
+		if(getProfile(userId) && !refresh){
 			profileData = getProfile(userId)
 			console.log("profile loaded from local")
 		}
@@ -41,12 +53,13 @@
 
 		}
 		loading = false
-	})
+	}
 
 	$: profile = profileData.profile
 	$: subscriberCount = profileData.subscriberCount || 0
 	$: interestCount = profileData.interestCount || 0
 	$: margin = (elt ? elt.getBoundingClientRect().height : 0) + 40
+	$: isSelf = userId === $page.data.user?.userId
 
 </script>
 <span use:clickOutside={handleClickOutside}>
@@ -55,24 +68,31 @@
 			style="margin-top: {-margin}px"
 			bind:this={elt}
 			data-popover
-			class="popover absolute -mt-2 z-50 dropdown-content text-sm font-light text-gray-500 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 dark:bg-gray-800 dark:border-gray-600">
+			class="absolute -mt-2 z-50 dropdown-content text-sm font-light text-gray-500 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 dark:bg-gray-800 dark:border-gray-600">
 			<div class="p-3">
 				
 				<div class="flex items-center justify-between mb-2">
 					<span>
-						<img class="w-10 h-10 rounded-full bg-base-100" src={profileData.profile.avatar} alt={profileData.profile.avatar} />
+						<img class="w-10 h-10 rounded-full bg-base-100 mask mask-squircle" src={profileData.profile.avatar} alt={profileData.profile.avatar} />
 					</span>
-					
-					{#if !profileData.isSubscribed}
-						<div>
-							<button type="button" class="btn">Subscribe</button>
-						</div>
-					{/if}
+					<div>
+						<button 
+							on:click={doSubscribe}
+							disabled={isSelf || loading } 
+							type="button" 
+							class="text-white bg-blue-700 hover:bg-blue-800 
+							focus:ring-4 focus:ring-blue-300 font-medium rounded-lg 
+							text-xs px-3 py-1.5 dark:bg-blue-600 dark:hover:bg-blue-700 
+							focus:outline-none dark:focus:ring-blue-800"
+						>
+							{loading ? "Loading..." : !profileData.isSubscribed ? "Unsubscribe" : "Subscribe"}
+						</button>
+					</div>
 					
 					
 				</div>
 				
-				<p class="text-base font-semibold leading-none">
+				<p class="text-base font-semibold leading-none text-gray-900">
 					{profileData.profile.displayName || ""}
 				</p>
 				<p class="mb-3 text-sm font-normal">
@@ -84,18 +104,18 @@
 				<ul class="flex text-sm font-light">
 					<li class="mr-2">
 						<span class="hover:underline">
-							<span class="font-semibold">{subscriberCount}</span>
-							<span>Subscribers</span>
+							<a class="font-semibold">{subscriberCount}</a>
+							<a>Subscribers</a>
 						</span>
 					</li>
 					<li>
 						<span class="hover:underline">
-							<span class="font-semibold">{interestCount}</span>
-							<span>Interests</span>
+							<a class="font-semibold">{interestCount}</a>
+							<a>Interests</a>
 						</span>
 					</li>
 				</ul>
-				<div data-popper-arrow class="tail bg-white w-4 h-4 absolute"/>
+				<div class="rotate-45 bg-white w-4 h-4 absolute"/>
 			</div>
 			
 		</div>
@@ -105,12 +125,3 @@
 		<slot/>
 	</span>
 	</span>
-
-	<style>
-		.tail {
-			transform: rotate(180deg);
-		}
-		.popover {
-			box-shadow: 1px 2px 8px 1px #f3f4f647
-		}
-	</style>
