@@ -158,7 +158,9 @@
 				<a href="/premium" class="custom-menu-item text-accent hover:text-accent font-medium">
 					<IconDrawerPremium />
 					<span class={isChannelPage ? 'md:hidden' : ''}>Premium</span>
-					<span class="badge badge-accent text-black">New</span>
+					{#if !isChannelPage}
+						<span class="badge badge-accent text-black">New</span>
+					{/if}
 				</a>
 			</li>
 		{/if}
