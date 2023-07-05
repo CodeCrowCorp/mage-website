@@ -10,7 +10,7 @@
 
 	let params = $page.params
 
-	const useOueryEffect = createEffect();
+	const useOueryEffect = createEffect()
 
 	let showAddCategory = false,
 		maxCategory = 4
@@ -30,34 +30,30 @@
 		}, 200)
 	}
 
-	let username: HTMLInputElement, submitBtn:any;
-	let prevUsername = ""
-	
+	let username: HTMLInputElement, submitBtn: any
+	let prevUsername = ''
+
 	$: useOueryEffect(() => {
 		if ($page.status === 422 && $page.form && $page.form.username !== prevUsername) {
 			submitBtn.disabled = false
 			let v = username.value
-			username.value = ""
+			username.value = ''
 			username.setCustomValidity('This username is already taken')
 			submitBtn.click()
 			username.value = v
 			prevUsername = $page.form.username
 		}
-	}, [$page]);
+	}, [$page])
 
 	$: useOueryEffect(() => {
-
-		for(let key in $page.params){
-			if($page.params[key] !== params[key]){
-				if(submitBtn)
-					submitBtn.disabled = false
+		for (let key in $page.params) {
+			if ($page.params[key] !== params[key]) {
+				if (submitBtn) submitBtn.disabled = false
 				toggleDrawer()
-				break;
+				break
 			}
 		}
-
 	}, [$page.params])
-
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
@@ -85,8 +81,7 @@
 				}}
 				on:submit={() => {
 					submitBtn.disabled = true
-				}}
-			>
+				}}>
 				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col rounded-lg">
 					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 						Update Profile
@@ -110,11 +105,10 @@
 							class="input input-primary input-bordered mt-5 w-full"
 							placeholder="Username"
 							bind:this={username}
-							on:input={() =>{
+							on:input={() => {
 								username.setCustomValidity('')
-							}}
-						/>
-						
+							}} />
+
 						<input
 							bind:value={profile.website}
 							type="url"
@@ -177,12 +171,7 @@
 							type="button"
 							class="btn btn-neutral text-white grow"
 							on:click={() => toggleDrawer()}>Cancel</button>
-						<button 
-							type="submit" 
-							class="btn btn-primary grow"
-							bind:this={submitBtn}
-							
-						>Save</button>
+						<button type="submit" class="btn btn-primary grow" bind:this={submitBtn}>Save</button>
 					</div>
 				</div>
 			</form>
