@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte'
 	import { subscriber_count, interest_count } from '$lib/stores/profileStore'
 	import { enhance } from '$app/forms'
-	import { get } from '$lib/api'
+	import { post } from '$lib/api.js'
 
 	export let profile: any,
 		subscriberCount: Promise<any>,
@@ -14,18 +14,30 @@
 		showDrawer = false
 
 	let isSubscribing = false,
-		isSub: any
+		isSubscriber: any
+
+	let subValues: any = null
 
 	$: currentUser = $page.data.user?.user
+
+	const refreash = async () => {
+		subValues = await isSubscribed
+	}
+
+	const doSubscribe = async () => {
+		subValues = null
+		const resp = await post('subscribe', {
+			source1: profile._id,
+			source2: $page.data.user?.userId,
+			isSubscriber: true
+		})
+		refreash()
+	}
 
 	onMount(async () => {
 		$subscriber_count = await subscriberCount
 		$interest_count = await interestCount
-		// isSub = await get(`subscribes/relationship?source=${profile._id}`, {
-		// 	userId: $page.data.user?.userId,
-		// 	token: $page.data.user?.token
-		// })
-		// isSubscribing = isSub.isSubscriber
+		refreash()
 	})
 </script>
 
@@ -57,16 +69,9 @@
 					data.append('source2', $page.data.user?.userId)
 				}}>
 				<div class="flex gap-4">
-					{#await isSubscribed}
-						<button class="btn btn-secondary" disabled>Unsubscribe</button>
-					{:then value}
-						<button
-							class="btn btn-secondary"
-							disabled={profile._id === $page.data.user?.userId || !currentUser}
-							on:click={() => {
-								isSubscribing = !value.isSubscribed
-							}}>{value.isSubscribed ? 'Unsubscribe' : 'Subscribe'}</button>
-					{/await}
+					<button disabled={!subValues} class="btn btn-secondary" on:click={doSubscribe}>
+						{subValues?.isSubscriber ? 'Unsubscribe' : !subValues ? 'Loading...' : 'Subscribe'}
+					</button>
 					<!--TODO: open sponsor dialog-->
 					<button class="btn btn-primary" formaction="?/sponsor" disabled>Sponsor</button>
 				</div>
