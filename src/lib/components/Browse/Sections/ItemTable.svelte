@@ -13,7 +13,7 @@
 	<td>
 		<div class="flex items-center space-x-2 my-3 pl-3">
 			<div class="avatar">
-				<div class="w-12 mask {channel.isPaidPlan ? 'mask-hexagon' : 'mask-squircle'}">
+				<div class="w-12 mask {channel?.isPaidPlan ? 'mask-hexagon' : 'mask-squircle'}">
 					<img src={channel.avatar} alt="" />
 				</div>
 			</div>

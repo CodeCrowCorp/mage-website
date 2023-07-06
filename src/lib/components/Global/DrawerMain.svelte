@@ -87,7 +87,7 @@
 							<div class={isChannelPage ? 'max-w-md' : 'max-w-full'}>
 								<div class="avatar {$isOnline ? 'online' : 'offline'}">
 									<div
-										class="w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser.isPaidPlan
+										class="w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser?.isPaidPlan
 											? 'mask-hexagon'
 											: 'mask-squircle'}">
 										<img src={currentUser.avatar} alt="" />
