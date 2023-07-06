@@ -3,7 +3,9 @@
 	import IconDrawerChevron from '$lib/assets/icons/drawer/IconDrawerChevron.svelte'
 	import LoadingItemCarousel from '$lib/components/Browse/Sections/LoadingItemCarousel.svelte'
 	import { onMount } from 'svelte'
-	import Swiper, { Navigation } from 'swiper'
+	import Swiper from 'swiper'
+	import { Navigation } from 'swiper/modules'
+
 	import ItemCarousel from '$lib/components/Browse/Sections/ItemCarousel.svelte'
 	import 'swiper/css'
 
@@ -60,7 +62,8 @@
 {:then value}
 	{#if value?.length > 0}
 		<div class={'relative p-1 transition-opacity ease-in duration-100 ' + swiperClass}>
-			<div class="btn btn-neutral text-white p-2 btn-prev btn-square absolute top-2/4 left-1 z-10 ml-3">
+			<div
+				class="btn btn-neutral text-white p-2 btn-prev btn-square absolute top-2/4 left-1 z-10 ml-3">
 				<IconDrawerLeft />
 			</div>
 			<div class="swiper carousel !pt-10 mx-8">
@@ -70,7 +73,8 @@
 					{/each}
 				</div>
 			</div>
-			<div class="btn btn-neutral text-white z-10 p-2 btn-next btn-square absolute top-2/4 right-1 mr-3">
+			<div
+				class="btn btn-neutral text-white z-10 p-2 btn-next btn-square absolute top-2/4 right-1 mr-3">
 				<IconDrawerChevron />
 			</div>
 		</div>
