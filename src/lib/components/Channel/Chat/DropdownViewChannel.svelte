@@ -16,9 +16,10 @@
 		isSubscribing: boolean = false,
 		isFavorite: boolean = false
 
-	$: if (channel) {
-		getHostAndRelationship()
-	}
+	// $: if (channel) {
+	// 	console.log("channelssss",channel);
+	// 	getHostAndRelationship();
+	// }
 
 	const getHostAndRelationship = async () => {
 		host = await get(`users/search/id?userId=${channel.user}`)
