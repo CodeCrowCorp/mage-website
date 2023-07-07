@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte'
 	import { setProfile, getProfile } from '$lib/stores/helperStore'
 	import { clickOutside } from '$lib/utils.js'
+	import { put, del } from '$lib/api'
 
 	export let userId: string
 	let profileData: any = getProfile(userId) || { profile: {} }
@@ -20,14 +21,23 @@
 		show = false
 	}
 
-	const doSubscribe = async () => {
+	const doSubscribe = async (isSubscribe: any) => {
 		loading = true
-		const resp = await post('subscribe', {
-			source1: profileData.profile._id,
-			source2: $page.data.user?.userId,
-			isSubscriber: true
-		})
-		loadProfile(true)
+
+		const source1 = profile._id
+		const source2 = $page.data.user?.userId
+		const isSubscribing = isSubscribe.toString()
+
+		if (isSubscribing === 'true') {
+			const resp = await put(
+				`subscribes`,
+				{ source1, source2, isSubscribing }
+			)
+		} else {
+			const resp = await del(`subscribes?source1=${source1}&source2=${source2}`)
+		}
+
+		await loadProfile(true)
 		loading = false
 	}
 
@@ -62,7 +72,7 @@
 	$: isSelf = userId === $page.data.user?.userId
 </script>
 
-<span use:clickOutside={handleClickOutside}>
+<span>
 	{#if show}
 		<div
 			style="margin-top: {-margin}px"
@@ -79,11 +89,15 @@
 					</span>
 					<!-- <div>
 						<button
-							on:click={doSubscribe}
+							on:click={() => doSubscribe(!profileData.isSubscribed?.isInterested)}
 							disabled={isSelf || loading}
 							type="button"
 							class="btn btn-secondary btn-sm">
-							{loading ? 'Loading...' : !profileData.isSubscribed ? 'Subscribe' : 'Unsubscribe'}
+							{loading
+								? 'Loading...'
+								: !profileData.isSubscribed?.isInterested
+								? 'Subscribe'
+								: 'Unsubscribe'}
 						</button>
 					</div> -->
 				</div>
