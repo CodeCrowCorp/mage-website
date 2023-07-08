@@ -225,7 +225,9 @@
 				<IconSocialTwitter />
 			</a>
 		</div>
-		<p>Code Crow © 2023</p>
+		<p>
+			<a href="https://codecrow.io" target="_blank" class="link link-hover">Code Crow © 2023</a>
+		</p>
 		<p class="text-gray-500">
 			v{__VERSION__} [{env.PUBLIC_ENV === 'production' ? 'beta' : env.PUBLIC_ENV}]
 		</p>
