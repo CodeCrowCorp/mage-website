@@ -165,7 +165,7 @@
 			</li>
 		{/if}
 		<li>
-			<a class="custom-menu-item" href="/careers">
+			<a class="custom-menu-item" href="https://codecrow.io/careers" target="_blank">
 				<IconDrawerCareers />
 				<span class={isChannelPage ? 'md:hidden' : ''}> Careers </span>
 			</a>
@@ -176,8 +176,8 @@
 					><IconDrawerHelpAndLegal />
 					<span class={isChannelPage ? 'md:hidden' : ''}>Help & Legal</span></summary>
 				<ul class="p-2 {isChannelPage ? 'lg:menu-sm' : 'ml-5'}">
-					<li><a href="/contact">Contact</a></li>
-					<li><a href="/legal">Legal</a></li>
+					<li><a href="https://codecrow.io/contact" target="_blank">Contact</a></li>
+					<li><a href="https://codecrow.io/legal" target="_blank">Legal</a></li>
 				</ul>
 			</details>
 		</li>
