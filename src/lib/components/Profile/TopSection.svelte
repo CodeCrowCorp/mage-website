@@ -95,7 +95,13 @@
 						disabled={!subValues || profile._id === $page.data.user?.userId || !currentUser}
 						on:click={() => doSubscribe(!subValues?.isInterested)}
 						class="btn btn-secondary">
-						{subValues?.isInterested ? 'Unsubscribe' : !subValues ? 'Loading...' : 'Subscribe'}
+						{#if !subValues}
+							<progress class="progress w-56"></progress>
+							{:else if subValues?.isInterested}
+								Unsubscribe
+							{:else}
+								Subscribe
+						{/if}
 					</button>
 					<!--TODO: open sponsor dialog-->
 					<button class="btn btn-primary" formaction="?/sponsor" disabled>Sponsor</button>
