@@ -28,13 +28,13 @@
 		const source2 = $page.data.user?.userId
 		const isSubscribing = isSubscribe.toString()
 
-		if (isSubscribing === 'true') {
-			const resp = await put(
+		if (isSubscribing == 'true') {
+			await put(
 				`subscribes`,
 				{ source1, source2, isSubscribing }
 			)
 		} else {
-			const resp = await del(`subscribes?source1=${source1}&source2=${source2}`)
+			await del(`subscribes?source1=${source1}&source2=${source2}`)
 		}
 
 		await loadProfile(true)
@@ -45,7 +45,6 @@
 		loading = true
 		if (getProfile(userId) && !refresh) {
 			profileData = getProfile(userId)
-			console.log('profile loaded from local')
 		} else {
 			profileData.profile = await get(`users/search/id?userId=${userId}`)
 			profileData.subscriberCount = await get(
@@ -60,7 +59,6 @@
 			}
 
 			setProfile(userId, profileData)
-			console.log('profile loaded from server')
 		}
 		loading = false
 	}
@@ -72,7 +70,7 @@
 	$: isSelf = userId === $page.data.user?.userId
 </script>
 
-<span>
+<span use:clickOutside={handleClickOutside}>
 	{#if show}
 		<div
 			style="margin-top: {-margin}px"
@@ -93,11 +91,13 @@
 							disabled={isSelf || loading}
 							type="button"
 							class="btn btn-secondary btn-sm">
-							{loading
-								? 'Loading...'
-								: !profileData.isSubscribed?.isInterested
-								? 'Subscribe'
-								: 'Unsubscribe'}
+							{#if loading}
+							<span class="loading loading-dots loading-md"></span>
+							{:else if profileData.isSubscribed?.isInterested}
+								Unsubscribe
+							{:else}
+								Subscribe
+							{/if}
 						</button>
 					</div> -->
 				</div>

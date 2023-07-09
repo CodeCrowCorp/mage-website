@@ -96,7 +96,7 @@
 						on:click={() => doSubscribe(!subValues?.isInterested)}
 						class="btn btn-secondary">
 						{#if !subValues}
-							<progress class="progress w-56"></progress>
+							<span class="loading loading-dots loading-md"></span>
 							{:else if subValues?.isInterested}
 								Unsubscribe
 							{:else}
