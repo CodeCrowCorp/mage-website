@@ -133,8 +133,6 @@
 	$: codeSnippet = isCodeSnippet(sender.message) ? getCodeSnippet(sender.message) : false
 </script>
 
-
-
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <ul class="menu" on:click={copy}>
 	<li class="group relative">
@@ -147,17 +145,15 @@
 						>{role}</span>
 				{/if}
 				{#if role !== '🤖 AI'}
-						<!-- <span
+					<!-- <span
 							id="b1"
 							class="{coloredRole.textColor} font-medium">@{sender.user?.username}</span> -->
 
-							<ProfileCard userId={sender.user?.userId}>
-								<span
-									class="{coloredRole.textColor} font-medium"
-								>
-									@{sender.user?.username}
-								</span>
-							</ProfileCard>
+					<ProfileCard userId={sender.user?.userId}>
+						<span class="{coloredRole.textColor} font-medium">
+							@{sender.user?.username}
+						</span>
+					</ProfileCard>
 				{/if}
 				{#if isImage(sender.message)}
 					<img class="py-2 pr-2" src={sender.message} alt="imgs" />
@@ -182,46 +178,45 @@
 
 			<div
 				class="group-hover:block dropdown-menu absolute hidden right-0 dropdown dropdown-left dropdown-end"
-			>
-			<div class="rounded-lg bg-base-200 m-1 border-base-100 border-2">
-				<IconChatHorizontalMore />
+				tabindex="1">
+				<div class="rounded-lg bg-base-200 m-1 border-base-100 border-2">
+					<IconChatHorizontalMore />
+				</div>
+				<ul tabindex="1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 z-10">
+					<!-- svelte-ignore a11y-missing-attribute -->
+					<li class="disabled"><a><IconChatReact /> React </a></li>
+					<!-- svelte-ignore a11y-missing-attribute -->
+					<li class="disabled"><a><IconChatQuote /> Quote </a></li>
+					{#if showRoleItem && !channel.bans.includes(sender.user?.userId)}
+						<li>
+							<!-- svelte-ignore a11y-missing-attribute -->
+							<a on:click={() => toggleMod()}
+								><IconChatMod /> {role === 'Mod' ? 'Revoke Mod' : 'Grant Mod'}
+							</a>
+						</li>
+						<li>
+							<!-- svelte-ignore a11y-missing-attribute -->
+							<a on:click={() => toggleGuest()}
+								><IconChatGuest /> {isGuest ? 'Revoke Guest' : 'Grant Guest'}
+							</a>
+						</li>
+					{/if}
+					{#if showBanItem}
+						<li>
+							<!-- svelte-ignore a11y-missing-attribute -->
+							<a on:click={() => toggleBan()}
+								><IconChatBan /> {channel.bans?.includes(sender.user?.userId) ? 'Unban' : 'Ban'}
+							</a>
+						</li>
+					{/if}
+					{#if hostId === $page.data.user?.userId || sender.user?.userId === $page.data.user?.userId}
+						<li>
+							<!-- svelte-ignore a11y-missing-attribute -->
+							<a on:click={() => deleteMessage()}><IconChatDelete /> Delete</a>
+						</li>
+					{/if}
+				</ul>
 			</div>
-			<ul class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 z-10">
-				<!-- svelte-ignore a11y-missing-attribute -->
-				<li class="disabled"><a><IconChatReact /> React </a></li>
-				<!-- svelte-ignore a11y-missing-attribute -->
-				<li class="disabled"><a><IconChatQuote /> Quote </a></li>
-				{#if showRoleItem && !channel.bans.includes(sender.user?.userId)}
-					<li>
-						<!-- svelte-ignore a11y-missing-attribute -->
-						<a on:click={() => toggleMod()}
-							><IconChatMod /> {role === 'Mod' ? 'Revoke Mod' : 'Grant Mod'}
-						</a>
-					</li>
-					<li>
-						<!-- svelte-ignore a11y-missing-attribute -->
-						<a on:click={() => toggleGuest()}
-							><IconChatGuest /> {isGuest ? 'Revoke Guest' : 'Grant Guest'}
-						</a>
-					</li>
-				{/if}
-				{#if showBanItem}
-					<li>
-						<!-- svelte-ignore a11y-missing-attribute -->
-						<a on:click={() => toggleBan()}
-							><IconChatBan /> {channel.bans?.includes(sender.user?.userId) ? 'Unban' : 'Ban'}
-						</a>
-					</li>
-				{/if}
-				{#if hostId === $page.data.user?.userId || sender.user?.userId === $page.data.user?.userId}
-					<li>
-						<!-- svelte-ignore a11y-missing-attribute -->
-						<a on:click={() => deleteMessage()}><IconChatDelete /> Delete</a>
-					</li>
-				{/if}
-			</ul>
-			</div>
-		
 		</div>
 	</li>
 </ul>
@@ -231,5 +226,4 @@
 		pointer-events: none;
 		color: #ccc;
 	}
-	
 </style>

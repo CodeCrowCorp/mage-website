@@ -11,10 +11,11 @@
 	import LastItemInViewport from '$lib/actions/LastItemInViewport'
 
 	export let channel: any = undefined,
-		showEditChannelDrawer: boolean = false
+		showEditChannelDrawer: boolean = false,
+		viewers: any[] = []
 	let chatHistory: any[] = [],
 		chatDrawerElement: HTMLElement
-	let cursor = "";
+	let cursor = ''
 
 	channel_message.subscribe((value) => {
 		if (!value) return
@@ -30,7 +31,7 @@
 						channel,
 						currentUserId: $page.data.user?.userId
 					})
-					return message;
+					return message
 				})
 
 				chatHistory = [...chatHistory, ...messages]
@@ -68,14 +69,6 @@
 		$is_chat_drawer_open = false
 	})
 
-	const createuserList = (list: any[]) => {
-		let users: any = {}
-		list.forEach((chat) => {
-			if ($page.data.user?.userId !== chat.user.userId) users[chat.user.userId] = chat.user
-		})
-		return Object.keys(users).map((key) => users[key])
-	}
-
 	const loadMore = () => {
 		if (
 			$channel_connection === `open-${channel._id}` &&
@@ -85,12 +78,10 @@
 				channelSocket: channel.socket,
 				channelId: channel._id,
 				skip: 100,
-				cursor: cursor || "none"
+				cursor: cursor || 'none'
 			})
 		}
 	}
-
-	$: users = createuserList(chatHistory)
 </script>
 
 <div class="bg-base-100 flex flex-col overflow-y-hidden w-72 md:w-full h-full rounded-lg">
@@ -102,6 +93,6 @@
 		<span use:LastItemInViewport on:loadMore={loadMore} />
 	</div>
 	<div class="flex flex-row mt-auto p-3 w-full">
-		<ChatInput bind:channel bind:users />
+		<ChatInput bind:channel bind:viewers />
 	</div>
 </div>

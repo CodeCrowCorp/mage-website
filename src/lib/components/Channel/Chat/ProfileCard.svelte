@@ -77,7 +77,7 @@
 							src={profileData.profile.avatar}
 							alt={profileData.profile.avatar} />
 					</span>
-					<div>
+					<!-- <div>
 						<button
 							on:click={doSubscribe}
 							disabled={isSelf || loading}
@@ -85,7 +85,7 @@
 							class="btn btn-secondary btn-sm">
 							{loading ? 'Loading...' : !profileData.isSubscribed ? 'Subscribe' : 'Unsubscribe'}
 						</button>
-					</div>
+					</div> -->
 				</div>
 
 				<p class="text-base font-semibold leading-none">
