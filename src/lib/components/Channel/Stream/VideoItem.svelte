@@ -48,6 +48,7 @@
 	$: showBanItem =
 		(channel.user === $page.data.user?.userId ||
 			channel?.mods?.includes($page.data.user?.userId)) &&
+		channel.user !== video._id &&
 		video._id !== $page.data.user?.userId &&
 		role !== '🤖 AI'
 

@@ -20,14 +20,18 @@
 		$channel_connection === `open-${channel._id}` && $page.data.user?.userId
 	$: isHost = channel.user === $page.data.user?.userId
 
+	$: viewersWithOutHost = viewers.filter((viewer) => viewer.userId !== channel.user)
+
 	function insert(str: string, index: number, value: string) {
 		return str.substr(0, index) + value + str.substr(index)
 	}
 
 	const sendMessage = () => {
 		if (messageIsCommand && !chatMessage.startsWith('/ai ')) {
-			if (selectedCommand && selectedUser >= 0) {
-				const user = viewers[selectedUser]
+			if (selectedCommand) {
+				const usernameFromMsg = chatMessage.substring(chatMessage.indexOf('@') + 1)
+				const user = viewersWithOutHost.find((viewer: any) => viewer.username === usernameFromMsg)
+				if (!user) return
 				executeCommand(selectedCommand, user.userId)
 			}
 		} else if (!chatMessage.startsWith('/') || chatMessage.startsWith('/ai')) {
@@ -110,6 +114,7 @@
 	// toggle commands handlers
 
 	const toggleBan = (userId: string) => {
+		if (channel.user === userId) return
 		let isEnabled = false
 		if (!channel.bans.includes(userId)) {
 			channel.bans.push(userId)
@@ -127,6 +132,7 @@
 	}
 
 	const toggleMod = (userId: string) => {
+		if (channel.user === userId) return
 		if (!channel.bans.includes(userId)) {
 			let isEnabled = false
 			if (!channel.mods?.includes(userId)) {
@@ -144,6 +150,7 @@
 	}
 
 	const toggleGuest = (userId: string) => {
+		if (channel.user === userId) return
 		if (!channel.bans.includes(userId)) {
 			let isEnabled = false
 			if (!channel.guests.includes(userId) && channel.guests.length < 9) {
@@ -252,12 +259,12 @@
 			</div>
 		{/if}
 
-		{#if viewers.length > 0 && showUsers}
+		{#if viewersWithOutHost.length > 0 && showUsers}
 			<div
 				class={'dropdown dropdown-top w-full rounded-box bg-white ' +
 					(showUsers ? 'dropdown-open' : '')}>
 				<ul class="dropdown-content menu p-2 shadow bg-base-300 rounded-box w-full">
-					{#each viewers as user, idx}
+					{#each viewersWithOutHost as user, idx}
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<li
 							on:click={() => {
@@ -293,7 +300,7 @@
 							if (showUsers) {
 								if (selectedUser >= 0) {
 									const user = viewers[selectedUser]
-									chatMessage = chatMessage.replace(/@/, '@' + user.username) + ' '
+									chatMessage = chatMessage.replace(/@/, '@' + user.username)
 								}
 							} else {
 								if (selectedCommand) {
