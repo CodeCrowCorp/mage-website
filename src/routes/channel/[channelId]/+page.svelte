@@ -33,7 +33,8 @@
 		viewers: any[] = []
 
 	$: userCount = 0
-	$: isHostOrGuest = false
+	$: isHostOrGuest =
+		channel?.user === $page.data.user?.userId || channel?.guests?.includes($page.data.user?.userId)
 
 	$: if (channel) {
 		if (channel._id !== $page.params.channelId) {
