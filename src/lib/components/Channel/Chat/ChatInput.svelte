@@ -25,7 +25,7 @@
 	}
 
 	const sendMessage = () => {
-		if (messageIsCommand) {
+		if (messageIsCommand && !chatMessage.startsWith('/ai ')) {
 			if (selectedCommand && selectedUser >= 0) {
 				const user = viewers[selectedUser]
 				executeCommand(selectedCommand, user.userId)
@@ -188,8 +188,7 @@
 	]
 
 	$: messageIsCommand =
-		(chatMessage && chatMessage.startsWith('/') && /[a-z] @[a-z]/.test(chatMessage.substr(1))) ||
-		!chatMessage.startsWith('/ai ')
+		chatMessage && chatMessage.startsWith('/') && /[a-z] @[a-z]/.test(chatMessage.substr(1))
 
 	$: showUsers = chatMessage && chatMessage.endsWith('@')
 	$: showCommandOptions =
