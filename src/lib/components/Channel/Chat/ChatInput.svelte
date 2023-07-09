@@ -188,16 +188,15 @@
 	]
 
 	$: messageIsCommand =
-		chatMessage &&
-		chatMessage.startsWith('/') &&
-		/[a-z] @[a-z]/.test(chatMessage.substr(1)) &&
-		chatMessage.startsWith('/ai ')
+		(chatMessage && chatMessage.startsWith('/') && /[a-z] @[a-z]/.test(chatMessage.substr(1))) ||
+		!chatMessage.startsWith('/ai ')
 
 	$: showUsers = chatMessage && chatMessage.endsWith('@')
 	$: showCommandOptions =
 		chatMessage &&
 		chatMessage.startsWith('/') &&
 		!chatMessage.startsWith('/ai ') &&
+		!chatMessage.includes('@') &&
 		(channel.user === $page.data.user?.userId || channel.mods?.includes($page.data.user?.userId)) &&
 		!showUsers
 </script>
