@@ -8,8 +8,9 @@
 	import EmojiPicker from '$lib/components/Channel/Chat/EmojiPicker.svelte'
 	import GifPicker from '$lib/components/Channel/Chat/GifPicker.svelte'
 
-	export let channel: any
-	export let users: any
+	export let channel: any,
+		viewers: any[] = []
+
 	let selectedCommand = 0
 	let selectedUser = 0
 	let inputBox: any = null
@@ -26,7 +27,7 @@
 	const sendMessage = () => {
 		if (messageIsCommand) {
 			if (selectedCommand && selectedUser >= 0) {
-				const user = users[selectedUser]
+				const user = viewers[selectedUser]
 				executeCommand(selectedCommand, user.userId)
 			}
 		} else if (!chatMessage.startsWith('/') || chatMessage.startsWith('/ai')) {
@@ -55,15 +56,15 @@
 	}
 
 	const slectCommandfromKey = (key: string) => {
-		if (key === 'ArrowDown' && selectedCommand < 3) {
+		if (key === 'ArrowDown' && selectedCommand < 4) {
 			selectedCommand++
-		} else if (key === 'ArrowUp' && selectedCommand >= 1) {
+		} else if (key === 'ArrowUp' && selectedCommand >= 2) {
 			selectedCommand--
 		}
 	}
 
 	const slectUserfromKey = (key: string) => {
-		if (key === 'ArrowDown' && selectedUser < users.length) {
+		if (key === 'ArrowDown' && selectedUser < viewers.length) {
 			selectedUser++
 		} else if (key === 'ArrowUp' && selectedUser >= 0) {
 			selectedUser--
@@ -253,12 +254,12 @@
 			</div>
 		{/if}
 
-		{#if users.length > 0 && showUsers}
+		{#if viewers.length > 0 && showUsers}
 			<div
 				class={'dropdown dropdown-top w-full rounded-box bg-white ' +
 					(showUsers ? 'dropdown-open' : '')}>
 				<ul class="dropdown-content menu p-2 shadow bg-base-300 rounded-box w-full">
-					{#each users as user, idx}
+					{#each viewers as user, idx}
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<li
 							on:click={() => {
@@ -293,7 +294,7 @@
 							e.preventDefault()
 							if (showUsers) {
 								if (selectedUser >= 0) {
-									const user = users[selectedUser]
+									const user = viewers[selectedUser]
 									chatMessage = chatMessage.replace(/@/, '@' + user.username) + ' '
 								}
 							} else {
