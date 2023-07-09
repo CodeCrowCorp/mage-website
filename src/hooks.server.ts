@@ -56,7 +56,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	if (Authenticate({ pathname, user_role: role || 'user' })) {
-		if (maintenanceMode && !['/contact', '/legal', '/careers'].includes(pathname)) {
+		if (maintenanceMode) {
 			if (pathname === '/maintenance') {
 				return await resolve(event)
 			} else {
