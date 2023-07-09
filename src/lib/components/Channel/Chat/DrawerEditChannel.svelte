@@ -1,6 +1,7 @@
 <script lang="ts">
 	// import IconPhoto from '$lib/assets/icons/IconPhoto.svelte'
 	import { tags } from '$lib/stores/channelStore'
+	import {video_items,is_sharing_screen,is_sharing_webcam} from '$lib/stores/streamStore'
 	import { onDestroy, onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
@@ -8,6 +9,9 @@
 	import { enhance } from '$app/forms'
 	import { category_list } from '$lib/stores/channelStore'
 	import { emitChannelUpdate } from '$lib/websocket'
+	import IconCamera from '$lib/assets/icons/IconCamera.svelte'
+	import IconPhoto from '$lib/assets/icons/IconPhoto.svelte'
+
 
 	export let channel: any, showDrawer: boolean
 
@@ -16,7 +20,8 @@
 		showThumbnail = false,
 		showAddCategory = false,
 		maxTag = 3,
-		maxCategory = 4
+		maxCategory = 4,
+		imageSrc = ""
 
 	$: maxTagLabel = channel?.tags.length == maxTag ? 'max reached' : 'max ' + maxTag
 	$: maxCategoryLabel =
@@ -47,6 +52,35 @@
 			return
 		}
 		showThumbnail = false
+	}
+
+	const checkVideo = (e: any) => {
+		e.preventDefault();
+		showThumbnail = true
+		video_items.subscribe((video)=>{
+			if(video.length > 0){
+				let screenElement = document.getElementById(`screen-${video[0]._id}`) as HTMLVideoElement
+				let webcamElement = document.getElementById(`webcam-${video[0]._id}`) as HTMLVideoElement
+				let canvas = document.createElement('canvas')
+				canvas.width = 1920;
+				canvas.height = 1080;
+
+				let ctx = canvas.getContext('2d');
+
+				console.log(screenElement);
+				console.log(webcamElement);
+
+				if(ctx !== null){
+				ctx.drawImage(screenElement, 0, 0, canvas.width, canvas.height);
+				ctx.globalAlpha = 0.9;
+				ctx.drawImage(webcamElement, 1300, 650, canvas.width-1400, canvas.height - 650)
+				}
+
+				let screenshot = canvas.toDataURL('image/jpeg');
+				imageSrc = screenshot
+				//thumbnailRef.setAttribute('src', screenshot);
+			}
+		})
 	}
 
 	const addTag = (tagName: string) => {
@@ -103,23 +137,36 @@
 					<div class="flex flex-col p-3">
 						<p class="text-lg font-semibold">Please hide all sensitive data before going live.</p>
 
-						<!-- <div class="flex flex-row justify-center w-full">
+						 <div class="flex flex-row justify-center w-full">
 							<div class="card w-40 shadow-xl">
 								<div class="card-body items-center max-h-40 {showThumbnail ? '!p-3' : ''}">
 									{#if showThumbnail}
-										<img bind:this={thumbnailRef} src="" alt="Preview" class="rounded-lg h-full" />
+										<img bind:this={thumbnailRef} src={imageSrc} alt="Preview" class="rounded-lg h-full" />
 									{:else}
 										<IconPhoto />
 									{/if}
 								</div>
 							</div>
 						</div>
-
+						<div class="flex justify-center items-center">
+							<button on:click={checkVideo}><IconCamera /></button>
+						</div>
+						<input 
+						type="hidden"
+						name="imageSrc"
+						value={imageSrc}
+						/>
+						<input
+						type="hidden"
+						name="channelId"
+						value={channel._id}
+						/>
 						<input
 							bind:this={fileuploader}
 							on:change={fileupload}
 							type="file"
-							class="file-input file-input-bordered file-input-primary w-full mt-5" /> -->
+							name="thumbnail"
+							class="file-input file-input-bordered file-input-primary w-full mt-5" /> 
 						<input
 							bind:value={channel.title}
 							type="text"
