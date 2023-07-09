@@ -91,6 +91,10 @@
 		})
 	}
 
+	const copy = () => {
+		copyToClipboard(sender.message)
+	}
+
 	const isImage = (message: string = '') => {
 		// if message is a url and url is of an image
 		const str = message.split('?')[0] || ''
@@ -129,8 +133,9 @@
 	$: codeSnippet = isCodeSnippet(sender.message) ? getCodeSnippet(sender.message) : false
 </script>
 
-<ul class="menu" on:click={() => copyToClipboard(sender.message)}>
-	<li class="group relative dropdown">
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<ul class="menu" on:click={copy}>
+	<li class="group relative">
 		<!--Host, Mod, You or Rando-->
 		<div class="p-1 border border-transparent rounded-lg flex gap-2 overflow-x-hidden">
 			<!-- svelte-ignore a11y-label-has-associated-control -->
@@ -140,9 +145,15 @@
 						>{role}</span>
 				{/if}
 				{#if role !== '🤖 AI'}
-					<span
-						data-popover-target="popover-user-profile"
-						class="{coloredRole.textColor} font-medium">@{sender.user?.username}</span>
+					<!-- <span
+							id="b1"
+							class="{coloredRole.textColor} font-medium">@{sender.user?.username}</span> -->
+
+					<ProfileCard userId={sender.user?.userId}>
+						<span class="{coloredRole.textColor} font-medium">
+							@{sender.user?.username}
+						</span>
+					</ProfileCard>
 				{/if}
 				{#if isImage(sender.message)}
 					<img class="py-2 pr-2" src={sender.message} alt="imgs" />
@@ -164,9 +175,7 @@
 					<span class="break-all">{sender.message}</span>
 				{/if}
 			</label>
-			<!-- <ul class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
-				<ProfileCard userId={sender.user?.userId} />
-			</ul> -->
+
 			<div
 				class="group-hover:block dropdown-menu absolute hidden right-0 dropdown dropdown-left dropdown-end"
 				tabindex="1">
@@ -174,15 +183,19 @@
 					<IconChatHorizontalMore />
 				</div>
 				<ul tabindex="1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 z-10">
+					<!-- svelte-ignore a11y-missing-attribute -->
 					<li class="disabled"><a><IconChatReact /> React </a></li>
+					<!-- svelte-ignore a11y-missing-attribute -->
 					<li class="disabled"><a><IconChatQuote /> Quote </a></li>
 					{#if showRoleItem && !channel.bans.includes(sender.user?.userId)}
 						<li>
+							<!-- svelte-ignore a11y-missing-attribute -->
 							<a on:click={() => toggleMod()}
 								><IconChatMod /> {role === 'Mod' ? 'Revoke Mod' : 'Grant Mod'}
 							</a>
 						</li>
 						<li>
+							<!-- svelte-ignore a11y-missing-attribute -->
 							<a on:click={() => toggleGuest()}
 								><IconChatGuest /> {isGuest ? 'Revoke Guest' : 'Grant Guest'}
 							</a>
@@ -190,6 +203,7 @@
 					{/if}
 					{#if showBanItem}
 						<li>
+							<!-- svelte-ignore a11y-missing-attribute -->
 							<a on:click={() => toggleBan()}
 								><IconChatBan /> {channel.bans?.includes(sender.user?.userId) ? 'Unban' : 'Ban'}
 							</a>
@@ -197,6 +211,7 @@
 					{/if}
 					{#if hostId === $page.data.user?.userId || sender.user?.userId === $page.data.user?.userId}
 						<li>
+							<!-- svelte-ignore a11y-missing-attribute -->
 							<a on:click={() => deleteMessage()}><IconChatDelete /> Delete</a>
 						</li>
 					{/if}

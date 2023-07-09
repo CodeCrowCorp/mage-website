@@ -14,7 +14,8 @@
 	export let userCount: number = 1,
 		channel: any,
 		channels: any = [],
-		isHostOrGuest: boolean = false
+		isHostOrGuest: boolean = false,
+		viewers: any[] = []
 
 	$: isChannelSocketConnected = $channel_connection === `open-${channel._id}`
 
@@ -63,7 +64,7 @@
 								<IconViewers />
 								{userCount}
 							</label>
-							<DropdownViewers {channel} />
+							<DropdownViewers {channel} bind:viewers />
 						</div>
 					</div>
 					{#if channel && nextchannel?._id === $page.params.channelId}

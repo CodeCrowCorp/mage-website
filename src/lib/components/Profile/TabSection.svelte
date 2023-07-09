@@ -6,6 +6,8 @@
 		is_feature_stats_enabled,
 		is_feature_subscribes_enabled
 	} from '$lib/stores/remoteConfigStore'
+	import { onMount } from 'svelte'
+	import { env } from '$env/dynamic/public'
 
 	export let profileId: string = '',
 		channels: Promise<any>,
@@ -15,11 +17,16 @@
 		highestAndCurrentStreak: Promise<any>,
 		totalAndAvgHours: Promise<any>
 
-	let tabs = ['Channels']
+	let tabs: string[] = []
 	let activeTab = 0
 
-	$: if ($is_feature_subscribes_enabled) tabs.push('Subscribers')
-	$: if ($is_feature_stats_enabled) tabs.push('Stats')
+	onMount(() => {
+		$is_feature_subscribes_enabled = env.PUBLIC_FEATURE_SUBSCRIBES === 'true'
+		$is_feature_stats_enabled = env.PUBLIC_FEATURE_STATS === 'true'
+		tabs = ['Channels']
+		if ($is_feature_subscribes_enabled) tabs.push('Subscribers')
+		if ($is_feature_stats_enabled) tabs.push('Stats')
+	})
 </script>
 
 <div class="mt-10 py-10 border-t border-blueGray-200 text-center">
@@ -43,7 +50,7 @@
 			</div>
 			{#if $is_feature_subscribes_enabled}
 				<div class="flex-auto h-full" class:hidden={activeTab != tabs.indexOf('Subscribers')}>
-					<ListSubscribe {subscribers} {interests} />
+					<ListSubscribe {subscribers} {interests} {profileId} />
 				</div>
 			{/if}
 		</div>

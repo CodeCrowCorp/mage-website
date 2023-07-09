@@ -48,6 +48,7 @@
 	$: showBanItem =
 		(channel.user === $page.data.user?.userId ||
 			channel?.mods?.includes($page.data.user?.userId)) &&
+		channel.user !== video._id &&
 		video._id !== $page.data.user?.userId &&
 		role !== '🤖 AI'
 
@@ -323,7 +324,7 @@
 		<img
 			src={video.avatar}
 			alt=""
-			class="absolute inset-0 w-24 md:w-24 mask {video.isPaidPlan
+			class="absolute inset-0 w-24 md:w-24 mask {video?.isPaidPlan
 				? 'mask-hexagon'
 				: 'mask-squircle'} object-cover m-auto" />
 		<div class="absolute inset-0">

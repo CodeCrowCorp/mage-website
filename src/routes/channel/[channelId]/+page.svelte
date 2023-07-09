@@ -29,10 +29,12 @@
 		showEditChannelDrawer = false,
 		channels: any = [],
 		skip = 0,
-		limit = 10
+		limit = 10,
+		viewers: any[] = []
 
 	$: userCount = 0
-	$: isHostOrGuest = false
+	$: isHostOrGuest =
+		channel?.user === $page.data.user?.userId || channel?.guests?.includes($page.data.user?.userId)
 
 	$: if (channel) {
 		if (channel._id !== $page.params.channelId) {
@@ -273,7 +275,8 @@
 				bind:userCount
 				bind:channels
 				on:loadMore={loadMoreChannels}
-				bind:isHostOrGuest />
+				bind:isHostOrGuest
+				bind:viewers />
 
 			{#if showEditChannelDrawer}
 				<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />
@@ -291,7 +294,7 @@
 						<label for="chat-drawer" class="drawer-overlay lg:hidden" />
 						<div
 							class="h-full pt-12 lg:p-5 md:w-fit lg:ml-0 md:ml-0 w-max-full mobile-margin lg:drop-shadow-lg">
-							<DrawerChat bind:channel bind:showEditChannelDrawer />
+							<DrawerChat bind:channel bind:showEditChannelDrawer bind:viewers />
 						</div>
 					</div>
 				</div>
