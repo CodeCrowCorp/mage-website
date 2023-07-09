@@ -1,22 +1,17 @@
 <script lang="ts">
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
-	import AvatarLoader from './Elements/AvatarLoader.svelte'
 	import { page } from '$app/stores'
 	import { onMount } from 'svelte'
 	import { subscriber_count, interest_count } from '$lib/stores/profileStore'
 	import { enhance } from '$app/forms'
 	import { put, del } from '$lib/api'
 	import { get } from '$lib/api'
-	import { setProfile, getProfile } from '$lib/temp-store'
 
 	export let profile: any,
 		subscriberCount: Promise<any>,
 		interestCount: Promise<any>,
 		isSubscribed: Promise<any>,
 		showDrawer = false
-
-	// let isSubscribing = false,
-	// 	isSubscriber: any
 
 	let subValues: any = null
 
@@ -42,13 +37,13 @@
 		const source2 = $page.data.user?.userId
 		const isSubscribing = isSubscriber.toString()
 
-		if (isSubscribing === 'true') {
-			const resp = await put(
+		if (isSubscribing == 'true') {
+			await put(
 				`subscribes`,
 				{ source1, source2, isSubscribing }
 			)
 		} else {
-			const resp = await del(`subscribes?source1=${source1}&source2=${source2}`)
+			await del(`subscribes?source1=${source1}&source2=${source2}`)
 		}
 		refreash()
 	}
