@@ -7,19 +7,18 @@
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
 	import { del, get, put } from '$lib/api'
+	import { createEffect } from '$lib/utils'
 
 	export let channel: any = undefined,
 		showEditChannelDrawer: boolean = false
+
+	const useEffect = createEffect()
+
 
 	let host: any = {},
 		isHost: boolean = false,
 		isSubscribing: boolean = false,
 		isFavorite: boolean = false
-
-	// $: if (channel) {
-	// 	console.log("channelssss",channel);
-	// 	getHostAndRelationship();
-	// }
 
 	const getHostAndRelationship = async () => {
 		host = await get(`users/search/id?userId=${channel.user}`)
@@ -34,8 +33,6 @@
 	}
 
 	onMount(async () => {
-		if (!$page.data.user?.userId) return
-		await getHostAndRelationship()
 		isFavorite = $page.data.user?.user?.favChannelIds?.includes(channel._id)
 	})
 
@@ -70,6 +67,12 @@
 			})
 		}
 	}
+
+	$: useEffect(() => {
+		if (!$page.data.user?.userId) return
+		getHostAndRelationship();
+	}, [channel?._id])
+
 </script>
 
 <div class="menu dropdown dropdown-bottom z-10">
