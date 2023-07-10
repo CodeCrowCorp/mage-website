@@ -85,7 +85,7 @@
 							src={profileData.profile.avatar}
 							alt={profileData.profile.avatar} />
 					</span>
-					<!-- <div>
+					<div>
 						<button
 							on:click={() => doSubscribe(!profileData.isSubscribed?.isInterested)}
 							disabled={isSelf || loading}
@@ -99,7 +99,7 @@
 								Subscribe
 							{/if}
 						</button>
-					</div> -->
+					</div>
 				</div>
 
 				<p class="text-base font-semibold leading-none">
