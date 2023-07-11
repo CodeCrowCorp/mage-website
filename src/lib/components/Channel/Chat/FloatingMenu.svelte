@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { clickOutside } from '$lib/utils.js'
+	import { clickOutside } from '$lib/utils'
 	export let id: string = 'float-menu'
 	export let icon: any = null
 	export let label: string = '',
