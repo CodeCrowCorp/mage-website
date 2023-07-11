@@ -2,7 +2,7 @@ import type { Actions, PageServerLoad } from './$types'
 import { get, patch, put, del, putImage } from '$lib/api'
 import { redirect, fail } from '@sveltejs/kit'
 
-export const load = (async ({ params, locals }) => {
+export const load = (async ({ params, locals }: { params: any; locals: any }) => {
 	const profile = await get(`users/search/username?username=${params.username}`)
 	return {
 		profile: profile,
@@ -16,8 +16,6 @@ export const load = (async ({ params, locals }) => {
 				userId: locals.user?.userId,
 				token: locals.user?.token
 			}),
-			subscriberCount: get(`subscribes/count?source=${profile._id}&sourceType=source1`),
-			interestCount: get(`subscribes/count?source=${profile._id}&sourceType=source2`),
 			isSubscribed: get(`subscribes/relationship?source=${profile._id}`, {
 				userId: locals.user?.userId,
 				token: locals.user?.token

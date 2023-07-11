@@ -31,8 +31,6 @@
 				<div class="px-6">
 					<TopSection
 						profile={data.profile}
-						subscriberCount={data.lazy.subscriberCount}
-						interestCount={data.lazy.interestCount}
 						isSubscribed={data.lazy.isSubscribed}
 						bind:showDrawer />
 					<UserDetails profile={data.profile} />
