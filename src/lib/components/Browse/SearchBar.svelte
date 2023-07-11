@@ -1,5 +1,5 @@
 <script lang="ts">
-	import IconCreate from '$lib/assets/icons/IconCreate.svelte'
+	import IconBrowseCreate from '$lib/assets/icons/browse/IconBrowseCreate.svelte'
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
 	import DrawerCreateChannel from './DrawerCreateChannel.svelte'
 	import { is_login_modal_open } from '$lib/stores/helperStore'
@@ -37,7 +37,7 @@
 					$is_login_modal_open = true
 				}
 			}}>
-			<IconCreate />
+			<IconBrowseCreate />
 			Create a channel
 		</label>
 	</div>
