@@ -2,7 +2,7 @@
 	import { page } from '$app/stores'
 	import { get, post } from '$lib/api'
 	import { onMount } from 'svelte'
-	import { setProfile, getProfile } from '$lib/temp-store'
+	import { setProfile, getProfile } from '$lib/stores/helperStore'
 	import { clickOutside } from '$lib/utils.js'
 
 	export let userId: string

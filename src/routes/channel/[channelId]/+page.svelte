@@ -30,7 +30,8 @@
 		channels: any = [],
 		skip = 0,
 		limit = 10,
-		viewers: any[] = []
+		viewers: any[] = [],
+		chatHistory: any[] = []
 
 	$: userCount = 0
 	$: isHostOrGuest =
@@ -55,7 +56,7 @@
 	onMount(async () => {
 		await loadChannel()
 		await handleWebsocket()
-		// await loadMoreChannels()
+		await loadMoreChannels()
 		$is_chat_drawer_destroy = false
 		setTimeout(() => {
 			$is_chat_drawer_open = true
@@ -104,6 +105,7 @@
 	const handleWebsocket = async () => {
 		try {
 			channel = channels.find((ch: any) => ch._id === $page.params.channelId)
+			chatHistory = []
 			isHostOrGuest =
 				channel.user === $page.data.user?.userId ||
 				channel.guests?.includes($page.data.user?.userId)
@@ -294,7 +296,7 @@
 						<label for="chat-drawer" class="drawer-overlay lg:hidden" />
 						<div
 							class="h-full pt-12 lg:p-5 md:w-fit lg:ml-0 md:ml-0 w-max-full mobile-margin lg:drop-shadow-lg">
-							<DrawerChat bind:channel bind:showEditChannelDrawer bind:viewers />
+							<DrawerChat bind:channel bind:showEditChannelDrawer bind:viewers {chatHistory} />
 						</div>
 					</div>
 				</div>
