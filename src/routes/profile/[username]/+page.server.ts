@@ -16,8 +16,6 @@ export const load = (async ({ params, locals }: { params: any; locals: any }) =>
 				userId: locals.user?.userId,
 				token: locals.user?.token
 			}),
-			subscriberCount: get(`subscribes/count?source=${profile._id}&sourceType=source1`),
-			interestCount: get(`subscribes/count?source=${profile._id}&sourceType=source2`),
 			isSubscribed: get(`subscribes/relationship?source=${profile._id}`, {
 				userId: locals.user?.userId,
 				token: locals.user?.token
