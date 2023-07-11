@@ -50,7 +50,7 @@
 			</div>
 			{#if $is_feature_subscribes_enabled}
 				<div class="flex-auto h-full" class:hidden={activeTab != tabs.indexOf('Subscribers')}>
-					<ListSubscribe {subscribers} {interests} {profileId} />
+					<ListSubscribe {profileId} />
 				</div>
 			{/if}
 		</div>

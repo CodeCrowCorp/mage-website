@@ -4,12 +4,18 @@
 	import { onMount } from 'svelte'
 	import { setProfile, getProfile } from '$lib/stores/helperStore'
 	import { clickOutside } from '$lib/utils.js'
+	import { put, del } from '$lib/api'
 
 	export let userId: string
 	let profileData: any = getProfile(userId) || { profile: {} }
 	let loading = false
 	let show = false
 	let elt: any
+
+	$: auth = {
+		userId: $page.data.user?.userId,
+		token: $page.data.user?.token
+	}
 
 	const toggle = async () => {
 		show = !show
@@ -20,14 +26,20 @@
 		show = false
 	}
 
-	const doSubscribe = async () => {
+	const doSubscribe = async (isSubscribe: any) => {
 		loading = true
-		const resp = await post('subscribe', {
-			source1: profileData.profile._id,
-			source2: $page.data.user?.userId,
-			isSubscriber: true
-		})
-		loadProfile(true)
+
+		const source1 = profile._id
+		const source2 = $page.data.user?.userId
+		const isSubscribing = isSubscribe.toString()
+
+		if (isSubscribing == 'true') {
+			await put(`subscribes`, { source1, source2, isSubscribing }, auth)
+		} else {
+			await del(`subscribes?source1=${source1}&source2=${source2}`, auth)
+		}
+
+		await loadProfile(true)
 		loading = false
 	}
 
@@ -35,22 +47,21 @@
 		loading = true
 		if (getProfile(userId) && !refresh) {
 			profileData = getProfile(userId)
-			console.log('profile loaded from local')
 		} else {
-			profileData.profile = await get(`users/search/id?userId=${userId}`)
+			profileData.profile = await get(`users/search/id?userId=${userId}`, auth)
 			profileData.subscriberCount = await get(
-				`subscribes/count?source=${userId}&sourceType=source1`
+				`subscribes/count?source=${userId}&sourceType=source1`,
+				auth
 			)
-			profileData.interestCount = await get(`subscribes/count?source=${userId}&sourceType=source2`)
+			profileData.interestCount = await get(
+				`subscribes/count?source=${userId}&sourceType=source2`,
+				auth
+			)
 			if ($page.data.user?.userId) {
-				profileData.isSubscribed = await get(`subscribes/relationship?source=${profile._id}`, {
-					userId: $page.data.user?.userId,
-					token: $page.data.user?.token
-				})
+				profileData.isSubscribed = await get(`subscribes/relationship?source=${profile._id}`, auth)
 			}
 
 			setProfile(userId, profileData)
-			console.log('profile loaded from server')
 		}
 		loading = false
 	}
@@ -77,15 +88,21 @@
 							src={profileData.profile.avatar}
 							alt={profileData.profile.avatar} />
 					</span>
-					<!-- <div>
+					<div>
 						<button
-							on:click={doSubscribe}
+							on:click={() => doSubscribe(!profileData.isSubscribed?.isInterested)}
 							disabled={isSelf || loading}
 							type="button"
 							class="btn btn-secondary btn-sm">
-							{loading ? 'Loading...' : !profileData.isSubscribed ? 'Subscribe' : 'Unsubscribe'}
+							{#if loading}
+								<span class="loading loading-dots loading-md" />
+							{:else if profileData.isSubscribed?.isInterested}
+								Unsubscribe
+							{:else}
+								Subscribe
+							{/if}
 						</button>
-					</div> -->
+					</div>
 				</div>
 
 				<p class="text-base font-semibold leading-none">
@@ -99,8 +116,10 @@
 					{profileData.profile.bio || ''}
 				</p>
 				<div class="flex text-sm gap-5">
+					<!-- svelte-ignore a11y-missing-attribute -->
 					<a class="link link-hover">
 						<span class="font-semibold">{subscriberCount}</span> Subscribers</a>
+					<!-- svelte-ignore a11y-missing-attribute -->
 					<a class="link link-hover">
 						<span class="font-semibold">{interestCount}</span> Interests</a>
 				</div>

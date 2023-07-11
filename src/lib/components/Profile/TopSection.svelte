@@ -1,44 +1,53 @@
 <script lang="ts">
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
-	import AvatarLoader from './Elements/AvatarLoader.svelte'
 	import { page } from '$app/stores'
 	import { onMount } from 'svelte'
 	import { subscriber_count, interest_count } from '$lib/stores/profileStore'
 	import { enhance } from '$app/forms'
-	import { post } from '$lib/api.js'
+	import { put, del } from '$lib/api'
+	import { get } from '$lib/api'
 
 	export let profile: any,
-		subscriberCount: Promise<any>,
-		interestCount: Promise<any>,
 		isSubscribed: Promise<any>,
 		showDrawer = false
 
-	let isSubscribing = false,
-		isSubscriber: any
+	$: auth = {
+		userId: $page.data.user?.userId,
+		token: $page.data.user?.token
+	}
 
 	let subValues: any = null
 
-	$: currentUser = $page.data.user?.user
-
 	const refreash = async () => {
-		subValues = await isSubscribed
+		$subscriber_count = await get(`subscribes/count?source=${profile._id}&sourceType=source1`, auth)
+		$interest_count = await get(`subscribes/count?source=${profile._id}&sourceType=source2`, auth)
+
+		if ($page.data.user?.userId) {
+			isSubscribed = await get(`subscribes/relationship?source=${profile._id}`, auth)
+			subValues = isSubscribed
+		}
 	}
 
-	const doSubscribe = async () => {
+	const doSubscribe = async (isSubscriber: any) => {
 		subValues = null
-		const resp = await post('subscribe', {
-			source1: profile._id,
-			source2: $page.data.user?.userId,
-			isSubscriber: true
-		})
+		const source1 = profile._id
+		const source2 = $page.data.user?.userId
+		const isSubscribing = isSubscriber.toString()
+
+		if (isSubscribing == 'true') {
+			await put(`subscribes`, { source1, source2, isSubscribing }, auth)
+		} else {
+			await del(`subscribes?source1=${source1}&source2=${source2}`, auth)
+		}
 		refreash()
 	}
 
 	onMount(async () => {
-		$subscriber_count = await subscriberCount
-		$interest_count = await interestCount
 		refreash()
 	})
+
+	$: currentUser = $page.data.user?.user
+	$: subValues
 </script>
 
 <div class="flex flex-wrap justify-center">
@@ -64,13 +73,22 @@
 				action="?/subscribe"
 				method="post"
 				use:enhance={({ data }) => {
-					data.append('isSubscribing', isSubscribing.toString())
-					data.append('source1', profile._id)
+					data.append('isSubscribing', (!subValues?.isInterested)?.toString()),
+						data.append('source1', profile._id)
 					data.append('source2', $page.data.user?.userId)
 				}}>
 				<div class="flex gap-4">
-					<button disabled={!subValues} class="btn btn-secondary" on:click={doSubscribe}>
-						{subValues?.isSubscriber ? 'Unsubscribe' : !subValues ? 'Loading...' : 'Subscribe'}
+					<button
+						disabled={!subValues || profile._id === $page.data.user?.userId || !currentUser}
+						on:click={() => doSubscribe(!subValues?.isInterested)}
+						class="btn btn-secondary">
+						{#if !subValues}
+							<span class="loading loading-dots loading-md" />
+						{:else if subValues?.isInterested}
+							Unsubscribe
+						{:else}
+							Subscribe
+						{/if}
 					</button>
 					<!--TODO: open sponsor dialog-->
 					<button class="btn btn-primary" formaction="?/sponsor" disabled>Sponsor</button>
