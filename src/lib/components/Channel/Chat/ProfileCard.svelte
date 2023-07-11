@@ -26,17 +26,17 @@
 		show = false
 	}
 
-	const doSubscribe = async (isSubscribe: any) => {
+	const doFollow = async (isFollow: any) => {
 		loading = true
 
 		const source1 = profile._id
 		const source2 = $page.data.user?.userId
-		const isSubscribing = isSubscribe.toString()
+		const isFollowing = isFollow.toString()
 
-		if (isSubscribing == 'true') {
-			await put(`subscribes`, { source1, source2, isSubscribing }, auth)
+		if (isFollowing == 'true') {
+			await put(`follows`, { source1, source2 }, auth)
 		} else {
-			await del(`subscribes?source1=${source1}&source2=${source2}`, auth)
+			await del(`follows?source1=${source1}&source2=${source2}`, auth)
 		}
 
 		await loadProfile(true)
@@ -49,16 +49,16 @@
 			profileData = getProfile(userId)
 		} else {
 			profileData.profile = await get(`users/search/id?userId=${userId}`, auth)
-			profileData.subscriberCount = await get(
-				`subscribes/count?source=${userId}&sourceType=source1`,
+			profileData.followerCount = await get(
+				`follows/count?source=${userId}&sourceType=source1`,
 				auth
 			)
-			profileData.interestCount = await get(
-				`subscribes/count?source=${userId}&sourceType=source2`,
+			profileData.followingCount = await get(
+				`follows/count?source=${userId}&sourceType=source2`,
 				auth
 			)
 			if ($page.data.user?.userId) {
-				profileData.isSubscribed = await get(`subscribes/relationship?source=${profile._id}`, auth)
+				profileData.isFollowed = await get(`follows/relationship?source=${profile._id}`, auth)
 			}
 
 			setProfile(userId, profileData)
@@ -67,8 +67,8 @@
 	}
 
 	$: profile = profileData.profile
-	$: subscriberCount = profileData.subscriberCount || 0
-	$: interestCount = profileData.interestCount || 0
+	$: followerCount = profileData.followerCount || 0
+	$: followingCount = profileData.followingCount || 0
 	$: margin = (elt ? elt.getBoundingClientRect().height : 0) + 40
 	$: isSelf = userId === $page.data.user?.userId
 </script>
@@ -90,16 +90,16 @@
 					</span>
 					<div>
 						<button
-							on:click={() => doSubscribe(!profileData.isSubscribed?.isInterested)}
+							on:click={() => doFollow(!profileData.isFollowed?.isInterested)}
 							disabled={isSelf || loading}
 							type="button"
 							class="btn btn-secondary btn-sm">
 							{#if loading}
 								<span class="loading loading-dots loading-md" />
-							{:else if profileData.isSubscribed?.isInterested}
-								Unsubscribe
+							{:else if profileData.isFollowed?.isInterested}
+								Unfollow
 							{:else}
-								Subscribe
+								Follow
 							{/if}
 						</button>
 					</div>
@@ -118,10 +118,10 @@
 				<div class="flex text-sm gap-5">
 					<!-- svelte-ignore a11y-missing-attribute -->
 					<a class="link link-hover">
-						<span class="font-semibold">{subscriberCount}</span> Subscribers</a>
+						<span class="font-semibold">{followerCount}</span> Followers</a>
 					<!-- svelte-ignore a11y-missing-attribute -->
 					<a class="link link-hover">
-						<span class="font-semibold">{interestCount}</span> Interests</a>
+						<span class="font-semibold">{followingCount}</span> Following</a>
 				</div>
 			</div>
 		</div>

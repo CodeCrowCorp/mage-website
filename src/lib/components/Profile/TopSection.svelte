@@ -2,13 +2,12 @@
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
 	import { page } from '$app/stores'
 	import { onMount } from 'svelte'
-	import { subscriber_count, interest_count } from '$lib/stores/profileStore'
+	import { follower_count, following_count } from '$lib/stores/profileStore'
 	import { enhance } from '$app/forms'
 	import { put, del } from '$lib/api'
 	import { get } from '$lib/api'
 
 	export let profile: any,
-		isSubscribed: Promise<any>,
 		showDrawer = false
 
 	$: auth = {
@@ -16,28 +15,28 @@
 		token: $page.data.user?.token
 	}
 
-	let subValues: any = null
+	let subValues: any = null,
+		isFollowed: any = null
 
 	const refreash = async () => {
-		$subscriber_count = await get(`subscribes/count?source=${profile._id}&sourceType=source1`, auth)
-		$interest_count = await get(`subscribes/count?source=${profile._id}&sourceType=source2`, auth)
+		$follower_count = await get(`follows/count?source=${profile._id}&sourceType=source1`, auth)
+		$following_count = await get(`follows/count?source=${profile._id}&sourceType=source2`, auth)
 
 		if ($page.data.user?.userId) {
-			isSubscribed = await get(`subscribes/relationship?source=${profile._id}`, auth)
-			subValues = isSubscribed
+			isFollowed = await get(`follows/relationship?source=${profile._id}`, auth)
+			subValues = isFollowed
 		}
 	}
 
-	const doSubscribe = async (isSubscriber: any) => {
+	const doFollow = async (isFollow: any) => {
 		subValues = null
 		const source1 = profile._id
 		const source2 = $page.data.user?.userId
-		const isSubscribing = isSubscriber.toString()
 
-		if (isSubscribing == 'true') {
-			await put(`subscribes`, { source1, source2, isSubscribing }, auth)
+		if (isFollow) {
+			await put(`follows`, { source1, source2 }, auth)
 		} else {
-			await del(`subscribes?source1=${source1}&source2=${source2}`, auth)
+			await del(`follows?source1=${source1}&source2=${source2}`, auth)
 		}
 		refreash()
 	}
@@ -69,31 +68,22 @@
 	</div>
 	<div class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
 		<div class="py-6 px-3 justify-center flex md:justify-end gap-4">
-			<form
-				action="?/subscribe"
-				method="post"
-				use:enhance={({ data }) => {
-					data.append('isSubscribing', (!subValues?.isInterested)?.toString()),
-						data.append('source1', profile._id)
-					data.append('source2', $page.data.user?.userId)
-				}}>
-				<div class="flex gap-4">
-					<button
-						disabled={!subValues || profile._id === $page.data.user?.userId || !currentUser}
-						on:click={() => doSubscribe(!subValues?.isInterested)}
-						class="btn btn-secondary">
-						{#if !subValues}
-							<span class="loading loading-dots loading-md" />
-						{:else if subValues?.isInterested}
-							Unsubscribe
-						{:else}
-							Subscribe
-						{/if}
-					</button>
-					<!--TODO: open sponsor dialog-->
-					<button class="btn btn-primary" formaction="?/sponsor" disabled>Sponsor</button>
-				</div>
-			</form>
+			<div class="flex gap-4">
+				<button
+					disabled={!subValues || profile._id === $page.data.user?.userId || !currentUser}
+					on:click={() => doFollow(!subValues?.isFollowing)}
+					class="btn btn-secondary">
+					{#if !subValues}
+						<span class="loading loading-dots loading-md" />
+					{:else if subValues?.isFollowing}
+						Unfollow
+					{:else}
+						Follow
+					{/if}
+				</button>
+				<!--TODO: open sponsor dialog-->
+				<button class="btn btn-primary" formaction="?/sponsor" disabled>Sponsor</button>
+			</div>
 			<div class="dropdown dropdown-end">
 				<button
 					class="btn btn-circle"
@@ -112,13 +102,13 @@
 	</div>
 	<div class="w-full lg:w-4/12 px-4 lg:order-1">
 		<div class="flex justify-center py-4 lg:pt-4 pt-8">
-			<div class="mr-4 p-3 text-center tooltip" data-tip="{$subscriber_count || 0} subscribers">
-				<span class="text-xl font-bold block uppercase tracking-wide">{$subscriber_count || 0}</span
-				><span class="text-sm">Subscribers</span>
+			<div class="mr-4 p-3 text-center tooltip" data-tip="{$follower_count || 0} followers">
+				<span class="text-xl font-bold block uppercase tracking-wide">{$follower_count || 0}</span
+				><span class="text-sm">Followers</span>
 			</div>
-			<div class="mr-4 p-3 text-center tooltip" data-tip="{$interest_count || 0} interests">
-				<span class="text-xl font-bold block uppercase tracking-wide">{$interest_count || 0}</span
-				><span class="text-sm">Interests</span>
+			<div class="mr-4 p-3 text-center tooltip" data-tip="{$following_count || 0} followers">
+				<span class="text-xl font-bold block uppercase tracking-wide">{$following_count || 0}</span
+				><span class="text-sm">Following</span>
 			</div>
 			<div class="lg:mr-4 p-3 text-center tooltip" data-tip="coming soon...">
 				<!--{profile.views || 0} unique profile views-->
