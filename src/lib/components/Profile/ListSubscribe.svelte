@@ -1,6 +1,6 @@
 <script lang="ts">
-	import SubscriberItem from '$lib/components/Profile/Elements/SubscriberItem.svelte'
-	import { subscriber_count, interest_count } from '$lib/stores/profileStore'
+	import FollowItem from '$lib/components/Profile/Elements/FollowItem.svelte'
+	import { follower_count, following_count } from '$lib/stores/profileStore'
 	import { get } from '$lib/api.js'
 	import LoadMoreContaier from './LoadMore.svelte'
 	import { page } from '$app/stores'
@@ -12,30 +12,30 @@
 		token: $page?.data?.user?.token
 	}
 
-	const searchSubscribers = async (query: string, skip: number, limit: number) => {
+	const searchFollowers = async (query: string, skip: number, limit: number) => {
 		return await get(
-			`subscribes?source=${profileId}&sourceType=source1&searchQuery=${query}&skip=${skip}&limit=${limit}`,
+			`follows?source=${profileId}&sourceType=source1&searchQuery=${query}&skip=${skip}&limit=${limit}`,
 			auth
 		)
 	}
 
-	const searchInterests = async (query: string, skip: number, limit: number) => {
+	const searchFollowing = async (query: string, skip: number, limit: number) => {
 		return await get(
-			`subscribes?source=${profileId}&sourceType=source2&searchQuery=${query}&skip=${skip}&limit=${limit}`,
+			`follows?source=${profileId}&sourceType=source2&searchQuery=${query}&skip=${skip}&limit=${limit}`,
 			auth
 		)
 	}
 
-	const getSubscribers = async (skip: number, limit: number) => {
+	const getFollowers = async (skip: number, limit: number) => {
 		return await get(
-			`subscribes?source=${profileId}&sourceType=source1&skip=${skip}&limit=${limit}`,
+			`follows?source=${profileId}&sourceType=source1&skip=${skip}&limit=${limit}`,
 			auth
 		)
 	}
 
-	const getInterests = async (skip: number, limit: number) => {
+	const getFollowing = async (skip: number, limit: number) => {
 		return await get(
-			`subscribes?source=${profileId}&sourceType=source2&skip=${skip}&limit=${limit}`,
+			`follows?source=${profileId}&sourceType=source2&skip=${skip}&limit=${limit}`,
 			auth
 		)
 	}
@@ -43,30 +43,30 @@
 
 <div class="flex flex-row justify-center gap-5 mt-8">
 	<div class="card flex flex-col w-1/2 gap-2 bg-base-200 py-4 px-8">
-		<p class="text-start font-semibold">Subscribers ({$subscriber_count})</p>
+		<p class="text-start font-semibold">Followers ({$follower_count})</p>
 
 		<LoadMoreContaier
 			let:list
-			dataSource={getSubscribers}
-			searchDataSource={searchSubscribers}
-			inputPlaceholder="Search subscribers"
-			count={$subscriber_count}>
-			{#each list as subscriberItem}
-				<SubscriberItem {subscriberItem} />
+			dataSource={getFollowers}
+			searchDataSource={searchFollowers}
+			inputPlaceholder="Search followers"
+			count={$follower_count}>
+			{#each list as followItem}
+				<FollowItem {profileId} {followItem} />
 			{/each}
 		</LoadMoreContaier>
 	</div>
 	<div class="card flex flex-col w-1/2 gap-2 bg-base-200 py-4 px-8">
-		<p class="text-start font-semibold">Interests ({$interest_count})</p>
+		<p class="text-start font-semibold">Following ({$following_count})</p>
 
 		<LoadMoreContaier
 			let:list
-			dataSource={getInterests}
-			searchDataSource={searchInterests}
-			inputPlaceholder="Search interests"
-			count={$interest_count}>
-			{#each list as subscriberItem}
-				<SubscriberItem {subscriberItem} />
+			dataSource={getFollowing}
+			searchDataSource={searchFollowing}
+			inputPlaceholder="Search following"
+			count={$following_count}>
+			{#each list as followItem}
+				<FollowItem {profileId} {followItem} />
 			{/each}
 		</LoadMoreContaier>
 	</div>

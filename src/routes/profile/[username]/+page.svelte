@@ -29,16 +29,11 @@
 			<div
 				class="relative flex flex-col min-w-0 break-words bg-base-100 w-full mb-6 shadow-xl rounded-lg -mt-64">
 				<div class="px-6">
-					<TopSection
-						profile={data.profile}
-						isSubscribed={data.lazy.isSubscribed}
-						bind:showDrawer />
+					<TopSection profile={data.profile} bind:showDrawer />
 					<UserDetails profile={data.profile} />
 					<TabSection
 						profileId={data.profile?._id}
 						channels={data.lazy.channels}
-						subscribers={data.lazy.subscribers}
-						interests={data.lazy.interests}
 						totalPageViews={data.lazy.totalPageViews}
 						highestAndCurrentStreak={data.lazy.highestAndCurrentStreak}
 						totalAndAvgHours={data.lazy.totalAndAvgHours} />
