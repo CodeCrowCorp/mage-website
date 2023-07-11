@@ -19,14 +19,8 @@
 	let subValues: any = null
 
 	const refreash = async () => {
-		$subscriber_count = await get(
-			`subscribes/count?source=${profile._id}&sourceType=source1`,
-			auth
-		)
-		$interest_count = await get(
-			`subscribes/count?source=${profile._id}&sourceType=source2`,
-			auth
-		)
+		$subscriber_count = await get(`subscribes/count?source=${profile._id}&sourceType=source1`, auth)
+		$interest_count = await get(`subscribes/count?source=${profile._id}&sourceType=source2`, auth)
 
 		if ($page.data.user?.userId) {
 			isSubscribed = await get(`subscribes/relationship?source=${profile._id}`, auth)
@@ -41,10 +35,7 @@
 		const isSubscribing = isSubscriber.toString()
 
 		if (isSubscribing == 'true') {
-			await put(
-				`subscribes`,
-				{ source1, source2, isSubscribing, ...auth }
-			)
+			await put(`subscribes`, { source1, source2, isSubscribing }, auth)
 		} else {
 			await del(`subscribes?source1=${source1}&source2=${source2}`, auth)
 		}
@@ -92,11 +83,11 @@
 						on:click={() => doSubscribe(!subValues?.isInterested)}
 						class="btn btn-secondary">
 						{#if !subValues}
-							<span class="loading loading-dots loading-md"></span>
-							{:else if subValues?.isInterested}
-								Unsubscribe
-							{:else}
-								Subscribe
+							<span class="loading loading-dots loading-md" />
+						{:else if subValues?.isInterested}
+							Unsubscribe
+						{:else}
+							Subscribe
 						{/if}
 					</button>
 					<!--TODO: open sponsor dialog-->
