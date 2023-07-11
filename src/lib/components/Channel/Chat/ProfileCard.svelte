@@ -34,10 +34,7 @@
 		const isSubscribing = isSubscribe.toString()
 
 		if (isSubscribing == 'true') {
-			await put(
-				`subscribes`,
-				{ source1, source2, isSubscribing, ...auth }
-			)
+			await put(`subscribes`, { source1, source2, isSubscribing }, auth)
 		} else {
 			await del(`subscribes?source1=${source1}&source2=${source2}`, auth)
 		}
@@ -56,7 +53,10 @@
 				`subscribes/count?source=${userId}&sourceType=source1`,
 				auth
 			)
-			profileData.interestCount = await get(`subscribes/count?source=${userId}&sourceType=source2`, auth)
+			profileData.interestCount = await get(
+				`subscribes/count?source=${userId}&sourceType=source2`,
+				auth
+			)
 			if ($page.data.user?.userId) {
 				profileData.isSubscribed = await get(`subscribes/relationship?source=${profile._id}`, auth)
 			}
@@ -95,7 +95,7 @@
 							type="button"
 							class="btn btn-secondary btn-sm">
 							{#if loading}
-							<span class="loading loading-dots loading-md"></span>
+								<span class="loading loading-dots loading-md" />
 							{:else if profileData.isSubscribed?.isInterested}
 								Unsubscribe
 							{:else}
