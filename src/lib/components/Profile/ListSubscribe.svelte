@@ -7,24 +7,24 @@
 
 	export let profileId: string
 
+	$: auth = {
+		userId: $page?.data?.user?.userId, token: $page?.data?.user?.token 
+	}
+
 	const searchSubscribers = async(query:string, skip:number, limit:number) => {
-		return await get(`subscribes?source=${profileId}&sourceType=source1&searchQuery=${query}&skip=${skip}&limit=${limit}`)
+		return await get(`subscribes?source=${profileId}&sourceType=source1&searchQuery=${query}&skip=${skip}&limit=${limit}`, auth)
 	}
 
 	const searchInterests = async(query:string, skip:number, limit:number) => {
-		return await get(`subscribes?source=${profileId}&sourceType=source2&searchQuery=${query}&skip=${skip}&limit=${limit}`)
+		return await get(`subscribes?source=${profileId}&sourceType=source2&searchQuery=${query}&skip=${skip}&limit=${limit}`, auth)
 	}
 
 	const getSubscribers = async(skip:number, limit:number) => {
-		return await get(`subscribes?source=${profileId}&sourceType=source1&skip=${skip}&limit=${limit}`,{
-		 	userId: $page?.data?.user?.userId, token: $page?.data?.user?.token 
-		})
+		return await get(`subscribes?source=${profileId}&sourceType=source1&skip=${skip}&limit=${limit}`,auth)
 	}
 
 	const getInterests = async(skip:number, limit:number) => {
-		return await get(`subscribes?source=${profileId}&sourceType=source2&skip=${skip}&limit=${limit}`,{
-		 	userId: $page?.data?.user?.userId, token: $page?.data?.user?.token 
-		})
+		return await get(`subscribes?source=${profileId}&sourceType=source2&skip=${skip}&limit=${limit}`,auth)
 	}
 
 </script>
@@ -38,6 +38,7 @@
 				dataSource={getSubscribers}
 				searchDataSource={searchSubscribers}
 				inputPlaceholder="Search subscribers"
+				count={$subscriber_count}
 			>
 				{#each list as subscriberItem}
 					<SubscriberItem {subscriberItem} />
@@ -53,6 +54,7 @@
 				dataSource={getInterests}
 				searchDataSource={searchInterests}
 				inputPlaceholder="Search interests"
+				count={$interest_count}
 			>
 				{#each list as subscriberItem}
 					<SubscriberItem {subscriberItem} />

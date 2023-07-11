@@ -8,25 +8,28 @@
 	import { get } from '$lib/api'
 
 	export let profile: any,
-		subscriberCount: Promise<any>,
-		interestCount: Promise<any>,
 		isSubscribed: Promise<any>,
 		showDrawer = false
+
+	$: auth = {
+		userId: $page.data.user?.userId,
+		token: $page.data.user?.token
+	}
 
 	let subValues: any = null
 
 	const refreash = async () => {
 		$subscriber_count = await get(
-			`subscribes/count?source=${$page.data.user?.userId}&sourceType=source1`
+			`subscribes/count?source=${profile._id}&sourceType=source1`,
+			auth
 		)
 		$interest_count = await get(
-			`subscribes/count?source=${$page.data.user?.userId}&sourceType=source2`
+			`subscribes/count?source=${profile._id}&sourceType=source2`,
+			auth
 		)
+
 		if ($page.data.user?.userId) {
-			isSubscribed = await get(`subscribes/relationship?source=${profile._id}`, {
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			})
+			isSubscribed = await get(`subscribes/relationship?source=${profile._id}`, auth)
 			subValues = isSubscribed
 		}
 	}
@@ -40,17 +43,15 @@
 		if (isSubscribing == 'true') {
 			await put(
 				`subscribes`,
-				{ source1, source2, isSubscribing }
+				{ source1, source2, isSubscribing, ...auth }
 			)
 		} else {
-			await del(`subscribes?source1=${source1}&source2=${source2}`)
+			await del(`subscribes?source1=${source1}&source2=${source2}`, auth)
 		}
 		refreash()
 	}
 
 	onMount(async () => {
-		$subscriber_count = await subscriberCount
-		$interest_count = await interestCount
 		refreash()
 	})
 

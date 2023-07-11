@@ -12,6 +12,11 @@
 	let show = false
 	let elt: any
 
+	$: auth = {
+		userId: $page.data.user?.userId,
+		token: $page.data.user?.token
+	}
+
 	const toggle = async () => {
 		show = !show
 		if (show) loadProfile(false)
@@ -31,10 +36,10 @@
 		if (isSubscribing == 'true') {
 			await put(
 				`subscribes`,
-				{ source1, source2, isSubscribing }
+				{ source1, source2, isSubscribing, ...auth }
 			)
 		} else {
-			await del(`subscribes?source1=${source1}&source2=${source2}`)
+			await del(`subscribes?source1=${source1}&source2=${source2}`, auth)
 		}
 
 		await loadProfile(true)
@@ -46,16 +51,14 @@
 		if (getProfile(userId) && !refresh) {
 			profileData = getProfile(userId)
 		} else {
-			profileData.profile = await get(`users/search/id?userId=${userId}`)
+			profileData.profile = await get(`users/search/id?userId=${userId}`, auth)
 			profileData.subscriberCount = await get(
-				`subscribes/count?source=${userId}&sourceType=source1`
+				`subscribes/count?source=${userId}&sourceType=source1`,
+				auth
 			)
-			profileData.interestCount = await get(`subscribes/count?source=${userId}&sourceType=source2`)
+			profileData.interestCount = await get(`subscribes/count?source=${userId}&sourceType=source2`, auth)
 			if ($page.data.user?.userId) {
-				profileData.isSubscribed = await get(`subscribes/relationship?source=${profile._id}`, {
-					userId: $page.data.user?.userId,
-					token: $page.data.user?.token
-				})
+				profileData.isSubscribed = await get(`subscribes/relationship?source=${profile._id}`, auth)
 			}
 
 			setProfile(userId, profileData)
@@ -113,8 +116,10 @@
 					{profileData.profile.bio || ''}
 				</p>
 				<div class="flex text-sm gap-5">
+					<!-- svelte-ignore a11y-missing-attribute -->
 					<a class="link link-hover">
 						<span class="font-semibold">{subscriberCount}</span> Subscribers</a>
+					<!-- svelte-ignore a11y-missing-attribute -->
 					<a class="link link-hover">
 						<span class="font-semibold">{interestCount}</span> Interests</a>
 				</div>

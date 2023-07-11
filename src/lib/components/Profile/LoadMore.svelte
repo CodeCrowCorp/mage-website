@@ -8,6 +8,7 @@
     export let inputPlaceholder:string = ""
     export let limit = 10
 	export let s_limit = 10
+    export let count:any
 
     const useOueryEffect = createEffect();
 
@@ -23,10 +24,7 @@
 
     onMount(async() => {
 		if (listElement) {
-            loading = true
-            list =  await dataSource(skip, limit);
-            allLoaded = list.length < limit ? true : false
-			listElement.addEventListener("scroll", async() => {
+            listElement.addEventListener("scroll", async() => {
 				if (
 					listElement.scrollTop + listElement.clientHeight >=
 					listElement.scrollHeight
@@ -52,8 +50,7 @@
                      
 				}
 			});
-            loading = false
-		}
+        }
 	})
 
     const search = async() => {
@@ -75,6 +72,20 @@
 			s_list = null
 		}
 	}, [query])
+
+    $: useOueryEffect(async() => {
+        if(count === 0){
+            list = []
+            return 
+        }
+        query = ""
+        s_list = null
+        skip = 0
+        loading = true
+        list =  await dataSource(skip, limit);
+        allLoaded = list.length < limit ? true : false
+        loading = false
+    }, [count])
 
     $: main_list = s_list || list
 
