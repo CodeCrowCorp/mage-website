@@ -2,7 +2,7 @@ import type { Actions, PageServerLoad } from './$types'
 import { get, patch, put, del, putImage } from '$lib/api'
 import { redirect, fail } from '@sveltejs/kit'
 
-export const load = (async ({ params, locals }) => {
+export const load = (async ({ params, locals }: { params: any; locals: any }) => {
 	const profile = await get(`users/search/username?username=${params.username}`)
 	return {
 		profile: profile,
