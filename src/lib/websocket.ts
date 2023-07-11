@@ -105,7 +105,7 @@ const emitChatHistoryToChannel = ({
 	skip: number
 	cursor?: string
 }) => {
-	if(!cursor){
+	if (!cursor) {
 		channelSocket.send(
 			JSON.stringify({
 				eventName: `channel-message-history`,
@@ -123,7 +123,6 @@ const emitChatHistoryToChannel = ({
 			})
 		)
 	}
-
 }
 
 const emitReactToMessage = ({

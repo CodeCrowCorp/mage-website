@@ -2,6 +2,7 @@
 	import VideoItem from '$lib/components/Channel/Stream/VideoItem.svelte'
 	import { getVideoGrids } from '$lib/utils'
 	import { video_items } from '$lib/stores/streamStore'
+	import CommandList from '$lib/components/Channel/Stream/CommandList.svelte'
 
 	export let channel: any
 
@@ -22,4 +23,6 @@
 			</div>
 		</div>
 	</div>
+{:else}
+	<CommandList />
 {/if}

@@ -12,10 +12,10 @@
 
 	export let channel: any = undefined,
 		showEditChannelDrawer: boolean = false,
-		viewers: any[] = []
-	let chatHistory: any[] = [],
-		chatDrawerElement: HTMLElement
-	let cursor = ''
+		viewers: any[] = [],
+		chatHistory: any[] = []
+
+	let cursor: any = undefined
 
 	channel_message.subscribe((value) => {
 		if (!value) return
@@ -23,8 +23,6 @@
 		if (parsedMsg.eventName === `channel-message-${channel?._id}`) {
 			if (parsedMsg.isMessageHistory) {
 				cursor = parsedMsg.cursor
-				//chatHistory = []
-				// if (Array.isArray(parsedMsg.data)) {
 				let messages = parsedMsg.data.map((message: any) => {
 					message.role = setRole({
 						userId: message.user.userId,
@@ -33,12 +31,7 @@
 					})
 					return message
 				})
-
 				chatHistory = [...chatHistory, ...messages]
-				// } else {
-				// 	parsedMsg = setRole(JSON.parse(parsedMsg.data))
-				// 	chatHistory.push(parsedMsg)
-				// }
 			} else if (parsedMsg.isMessageDeleted) {
 				chatHistory = chatHistory.filter((item) => item.timestamp !== parsedMsg.data.timestamp)
 			} else {
@@ -61,7 +54,6 @@
 			channel.socket?.readyState === WebSocket.OPEN
 		) {
 			emitChatHistoryToChannel({ channelSocket: channel.socket, channelId: channel._id, skip: 100 })
-			chatDrawerElement = document.getElementById(`chat_drawer`) as HTMLElement
 		}
 	})
 

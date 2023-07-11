@@ -8,7 +8,6 @@
 	import { createEventDispatcher, onMount } from 'svelte'
 	import { video_items } from '$lib/stores/streamStore'
 	import { channel_connection } from '$lib/stores/websocketStore'
-	import CommandList from '$lib/components/Channel/Stream/CommandList.svelte'
 
 	const dispatch = createEventDispatcher()
 	export let userCount: number = 1,
@@ -69,9 +68,6 @@
 					</div>
 					{#if channel && nextchannel?._id === $page.params.channelId}
 						<VideoGrid {channel} />
-						{#if !$video_items?.length && isChannelSocketConnected}
-							<CommandList />
-						{/if}
 					{/if}
 				</div>
 			</div>
