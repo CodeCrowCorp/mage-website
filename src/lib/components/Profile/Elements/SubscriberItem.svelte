@@ -4,7 +4,7 @@
 	export let subscriberItem: any
 </script>
 
-<div class="flex flex-row gap-2 px-4 py-2 card bg-base-100 justify-between">
+<div class="flex flex-row gap-2 px-4 py-2 card bg-base-100 justify-between mb-1">
 	<div class="flex">
 		<div class="avatar">
 			<div class="w-16 mask mask-squircle">
