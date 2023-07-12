@@ -19,7 +19,7 @@
 	import {
 		is_feature_premium_page_enabled,
 		is_feature_video_responses_enabled,
-		is_feature_verify_enabled
+		is_feature_affiliate_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
 	import { is_login_modal_open } from '$lib/stores/helperStore'
@@ -61,7 +61,7 @@
 </script>
 
 <div
-	class="menu w-80 {isChannelPage
+	class="menu w-80 overflow-y-auto overflow-x-hidden flex-nowrap {isChannelPage
 		? 'md:w-24 fixed h-full'
 		: 'h-screen'} bg-base-100 text-base-content flex flex-col">
 	<ul class={isChannelPage ? 'md:flex md:flex-col items-center md:w-full' : ''}>
@@ -101,7 +101,7 @@
 									<p class="truncate">{currentUser.displayName}</p>
 								</div>
 								<div class="col-span-3 tooltip flex gap-1" data-tip="@{currentUser.username}">
-									{#if currentUser.isVerified}
+									{#if currentUser.isAffiliate}
 										<div>
 											<IconDrawerVerification />
 										</div>
@@ -177,11 +177,11 @@
 				<span class={isChannelPage ? 'md:hidden' : ''}>Careers</span>
 			</a>
 		</li>
-		{#if currentUser && $is_feature_verify_enabled}
+		{#if currentUser && $is_feature_affiliate_enabled}
 			<li>
-				<a href="/verify" class="custom-menu-item">
+				<a href="https://forms.gle/mBtByR6jdoJeQd367" class="custom-menu-item" target="_blank">
 					<IconDrawerVerification />
-					<span class={isChannelPage ? 'md:hidden' : ''}>Verify</span>
+					<span class={isChannelPage ? 'md:hidden' : ''}>Affiliate</span>
 					{#if !isChannelPage}
 						<span class="badge badge-neutral">New</span>
 					{/if}
