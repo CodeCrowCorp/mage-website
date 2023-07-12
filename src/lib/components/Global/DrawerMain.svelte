@@ -18,7 +18,8 @@
 	import { user_role } from '$lib/stores/authStore'
 	import {
 		is_feature_premium_page_enabled,
-		is_feature_video_responses_enabled
+		is_feature_video_responses_enabled,
+		is_feature_verify_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
 	import { is_login_modal_open } from '$lib/stores/helperStore'
@@ -27,6 +28,7 @@
 	import { isOnline } from '$lib/stores/userStore'
 	import { get } from '$lib/api'
 	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svelte'
+	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 
 	export var nav_drawer: HTMLInputElement
 
@@ -98,7 +100,12 @@
 								<div class="col-span-3 tooltip flex" data-tip={currentUser.displayName}>
 									<p class="truncate">{currentUser.displayName}</p>
 								</div>
-								<div class="col-span-3 tooltip flex" data-tip="@{currentUser.username}">
+								<div class="col-span-3 tooltip flex gap-1" data-tip="@{currentUser.username}">
+									{#if currentUser.isVerified}
+										<div>
+											<IconDrawerVerification />
+										</div>
+									{/if}
 									<p class=" text-pink-500 truncate">@{currentUser.username}</p>
 								</div>
 								<IconDrawerStreak />
@@ -167,9 +174,20 @@
 		<li>
 			<a class="custom-menu-item" href="https://codecrow.io/careers" target="_blank">
 				<IconDrawerCareers />
-				<span class={isChannelPage ? 'md:hidden' : ''}> Careers </span>
+				<span class={isChannelPage ? 'md:hidden' : ''}>Careers</span>
 			</a>
 		</li>
+		{#if currentUser && $is_feature_verify_enabled}
+			<li>
+				<a href="/verify" class="custom-menu-item">
+					<IconDrawerVerification />
+					<span class={isChannelPage ? 'md:hidden' : ''}>Verify</span>
+					{#if !isChannelPage}
+						<span class="badge badge-neutral">New</span>
+					{/if}
+				</a>
+			</li>
+		{/if}
 		<li>
 			<details>
 				<summary class="custom-menu-item"
@@ -184,7 +202,7 @@
 		<li>
 			<a class="custom-menu-item" href="/settings">
 				<IconDrawerSettings />
-				<span class={isChannelPage ? 'md:hidden' : ''}> Settings </span>
+				<span class={isChannelPage ? 'md:hidden' : ''}>Settings </span>
 			</a>
 		</li>
 		{#if currentUser}
@@ -192,7 +210,7 @@
 				<li>
 					<button class="custom-menu-item" type="submit">
 						<IconDrawerLogOut />
-						<span class={isChannelPage ? 'md:hidden' : ''}>Log out </span>
+						<span class={isChannelPage ? 'md:hidden' : ''}>Log out</span>
 					</button>
 				</li>
 			</form>
@@ -207,7 +225,7 @@
 						}
 					}}>
 					<IconDrawerLogOut />
-					<span class={isChannelPage ? 'md:hidden' : ''}>Log In </span>
+					<span class={isChannelPage ? 'md:hidden' : ''}>Log In</span>
 				</button>
 			</li>
 		{/if}
