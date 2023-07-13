@@ -10,11 +10,14 @@
 	import { copyToClipboard, getColoredRole, setRole } from '$lib/utils'
 	import { page } from '$app/stores'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
-	import { onMount } from "svelte"
+	import { onMount } from 'svelte'
+	import ProfilePopup from './ProfilePopup.svelte'
 
 	export let sender: any, hostId: string, channel: any, onUsernameClick:any
 	let role: string, coloredRole: any
-	
+	let profileElt: any = null
+	let ignoreOutsideClick = false
+
 	$: isGuest = channel?.guests?.includes(sender.user?.userId)
 
 	$: showBanItem =
@@ -131,8 +134,8 @@
 		}
 	}
 
-	const hightlightUsername = (match:string) => {
-	    return `
+	const hightlightUsername = (match: string) => {
+		return `
 			<span 
 				class="text-info font-medium cursor-pointer"
 				name="username"
@@ -140,20 +143,34 @@
 			>
 				${match}
 			</span>
-		`;
-    }
+		`
+	}
 
 	const parse = (msg: string) => {
 		return msg.replace(/@[\w-]+[,\s]/g, hightlightUsername)
 	}
 
-
 	onMount(() => {
 		const spans = document.querySelectorAll('span[name="username"]')
-		spans.forEach((span:any) => {
+		spans.forEach((span: any) => {
 			span.onclick = onUsernameClick
 		})
 	})
+
+	// const closeProfile = () => {
+	// 	if (ignoreOutsideClick) return
+	// 	profileElt = null
+	// }
+
+	// const onUsernameClick = (evt: any) => {
+	// 	profileElt = evt.target
+	// 	ignoreOutsideClick = true
+	// 	setTimeout(() => {
+	// 		ignoreOutsideClick = false
+	// 	}, 100)
+	// }
+
+	$:console.log("sender",sender);
 
 	$: codeSnippet = isCodeSnippet(sender.message) ? getCodeSnippet(sender.message) : false
 </script>
@@ -174,11 +191,13 @@
 							id="b1"
 							class="{coloredRole.textColor} font-medium">@{sender.user?.username}</span> -->
 
-					<ProfileCard userId={sender.user?.userId}>
-						<span class="{coloredRole.textColor} font-medium">
-							@{sender.user?.username}
-						</span>
-					</ProfileCard>
+					<span
+						class="{coloredRole.textColor} font-medium cursor-pointer"
+						on:click={onUsernameClick}  id={sender.user?.username}  >
+						@{sender.user?.username}
+					</span>
+
+				
 				{/if}
 				{#if isImage(sender.message)}
 					<img class="py-2 pr-2" src={sender.message} alt="imgs" />
@@ -199,6 +218,7 @@
 				{:else}
 					<span class="break-all">{@html parse(sender.message)}</span>
 					
+
 				{/if}
 			</label>
 

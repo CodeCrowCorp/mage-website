@@ -17,8 +17,8 @@
 		chatHistory: any[] = []
 
 	let cursor: any = undefined
-	let profileElt:any = null
-	let selectedUser:string = ""
+	let profileElt: any = null
+	let selectedUser: string = ''
 	let ignoreOutsideClick = false
 
 	channel_message.subscribe((value) => {
@@ -79,40 +79,43 @@
 		}
 	}
 
-
 	const closeProfile = () => {
-		if(ignoreOutsideClick)return
+		if (ignoreOutsideClick) return
 		profileElt = null
-		selectedUser = ""
+		selectedUser = ''
 	}
 
-	const onUsernameClick = (evt:any) => {
+	const onUsernameClick = (evt: any) => {
 		profileElt = evt.target
-		selectedUser = viewers.find(i => i.username == profileElt.id.substr(1))?.userId
+		
+
+		const match = profileElt.id.match(/@\w+/g);
+		console.log('working +++', match)
+		if(match){
+			selectedUser = viewers.find((i) => i.username == profileElt.id.substr(1))?.userId
+		}
+		else{
+			selectedUser = viewers.find((i) => i.username == profileElt.id)?.userId
+		}
+		
+		console.log('selectedUser', selectedUser, 'viewers', viewers)
 		ignoreOutsideClick = true
 		setTimeout(() => {
 			ignoreOutsideClick = false
 		}, 100)
 	}
-	
 </script>
 
 <div class="bg-base-100 flex flex-col overflow-y-hidden w-72 md:w-full h-full rounded-lg">
 	<DropdownViewChannel bind:channel bind:showEditChannelDrawer />
 	<div class="flex flex-col-reverse p-3 grow overflow-y-scroll w-96">
-		<ProfilePopup 
-			open={profileElt ? true: false}
+		<ProfilePopup
+			open={profileElt ? true : false}
 			elt={profileElt}
-			userId={selectedUser}
-			onOutsideClick={closeProfile}
-		/>
+			bind:userId={selectedUser}
+			onOutsideClick={closeProfile} />
 		{#each chatHistory as sender}
-			<Message 
-				bind:sender 
-				bind:hostId={channel.user} 
-				bind:channel 
-				onUsernameClick={onUsernameClick}
-			 />
+			<Message bind:sender bind:hostId={channel.user} bind:channel {onUsernameClick} />
 		{/each}
 		<span use:LastItemInViewport on:loadMore={loadMore} />
 	</div>

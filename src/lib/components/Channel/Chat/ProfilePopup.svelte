@@ -10,6 +10,7 @@
 	export let open:boolean
 	export let onOutsideClick:any
 	export let elt: any
+	export let hideLoader= true;
 
 	let self:any
 
@@ -69,9 +70,10 @@
 
 	$: useOueryEffect(() => {
 		if(open && userId){
+			profileData = { profile: {} }
 			loadProfile(false)
 		}
-	}, [open])
+	}, [open, userId])
 
 	$: profile = profileData.profile
 	$: followerCount = profileData.followerCount || 0
@@ -81,6 +83,7 @@
 	$: isSelf = userId === $page.data.user?.userId
 
 	$: console.log("userId: ", userId)
+
 </script>
 
 <span use:clickOutside={handleClickOutside}>
@@ -93,20 +96,26 @@
 			<div class="p-3">
 				<div class="flex items-center justify-between mb-2">
 					<span>
-						<img
-							class="w-10 h-10 mask mask-squircle"
-							src={profileData.profile.avatar}
-							alt={profileData.profile.avatar} />
+						{#if !profileData?.profile?.avatar}
+							<div class="animate-pulse flex space-x-4 mb-1">
+								<div class="rounded bg-slate-200 h-8 w-24" />
+							</div>
+						{:else}
+							<img
+								class="w-10 h-10 mask mask-squircle"
+								src={profileData?.profile?.avatar}
+								alt={profileData?.profile?.avatar} />
+						{/if}
 					</span>
 					<div>
 						<button
-							on:click={() => doFollow(!profileData.isFollowed?.isInterested)}
+							on:click={() => doFollow(!profileData?.isFollowed?.isInterested)}
 							disabled={isSelf || loading}
 							type="button"
 							class="btn btn-secondary btn-sm">
 							{#if loading}
 								<span class="loading loading-dots loading-md" />
-							{:else if profileData.isFollowed?.isInterested}
+							{:else if profileData?.isFollowed?.isInterested}
 								Unfollow
 							{:else}
 								Follow
@@ -115,24 +124,42 @@
 					</div>
 				</div>
 
-				<p class="text-base font-semibold leading-none">
-					{profileData.profile.displayName || ''}
-				</p>
-				<p class="mb-3 text-sm font-normal">
-					<a class="link link-hover" href="/profile/{profileData.profile.username}"
-						>@{profileData.profile.username || ''}</a>
-				</p>
+				{#if !profileData?.profile?.displayName && !profileData?.profile?.username}
+					<div class="animate-pulse flex space-x-4 mb-3">
+						<div class="rounded bg-slate-200 h-12 w-full" />
+					</div>
+				{:else}
+					<p class="text-base font-semibold leading-none">
+						{profileData?.profile?.displayName}
+					</p>
+					<p class="mb-3 text-sm font-normal">
+						<a class="link link-hover" href="/profile/{profileData?.profile?.username}"
+							>@{profileData?.profile?.username}</a>
+					</p>
+				{/if}
+
 				<p class="mb-4 text-sm font-light">
-					
-					{profileData.profile.bio || ''}
+					{#if !profileData?.profile?.bio  && profileData?.profile?.bio == undefined && profileData?.profile?.bio == "" }
+						<div class="animate-pulse flex space-x-4">
+							<div class="rounded bg-slate-200 h-4 w-full" />
+						</div>
+					{:else}
+						{profileData?.profile?.bio}
+					{/if}
 				</p>
 				<div class="flex text-sm gap-5">
-					<!-- svelte-ignore a11y-missing-attribute -->
-					<a class="link link-hover">
-						<span class="font-semibold">{followerCount}</span> Followers</a>
-					<!-- svelte-ignore a11y-missing-attribute -->
-					<a class="link link-hover">
-						<span class="font-semibold">{followingCount}</span> Following</a>
+					{#if !followerCount && !followingCount}
+						<div class="animate-pulse flex space-x-4 w-full -mt-1">
+							<div class="rounded bg-slate-200 h-4 w-full" />
+						</div>
+					{:else}
+						<!-- svelte-ignore a11y-missing-attribute -->
+						<a class="link link-hover">
+							<span class="font-semibold">{followerCount}</span> Followers</a>
+						<!-- svelte-ignore a11y-missing-attribute -->
+						<a class="link link-hover">
+							<span class="font-semibold">{followingCount}</span> Following</a>
+					{/if}
 				</div>
 			</div>
 		</div>
