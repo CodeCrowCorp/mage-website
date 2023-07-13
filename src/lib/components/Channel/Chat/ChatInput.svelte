@@ -21,7 +21,7 @@
 	$: isHost = channel.user === $page.data.user?.userId
 
 	$: viewersWithOutHost = viewers.filter((viewer) => viewer.userId !== channel.user)
-
+$: console.log("viewers : ", viewers)
 	function insert(str: string, index: number, value: string) {
 		return str.substr(0, index) + value + str.substr(index)
 	}
@@ -205,6 +205,8 @@
 		!chatMessage.includes('@') &&
 		(channel.user === $page.data.user?.userId || channel.mods?.includes($page.data.user?.userId)) &&
 		!showUsers
+
+	console.log("viewersWithOutHost: ", viewersWithOutHost)
 </script>
 
 <form class="rounded-lg bg-base-200 p-2 w-full relative">

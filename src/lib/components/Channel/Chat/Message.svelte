@@ -10,10 +10,11 @@
 	import { copyToClipboard, getColoredRole, setRole } from '$lib/utils'
 	import { page } from '$app/stores'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
+	import { onMount } from "svelte"
 
-	export let sender: any, hostId: string, channel: any
+	export let sender: any, hostId: string, channel: any, onUsernameClick:any
 	let role: string, coloredRole: any
-
+	
 	$: isGuest = channel?.guests?.includes(sender.user?.userId)
 
 	$: showBanItem =
@@ -130,6 +131,30 @@
 		}
 	}
 
+	const hightlightUsername = (match:string) => {
+	    return `
+			<span 
+				class="text-info font-medium cursor-pointer"
+				name="username"
+				id=${match}
+			>
+				${match}
+			</span>
+		`;
+    }
+
+	const parse = (msg: string) => {
+		return msg.replace(/@[\w-]+[,\s]/g, hightlightUsername)
+	}
+
+
+	onMount(() => {
+		const spans = document.querySelectorAll('span[name="username"]')
+		spans.forEach((span:any) => {
+			span.onclick = onUsernameClick
+		})
+	})
+
 	$: codeSnippet = isCodeSnippet(sender.message) ? getCodeSnippet(sender.message) : false
 </script>
 
@@ -172,7 +197,8 @@
 						<span class="break-all">{codeSnippet.endText}</span>
 					{/if}
 				{:else}
-					<span class="break-all">{sender.message}</span>
+					<span class="break-all">{@html parse(sender.message)}</span>
+					
 				{/if}
 			</label>
 

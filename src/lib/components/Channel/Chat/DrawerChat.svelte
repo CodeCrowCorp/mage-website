@@ -9,6 +9,7 @@
 	import { emitChatHistoryToChannel } from '$lib/websocket'
 	import { setRole } from '$lib/utils'
 	import LastItemInViewport from '$lib/actions/LastItemInViewport'
+	import ProfilePopup from './ProfilePopup.svelte'
 
 	export let channel: any = undefined,
 		showEditChannelDrawer: boolean = false,
@@ -16,6 +17,9 @@
 		chatHistory: any[] = []
 
 	let cursor: any = undefined
+	let profileElt:any = null
+	let selectedUser:string = ""
+	let ignoreOutsideClick = false
 
 	channel_message.subscribe((value) => {
 		if (!value) return
@@ -74,13 +78,41 @@
 			})
 		}
 	}
+
+
+	const closeProfile = () => {
+		if(ignoreOutsideClick)return
+		profileElt = null
+		selectedUser = ""
+	}
+
+	const onUsernameClick = (evt:any) => {
+		profileElt = evt.target
+		selectedUser = viewers.find(i => i.username == profileElt.id.substr(1))?.userId
+		ignoreOutsideClick = true
+		setTimeout(() => {
+			ignoreOutsideClick = false
+		}, 100)
+	}
+	
 </script>
 
 <div class="bg-base-100 flex flex-col overflow-y-hidden w-72 md:w-full h-full rounded-lg">
 	<DropdownViewChannel bind:channel bind:showEditChannelDrawer />
 	<div class="flex flex-col-reverse p-3 grow overflow-y-scroll w-96">
+		<ProfilePopup 
+			open={profileElt ? true: false}
+			elt={profileElt}
+			userId={selectedUser}
+			onOutsideClick={closeProfile}
+		/>
 		{#each chatHistory as sender}
-			<Message bind:sender bind:hostId={channel.user} bind:channel />
+			<Message 
+				bind:sender 
+				bind:hostId={channel.user} 
+				bind:channel 
+				onUsernameClick={onUsernameClick}
+			 />
 		{/each}
 		<span use:LastItemInViewport on:loadMore={loadMore} />
 	</div>
