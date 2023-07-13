@@ -5,9 +5,7 @@
 	import VideoGrid from '$lib/components/Channel/Stream/VideoGrid.svelte'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
-	import { createEventDispatcher, onMount } from 'svelte'
-	import { video_items } from '$lib/stores/streamStore'
-	import { channel_connection } from '$lib/stores/websocketStore'
+	import { createEventDispatcher } from 'svelte'
 
 	const dispatch = createEventDispatcher()
 	export let userCount: number = 1,
@@ -15,8 +13,6 @@
 		channels: any = [],
 		isHostOrGuest: boolean = false,
 		viewers: any[] = []
-
-	$: isChannelSocketConnected = $channel_connection === `open-${channel._id}`
 
 	function autoActive(node: Element) {
 		const observer = new IntersectionObserver(callback, { threshold: 0.5 })
@@ -50,7 +46,8 @@
 				<div class="flex flex-col w-full">
 					<div class="flex gap-2 mb-3">
 						<span
-							class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center {$video_items?.length
+							class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center {channel
+								.videoItems?.length
 								? 'bg-red-700 hover:bg-red-700'
 								: ''}">
 							LIVE
