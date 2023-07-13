@@ -49,7 +49,7 @@
 			<div class="flex flex-row items-center gap-2">
 				<div class="avatar">
 					<div class="w-14 mask {channel.isPaidPlan ? 'mask-hexagon' : 'mask-squircle'}">
-						<img src={channel.thumbnail} alt="" />
+						<img src={channel.thumbnail || channel.avatar} alt="" />
 					</div>
 				</div>
 				<div class="w-4/5">

@@ -3,6 +3,10 @@
 	import { goto } from '$app/navigation'
 	import { category_list } from '$lib/stores/channelStore'
 	export let channel: any = {}
+
+	let thumbnailImage = channel.thumbnail || '/placeholder/programming-placeholder.jpg';
+
+	console.log(thumbnailImage)
 </script>
 
 <tr
@@ -14,7 +18,7 @@
 		<div class="flex items-center space-x-2 my-3 pl-3">
 			<div class="avatar">
 				<div class="w-12 mask {channel.isPaidPlan ? 'mask-hexagon' : 'mask-squircle'}">
-					<img src={channel.thumbnail} alt="" />
+					<img src={thumbnailImage} alt="" />
 				</div>
 			</div>
 			<div>
