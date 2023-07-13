@@ -218,6 +218,7 @@
 						case 'guest':
 							if (parsedMsg.roleUpdate.isEnabled) {
 								channel.videoItems.push(parsedMsg.roleUpdate.user)
+								channel.videoItems = channel.videoItems
 							} else {
 								channel.videoItems = channel.videoItems.filter(
 									(video: any) => video._id !== parsedMsg.roleUpdate.userId
