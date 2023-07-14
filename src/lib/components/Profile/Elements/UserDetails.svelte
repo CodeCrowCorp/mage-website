@@ -12,7 +12,7 @@
 		</h3>
 	{/if}
 	{#if profile.username}
-		<div class="text-lg leading-normal mt-0 mb-2 font-bold text-pink-500">
+		<div class="text-lg leading-normal mt-0 mb-2 font-bold">
 			@{profile.username || ''}
 		</div>
 	{/if}
