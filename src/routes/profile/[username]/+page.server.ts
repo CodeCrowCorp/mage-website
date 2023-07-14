@@ -1,27 +1,13 @@
 import type { Actions, PageServerLoad } from './$types'
-import { get, patch, put, del, putImage } from '$lib/api'
+import { get, patch, putImage } from '$lib/api'
 import { redirect, fail } from '@sveltejs/kit'
 
-export const load = (async ({ params, locals }) => {
+export const load = (async ({ params }: { params: any }) => {
 	const profile = await get(`users/search/username?username=${params.username}`)
 	return {
 		profile: profile,
 		lazy: {
 			channels: get(`channels/user?userId=${profile._id}&skip=${0}&limit=${10}`),
-			subscribers: get(
-				`subscribes?source=${profile._id}&sourceType=source1&skip=${0}&limit=${10}`,
-				{ userId: locals.user?.userId, token: locals.user?.token }
-			),
-			interests: get(`subscribes?source=${profile._id}&sourceType=source2&skip=${0}&limit=${10}`, {
-				userId: locals.user?.userId,
-				token: locals.user?.token
-			}),
-			subscriberCount: get(`subscribes/count?source=${profile._id}&sourceType=source1`),
-			interestCount: get(`subscribes/count?source=${profile._id}&sourceType=source2`),
-			isSubscribed: get(`subscribes/relationship?source=${profile._id}`, {
-				userId: locals.user?.userId,
-				token: locals.user?.token
-			}),
 			totalPageViews: get(`stats`),
 			highestAndCurrentStreak: get(`stats`),
 			totalAndAvgHours: get(`stats`)
@@ -83,33 +69,7 @@ export const actions = {
 			}
 		}
 	},
-	subscribe: async ({ request, locals }: { request: any; locals: any }) => {
-		const data = await request.formData()
-		const isSubscribing = data.get('isSubscribing')
-		const source1 = data.get('source1')
-		const source2 = data.get('source2')
-		if (isSubscribing === 'true') {
-			await put(
-				`subscribes`,
-				{ source1, source2 },
-				{
-					userId: locals.user?.userId,
-					token: locals.user?.token
-				}
-			)
-		} else {
-			await del(`subscribes?source1=${source1}&source2=${source2}`, {
-				userId: locals.user?.userId,
-				token: locals.user?.token
-			})
-		}
-	},
 	sponsor: async ({ request, locals }: { request: any; locals: any }) => {
-		await new Promise<any>((resolve) => setTimeout(resolve, 1000))
-	},
-	search: async ({ request, locals }: { request: any; locals: any }) => {
-		const data = await request.formData()
-		const search = data.get('query')
 		await new Promise<any>((resolve) => setTimeout(resolve, 1000))
 	}
 } satisfies Actions

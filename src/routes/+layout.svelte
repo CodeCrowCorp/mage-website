@@ -21,9 +21,10 @@
 	import { current_theme } from '$lib/stores/helperStore'
 	import {
 		is_feature_premium_page_enabled,
-		is_feature_subscribes_enabled,
+		is_feature_follows_enabled,
 		is_feature_video_responses_enabled,
-		is_feature_stats_enabled
+		is_feature_stats_enabled,
+		is_feature_affiliate_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import { env } from '$env/dynamic/public'
 	import { user_role } from '$lib/stores/authStore'
@@ -48,8 +49,9 @@
 		$current_theme = localStorage.getItem('theme') || 'dark'
 		$is_feature_premium_page_enabled = env.PUBLIC_FEATURE_PREMIUM_PAGE === 'true'
 		$is_feature_video_responses_enabled = env.PUBLIC_FEATURE_VIDEO_RESPONSES === 'true'
-		$is_feature_subscribes_enabled = env.PUBLIC_FEATURE_SUBSCRIBES === 'true'
+		$is_feature_follows_enabled = env.PUBLIC_FEATURE_FOLLOWS === 'true'
 		$is_feature_stats_enabled = env.PUBLIC_FEATURE_STATS === 'true'
+		$is_feature_affiliate_enabled = env.PUBLIC_FEATURE_AFFILIATE === 'true'
 		await handleWebsocket()
 		if (!$category_list.length) {
 			$category_list = imageUrlsJson

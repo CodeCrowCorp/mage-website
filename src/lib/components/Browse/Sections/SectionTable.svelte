@@ -1,5 +1,4 @@
 <script lang="ts">
-	// import IconLock from '$lib/assets/icons/IconLock.svelte'
 	// import VirtualList from '@sveltejs/svelte-virtual-list'
 	import LoadingItemTable from '$lib/components/Browse/Sections/LoadingItemTable.svelte'
 	import ItemTable from '$lib/components/Browse/Sections/ItemTable.svelte'

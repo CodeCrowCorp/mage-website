@@ -40,7 +40,13 @@
 				user.coloredRole = getColoredRole(role)
 				return user
 			})
-			viewers = users
+			viewers = users.reduce((acc: any, cur: any) => {
+				let username = cur.username.toLowerCase()
+				if (!acc.find((viewer: any) => viewer.username.toLowerCase() === username)) {
+					acc.push(cur)
+				}
+				return acc
+			}, [])
 			cursor = parsedMsg.cursor
 		}
 

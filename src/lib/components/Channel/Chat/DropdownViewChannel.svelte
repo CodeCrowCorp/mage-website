@@ -7,47 +7,44 @@
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
 	import { del, get, put } from '$lib/api'
+	import { createEffect } from '$lib/utils'
 
 	export let channel: any = undefined,
 		showEditChannelDrawer: boolean = false
 
+	const useEffect = createEffect()
+
 	let host: any = {},
 		isHost: boolean = false,
-		isSubscribing: boolean = false,
+		isFollowing: boolean = false,
 		isFavorite: boolean = false
-
-	$: if (channel) {
-		getHostAndRelationship()
-	}
 
 	const getHostAndRelationship = async () => {
 		host = await get(`users/search/id?userId=${channel.user}`)
 		isHost = channel.user === $page?.data?.user?.userId
 		if ($page.data.user?.userId) {
-			const relationship = await get(`subscribes/relationship?source=${channel.user}`, {
+			const relationship = await get(`follows/relationship?source=${channel.user}`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
-			isSubscribing = relationship?.isInterested
+			isFollowing = relationship?.isFollowing
 		}
 	}
 
 	onMount(async () => {
-		if (!$page.data.user?.userId) return
-		await getHostAndRelationship()
 		isFavorite = $page.data.user?.user?.favChannelIds?.includes(channel._id)
 	})
 
-	const toggleSubscribe = async () => {
-		isSubscribing = !isSubscribing
-		if (isSubscribing) {
+	const toggleFollow = async () => {
+		isFollowing = !isFollowing
+		if (isFollowing) {
 			await put(
-				`subscribes`,
+				`follows`,
 				{ source1: channel.user, source2: $page.data.user?.userId },
 				{ userId: $page.data.user?.userId, token: $page.data.user?.token }
 			)
 		} else {
-			await del(`subscribes?source1=${channel.user}&source2=${$page.data.user?.userId}`, {
+			await del(`follows?source1=${channel.user}&source2=${$page.data.user?.userId}`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
@@ -69,6 +66,11 @@
 			})
 		}
 	}
+
+	$: useEffect(() => {
+		if (!$page.data.user?.userId) return
+		getHostAndRelationship()
+	}, [channel?._id])
 </script>
 
 <div class="menu dropdown dropdown-bottom z-10">
@@ -154,12 +156,12 @@
 			<div class="grid grid-cols-5 gap-2">
 				<button
 					disabled={!$page.data.user?.userId}
-					class="btn btn-secondary {isSubscribing
+					class="btn btn-secondary {isFollowing
 						? 'btn-outline'
 						: ''} col-span-4 normal-case tooltip tooltip-top flex"
-					data-tip={isSubscribing ? 'Unsubscribe from host' : 'Subscribe to host'}
-					on:click={() => toggleSubscribe()}>
-					{isSubscribing ? 'Unsubscribe' : 'Subscribe'}
+					data-tip={isFollowing ? 'Unfollow host' : 'Follow host'}
+					on:click={() => toggleFollow()}>
+					{isFollowing ? 'Unfollow' : 'Follow'}
 				</button>
 				<button
 					disabled={!$page.data.user?.userId}

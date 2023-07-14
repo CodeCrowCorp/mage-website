@@ -2,14 +2,20 @@
 	import { page } from '$app/stores'
 	import { get, post } from '$lib/api'
 	import { onMount } from 'svelte'
-	import { setProfile, getProfile } from '$lib/temp-store'
+	import { setProfile, getProfile } from '$lib/stores/helperStore'
 	import { clickOutside } from '$lib/utils.js'
+	import { put, del } from '$lib/api'
 
 	export let userId: string
 	let profileData: any = getProfile(userId) || { profile: {} }
 	let loading = false
 	let show = false
 	let elt: any
+
+	$: auth = {
+		userId: $page.data.user?.userId,
+		token: $page.data.user?.token
+	}
 
 	const toggle = async () => {
 		show = !show
@@ -20,14 +26,20 @@
 		show = false
 	}
 
-	const doSubscribe = async () => {
+	const doFollow = async (isFollow: any) => {
 		loading = true
-		const resp = await post('subscribe', {
-			source1: profileData.profile._id,
-			source2: $page.data.user?.userId,
-			isSubscriber: true
-		})
-		loadProfile(true)
+
+		const source1 = profile._id
+		const source2 = $page.data.user?.userId
+		const isFollowing = isFollow.toString()
+
+		if (isFollowing == 'true') {
+			await put(`follows`, { source1, source2 }, auth)
+		} else {
+			await del(`follows?source1=${source1}&source2=${source2}`, auth)
+		}
+
+		await loadProfile(true)
 		loading = false
 	}
 
@@ -35,29 +47,28 @@
 		loading = true
 		if (getProfile(userId) && !refresh) {
 			profileData = getProfile(userId)
-			console.log('profile loaded from local')
 		} else {
-			profileData.profile = await get(`users/search/id?userId=${userId}`)
-			profileData.subscriberCount = await get(
-				`subscribes/count?source=${userId}&sourceType=source1`
+			profileData.profile = await get(`users/search/id?userId=${userId}`, auth)
+			profileData.followerCount = await get(
+				`follows/count?source=${userId}&sourceType=source1`,
+				auth
 			)
-			profileData.interestCount = await get(`subscribes/count?source=${userId}&sourceType=source2`)
+			profileData.followingCount = await get(
+				`follows/count?source=${userId}&sourceType=source2`,
+				auth
+			)
 			if ($page.data.user?.userId) {
-				profileData.isSubscribed = await get(`subscribes/relationship?source=${profile._id}`, {
-					userId: $page.data.user?.userId,
-					token: $page.data.user?.token
-				})
+				profileData.isFollowed = await get(`follows/relationship?source=${profile._id}`, auth)
 			}
 
 			setProfile(userId, profileData)
-			console.log('profile loaded from server')
 		}
 		loading = false
 	}
 
 	$: profile = profileData.profile
-	$: subscriberCount = profileData.subscriberCount || 0
-	$: interestCount = profileData.interestCount || 0
+	$: followerCount = profileData.followerCount || 0
+	$: followingCount = profileData.followingCount || 0
 	$: margin = (elt ? elt.getBoundingClientRect().height : 0) + 40
 	$: isSelf = userId === $page.data.user?.userId
 </script>
@@ -79,11 +90,17 @@
 					</span>
 					<div>
 						<button
-							on:click={doSubscribe}
+							on:click={() => doFollow(!profileData.isFollowed?.isInterested)}
 							disabled={isSelf || loading}
 							type="button"
 							class="btn btn-secondary btn-sm">
-							{loading ? 'Loading...' : !profileData.isSubscribed ? 'Subscribe' : 'Unsubscribe'}
+							{#if loading}
+								<span class="loading loading-dots loading-md" />
+							{:else if profileData.isFollowed?.isInterested}
+								Unfollow
+							{:else}
+								Follow
+							{/if}
 						</button>
 					</div>
 				</div>
@@ -99,10 +116,12 @@
 					{profileData.profile.bio || ''}
 				</p>
 				<div class="flex text-sm gap-5">
+					<!-- svelte-ignore a11y-missing-attribute -->
 					<a class="link link-hover">
-						<span class="font-semibold">{subscriberCount}</span> Subscribers</a>
+						<span class="font-semibold">{followerCount}</span> Followers</a>
+					<!-- svelte-ignore a11y-missing-attribute -->
 					<a class="link link-hover">
-						<span class="font-semibold">{interestCount}</span> Interests</a>
+						<span class="font-semibold">{followingCount}</span> Following</a>
 				</div>
 			</div>
 		</div>
