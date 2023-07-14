@@ -48,8 +48,8 @@
 			<p class="text-2xl truncate text-white font-semibold">{channel.title || ''}</p>
 			<div class="flex flex-row items-center gap-2">
 				<div class="avatar">
-					<div class="w-14 mask {channel.isPaidPlan ? 'mask-hexagon' : 'mask-squircle'}">
-						<img src={channel.thumbnail || channel.avatar} alt="" />
+					<div class="w-14 mask {channel?.isPaidPlan ? 'mask-hexagon' : 'mask-squircle'}">
+						<img src={channel.avatar} alt="" />
 					</div>
 				</div>
 				<div class="w-4/5">
