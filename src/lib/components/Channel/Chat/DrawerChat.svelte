@@ -87,24 +87,18 @@
 
 	const onUsernameClick = (evt: any) => {
 		profileElt = evt.target
-		const match = profileElt.id.match(/@\w+/g);
-		if(match){
-			selectedUser = viewers.find((i) => i.username == profileElt.id.substr(1))?.userId
-		}
-		else{
-			selectedUser = viewers.find((i) => i.username == profileElt.id)?.userId
-		}
-		console.log("selectedUser",selectedUser, profileElt, viewers);
+		selectedUser = profileElt.id.substr(1)
 		ignoreOutsideClick = true
 		setTimeout(() => {
 			ignoreOutsideClick = false
 		}, 100)
 	}
+
 </script>
 
 <div class="bg-base-100 flex flex-col overflow-y-hidden w-72 md:w-full h-full rounded-lg">
 	<DropdownViewChannel bind:channel bind:showEditChannelDrawer />
-	<div class="flex flex-col-reverse p-3 grow overflow-y-scroll w-96">
+	<div on:scroll={closeProfile} class="flex flex-col-reverse p-3 grow overflow-y-scroll w-96">
 		<ProfilePopup
 			open={profileElt ? true : false}
 			elt={profileElt}

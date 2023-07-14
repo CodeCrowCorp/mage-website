@@ -30,7 +30,7 @@
 	const doFollow = async (isFollow: any) => {
 		loading = true
 
-		const source1 = profile._id
+		const source1 = profileData.profile._id
 		const source2 = $page.data.user?.userId
 		const isFollowing = isFollow.toString()
 
@@ -49,17 +49,18 @@
 		if (getProfile(userId) && !refresh) {
 			profileData = getProfile(userId)
 		} else {
-			profileData.profile = await get(`users/search/id?userId=${userId}`, auth)
+			profileData.profile = await get(`users/search/username?username=${userId}`, auth)
+			const id = profileData.profile._id
 			profileData.followerCount = await get(
-				`follows/count?source=${userId}&sourceType=source1`,
+				`follows/count?source=${id}&sourceType=source1`,
 				auth
 			)
 			profileData.followingCount = await get(
-				`follows/count?source=${userId}&sourceType=source2`,
+				`follows/count?source=${id}&sourceType=source2`,
 				auth
 			)
 			if ($page.data.user?.userId) {
-				profileData.isFollowed = await get(`follows/relationship?source=${profile._id}`, auth)
+				profileData.isFollowed = await get(`follows/relationship?source=${id}`, auth)
 			}
 
 			setProfile(userId, profileData)
@@ -138,13 +139,7 @@
 				{/if}
 
 				<p class="mb-4 text-sm font-light">
-					{#if !profileData?.profile?.bio && loading}
-						<div class="animate-pulse flex space-x-4">
-							<div class="rounded bg-slate-200 h-4 w-full" />
-						</div>
-					{:else}
-						{profileData?.profile?.bio || " "}
-					{/if}
+					{profileData?.profile?.bio || " "}
 				</p>
 				<div class="flex text-sm gap-5">
 					{#if !followerCount && !followingCount}
