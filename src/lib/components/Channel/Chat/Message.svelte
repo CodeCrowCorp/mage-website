@@ -178,7 +178,9 @@
 
 					<span
 						class="{coloredRole.textColor} font-medium cursor-pointer"
-						on:click={onUsernameClick}  id={sender.user?.username}  >
+						on:click={onUsernameClick}  
+						id={"@"+sender.user?.username}  
+					>
 						@{sender.user?.username}
 					</span>
 

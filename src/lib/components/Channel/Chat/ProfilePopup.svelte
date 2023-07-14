@@ -54,7 +54,12 @@
 		if (getProfile(userId) && !refresh) {
 			profileData = getProfile(userId)
 		} else {
-			profileData.profile = await get(`users/search/username?username=${userId}`, auth)
+			if($page?.data?.user?.user?.username === userId){
+				profileData.profile = $page?.data?.user?.user
+			}
+			else{
+				profileData.profile = await get(`users/search/username?username=${userId}`, auth)
+			}
 			const id = profileData.profile._id
 			profileData.followerCount = await get(
 				`follows/count?source=${id}&sourceType=source1`,
@@ -64,12 +69,14 @@
 				`follows/count?source=${id}&sourceType=source2`,
 				auth
 			)
-			if ($page.data.user?.userId) {
+
+			if(userId === $page.data.user?.user?.username){
+				profileData.isFollowed = { isFollowing: true }
+			}
+			else{
 				profileData.isFollowed = await get(`follows/relationship?source=${id}`, auth)
 			}
-
-			console.log("profileData: ", profileData)
-
+		
 			setProfile(userId, profileData)
 		}
 		loading = false
@@ -82,14 +89,11 @@
 		}
 	}, [open, userId])
 
-
-	$:console.log("userIdd",userId);
-	$: profile = profileData.profile
 	$: followerCount = profileData.followerCount || 0
 	$: followingCount = profileData.followingCount || 0
 	$: margin = (self ? self.getBoundingClientRect().height : 0) + 40
 	$: top = (elt ? elt.getBoundingClientRect().top : 0) + 40
-	$: isSelf = userId === $page.data.user?.userId
+	$: isSelf = userId === $page.data.user?.user?.username
 
 </script>
 
