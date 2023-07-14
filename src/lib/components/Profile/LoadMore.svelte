@@ -14,12 +14,12 @@
 
 	let listElement: any
 	let skip = 0
-	let s_skip = 0
+	let sSkip = 0
 	let list: any[] = []
-	let s_list: any = null
+	let sList: any = null
 	let loading = false
 	let allLoaded = false
-	let s_allLoaded = false
+	let sAllLoaded = false
 	let query = ''
 
 	onMount(async () => {
@@ -29,11 +29,11 @@
 					if (dataSource && !loading && !allLoaded) {
 						loading = true
 						if (query) {
-							if (!s_allLoaded) {
-								s_skip += s_limit
-								let resp = await searchDataSource(query, s_skip, s_limit)
-								s_allLoaded = resp.length === 0
-								s_list = [...s_list, ...resp]
+							if (!sAllLoaded) {
+								sSkip += s_limit
+								let resp = await searchDataSource(query, sSkip, s_limit)
+								sAllLoaded = resp.length === 0
+								sList = [...sList, ...resp]
 							}
 						} else {
 							skip += limit
@@ -50,11 +50,11 @@
 
 	const search = async () => {
 		loading = true
-		s_allLoaded = false
-		s_list = []
-		s_skip = 0
-		s_list = await searchDataSource(query, s_skip, s_limit)
-		s_allLoaded = s_list.length < s_limit ? true : false
+		sAllLoaded = false
+		sList = []
+		sSkip = 0
+		sList = await searchDataSource(query, sSkip, s_limit)
+		sAllLoaded = sList.length < s_limit ? true : false
 		loading = false
 	}
 
@@ -64,7 +64,7 @@
 
 	$: useOueryEffect(() => {
 		if (!query) {
-			s_list = null
+			sList = null
 		}
 	}, [query])
 
@@ -74,7 +74,7 @@
 			return
 		}
 		query = ''
-		s_list = null
+		sList = null
 		skip = 0
 		loading = true
 		list = await dataSource(skip, limit)
@@ -82,7 +82,7 @@
 		loading = false
 	}, [count])
 
-	$: main_list = s_list || list
+	$: main_list = sList || list
 </script>
 
 <div>
