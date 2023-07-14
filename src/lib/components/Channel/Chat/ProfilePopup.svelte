@@ -7,12 +7,11 @@
 	import { createEffect } from '$lib/utils'
 
 	export let userId: string
-	export let open:boolean
-	export let onOutsideClick:any
+	export let open: boolean
+	export let onOutsideClick: any
 	export let elt: any
-	export let hideLoader= true;
 
-	let self:any
+	let self: any
 
 	const useOueryEffect = createEffect()
 
@@ -25,7 +24,7 @@
 	}
 
 	const handleClickOutside = (event: any) => {
-		if(onOutsideClick)onOutsideClick()
+		if (onOutsideClick) onOutsideClick()
 	}
 
 	const doFollow = async (isFollow: any) => {
@@ -69,20 +68,20 @@
 	}
 
 	$: useOueryEffect(() => {
-		if(open && userId){
+		if (open && userId) {
 			profileData = { profile: {} }
 			loadProfile(false)
 		}
 	}, [open, userId])
 
+
+	$:console.log("userIdd",userId);
 	$: profile = profileData.profile
 	$: followerCount = profileData.followerCount || 0
 	$: followingCount = profileData.followingCount || 0
 	$: margin = (self ? self.getBoundingClientRect().height : 0) + 40
 	$: top = (elt ? elt.getBoundingClientRect().top : 0) + 40
 	$: isSelf = userId === $page.data.user?.userId
-
-	$: console.log("userId: ", userId)
 
 </script>
 
@@ -139,12 +138,12 @@
 				{/if}
 
 				<p class="mb-4 text-sm font-light">
-					{#if !profileData?.profile?.bio  && profileData?.profile?.bio == undefined && profileData?.profile?.bio == "" }
+					{#if !profileData?.profile?.bio && loading}
 						<div class="animate-pulse flex space-x-4">
 							<div class="rounded bg-slate-200 h-4 w-full" />
 						</div>
 					{:else}
-						{profileData?.profile?.bio}
+						{profileData?.profile?.bio || " "}
 					{/if}
 				</p>
 				<div class="flex text-sm gap-5">

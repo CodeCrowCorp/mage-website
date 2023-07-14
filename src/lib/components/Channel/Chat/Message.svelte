@@ -5,7 +5,6 @@
 	import IconChatQuote from '$lib/assets/icons/chat/IconChatQuote.svelte'
 	import IconChatDelete from '$lib/assets/icons/chat/IconChatDelete.svelte'
 	import IconChatHorizontalMore from '$lib/assets/icons/chat/IconChatHorizontalMore.svelte'
-	import ProfileCard from '$lib/components/Channel/Chat/ProfileCard.svelte'
 	import { emitChannelUpdate, emitDeleteMessageToChannel } from '$lib/websocket'
 	import { copyToClipboard, getColoredRole, setRole } from '$lib/utils'
 	import { page } from '$app/stores'
@@ -156,21 +155,6 @@
 			span.onclick = onUsernameClick
 		})
 	})
-
-	// const closeProfile = () => {
-	// 	if (ignoreOutsideClick) return
-	// 	profileElt = null
-	// }
-
-	// const onUsernameClick = (evt: any) => {
-	// 	profileElt = evt.target
-	// 	ignoreOutsideClick = true
-	// 	setTimeout(() => {
-	// 		ignoreOutsideClick = false
-	// 	}, 100)
-	// }
-
-	$:console.log("sender",sender);
 
 	$: codeSnippet = isCodeSnippet(sender.message) ? getCodeSnippet(sender.message) : false
 </script>

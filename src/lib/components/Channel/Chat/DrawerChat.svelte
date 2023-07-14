@@ -87,18 +87,14 @@
 
 	const onUsernameClick = (evt: any) => {
 		profileElt = evt.target
-		
-
 		const match = profileElt.id.match(/@\w+/g);
-		console.log('working +++', match)
 		if(match){
 			selectedUser = viewers.find((i) => i.username == profileElt.id.substr(1))?.userId
 		}
 		else{
 			selectedUser = viewers.find((i) => i.username == profileElt.id)?.userId
 		}
-		
-		console.log('selectedUser', selectedUser, 'viewers', viewers)
+		console.log("selectedUser",selectedUser, profileElt, viewers);
 		ignoreOutsideClick = true
 		setTimeout(() => {
 			ignoreOutsideClick = false
