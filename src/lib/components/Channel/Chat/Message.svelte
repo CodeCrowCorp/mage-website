@@ -12,7 +12,7 @@
 	import { onMount } from 'svelte'
 	import ProfilePopup from './ProfilePopup.svelte'
 
-	export let sender: any, hostId: string, channel: any, onUsernameClick:any
+	export let sender: any, hostId: string, channel: any, onUsernameClick: any
 	let role: string, coloredRole: any
 	let profileElt: any = null
 	let ignoreOutsideClick = false
@@ -136,7 +136,7 @@
 	const hightlightUsername = (match: string) => {
 		return `
 			<span 
-				class="text-info font-medium cursor-pointer"
+				class="text-success font-medium cursor-pointer link"
 				name="username"
 				id=${match}
 			>
@@ -146,7 +146,7 @@
 	}
 
 	const parse = (msg: string) => {
-		const m = msg + " "
+		const m = msg + ' '
 		return m.replace(/@[\w-]+[,\s]/g, hightlightUsername).trim()
 	}
 
@@ -178,13 +178,10 @@
 
 					<span
 						class="{coloredRole.textColor} font-medium cursor-pointer"
-						on:click={onUsernameClick}  
-						id={"@"+sender.user?.username}  
-					>
+						on:click={onUsernameClick}
+						id={'@' + sender.user?.username}>
 						@{sender.user?.username}
 					</span>
-
-				
 				{/if}
 				{#if isImage(sender.message)}
 					<img class="py-2 pr-2" src={sender.message} alt="imgs" />
@@ -204,8 +201,6 @@
 					{/if}
 				{:else}
 					<span class="break-all">{@html parse(sender.message)}</span>
-					
-
 				{/if}
 			</label>
 

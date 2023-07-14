@@ -33,8 +33,7 @@
 		const source1 = profileData.profile._id
 		const source2 = $page.data.user?.userId
 		const isFollowing = isFollow.toString()
-		if(!profileData.isFollowed)
-			profileData.isFollowed = {}
+		if (!profileData.isFollowed) profileData.isFollowed = {}
 
 		if (isFollowing == 'true') {
 			await put(`follows`, { source1, source2 }, auth)
@@ -54,29 +53,21 @@
 		if (getProfile(userId) && !refresh) {
 			profileData = getProfile(userId)
 		} else {
-			if($page?.data?.user?.user?.username === userId){
+			if ($page?.data?.user?.user?.username === userId) {
 				profileData.profile = $page?.data?.user?.user
-			}
-			else{
+			} else {
 				profileData.profile = await get(`users/search/username?username=${userId}`, auth)
 			}
 			const id = profileData.profile._id
-			profileData.followerCount = await get(
-				`follows/count?source=${id}&sourceType=source1`,
-				auth
-			)
-			profileData.followingCount = await get(
-				`follows/count?source=${id}&sourceType=source2`,
-				auth
-			)
+			profileData.followerCount = await get(`follows/count?source=${id}&sourceType=source1`, auth)
+			profileData.followingCount = await get(`follows/count?source=${id}&sourceType=source2`, auth)
 
-			if(userId === $page.data.user?.user?.username){
+			if (userId === $page.data.user?.user?.username) {
 				profileData.isFollowed = { isFollowing: true }
-			}
-			else{
+			} else {
 				profileData.isFollowed = await get(`follows/relationship?source=${id}`, auth)
 			}
-		
+
 			setProfile(userId, profileData)
 		}
 		loading = false
@@ -94,7 +85,6 @@
 	$: margin = (self ? self.getBoundingClientRect().height : 0) + 40
 	$: top = (elt ? elt.getBoundingClientRect().top : 0) + 40
 	$: isSelf = userId === $page.data.user?.user?.username
-
 </script>
 
 <span use:clickOutside={handleClickOutside}>
@@ -109,7 +99,7 @@
 					<span>
 						{#if !profileData?.profile?.avatar}
 							<div class="animate-pulse flex space-x-4 mb-1">
-								<div class="rounded bg-slate-200 h-8 w-24" />
+								<div class="rounded bg-base-100 h-8 w-8" />
 							</div>
 						{:else}
 							<img
@@ -121,7 +111,7 @@
 					<div>
 						<button
 							on:click={() => doFollow(!profileData?.isFollowed?.isFollowing)}
-							disabled={isSelf || loading}
+							disabled={!$page.data.user?.userId || isSelf || loading}
 							type="button"
 							class="btn btn-secondary btn-sm">
 							{#if loading}
@@ -137,7 +127,7 @@
 
 				{#if !profileData?.profile?.displayName && !profileData?.profile?.username}
 					<div class="animate-pulse flex space-x-4 mb-3">
-						<div class="rounded bg-slate-200 h-12 w-full" />
+						<div class="rounded bg-base-100 h-12 w-full" />
 					</div>
 				{:else}
 					<p class="text-base font-semibold leading-none">
@@ -150,21 +140,15 @@
 				{/if}
 
 				<p class="mb-4 text-sm font-light">
-					{profileData?.profile?.bio || " "}
+					{profileData?.profile?.bio || ' '}
 				</p>
 				<div class="flex text-sm gap-5">
-					{#if !followerCount && !followingCount}
-						<div class="animate-pulse flex space-x-4 w-full -mt-1">
-							<div class="rounded bg-slate-200 h-4 w-full" />
-						</div>
-					{:else}
-						<!-- svelte-ignore a11y-missing-attribute -->
-						<a class="link link-hover">
-							<span class="font-semibold">{followerCount}</span> Followers</a>
-						<!-- svelte-ignore a11y-missing-attribute -->
-						<a class="link link-hover">
-							<span class="font-semibold">{followingCount}</span> Following</a>
-					{/if}
+					<!-- svelte-ignore a11y-missing-attribute -->
+					<a class="link link-hover">
+						<span class="font-semibold">{followerCount}</span> Followers</a>
+					<!-- svelte-ignore a11y-missing-attribute -->
+					<a class="link link-hover">
+						<span class="font-semibold">{followingCount}</span> Following</a>
 				</div>
 			</div>
 		</div>
