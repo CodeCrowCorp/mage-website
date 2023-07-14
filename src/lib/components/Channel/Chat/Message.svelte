@@ -146,7 +146,8 @@
 	}
 
 	const parse = (msg: string) => {
-		return msg.replace(/@[\w-]+[,\s]/g, hightlightUsername)
+		const m = msg + " "
+		return m.replace(/@[\w-]+[,\s]/g, hightlightUsername).trim()
 	}
 
 	onMount(() => {
