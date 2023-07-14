@@ -33,14 +33,19 @@
 		const source1 = profileData.profile._id
 		const source2 = $page.data.user?.userId
 		const isFollowing = isFollow.toString()
+		if(!profileData.isFollowed)
+			profileData.isFollowed = {}
 
 		if (isFollowing == 'true') {
 			await put(`follows`, { source1, source2 }, auth)
+			profileData.followerCount++
+			profileData.isFollowed.isFollowing = true
 		} else {
 			await del(`follows?source1=${source1}&source2=${source2}`, auth)
+			profileData.followerCount--
+			profileData.isFollowed.isFollowing = false
 		}
-
-		await loadProfile(true)
+		setProfile(userId, profileData)
 		loading = false
 	}
 
@@ -62,6 +67,8 @@
 			if ($page.data.user?.userId) {
 				profileData.isFollowed = await get(`follows/relationship?source=${id}`, auth)
 			}
+
+			console.log("profileData: ", profileData)
 
 			setProfile(userId, profileData)
 		}
@@ -109,13 +116,13 @@
 					</span>
 					<div>
 						<button
-							on:click={() => doFollow(!profileData?.isFollowed?.isInterested)}
+							on:click={() => doFollow(!profileData?.isFollowed?.isFollowing)}
 							disabled={isSelf || loading}
 							type="button"
 							class="btn btn-secondary btn-sm">
 							{#if loading}
 								<span class="loading loading-dots loading-md" />
-							{:else if profileData?.isFollowed?.isInterested}
+							{:else if profileData?.isFollowed?.isFollowing}
 								Unfollow
 							{:else}
 								Follow
