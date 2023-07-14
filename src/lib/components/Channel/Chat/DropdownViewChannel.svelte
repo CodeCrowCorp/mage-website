@@ -130,7 +130,7 @@
 							<p class="truncate">{host?.displayName}</p>
 						</div>
 						<div class="col-span-3 tooltip flex" data-tip="@{host?.username}">
-							<p class=" text-pink-500 truncate">@{host?.username}</p>
+							<p class="truncate">@{host?.username}</p>
 						</div>
 					</div>
 				</div>
@@ -140,7 +140,7 @@
 			<div class="grid grid-cols-5 gap-2">
 				<label
 					for="edit-channel-drawer"
-					class="btn btn-neutral text-white col-span-4 flex"
+					class="btn btn-neutral text-white col-span-4 flex tooltip font-normal normal-case"
 					data-tip="Edit channel"
 					on:click={() => (showEditChannelDrawer = true)}>
 					Edit channel
