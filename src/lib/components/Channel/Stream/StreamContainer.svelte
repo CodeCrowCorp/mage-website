@@ -64,7 +64,7 @@
 						</div>
 					</div>
 					{#if channel && nextchannel?._id === $page.params.channelId}
-						<VideoGrid {channel} />
+						<VideoGrid bind:channel />
 					{/if}
 				</div>
 			</div>
@@ -72,6 +72,6 @@
 	</div>
 
 	<div class="absolute lg:bottom-0 bottom-10 m-7">
-		<StreamControls bind:isHostOrGuest {channel} />
+		<StreamControls bind:isHostOrGuest bind:channel />
 	</div>
 </div>
