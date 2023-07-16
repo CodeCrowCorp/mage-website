@@ -73,7 +73,7 @@
 				if(ctx !== null){
 				ctx.drawImage(screenElement, 0, 0, canvas.width, canvas.height);
 				ctx.globalAlpha = 0.9;
-				ctx.drawImage(webcamElement, 1400, 650, canvas.width-1400, canvas.height - 650)
+				ctx.drawImage(webcamElement, 1400, 750, canvas.width-1400, canvas.height - 750)
 				}
 
 				let screenshot = canvas.toDataURL('image/jpeg');
