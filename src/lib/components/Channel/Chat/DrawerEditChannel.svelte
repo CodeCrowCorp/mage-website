@@ -70,9 +70,9 @@
 				console.log(screenElement);
 				console.log(webcamElement);
 
-				if(ctx !== null){
+				if(ctx !== null && screenElement !== null && webcamElement !== null){
 				ctx.drawImage(screenElement, 0, 0, canvas.width, canvas.height);
-				ctx.globalAlpha = 0.9;
+				ctx.globalAlpha = 1;
 				ctx.drawImage(webcamElement, 1400, 750, canvas.width-1400, canvas.height - 750)
 				}
 
