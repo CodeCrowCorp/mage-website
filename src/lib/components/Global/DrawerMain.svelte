@@ -83,10 +83,10 @@
 			<li class={isChannelPage ? 'md:w-full' : ''}>
 				<a
 					href="/profile/{currentUser.username}"
-					class="{isChannelPage ? 'justify-center md:w-full' : 'hero'} rounded-md cursor-pointer">
+					class="{isChannelPage ? 'justify-center md:w-full hero' : ''} rounded-md cursor-pointer">
 					<div class={isChannelPage ? 'md:text-center' : ''}>
-						<div class="hero-content {isChannelPage ? '' : 'my-1 w-64'}">
-							<div class={isChannelPage ? 'max-w-md' : 'max-w-full'}>
+						<div class={isChannelPage ? '' : 'my-1'}>
+							<div class="flex gap-3 {isChannelPage ? 'max-w-md' : 'max-w-full'}">
 								<div class="avatar {$isOnline ? 'online' : 'offline'}">
 									<div
 										class="w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser?.isPaidPlan
@@ -96,33 +96,37 @@
 									</div>
 								</div>
 							</div>
-							<div class="grid grid-cols-3 gap-1 {isChannelPage ? 'md:hidden' : ''}">
-								<div class="col-span-3 tooltip flex" data-tip={currentUser.displayName}>
-									<p class="truncate">{currentUser.displayName}</p>
+						</div>
+						<div class={isChannelPage ? 'md:hidden' : 'space-y-1'}>
+							<div class="tooltip flex w-fit" data-tip={currentUser.displayName}>
+								<p class="tooltip truncate">{currentUser.displayName}</p>
+							</div>
+							<div class="tooltip flex gap-1 w-fit" data-tip="@{currentUser.username}">
+								<p class="truncate">@{currentUser.username}</p>
+								{#if currentUser.isAffiliate}
+									<div class="text-accent font-bold">
+										<IconDrawerVerification />
+									</div>
+								{/if}
+							</div>
+							<div class="flex gap-4 {isChannelPage ? 'md:hidden' : ''}">
+								<div class="flex gap-1 tooltip" data-tip="{streakCount} day streak">
+									<IconDrawerStreak />
+									<p class="text-start">
+										{streakCount} d
+									</p>
 								</div>
-								<div class="col-span-3 tooltip flex gap-1" data-tip="@{currentUser.username}">
-									{#if currentUser.isAffiliate}
-										<div>
-											<IconDrawerVerification />
-										</div>
-									{/if}
-									<p class=" text-pink-500 truncate">@{currentUser.username}</p>
+								<div class="flex gap-1 tooltip" data-tip="{hoursStreamed} hours streamed today">
+									<IconDrawerStreamDuration />
+									<p class="text-start">
+										{hoursStreamed} h
+									</p>
 								</div>
-								<IconDrawerStreak />
-								<p class="col-span-2 tooltip text-start" data-tip="{streakCount} day streak">
-									{streakCount} d
-								</p>
-								<IconDrawerStreamDuration />
-								<p
-									class="col-span-2 tooltip text-start"
-									data-tip="{hoursStreamed} hours streamed today">
-									{hoursStreamed} h
-								</p>
 							</div>
 						</div>
 						<div class="tooltip" data-tip="level {progressBarLevel}">
 							<progress
-								class="progress w-64 {isChannelPage ? 'md:w-12' : 'mb-1'}"
+								class="tooltip progress w-[17rem] mt-3 {isChannelPage ? 'md:w-12' : ''}"
 								style="--progress-bar-color: {progressBarColor}"
 								value={progressBarValue}
 								max="100" />

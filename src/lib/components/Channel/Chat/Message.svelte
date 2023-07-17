@@ -5,14 +5,17 @@
 	import IconChatQuote from '$lib/assets/icons/chat/IconChatQuote.svelte'
 	import IconChatDelete from '$lib/assets/icons/chat/IconChatDelete.svelte'
 	import IconChatHorizontalMore from '$lib/assets/icons/chat/IconChatHorizontalMore.svelte'
-	import ProfileCard from '$lib/components/Channel/Chat/ProfileCard.svelte'
 	import { emitChannelUpdate, emitDeleteMessageToChannel } from '$lib/websocket'
 	import { copyToClipboard, getColoredRole, setRole } from '$lib/utils'
 	import { page } from '$app/stores'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
+	import { onMount } from 'svelte'
+	import ProfilePopup from './ProfilePopup.svelte'
 
-	export let sender: any, hostId: string, channel: any
+	export let sender: any, hostId: string, channel: any, onUsernameClick: any
 	let role: string, coloredRole: any
+	let profileElt: any = null
+	let ignoreOutsideClick = false
 
 	$: isGuest = channel?.guests?.includes(sender.user?.userId)
 
@@ -130,6 +133,30 @@
 		}
 	}
 
+	const hightlightUsername = (match: string) => {
+		return `
+			<span 
+				class="text-success font-medium cursor-pointer link"
+				name="username"
+				id=${match}
+			>
+				${match}
+			</span>
+		`
+	}
+
+	const parse = (msg: string) => {
+		const m = msg + ' '
+		return m.replace(/@[\w-]+[,\s]/g, hightlightUsername).trim()
+	}
+
+	onMount(() => {
+		const spans = document.querySelectorAll('span[name="username"]')
+		spans.forEach((span: any) => {
+			span.onclick = onUsernameClick
+		})
+	})
+
 	$: codeSnippet = isCodeSnippet(sender.message) ? getCodeSnippet(sender.message) : false
 </script>
 
@@ -149,11 +176,12 @@
 							id="b1"
 							class="{coloredRole.textColor} font-medium">@{sender.user?.username}</span> -->
 
-					<ProfileCard userId={sender.user?.userId}>
-						<span class="{coloredRole.textColor} font-medium">
-							@{sender.user?.username}
-						</span>
-					</ProfileCard>
+					<span
+						class="{coloredRole.textColor} font-medium cursor-pointer"
+						on:click={onUsernameClick}
+						id={'@' + sender.user?.username}>
+						@{sender.user?.username}
+					</span>
 				{/if}
 				{#if isImage(sender.message)}
 					<img class="py-2 pr-2" src={sender.message} alt="imgs" />
@@ -172,7 +200,7 @@
 						<span class="break-all">{codeSnippet.endText}</span>
 					{/if}
 				{:else}
-					<span class="break-all">{sender.message}</span>
+					<span class="break-all">{@html parse(sender.message)}</span>
 				{/if}
 			</label>
 
