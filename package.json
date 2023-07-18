@@ -19,13 +19,13 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@playwright/test": "1.36.0",
+		"@playwright/test": "1.36.1",
 		"@sveltejs/adapter-cloudflare": "^2.2.0",
 		"@sveltejs/kit": "^1.10.0",
 		"@sveltejs/svelte-virtual-list": "^3.0.1",
 		"@svitejs/svelte-preprocess-svg": "^2.0.0",
-		"@typescript-eslint/eslint-plugin": "^6.0.0",
-		"@typescript-eslint/parser": "^6.0.0",
+		"@typescript-eslint/eslint-plugin": "^6.1.0",
+		"@typescript-eslint/parser": "^6.1.0",
 		"autoprefixer": "^10.4.13",
 		"concurrently": "^8.0.1",
 		"cross-env": "^7.0.3",

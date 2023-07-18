@@ -362,7 +362,12 @@
 					{formattedTime}
 				</span>
 			{/if}
-			<video bind:this={screenElement} autoplay muted class="rounded-md w-full h-full" />
+			<video
+				bind:this={screenElement}
+				id={`screen-${video._id}`}
+				autoplay
+				muted
+				class="rounded-md w-full h-full" />
 			<div
 				use:draggable={{ bounds: 'parent' }}
 				on:mousedown={onMouseDown}
@@ -370,7 +375,12 @@
 				class={animate +
 					' absolute ' +
 					(!isScreenLive ? 'w-full bottom-0 left-0 h-full' : 'w-1/4 bottom-0 right-0')}>
-				<video bind:this={webcamElement} autoplay muted class="rounded-md h-full w-full" />
+				<video
+					bind:this={webcamElement}
+					id={`webcam-${video._id}`}
+					autoplay
+					muted
+					class="rounded-md h-full w-full" />
 			</div>
 			<video bind:this={audioElement} autoplay muted class="rounded-md w-0 h-0" />
 			<div class="absolute left-2 bottom-2 rounded-md dropdown">
