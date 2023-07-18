@@ -20,8 +20,7 @@
 		is_sharing_screen,
 		is_sharing_webcam,
 		is_sharing_audio,
-		updateVideoItems,
-		video_items
+		updateVideoItems
 	} from '$lib/stores/streamStore'
 
 	let channel: any,
@@ -80,13 +79,14 @@
 
 	const loadChannel = async () => {
 		const chan = await get(`channel?channelId=${$page.params.channelId}`)
+		chan.videoItems = []
 		channels.push(chan)
 	}
 
 	const initChannel = (chan: any) => {
 		$channel_connection = `open-${$page.params.channelId}`
 		$channel_message = ''
-		$video_items = []
+		chan.videoItems = []
 		if (chan.socket.readyState === WebSocket.OPEN) {
 			emitChannelSubscribeByUser({
 				channelSocket: chan.socket,
@@ -191,34 +191,36 @@
 		newchannels = newchannels.filter(
 			(newChannel: any) => !channels.some((channel: any) => channel._id === newChannel._id)
 		)
+		newchannels.forEach((channel: any) => {
+			channel.videoItems = []
+		})
 		channels = [...channels, ...newchannels]
 		skip += limit
 	}
 
 	channel_message.subscribe(async (value: any) => {
-		if (!value) return
+		if (!value || $page.params.channelId !== channel._id) return
 		var parsedMsg = JSON.parse(value)
 		switch (parsedMsg.eventName) {
 			case `channel-update-${$page.params.channelId}`:
 				console.log('channel-update', parsedMsg)
-				channel = { ...parsedMsg.channel, socket: channel.socket }
+				channel = { ...parsedMsg.channel, socket: channel.socket, videoItems: channel.videoItems }
 
 				if (parsedMsg.roleUpdate) {
-					let videoItems = [...$video_items]
 					switch (parsedMsg.roleUpdate.roleEvent) {
 						case 'ban':
 							if (parsedMsg.roleUpdate.isEnabled) {
-								$video_items = videoItems.filter(
+								channel.videoItems = channel.videoItems.filter(
 									(video: any) => video._id !== parsedMsg.roleUpdate.userId
 								)
 							}
 							break
 						case 'guest':
 							if (parsedMsg.roleUpdate.isEnabled) {
-								videoItems.push(parsedMsg.roleUpdate.user)
-								$video_items = videoItems
+								channel.videoItems.push(parsedMsg.roleUpdate.user)
+								channel.videoItems = channel.videoItems
 							} else {
-								$video_items = videoItems.filter(
+								channel.videoItems = channel.videoItems.filter(
 									(video: any) => video._id !== parsedMsg.roleUpdate.userId
 								)
 							}
@@ -229,15 +231,19 @@
 			case `channel-subscribe-${$page.params.channelId}`:
 				userCount = parsedMsg.userCount
 				if (parsedMsg.quitUserId) {
-					$video_items = $video_items.filter((video: any) => video._id !== parsedMsg.quitUserId)
+					channel.videoItems = channel.videoItems.filter(
+						(video: any) => video._id !== parsedMsg.quitUserId
+					)
 				} else {
 					const activeGuests = parsedMsg.activeGuests
 					if (activeGuests?.length) {
-						if ($video_items.length) {
+						if (channel.videoItems.length) {
 							// for users that are in the channel and new users join
 							// add new users but dont overwrite the existing ones streaming
-							$video_items = activeGuests.map((guest: any) => {
-								const foundVideoItem = $video_items.find((video: any) => guest._id === video._id)
+							channel.videoItems = activeGuests.map((guest: any) => {
+								const foundVideoItem = channel.videoItems.find(
+									(video: any) => guest._id === video._id
+								)
 								return foundVideoItem || guest
 							})
 						} else {
@@ -245,7 +251,7 @@
 							const liveInputs = await get(
 								`cloudflare/live-inputs?channelId=${$page.params.channelId}`
 							)
-							$video_items = updateVideoItems([...activeGuests], liveInputs)
+							channel.videoItems = updateVideoItems([...activeGuests], liveInputs)
 						}
 					}
 				}
@@ -255,10 +261,10 @@
 					case 'toggleTrack':
 						if ($page.data.user?.userId) {
 							if ($page.data.user.userId !== parsedMsg.data.video._id) {
-								$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
+								channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
 							}
 						} else {
-							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
+							channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
 						}
 						break
 				}
