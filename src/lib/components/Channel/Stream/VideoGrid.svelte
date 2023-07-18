@@ -1,15 +1,14 @@
 <script lang="ts">
 	import VideoItem from '$lib/components/Channel/Stream/VideoItem.svelte'
 	import { getVideoGrids } from '$lib/utils'
-	import { video_items } from '$lib/stores/streamStore'
 	import CommandList from '$lib/components/Channel/Stream/CommandList.svelte'
 
 	export let channel: any
 
-	$: grid = getVideoGrids($video_items, 9)
+	$: grid = getVideoGrids(channel.videoItems, 9)
 </script>
 
-{#if $video_items?.length}
+{#if channel.videoItems?.length}
 	<div class="carousel h-full pb-6">
 		<div class="carousel-item w-full h-full">
 			<div class="flex flex-col h-full w-full">
