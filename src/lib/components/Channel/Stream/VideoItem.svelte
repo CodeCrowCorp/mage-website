@@ -96,15 +96,9 @@
 	}
 
 	const toggleClient = ({ trackType }: { trackType: string }) => {
-
-		if(!video.screen){
-			screenElement.srcObject = null
-			$is_sharing_screen = false
-			isScreenLive = false
-			return 
-		}
-
+		
 		if ($page.data.user?.userId === video._id) {
+			
 			switch (trackType) {
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
@@ -129,6 +123,13 @@
 						})
 						screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 					}
+					else if(!video.screen){
+						if(screenElement){
+							screenElement.srcObject = null
+						}
+						$is_sharing_screen = false
+						isScreenLive = false
+					}
 					break
 				case 'webcam':
 					if (video.webcam && $is_sharing_webcam) {
@@ -142,6 +143,11 @@
 							isWebcamLive = false
 						})
 						webcamWhip.addEventListener(`isWebcamLive`, (ev: any) => (isWebcamLive = ev.detail))
+					}
+					else if(!video.webcam){
+						if(webcamElement){
+							webcamElement.srcObject = null
+						}
 					}
 					break
 				case 'audio':
