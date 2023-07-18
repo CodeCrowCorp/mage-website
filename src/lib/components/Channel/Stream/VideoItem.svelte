@@ -96,6 +96,14 @@
 	}
 
 	const toggleClient = ({ trackType }: { trackType: string }) => {
+
+		if(!video.screen){
+			screenElement.srcObject = null
+			$is_sharing_screen = false
+			isScreenLive = false
+			return 
+		}
+
 		if ($page.data.user?.userId === video._id) {
 			switch (trackType) {
 				case 'screen':
