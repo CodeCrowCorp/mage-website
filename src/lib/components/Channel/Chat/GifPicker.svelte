@@ -3,8 +3,8 @@
 	import IconChatGif from '$lib/assets/icons/chat/IconChatGif.svelte'
 	import FloatingMenu from './FloatingMenu.svelte'
 
-	import { get } from '../../../api.js'
 	import { page } from '$app/stores'
+	import { get } from '$lib/api'
 
 	export let onSelect: any, isChannelSocketConnected: any
 

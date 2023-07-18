@@ -106,10 +106,10 @@ export const setRole = ({
 	channel,
 	currentUserId
 }: {
-	userId: string
-	channel: { user: string; mods: string[] }
+	userId: any
+	channel: any
 	currentUserId: string
-}): string => {
+}): any => {
 	if (userId === 'AI') return '🤖 AI'
 	else if (userId === channel?.user) return 'Host'
 	else if (channel?.mods?.includes(userId)) return 'Mod'
@@ -165,9 +165,9 @@ export const cardCounts: { [key: number]: number[] } = {
 
 export const timeSince = (date: string) => {
 	if (!date) return 'Date created unknown'
-	const created: Date = new Date(date)
-	const currentDate: Date = new Date(Date.now())
-	const seconds = Math.floor((currentDate.getTime() - created.getTime()) / 1000)
+	const created: any = new Date(date)
+	const currentDate: any = new Date(Date.now())
+	const seconds = Math.floor((currentDate - created) / 1000)
 	let interval = seconds / 31536000
 	if (interval > 1) {
 		return Math.floor(interval) + ' years ago'
@@ -191,15 +191,15 @@ export const timeSince = (date: string) => {
 	return Math.floor(seconds) + ' seconds ago'
 }
 
-export const getVideoGrids = (list: object[], limit: number) => {
+export const getVideoGrids = (list: any, limit: number) => {
 	if (!list.length) return []
 
 	const numList = divideNumber(list.length, limit)
-	const result: unknown[][] = []
+	const result: any[] = []
 	let pointer = 0
 
 	for (let i = 0; i < numList.length; i++) {
-		const row: number[] = cardCounts[numList[i]]
+		const row: any = cardCounts[numList[i]]
 		for (let j = 0; j < row.length; j++) {
 			result[j] = []
 			for (let k = 0; k < row[j]; k++) {
@@ -253,12 +253,9 @@ export const getAudioIndicator = (
 
 /** Dispatch event on click outside of node */
 
-export const clickOutside = (
-	element: HTMLElement,
-	callbackFunction: (event: MouseEvent) => void
-) => {
-	const onClick = (event: MouseEvent) => {
-		if (!element.contains(event.target as Node)) {
+export const clickOutside = (element: any, callbackFunction: any) => {
+	const onClick = (event: any) => {
+		if (!element.contains(event.target)) {
 			callbackFunction(event)
 		}
 	}
@@ -266,7 +263,7 @@ export const clickOutside = (
 	document.body.addEventListener('click', onClick)
 
 	return {
-		update(newCallbackFunction: (event: MouseEvent) => void) {
+		update(newCallbackFunction: any) {
 			callbackFunction = newCallbackFunction
 		},
 		destroy() {
@@ -275,9 +272,9 @@ export const clickOutside = (
 	}
 }
 
-export const createEffect = <T extends unknown[]>(...initialDeps: T) => {
+export const createEffect = (...initialDeps: any[]) => {
 	let diff = JSON.stringify(initialDeps)
-	return (callback: () => void, deps?: T, allowServerSide = false) => {
+	return (callback: () => void, deps?: any[], allowServerSide = false) => {
 		if (JSON.stringify(deps) !== diff && ((!allowServerSide && browser) || allowServerSide)) {
 			diff = JSON.stringify(deps)
 			callback()
