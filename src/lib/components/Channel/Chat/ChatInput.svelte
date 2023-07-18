@@ -206,7 +206,6 @@ $: console.log("viewers : ", viewers)
 		(channel.user === $page.data.user?.userId || channel.mods?.includes($page.data.user?.userId)) &&
 		!showUsers
 
-	console.log("viewersWithOutHost: ", viewersWithOutHost)
 </script>
 
 <form class="rounded-lg bg-base-200 p-2 w-full relative">
@@ -301,7 +300,7 @@ $: console.log("viewers : ", viewers)
 							e.preventDefault()
 							if (showUsers) {
 								if (selectedUser >= 0) {
-									const user = viewers[selectedUser]
+									const user = viewersWithOutHost[selectedUser]
 									chatMessage = chatMessage.replace(/@/, '@' + user.username)
 								}
 							} else {
