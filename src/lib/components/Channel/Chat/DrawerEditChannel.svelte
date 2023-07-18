@@ -144,7 +144,10 @@
 											alt="Preview"
 											class="rounded-lg h-full" />
 									{:else}
-										<IconChatScreenshot />
+										<div class="h-40 flex flex-col justify-center items-center">
+											<IconChatScreenshot />
+											Thumbnail
+										</div>
 									{/if}
 								</div>
 							</div>
