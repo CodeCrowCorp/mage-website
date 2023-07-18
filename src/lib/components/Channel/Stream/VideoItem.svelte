@@ -11,6 +11,7 @@
 	import { getColoredRole, setRole } from '$lib/utils'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import { is_feature_stats_enabled } from '$lib/stores/remoteConfigStore'
+	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 
 	export let video: any, channel: any
 
@@ -57,7 +58,7 @@
 		video._id !== $page.data.user?.userId &&
 		role !== '🤖 AI'
 
-	$: if (isMounted && video.screen !== prevScreen) {
+	$: if (isMounted && (video.screen !== prevScreen)) {
 		handleScreenChanges()
 	}
 
@@ -99,14 +100,23 @@
 			switch (trackType) {
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
-						screenWhip = new WHIPClient(
+						const existed = getScreen(video.screen.webRTC.url)
+						screenWhip = existed || new WHIPClient(
 							video.screen.webRTC.url,
 							screenElement,
 							video.screen.trackType
 						)
+						if(existed){
+							existed.videoElement = screenElement
+							screenElement.srcObject = existed.localStream
+							$is_sharing_screen = true
+							isScreenLive = true
+						}
+						addScreen(video.screen.webRTC.url, screenWhip)
 						screenWhip.addEventListener(`localStreamStopped-${trackType}`, () => {
 							$is_sharing_screen = false
 							isScreenLive = false
+							removeScreen(video.screen.webRTC.url)
 						})
 						screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 					}
@@ -309,6 +319,7 @@
 			}, 1000)
 		}
 	}
+
 </script>
 
 <div
