@@ -77,6 +77,8 @@
 	$: animate = isWebcamFocused ? '' : 'transition-all'
 
 	const handleScreenChanges = () => {
+		console.log("channel msg : handleScreenChanges....",video.screen)
+
 		prevScreen = video.screen
 		toggleClient({
 			trackType: 'screen'
@@ -96,7 +98,9 @@
 	}
 
 	const toggleClient = ({ trackType }: { trackType: string }) => {
-		
+
+		console.log("channel msg : toggleClient....",trackType)
+
 		if ($page.data.user?.userId === video._id) {
 			
 			switch (trackType) {
@@ -166,6 +170,7 @@
 		} else {
 			switch (trackType) {
 				case 'screen':
+					console.log("channel msg : screening....",video)
 					if (video.screen && screenElement) {
 						screenWhep = new WHEPClient(
 							video.screen.webRTCPlayback.url,
