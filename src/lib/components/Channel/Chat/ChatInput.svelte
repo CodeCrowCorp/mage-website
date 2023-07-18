@@ -68,9 +68,17 @@ $: console.log("viewers : ", viewers)
 	}
 
 	const slectUserfromKey = (key: string) => {
-		if (key === 'ArrowDown' && selectedUser < viewers.length) {
+		if(selectedUser >= viewersWithOutHost.length - 1){
+			selectedUser = 0
+			return 
+		}
+		else if(selectedUser === 0){
+			selectedUser = viewersWithOutHost.length - 1
+			return
+		}
+		if (key === 'ArrowDown' && selectedUser < viewersWithOutHost.length - 1) {
 			selectedUser++
-		} else if (key === 'ArrowUp' && selectedUser >= 0) {
+		} else if (key === 'ArrowUp' && selectedUser > 0) {
 			selectedUser--
 		}
 	}
