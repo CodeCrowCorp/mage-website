@@ -32,7 +32,7 @@ export default class WHIPClient extends EventTarget {
 		 * https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/negotiationneeded_event
 		 * https://www.ietf.org/archive/id/draft-ietf-wish-whip-01.html
 		 */
-		this.peerConnection.addEventListener('negotiationneeded', async (ev) => {
+		this.peerConnection.addEventListener('negotiationneeded', async () => {
 			console.log('Connection negotiation starting')
 			await negotiateConnectionWithClientOffer(this.peerConnection, this.endpoint)
 			console.log('Connection negotiation ended')
@@ -47,7 +47,7 @@ export default class WHIPClient extends EventTarget {
 				this.localStream = stream
 				videoElement.srcObject = stream
 			})
-			.catch((err: any) => {
+			.catch(() => {
 				this.disconnectStream()
 			})
 	}
@@ -72,7 +72,7 @@ export default class WHIPClient extends EventTarget {
 					audioTrack.enabled = true
 					// audioTrack.id = 'silent-audio-track'
 					// audioTrack.label = 'Silent Audio Track'
-					const audioTransceiver = this.peerConnection.addTransceiver(audioTrack, {
+					this.peerConnection.addTransceiver(audioTrack, {
 						direction: 'sendonly'
 					})
 				}
@@ -126,7 +126,7 @@ export default class WHIPClient extends EventTarget {
 				})
 				.then((stream) => {
 					stream.getTracks().forEach((track) => {
-						const transceiver = this.peerConnection.addTransceiver(track, {
+						this.peerConnection.addTransceiver(track, {
 							/** WHIP is only for sending streaming media */
 							direction: 'sendonly'
 						})
