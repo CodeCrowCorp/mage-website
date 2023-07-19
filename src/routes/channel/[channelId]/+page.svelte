@@ -201,7 +201,6 @@
 	channel_message.subscribe(async (value: any) => {
 		if (!value || (channel && $page.params.channelId !== channel._id)) return
 		var parsedMsg = JSON.parse(value)
-		console.log("channel msg : ", parsedMsg, value, channel)
 		switch (parsedMsg.eventName) {
 			case `channel-update-${$page.params.channelId}`:
 				console.log('channel-update', parsedMsg)
@@ -262,7 +261,6 @@
 				switch (parsedMsg.data.action) {
 					case 'toggleTrack':
 						if(channel){
-							console.log("channel msg : toggle track")
 							if ($page.data.user?.userId) {
 								if ($page.data.user.userId !== parsedMsg.data.video._id) {
 									channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
