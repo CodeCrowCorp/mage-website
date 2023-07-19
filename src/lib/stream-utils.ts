@@ -1,13 +1,13 @@
 var aliveScreens:any = {}
 
-export const addScreen = (url:string, screen:any) => {
-    aliveScreens[url] = screen
+export const addScreen = (key:string, screen:any) => {
+    aliveScreens[key] = screen
 }
 
-export const getScreen = (url:string):any => {
-    return aliveScreens[url]
+export const getScreen = (key:string):any => {
+    return aliveScreens[key]
 }
 
-export const removeScreen = (url:string) => {
-    delete aliveScreens[url]
+export const removeScreen = (key:string) => {
+    delete aliveScreens[key]
 }
