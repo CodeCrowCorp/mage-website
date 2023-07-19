@@ -14,7 +14,7 @@
 			<div class="flex flex-col h-full w-full">
 				{#each grid as row}
 					<div class="flex flex-row gap-4 justify-center h-full">
-						{#each row as video}
+						{#each row as video (video._id)}
 							<VideoItem bind:video {channel} />
 						{/each}
 					</div>

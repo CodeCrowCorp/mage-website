@@ -11,6 +11,7 @@
 	import { getColoredRole, setRole } from '$lib/utils'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import { is_feature_stats_enabled } from '$lib/stores/remoteConfigStore'
+	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 
 	export let video: any, channel: any
 
@@ -57,7 +58,7 @@
 		video._id !== $page.data.user?.userId &&
 		role !== '🤖 AI'
 
-	$: if (isMounted && video.screen !== prevScreen) {
+	$: if (isMounted && (video.screen !== prevScreen)) {
 		handleScreenChanges()
 	}
 
@@ -95,20 +96,39 @@
 	}
 
 	const toggleClient = ({ trackType }: { trackType: string }) => {
+
 		if ($page.data.user?.userId === video._id) {
+			
 			switch (trackType) {
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
-						screenWhip = new WHIPClient(
+						const key = video.screen.webRTCPlayback.url+"-"+video._id
+						const existed = getScreen(key)
+						screenWhip = existed || new WHIPClient(
 							video.screen.webRTC.url,
 							screenElement,
 							video.screen.trackType
 						)
+						if(existed){
+							existed.videoElement = screenElement
+							screenElement.srcObject = existed.localStream
+							$is_sharing_screen = true
+							isScreenLive = true
+						}
+						addScreen(key, screenWhip)
 						screenWhip.addEventListener(`localStreamStopped-${trackType}`, () => {
 							$is_sharing_screen = false
 							isScreenLive = false
+							removeScreen(key)
 						})
 						screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
+					}
+					else if(!video.screen){
+						if(screenElement){
+							screenElement.srcObject = null
+						}
+						$is_sharing_screen = false
+						isScreenLive = false
 					}
 					break
 				case 'webcam':
@@ -123,6 +143,11 @@
 							isWebcamLive = false
 						})
 						webcamWhip.addEventListener(`isWebcamLive`, (ev: any) => (isWebcamLive = ev.detail))
+					}
+					else if(!video.webcam){
+						if(webcamElement){
+							webcamElement.srcObject = null
+						}
 					}
 					break
 				case 'audio':
@@ -142,11 +167,20 @@
 			switch (trackType) {
 				case 'screen':
 					if (video.screen && screenElement) {
-						screenWhep = new WHEPClient(
+						const key = video.screen.webRTCPlayback.url +"-"+video._id
+						const existed = getScreen(key)
+						screenWhep = existed || new WHEPClient(
 							video.screen.webRTCPlayback.url,
 							screenElement,
 							video.screen.trackType
 						)
+						if(existed){
+							existed.videoElement = screenElement
+							screenElement.srcObject = existed.stream
+							isScreenLive = true
+						}
+						
+						addScreen(key, screenWhep)
 						screenElement.muted = false
 						screenElement.play()
 						screenWhep.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
@@ -309,6 +343,7 @@
 			}, 1000)
 		}
 	}
+
 </script>
 
 <div
@@ -316,6 +351,7 @@
 	on:mouseenter={() => (isHoverVideo = true)}
 	on:mouseleave={() => (isHoverVideo = false)}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
+		{video._id}
 		<img
 			src={video.avatar}
 			alt=""

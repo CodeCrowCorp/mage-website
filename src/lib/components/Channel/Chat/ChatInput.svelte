@@ -68,9 +68,17 @@ $: console.log("viewers : ", viewers)
 	}
 
 	const slectUserfromKey = (key: string) => {
-		if (key === 'ArrowDown' && selectedUser < viewers.length) {
+		if(selectedUser >= viewersWithOutHost.length - 1){
+			selectedUser = 0
+			return 
+		}
+		else if(selectedUser === 0){
+			selectedUser = viewersWithOutHost.length - 1
+			return
+		}
+		if (key === 'ArrowDown' && selectedUser < viewersWithOutHost.length - 1) {
 			selectedUser++
-		} else if (key === 'ArrowUp' && selectedUser >= 0) {
+		} else if (key === 'ArrowUp' && selectedUser > 0) {
 			selectedUser--
 		}
 	}
@@ -206,7 +214,6 @@ $: console.log("viewers : ", viewers)
 		(channel.user === $page.data.user?.userId || channel.mods?.includes($page.data.user?.userId)) &&
 		!showUsers
 
-	console.log("viewersWithOutHost: ", viewersWithOutHost)
 </script>
 
 <form class="rounded-lg bg-base-200 p-2 w-full relative">
@@ -301,7 +308,7 @@ $: console.log("viewers : ", viewers)
 							e.preventDefault()
 							if (showUsers) {
 								if (selectedUser >= 0) {
-									const user = viewers[selectedUser]
+									const user = viewersWithOutHost[selectedUser]
 									chatMessage = chatMessage.replace(/@/, '@' + user.username)
 								}
 							} else {
