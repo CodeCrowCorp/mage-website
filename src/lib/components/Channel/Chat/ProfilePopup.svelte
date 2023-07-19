@@ -6,10 +6,10 @@
 	import { put, del } from '$lib/api'
 	import { createEffect } from '$lib/utils'
 
-	export let userId: string
-	export let open: boolean
-	export let onOutsideClick: any
-	export let elt: any
+	export let userId: string = '',
+		open: boolean = false,
+		onOutsideClick: any,
+		elt: any
 
 	let self: any
 
