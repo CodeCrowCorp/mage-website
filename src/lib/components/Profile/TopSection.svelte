@@ -1,14 +1,16 @@
 <script lang="ts">
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
 	import { page } from '$app/stores'
-	import { onMount } from 'svelte'
 	import { follower_count, following_count } from '$lib/stores/profileStore'
-	import { enhance } from '$app/forms'
 	import { put, del } from '$lib/api'
 	import { get } from '$lib/api'
+	import { createEffect } from '$lib/utils'
 
 	export let profile: any,
 		showDrawer = false
+
+	const useOueryEffect = createEffect()
+
 
 	$: auth = {
 		userId: $page.data.user?.userId,
@@ -21,7 +23,6 @@
 	const refreash = async () => {
 		$follower_count = await get(`follows/count?source=${profile._id}&sourceType=source1`, auth)
 		$following_count = await get(`follows/count?source=${profile._id}&sourceType=source2`, auth)
-
 		if ($page.data.user?.userId) {
 			isFollowed = await get(`follows/relationship?source=${profile._id}`, auth)
 			subValues = isFollowed
@@ -41,9 +42,9 @@
 		refreash()
 	}
 
-	onMount(async () => {
+	$: useOueryEffect(async () => {
 		refreash()
-	})
+	}, [profile._id])
 
 	$: currentUser = $page.data.user?.user
 	$: subValues

@@ -8,8 +8,6 @@
 <tr
 	class="cursor-pointer hover:btn-ghost border border-transparent"
 	on:click|preventDefault={() => goto(`/channel/${channel._id}`)}>
-	<!-- <ul class="menu">
-								<li> -->
 	<td>
 		<div class="flex items-center space-x-2 my-3 pl-3">
 			<div class="avatar">
@@ -19,7 +17,7 @@
 			</div>
 			<div>
 				<div class="font-bold">{channel.createdByDisplayName || ''}</div>
-				<div class="text-sm text-pink-500">@{channel.createdByUsername || ''}</div>
+				<div class="text-sm">@{channel.createdByUsername || ''}</div>
 			</div>
 		</div>
 	</td>
@@ -66,6 +64,4 @@
 			{/if}
 		</div>
 	</td>
-	<!-- </li>
-							</ul> -->
 </tr>

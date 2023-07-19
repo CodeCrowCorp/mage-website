@@ -76,14 +76,14 @@ export default class WHEPClient extends EventTarget {
 			}
 		}
 
-		this.peerConnection.addEventListener('connectionstatechange', (ev) => {
+		this.peerConnection.addEventListener('connectionstatechange', () => {
 			if (this.peerConnection.connectionState !== 'connected') {
 				return
 			}
 			this.videoElement.srcObject = this.stream
 		})
 
-		this.peerConnection.addEventListener('negotiationneeded', (ev) => {
+		this.peerConnection.addEventListener('negotiationneeded', () => {
 			negotiateConnectionWithClientOffer(this.peerConnection, this.endpoint)
 		})
 	}

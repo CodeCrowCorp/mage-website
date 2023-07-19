@@ -18,7 +18,8 @@
 	import { user_role } from '$lib/stores/authStore'
 	import {
 		is_feature_premium_page_enabled,
-		is_feature_video_responses_enabled
+		is_feature_video_responses_enabled,
+		is_feature_affiliate_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
 	import { is_login_modal_open } from '$lib/stores/helperStore'
@@ -27,6 +28,7 @@
 	import { isOnline } from '$lib/stores/userStore'
 	import { get } from '$lib/api'
 	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svelte'
+	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 
 	export var nav_drawer: HTMLInputElement
 
@@ -59,7 +61,7 @@
 </script>
 
 <div
-	class="menu w-80 {isChannelPage
+	class="menu w-80 overflow-y-auto overflow-x-hidden flex-nowrap {isChannelPage
 		? 'md:w-24 fixed h-full'
 		: 'h-screen'} bg-base-100 text-base-content flex flex-col">
 	<ul class={isChannelPage ? 'md:flex md:flex-col items-center md:w-full' : ''}>
@@ -81,10 +83,10 @@
 			<li class={isChannelPage ? 'md:w-full' : ''}>
 				<a
 					href="/profile/{currentUser.username}"
-					class="{isChannelPage ? 'justify-center md:w-full' : 'hero'} rounded-md cursor-pointer">
+					class="{isChannelPage ? 'justify-center md:w-full hero' : ''} rounded-md cursor-pointer">
 					<div class={isChannelPage ? 'md:text-center' : ''}>
-						<div class="hero-content {isChannelPage ? '' : 'my-1 w-64'}">
-							<div class={isChannelPage ? 'max-w-md' : 'max-w-full'}>
+						<div class={isChannelPage ? '' : 'my-1'}>
+							<div class="flex gap-3 {isChannelPage ? 'max-w-md' : 'max-w-full'}">
 								<div class="avatar {$isOnline ? 'online' : 'offline'}">
 									<div
 										class="w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser?.isPaidPlan
@@ -94,28 +96,37 @@
 									</div>
 								</div>
 							</div>
-							<div class="grid grid-cols-3 gap-1 {isChannelPage ? 'md:hidden' : ''}">
-								<div class="col-span-3 tooltip flex" data-tip={currentUser.displayName}>
-									<p class="truncate">{currentUser.displayName}</p>
+						</div>
+						<div class={isChannelPage ? 'md:hidden' : 'space-y-1'}>
+							<div class="tooltip flex w-fit" data-tip={currentUser.displayName}>
+								<p class="tooltip truncate">{currentUser.displayName}</p>
+							</div>
+							<div class="tooltip flex gap-1 w-fit" data-tip="@{currentUser.username}">
+								<p class="truncate">@{currentUser.username}</p>
+								{#if currentUser.isAffiliate}
+									<div class="text-accent font-bold">
+										<IconDrawerVerification />
+									</div>
+								{/if}
+							</div>
+							<div class="flex gap-4 {isChannelPage ? 'md:hidden' : ''}">
+								<div class="flex gap-1 tooltip" data-tip="{streakCount} day streak">
+									<IconDrawerStreak />
+									<p class="text-start">
+										{streakCount} d
+									</p>
 								</div>
-								<div class="col-span-3 tooltip flex" data-tip="@{currentUser.username}">
-									<p class=" text-pink-500 truncate">@{currentUser.username}</p>
+								<div class="flex gap-1 tooltip" data-tip="{hoursStreamed} hours streamed today">
+									<IconDrawerStreamDuration />
+									<p class="text-start">
+										{hoursStreamed} h
+									</p>
 								</div>
-								<IconDrawerStreak />
-								<p class="col-span-2 tooltip text-start" data-tip="{streakCount} day streak">
-									{streakCount} d
-								</p>
-								<IconDrawerStreamDuration />
-								<p
-									class="col-span-2 tooltip text-start"
-									data-tip="{hoursStreamed} hours streamed today">
-									{hoursStreamed} h
-								</p>
 							</div>
 						</div>
 						<div class="tooltip" data-tip="level {progressBarLevel}">
 							<progress
-								class="progress w-64 {isChannelPage ? 'md:w-12' : 'mb-1'}"
+								class="tooltip progress w-[17rem] mt-3 {isChannelPage ? 'md:w-12' : ''}"
 								style="--progress-bar-color: {progressBarColor}"
 								value={progressBarValue}
 								max="100" />
@@ -167,9 +178,20 @@
 		<li>
 			<a class="custom-menu-item" href="https://codecrow.io/careers" target="_blank">
 				<IconDrawerCareers />
-				<span class={isChannelPage ? 'md:hidden' : ''}> Careers </span>
+				<span class={isChannelPage ? 'md:hidden' : ''}>Careers</span>
 			</a>
 		</li>
+		{#if currentUser && $is_feature_affiliate_enabled}
+			<li>
+				<a href="https://forms.gle/mBtByR6jdoJeQd367" class="custom-menu-item" target="_blank">
+					<IconDrawerVerification />
+					<span class={isChannelPage ? 'md:hidden' : ''}>Affiliate</span>
+					{#if !isChannelPage}
+						<span class="badge badge-neutral">New</span>
+					{/if}
+				</a>
+			</li>
+		{/if}
 		<li>
 			<details>
 				<summary class="custom-menu-item"
@@ -184,7 +206,7 @@
 		<li>
 			<a class="custom-menu-item" href="/settings">
 				<IconDrawerSettings />
-				<span class={isChannelPage ? 'md:hidden' : ''}> Settings </span>
+				<span class={isChannelPage ? 'md:hidden' : ''}>Settings </span>
 			</a>
 		</li>
 		{#if currentUser}
@@ -192,7 +214,7 @@
 				<li>
 					<button class="custom-menu-item" type="submit">
 						<IconDrawerLogOut />
-						<span class={isChannelPage ? 'md:hidden' : ''}>Log out </span>
+						<span class={isChannelPage ? 'md:hidden' : ''}>Log out</span>
 					</button>
 				</li>
 			</form>
@@ -207,7 +229,7 @@
 						}
 					}}>
 					<IconDrawerLogOut />
-					<span class={isChannelPage ? 'md:hidden' : ''}>Log In </span>
+					<span class={isChannelPage ? 'md:hidden' : ''}>Log In</span>
 				</button>
 			</li>
 		{/if}
