@@ -58,7 +58,7 @@
 		video._id !== $page.data.user?.userId &&
 		role !== '🤖 AI'
 
-	$: if (isMounted && (video.screen !== prevScreen)) {
+	$: if (isMounted && video.screen !== prevScreen) {
 		handleScreenChanges()
 	}
 
@@ -96,20 +96,16 @@
 	}
 
 	const toggleClient = ({ trackType }: { trackType: string }) => {
-
 		if ($page.data.user?.userId === video._id) {
-			
 			switch (trackType) {
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
-						const key = video.screen.webRTCPlayback.url+"-"+video._id
+						const key = video.screen.webRTCPlayback.url + '-' + video._id
 						const existed = getScreen(key)
-						screenWhip = existed || new WHIPClient(
-							video.screen.webRTC.url,
-							screenElement,
-							video.screen.trackType
-						)
-						if(existed){
+						screenWhip =
+							existed ||
+							new WHIPClient(video.screen.webRTC.url, screenElement, video.screen.trackType)
+						if (existed) {
 							existed.videoElement = screenElement
 							screenElement.srcObject = existed.localStream
 							$is_sharing_screen = true
@@ -122,9 +118,8 @@
 							removeScreen(key)
 						})
 						screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
-					}
-					else if(!video.screen){
-						if(screenElement){
+					} else if (!video.screen) {
+						if (screenElement) {
 							screenElement.srcObject = null
 						}
 						$is_sharing_screen = false
@@ -143,9 +138,8 @@
 							isWebcamLive = false
 						})
 						webcamWhip.addEventListener(`isWebcamLive`, (ev: any) => (isWebcamLive = ev.detail))
-					}
-					else if(!video.webcam){
-						if(webcamElement){
+					} else if (!video.webcam) {
+						if (webcamElement) {
 							webcamElement.srcObject = null
 						}
 					}
@@ -167,19 +161,17 @@
 			switch (trackType) {
 				case 'screen':
 					if (video.screen && screenElement) {
-						const key = video.screen.webRTCPlayback.url +"-"+video._id
+						const key = video.screen.webRTCPlayback.url + '-' + video._id
 						const existed = getScreen(key)
-						screenWhep = existed || new WHEPClient(
-							video.screen.webRTCPlayback.url,
-							screenElement,
-							video.screen.trackType
-						)
-						if(existed){
+						screenWhep =
+							existed ||
+							new WHEPClient(video.screen.webRTCPlayback.url, screenElement, video.screen.trackType)
+						if (existed) {
 							existed.videoElement = screenElement
 							screenElement.srcObject = existed.stream
 							isScreenLive = true
 						}
-						
+
 						addScreen(key, screenWhep)
 						screenElement.muted = false
 						screenElement.play()
@@ -343,7 +335,6 @@
 			}, 1000)
 		}
 	}
-
 </script>
 
 <div
@@ -351,7 +342,6 @@
 	on:mouseenter={() => (isHoverVideo = true)}
 	on:mouseleave={() => (isHoverVideo = false)}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
-		{video._id}
 		<img
 			src={video.avatar}
 			alt=""
