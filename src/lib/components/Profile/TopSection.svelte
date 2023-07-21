@@ -11,7 +11,6 @@
 
 	const useOueryEffect = createEffect()
 
-
 	$: auth = {
 		userId: $page.data.user?.userId,
 		token: $page.data.user?.token
@@ -57,7 +56,7 @@
 				<div class="w-32 h-32">
 					<div class="avatar -top-16 {profile.isOnline ? 'online' : 'offline'}">
 						<div
-							class="mask {profile?.isPaidPlan
+							class="mask {profile?.affiliateTier > 1
 								? 'mask-hexagon'
 								: 'mask-squircle'} h-auto align-middle max-w-150-px">
 							<img src={profile.avatar} alt="" class="!w-32 !h-32" />

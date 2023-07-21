@@ -4,7 +4,6 @@
 	import IconDrawerHome from '$lib/assets/icons/drawer/IconDrawerHome.svelte'
 	import IconDrawerVideos from '$lib/assets/icons/drawer/IconDrawerVideos.svelte'
 	import IconDrawerCreatorSpace from '$lib/assets/icons/drawer/IconDrawerCreatorSpace.svelte'
-	import IconDrawerPremium from '$lib/assets/icons/drawer/IconDrawerPremium.svelte'
 	import IconDrawerCareers from '$lib/assets/icons/drawer/IconDrawerCareers.svelte'
 	import IconDrawerHelpAndLegal from '$lib/assets/icons/drawer/IconDrawerHelpAndLegal.svelte'
 	import IconDrawerSettings from '$lib/assets/icons/drawer/IconDrawerSettings.svelte'
@@ -17,7 +16,6 @@
 	import { page } from '$app/stores'
 	import { user_role } from '$lib/stores/authStore'
 	import {
-		is_feature_premium_page_enabled,
 		is_feature_video_responses_enabled,
 		is_feature_affiliate_enabled
 	} from '$lib/stores/remoteConfigStore'
@@ -89,7 +87,8 @@
 							<div class="flex gap-3 {isChannelPage ? 'max-w-md' : 'max-w-full'}">
 								<div class="avatar {$isOnline ? 'online' : 'offline'}">
 									<div
-										class="w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser?.isPaidPlan
+										class="w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser?.affiliateTier >
+										1
 											? 'mask-hexagon'
 											: 'mask-squircle'}">
 										<img src={currentUser.avatar} alt="" />
@@ -164,11 +163,11 @@
 					Creator Space</a>
 			</li>
 		{/if}
-		{#if currentUser && $is_feature_premium_page_enabled}
+		{#if currentUser && $is_feature_affiliate_enabled}
 			<li>
-				<a href="/premium" class="custom-menu-item text-accent hover:text-accent font-medium">
-					<IconDrawerPremium />
-					<span class={isChannelPage ? 'md:hidden' : ''}>Premium</span>
+				<a href="/affiliate" class="custom-menu-item text-accent hover:text-accent font-medium">
+					<IconDrawerVerification />
+					<span class={isChannelPage ? 'md:hidden' : ''}>Affiliate</span>
 					{#if !isChannelPage}
 						<span class="badge badge-accent text-black">New</span>
 					{/if}
@@ -181,17 +180,6 @@
 				<span class={isChannelPage ? 'md:hidden' : ''}>Careers</span>
 			</a>
 		</li>
-		{#if currentUser && $is_feature_affiliate_enabled}
-			<li>
-				<a href="https://forms.gle/mBtByR6jdoJeQd367" class="custom-menu-item" target="_blank">
-					<IconDrawerVerification />
-					<span class={isChannelPage ? 'md:hidden' : ''}>Affiliate</span>
-					{#if !isChannelPage}
-						<span class="badge badge-neutral">New</span>
-					{/if}
-				</a>
-			</li>
-		{/if}
 		<li>
 			<details>
 				<summary class="custom-menu-item"

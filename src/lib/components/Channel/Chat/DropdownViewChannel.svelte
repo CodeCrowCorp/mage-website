@@ -68,7 +68,6 @@
 	}
 
 	$: useEffect(() => {
-		if (!$page.data.user?.userId) return
 		getHostAndRelationship()
 	}, [channel?._id])
 </script>
@@ -121,7 +120,7 @@
 			<a href="/profile/{host?.username}">
 				<div class="flex flex-wrap gap-2">
 					<div class="avatar online">
-						<div class="w-12 mask {host?.isPaidPlan ? 'mask-hexagon' : 'mask-squircle'}">
+						<div class="w-12 mask {host?.affiliateTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
 							<img src={host?.avatar} alt="" />
 						</div>
 					</div>
