@@ -2,10 +2,7 @@
 	import ListSubscribe from '$lib/components/Profile/ListSubscribe.svelte'
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	import Stats from '$lib/components/Profile/Elements/Stats.svelte'
-	import {
-		is_feature_stats_enabled,
-		is_feature_follows_enabled
-	} from '$lib/stores/remoteConfigStore'
+	import { is_feature_stats_enabled } from '$lib/stores/remoteConfigStore'
 	import { onMount } from 'svelte'
 	import { env } from '$env/dynamic/public'
 
@@ -19,10 +16,8 @@
 	let activeTab = 0
 
 	onMount(() => {
-		$is_feature_follows_enabled = env.PUBLIC_FEATURE_FOLLOWS === 'true'
 		$is_feature_stats_enabled = env.PUBLIC_FEATURE_STATS === 'true'
-		tabs = ['Channels']
-		if ($is_feature_follows_enabled) tabs.push('Followers')
+		tabs = ['Channels', 'Followers']
 		if ($is_feature_stats_enabled) tabs.push('Stats')
 	})
 </script>
@@ -41,11 +36,9 @@
 			<div class="flex-auto h-full text-left" class:hidden={activeTab != tabs.indexOf('Channels')}>
 				<SectionTable {channels} {profileId} />
 			</div>
-			{#if $is_feature_follows_enabled}
-				<div class="flex-auto h-full" class:hidden={activeTab != tabs.indexOf('Followers')}>
-					<ListSubscribe {profileId} />
-				</div>
-			{/if}
+			<div class="flex-auto h-full" class:hidden={activeTab != tabs.indexOf('Followers')}>
+				<ListSubscribe {profileId} />
+			</div>
 			{#if $is_feature_stats_enabled}
 				<div class="grid h-full" class:hidden={activeTab != tabs.indexOf('Stats')}>
 					<Stats {totalPageViews} {highestAndCurrentStreak} {totalAndAvgHours} />
