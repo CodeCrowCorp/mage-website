@@ -7,7 +7,7 @@
 <a class="p-4 bg-base-100 hover:bg-base-300 shrink-0 rounded-md" href="/profile/{user.username}">
 	<div class="text-center space-y-3 w-[200px]">
 		<div class="avatar">
-			<div class="w-36 mask {user?.isPaidPlan ? 'mask-hexagon' : 'mask-squircle'}">
+			<div class="w-36 mask {user?.affiliateTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
 				<img src={user.avatar} alt="" />
 			</div>
 		</div>

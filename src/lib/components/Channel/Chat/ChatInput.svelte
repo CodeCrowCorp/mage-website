@@ -20,8 +20,10 @@
 		$channel_connection === `open-${channel._id}` && $page.data.user?.userId
 	$: isHost = channel.user === $page.data.user?.userId
 
-	$: viewersWithOutHost = viewers.filter((viewer) => viewer.userId !== channel.user)
-$: console.log("viewers : ", viewers)
+	$: viewersWithOutHost = viewers.filter(
+		(viewer) => viewer.userId !== channel.user && viewer.userId === 'anon'
+	)
+	$: console.log('viewers : ', viewers)
 	function insert(str: string, index: number, value: string) {
 		return str.substr(0, index) + value + str.substr(index)
 	}
@@ -68,11 +70,10 @@ $: console.log("viewers : ", viewers)
 	}
 
 	const slectUserfromKey = (key: string) => {
-		if(selectedUser >= viewersWithOutHost.length - 1){
+		if (selectedUser >= viewersWithOutHost.length - 1) {
 			selectedUser = 0
-			return 
-		}
-		else if(selectedUser === 0){
+			return
+		} else if (selectedUser === 0) {
 			selectedUser = viewersWithOutHost.length - 1
 			return
 		}
@@ -213,7 +214,6 @@ $: console.log("viewers : ", viewers)
 		!chatMessage.includes('@') &&
 		(channel.user === $page.data.user?.userId || channel.mods?.includes($page.data.user?.userId)) &&
 		!showUsers
-
 </script>
 
 <form class="rounded-lg bg-base-200 p-2 w-full relative">

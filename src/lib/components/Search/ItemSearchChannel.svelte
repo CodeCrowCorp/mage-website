@@ -55,7 +55,7 @@
 
 					<div class="flex items-center">
 						<div class="avatar">
-							<div class="w-12 mask {item?.isPaidPlan ? 'mask-hexagon' : 'mask-squircle'}">
+							<div class="w-12 mask {item?.affiliateTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
 								<img src={item.avatar} alt="" />
 							</div>
 						</div>

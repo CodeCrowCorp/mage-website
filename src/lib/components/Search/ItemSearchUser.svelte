@@ -11,7 +11,7 @@
 			<div class="flex-col md:flex-row gap-4 w-full contents">
 				<div class="max-w-md">
 					<div class="avatar">
-						<div class="w-32 mask {item?.isPaidPlan ? 'mask-hexagon' : 'mask-squircle'}">
+						<div class="w-32 mask {item?.affiliateTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
 							<img loading="lazy" src={item.avatar} alt="" />
 						</div>
 					</div>
