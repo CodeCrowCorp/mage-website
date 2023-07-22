@@ -21,7 +21,8 @@
 	import { onDestroy, onMount } from 'svelte'
 
 	export let isHostOrGuest: boolean = false,
-		channel: any
+		channel: any,
+		isScrollable: boolean = false
 
 	$: isChannelSocketConnected =
 		$channel_connection === `open-${$page.params.channelId}` && $page.data.user?.userId
@@ -310,3 +311,11 @@
 		<IconChatDrawer />
 	</button>
 </div>
+<input
+	type="checkbox"
+	class="toggle toggle-primary toggle-xs tooltip absolute right-20 hidden sm:block"
+	data-tip="Lock scroll"
+	bind:checked={isScrollable}
+	on:click={() => {
+		isScrollable = !isScrollable
+	}} />

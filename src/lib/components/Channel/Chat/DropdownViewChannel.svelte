@@ -14,13 +14,11 @@
 
 	const useEffect = createEffect()
 
-	let host: any = {},
-		isHost: boolean = false,
+	let isHost: boolean = false,
 		isFollowing: boolean = false,
 		isFavorite: boolean = false
 
-	const getHostAndRelationship = async () => {
-		host = await get(`users/search/id?userId=${channel.user}`)
+	const getHostRelationship = async () => {
 		isHost = channel.user === $page?.data?.user?.userId
 		if ($page.data.user?.userId) {
 			const relationship = await get(`follows/relationship?source=${channel.user}`, {
@@ -68,7 +66,7 @@
 	}
 
 	$: useEffect(() => {
-		getHostAndRelationship()
+		getHostRelationship()
 	}, [channel?._id])
 </script>
 
@@ -117,19 +115,22 @@
 			</a>
 		</li>
 		<li>
-			<a href="/profile/{host?.username}">
+			<a href="/profile/{channel.userDetails?.username}">
 				<div class="flex flex-wrap gap-2">
 					<div class="avatar online">
-						<div class="w-12 mask {host?.affiliateTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
-							<img src={host?.avatar} alt="" />
+						<div
+							class="w-12 mask {channel.userDetails?.affiliateTier > 1
+								? 'mask-hexagon'
+								: 'mask-squircle'}">
+							<img src={channel.userDetails?.avatar} alt="" />
 						</div>
 					</div>
 					<div>
-						<div class="col-span-3 tooltip flex" data-tip={host?.displayName}>
-							<p class="truncate">{host?.displayName}</p>
+						<div class="col-span-3 tooltip flex" data-tip={channel.userDetails?.displayName}>
+							<p class="truncate">{channel.userDetails?.displayName}</p>
 						</div>
-						<div class="col-span-3 tooltip flex" data-tip="@{host?.username}">
-							<p class="truncate">@{host?.username}</p>
+						<div class="col-span-3 tooltip flex" data-tip="@{channel.userDetails?.username}">
+							<p class="truncate">@{channel.userDetails?.username}</p>
 						</div>
 					</div>
 				</div>
