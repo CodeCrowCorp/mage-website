@@ -234,7 +234,7 @@
 					channel.videoItems = channel.videoItems.filter(
 						(video: any) => video._id !== parsedMsg.quitUserId
 					)
-					console.log("channel.videoItems on quit : ", channel.videoItems)
+					console.log('channel.videoItems on quit : ', channel.videoItems)
 				} else {
 					const activeGuests = parsedMsg.activeGuests
 					if (activeGuests?.length) {
@@ -260,7 +260,7 @@
 			case `channel-streaming-action-${$page.params.channelId}`:
 				switch (parsedMsg.data.action) {
 					case 'toggleTrack':
-						if(channel){
+						if (channel) {
 							if ($page.data.user?.userId) {
 								if ($page.data.user.userId !== parsedMsg.data.video._id) {
 									channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
@@ -269,7 +269,6 @@
 								channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
 							}
 						}
-						
 						break
 				}
 				break
