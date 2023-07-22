@@ -313,7 +313,7 @@
 </div>
 <input
 	type="checkbox"
-	class="toggle toggle-primary toggle-xs tooltip absolute right-20"
+	class="toggle toggle-primary toggle-xs tooltip absolute right-20 hidden sm:block"
 	data-tip="Lock scroll"
 	bind:checked={isScrollable}
 	on:click={() => {
