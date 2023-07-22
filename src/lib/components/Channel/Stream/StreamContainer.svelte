@@ -14,6 +14,8 @@
 		isHostOrGuest: boolean = false,
 		viewers: any[] = []
 
+	let isScrollable = false
+
 	function autoActive(node: Element) {
 		const observer = new IntersectionObserver(callback, { threshold: 0.5 })
 		observer.observe(node)
@@ -40,7 +42,10 @@
 </script>
 
 <div class="flex justify-center h-full">
-	<div class="carousel carousel-vertical rounded-lg bg-base-100 w-full m-5 mb-24">
+	<div
+		class="carousel carousel-vertical rounded-lg bg-base-100 w-full m-5 mb-24 {isScrollable
+			? 'overflow-y-hidden'
+			: ''}">
 		{#each channels as nextchannel}
 			<div class="carousel-item h-full p-3" id={nextchannel?._id} use:autoActive>
 				<div class="flex flex-col w-full">
@@ -71,7 +76,7 @@
 		{/each}
 	</div>
 
-	<div class="absolute lg:bottom-0 bottom-10 m-7">
-		<StreamControls bind:isHostOrGuest bind:channel />
+	<div class="absolute lg:bottom-0 bottom-10 m-7 w-full items-center justify-center flex">
+		<StreamControls bind:isHostOrGuest bind:channel bind:isScrollable />
 	</div>
 </div>
