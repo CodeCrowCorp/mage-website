@@ -12,12 +12,12 @@
 		<div class="flex items-center space-x-2 my-3 pl-3">
 			<div class="avatar">
 				<div class="w-12 mask {channel?.affiliateTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
-					<img src={channel.avatar} alt="" />
+					<img src={channel.userDetails.avatar} alt="" />
 				</div>
 			</div>
 			<div>
-				<div class="font-bold">{channel.createdByDisplayName || ''}</div>
-				<div class="text-sm">@{channel.createdByUsername || ''}</div>
+				<div class="font-bold">{channel.userDetails.displayName || ''}</div>
+				<div class="text-sm">@{channel.userDetails.username || ''}</div>
 			</div>
 		</div>
 	</td>

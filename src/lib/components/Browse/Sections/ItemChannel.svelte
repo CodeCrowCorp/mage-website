@@ -47,11 +47,11 @@
 	<div class="flex flex-row gap-2 max-w-[25rem]">
 		<div class="avatar">
 			<div class="w-12 mask {channel?.affiliateTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
-				<img src={channel.avatar} alt="" />
+				<img src={channel.userDetails.avatar} alt="" />
 			</div>
 		</div>
 		<div class="flex items-center">
-			<p>@{channel.createdByUsername}</p>
+			<p>@{channel.userDetails.username}</p>
 		</div>
 	</div>
 </a>
