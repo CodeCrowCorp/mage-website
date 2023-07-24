@@ -1,5 +1,6 @@
 <script lang="ts">
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
+	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 	import { timeSince } from '$lib/utils'
 
@@ -51,12 +52,18 @@
 
 			<div class="flex items-center">
 				<div class="avatar">
-					<div class="w-12 mask {item?.affiliateTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
+					<div
+						class="w-12 mask {item?.planDetails?.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
 						<img src={item.avatar} alt="" />
 					</div>
 				</div>
-				<a class="ml-2 link link-secondary" href="/profile/{item.userDetails.username}"
-					>@{item.userDetails.username || ''}</a>
+				<a class="ml-2 link link-hover flex gap-1" href="/profile/{item.userDetails.username}"
+					>@{item.userDetails.username || ''}
+					{#if item.planDetails?.planTier > 1}
+						<div class="text-accent font-bold">
+							<IconDrawerVerification />
+						</div>
+					{/if}</a>
 			</div>
 
 			<div class="flex flex-wrap gap-2 my-1">

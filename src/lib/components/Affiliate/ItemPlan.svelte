@@ -42,9 +42,9 @@
 				{#if plan.name === 'Affiliate'}
 					<button
 						class="btn btn-accent px-5 py-2.5 text-black"
-						disabled={$page.data.user?.user?.affiliateTier > 0}
-						>{$page.data.user?.user?.affiliateTier > 0 ? 'Selected' : 'Select'}</button>
-					{#if $page.data.user?.user?.affiliateTier === 1}
+						disabled={$page.data.user?.user?.planDetails?.planTier > 0}
+						>{$page.data.user?.user?.planDetails?.planTier > 0 ? 'Selected' : 'Select'}</button>
+					{#if $page.data.user?.user?.planDetails?.planTier === 1}
 						<a
 							href="https://forms.gle/mBtByR6jdoJeQd367"
 							class="link link-accent link-hover font-bold">
@@ -54,8 +54,12 @@
 				{:else}
 					<button
 						class="btn btn-neutral px-5 py-2.5"
-						disabled={$page.data.user?.user?.affiliateTier === 0}
-						>{$page.data.user?.user?.affiliateTier === 0 ? 'Selected' : 'Select'}</button>
+						disabled={!$page.data.user?.user?.planDetails ||
+							$page.data.user?.user?.planDetails?.planTier === 0}
+						>{!$page.data.user?.user?.planDetails ||
+						$page.data.user?.user?.planDetails?.planTier === 0
+							? 'Selected'
+							: 'Select'}</button>
 				{/if}
 			</div>
 		</form>

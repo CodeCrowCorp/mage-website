@@ -2,6 +2,7 @@
 	import { page } from '$app/stores'
 	import { del, get, put } from '$lib/api'
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
+	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { follower_count, following_count } from '$lib/stores/profileStore'
 	export let followItem: any
 
@@ -38,14 +39,21 @@
 <div class="flex flex-row gap-2 px-4 py-2 card bg-base-100 justify-between mb-1">
 	<div class="flex">
 		<div class="avatar">
-			<div class="w-16 mask mask-squircle">
+			<div
+				class="w-16 mask {followItem.planDetails?.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
 				<img src={followItem.avatar} alt="" />
 			</div>
 		</div>
 
 		<div class="flex flex-col justify-center pl-4 text-start">
 			<p>{followItem.displayName}</p>
-			<p class="text-secondary">@{followItem.username}</p>
+			<p class="flex gap-1">
+				@{followItem.username}{#if followItem.planDetails?.planTier > 1}
+					<div class="text-accent font-bold">
+						<IconDrawerVerification />
+					</div>
+				{/if}
+			</p>
 		</div>
 	</div>
 

@@ -59,7 +59,7 @@
 	}
 
 	onDestroy(() => {
-		listElement.removeEventListener('scroll', () => {})
+		listElement?.removeEventListener('scroll', () => {})
 	})
 
 	$: useOueryEffect(() => {
