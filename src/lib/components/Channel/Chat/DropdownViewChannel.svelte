@@ -8,6 +8,7 @@
 	import { page } from '$app/stores'
 	import { del, get, put } from '$lib/api'
 	import { createEffect } from '$lib/utils'
+	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 
 	export let channel: any = undefined,
 		showEditChannelDrawer: boolean = false
@@ -119,7 +120,7 @@
 				<div class="flex flex-wrap gap-2">
 					<div class="avatar online">
 						<div
-							class="w-12 mask {channel.userDetails?.affiliateTier > 1
+							class="w-12 mask {channel.planDetails?.planTier > 1
 								? 'mask-hexagon'
 								: 'mask-squircle'}">
 							<img src={channel.userDetails?.avatar} alt="" />
@@ -129,8 +130,13 @@
 						<div class="col-span-3 tooltip flex" data-tip={channel.userDetails?.displayName}>
 							<p class="truncate">{channel.userDetails?.displayName}</p>
 						</div>
-						<div class="col-span-3 tooltip flex" data-tip="@{channel.userDetails?.username}">
+						<div class="col-span-3 tooltip flex gap-1" data-tip="@{channel.userDetails?.username}">
 							<p class="truncate">@{channel.userDetails?.username}</p>
+							{#if channel.planDetails?.planTier > 1}
+								<div class="text-accent font-bold">
+									<IconDrawerVerification />
+								</div>
+							{/if}
 						</div>
 					</div>
 				</div>

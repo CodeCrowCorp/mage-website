@@ -1,5 +1,6 @@
 <script lang="ts">
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
+	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	// import IconBrowseItemPlay from '$lib/assets/icons/browse/IconBrowseItemPlay.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 
@@ -48,14 +49,22 @@
 			<p class="text-2xl truncate text-white font-semibold">{channel.title || ''}</p>
 			<div class="flex flex-row items-center gap-2">
 				<div class="avatar">
-					<div class="w-14 mask {channel?.affiliateTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
+					<div
+						class="w-14 mask {channel?.planDetails?.planTier > 1
+							? 'mask-hexagon'
+							: 'mask-squircle'}">
 						<img src={channel.userDetails.avatar} alt="" />
 					</div>
 				</div>
-				<div class="w-4/5">
+				<div class="w-4/5 flex gap-1">
 					<p class="truncate text-white">
 						@{channel.userDetails.username}
 					</p>
+					{#if channel.planDetails?.planTier > 1}
+						<div class="text-accent font-bold">
+							<IconDrawerVerification />
+						</div>
+					{/if}
 				</div>
 			</div>
 		</div>

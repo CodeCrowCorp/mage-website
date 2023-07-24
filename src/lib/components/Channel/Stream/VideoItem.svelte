@@ -12,6 +12,7 @@
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import { is_feature_stats_enabled } from '$lib/stores/remoteConfigStore'
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
+	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 
 	export let video: any, channel: any
 
@@ -345,7 +346,7 @@
 		<img
 			src={video.avatar}
 			alt=""
-			class="absolute inset-0 w-24 md:w-24 mask {video?.affiliateTier > 1
+			class="absolute inset-0 w-24 md:w-24 mask {video.planDetails?.planTier > 1
 				? 'mask-hexagon'
 				: 'mask-squircle'} object-cover m-auto" />
 		<div class="absolute inset-0">
@@ -381,9 +382,17 @@
 			<div class="absolute left-2 bottom-2 rounded-md dropdown">
 				<label
 					tabindex="0"
-					class="{coloredRole.textColor} bg-base-100 btn btn-sm normal-case {speakingValue > 10
+					class="{coloredRole.textColor} bg-base-100 btn btn-sm normal-case flex gap-1 {speakingValue >
+					10
 						? 'btn-outline'
-						: 'border-transparent'}">@{video.username}</label>
+						: 'border-transparent'}"
+					>@{video.username}
+					{#if video.planDetails?.planTier > 1}
+						<div class="text-accent font-bold">
+							<IconDrawerVerification />
+						</div>
+					{/if}
+				</label>
 				{#if showBanItem || showRoleItem}
 					<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 						{#if showRoleItem && !channel.bans.includes(video._id)}
