@@ -5,7 +5,9 @@
 	export let user: any = {}
 </script>
 
-<a class="p-4 bg-base-100 hover:bg-base-300 shrink-0 rounded-md" href="/profile/{user.username}">
+<a
+	class="p-4 bg-base-100 hover:bg-base-300 shrink-0 rounded-md my-4"
+	href="/profile/{user.username}">
 	<div class="text-center space-y-3 w-[200px]">
 		<div class="avatar">
 			<div class="w-36 mask {user?.planDetails?.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">

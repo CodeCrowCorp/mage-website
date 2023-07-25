@@ -42,8 +42,8 @@
 	</div>
 {:then value}
 	{#if sectionId === 'weekly' ? value.channels?.length > 0 : value.length > 0}
-		<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide">
-			<div class="font-semibold m-3">
+		<div class="flex flex-col relative overflow-x-auto scrollbar-hide">
+			<div class="font-semibold mt-3 mx-3">
 				<a class="link link-secondary text-lg" href="/search?section={sectionId}"
 					>{sectionId === 'weekly' ? value.title : title}</a>
 			</div>
