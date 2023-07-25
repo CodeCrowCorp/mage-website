@@ -12,7 +12,7 @@
 	import LoginPrompt from '$lib/components/Global/LoginPrompt.svelte'
 	import DrawerMain from '$lib/components/Global/DrawerMain.svelte'
 	import { onMount } from 'svelte'
-	import { get } from '$lib/api'
+	import { get, put } from '$lib/api'
 	import { emitUserConnection, initPlatformSocket, platformSocket } from '$lib/websocket'
 	import { platform_connection, platform_message } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'

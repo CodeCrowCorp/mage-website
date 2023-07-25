@@ -87,8 +87,8 @@
 							<div class="flex gap-3 {isChannelPage ? 'max-w-md' : 'max-w-full'}">
 								<div class="avatar {$isOnline ? 'online' : 'offline'}">
 									<div
-										class="w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser?.affiliateTier >
-										1
+										class="w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser?.planDetails
+											?.planTier > 1
 											? 'mask-hexagon'
 											: 'mask-squircle'}">
 										<img src={currentUser.avatar} alt="" />
@@ -102,7 +102,7 @@
 							</div>
 							<div class="tooltip flex gap-1 w-fit" data-tip="@{currentUser.username}">
 								<p class="truncate">@{currentUser.username}</p>
-								{#if currentUser.isAffiliate}
+								{#if currentUser?.planDetails?.planTier > 1}
 									<div class="text-accent font-bold">
 										<IconDrawerVerification />
 									</div>

@@ -204,7 +204,13 @@
 		switch (parsedMsg.eventName) {
 			case `channel-update-${$page.params.channelId}`:
 				console.log('channel-update', parsedMsg)
-				channel = { ...parsedMsg.channel, socket: channel.socket, videoItems: channel.videoItems }
+				channel = {
+					...parsedMsg.channel,
+					socket: channel.socket,
+					videoItems: channel.videoItems,
+					userDetails: channel.userDetails,
+					planDetails: channel.planDetails
+				}
 
 				if (parsedMsg.roleUpdate) {
 					switch (parsedMsg.roleUpdate.roleEvent) {

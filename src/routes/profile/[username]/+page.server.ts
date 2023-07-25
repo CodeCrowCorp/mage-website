@@ -31,7 +31,7 @@ export const actions = {
 
 		if (data.get('avatar') !== null && avatar.size > 0) {
 			const urlLocation = await putImage(
-				`users/current/avatar?bucketName=avatars&originalName=${locals.user.userId}-avatar`,
+				`users/current/avatar?bucketName=avatars`,
 				data.get('avatar'),
 				{
 					userId: locals.user.userId,
@@ -43,7 +43,7 @@ export const actions = {
 
 		if (data.get('banner') !== null && banner.size > 0) {
 			const urlLocation = await putImage(
-				`users/current/banner?bucketName=banners&originalName=${locals.user.userId}-banner`,
+				`users/current/banner?bucketName=banners`,
 				data.get('banner'),
 				{
 					userId: locals.user.userId,

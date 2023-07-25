@@ -1,5 +1,6 @@
 <script lang="ts">
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
+	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 
 	export let item: any
@@ -9,7 +10,7 @@
 	<div class="flex-col md:flex-row gap-4 w-full contents">
 		<div class="max-w-md">
 			<div class="avatar">
-				<div class="w-32 mask {item?.affiliateTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
+				<div class="w-32 mask {item?.planDetails?.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
 					<img loading="lazy" src={item.avatar} alt="" />
 				</div>
 			</div>
@@ -28,7 +29,12 @@
 				{item.displayName || ''}
 			</h2>
 			<div class="flex items-center">
-				<a class="link link-secondary" href="/profile/{item.username}">@{item.username || ''}</a>
+				<a class="link link-hover flex gap-1" href="/profile/{item.username}"
+					>@{item.username || ''}
+					<div class="text-accent font-bold">
+						<IconDrawerVerification />
+					</div>
+				</a>
 			</div>
 			<h2 class="text-md">
 				{item.bio || ''}

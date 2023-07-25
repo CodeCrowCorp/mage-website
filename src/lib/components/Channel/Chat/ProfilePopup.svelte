@@ -5,6 +5,7 @@
 	import { clickOutside } from '$lib/utils.js'
 	import { put, del } from '$lib/api'
 	import { createEffect } from '$lib/utils'
+	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 
 	export let userId: string = '',
 		open: boolean = false,
@@ -134,8 +135,13 @@
 						{profileData?.profile?.displayName}
 					</p>
 					<p class="mb-3 text-sm font-normal">
-						<a class="link link-hover" href="/profile/{profileData?.profile?.username}"
-							>@{profileData?.profile?.username}</a>
+						<a class="link link-hover flex gap-1" href="/profile/{profileData?.profile?.username}"
+							>@{profileData?.profile?.username}
+							{#if profileData?.profile?.planDetails?.planTier > 1}
+								<div class="text-accent font-bold">
+									<IconDrawerVerification />
+								</div>
+							{/if}</a>
 					</p>
 				{/if}
 

@@ -172,10 +172,6 @@
 						>{role}</span>
 				{/if}
 				{#if role !== '🤖 AI'}
-					<!-- <span
-							id="b1"
-							class="{coloredRole.textColor} font-medium">@{sender.user?.username}</span> -->
-
 					<span
 						class="{coloredRole.textColor} font-medium cursor-pointer"
 						on:click={onUsernameClick}

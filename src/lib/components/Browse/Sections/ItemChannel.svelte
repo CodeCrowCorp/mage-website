@@ -1,12 +1,13 @@
 <script lang="ts">
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
+	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 
 	export let channel: any = {}
 </script>
 
 <a
-	class="flex flex-col w-[20rem] md:w-[27rem] p-4 bg-base-100 hover:bg-base-300 mt-6 rounded-md shrink-0"
+	class="flex flex-col w-[20rem] md:w-[27rem] p-4 bg-base-100 hover:bg-base-300 rounded-md shrink-0 my-4"
 	href="/channel/{channel._id}">
 	<div class="relative">
 		<div class="flex flex-row justify-between">
@@ -46,12 +47,18 @@
 	<p class="text-lg font-semibold truncate">{channel.title}</p>
 	<div class="flex flex-row gap-2 max-w-[25rem]">
 		<div class="avatar">
-			<div class="w-12 mask {channel?.affiliateTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
+			<div
+				class="w-12 mask {channel?.planDetails?.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
 				<img src={channel.userDetails.avatar} alt="" />
 			</div>
 		</div>
-		<div class="flex items-center">
+		<div class="flex items-center gap-1">
 			<p>@{channel.userDetails.username}</p>
+			{#if channel.planDetails?.planTier > 1}
+				<div class="text-accent font-bold">
+					<IconDrawerVerification />
+				</div>
+			{/if}
 		</div>
 	</div>
 </a>

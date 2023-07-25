@@ -158,6 +158,7 @@
 							bind:this={fileuploader}
 							on:change={fileupload}
 							type="file"
+							accept="image/png, image/jpeg"
 							name="thumbnail"
 							class="file-input file-input-bordered file-input-primary w-full mt-5" />
 						<input
