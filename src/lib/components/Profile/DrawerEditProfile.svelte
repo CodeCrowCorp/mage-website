@@ -124,6 +124,7 @@
 							</label>
 							<input
 								type="file"
+								accept="image/png, image/jpeg"
 								name="banner"
 								id="banner"
 								class="file-input file-input-bordered file-input-primary w-full" />
@@ -136,6 +137,7 @@
 							</label>
 							<input
 								type="file"
+								accept="image/png, image/jpeg"
 								name="avatar"
 								id="avatar"
 								class="file-input file-input-bordered file-input-primary w-full" />
