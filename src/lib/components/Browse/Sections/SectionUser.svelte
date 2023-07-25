@@ -43,7 +43,7 @@
 {:then value}
 	{#if value.length > 0}
 		<div class="flex flex-col my-4 relative overflow-x-auto scrollbar-hide">
-			<div class="font-semibold m-3">
+			<div class="font-semibold mt-3 mx-3">
 				<a class="link link-secondary text-lg" href="/search?section={sectionId}">{title}</a>
 			</div>
 			<div class="flex flex-row">

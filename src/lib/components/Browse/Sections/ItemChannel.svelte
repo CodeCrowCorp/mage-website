@@ -7,7 +7,7 @@
 </script>
 
 <a
-	class="flex flex-col w-[20rem] md:w-[27rem] p-4 bg-base-100 hover:bg-base-300 rounded-md shrink-0"
+	class="flex flex-col w-[20rem] md:w-[27rem] p-4 bg-base-100 hover:bg-base-300 rounded-md shrink-0 my-4"
 	href="/channel/{channel._id}">
 	<div class="relative">
 		<div class="flex flex-row justify-between">
