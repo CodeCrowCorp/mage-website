@@ -9,6 +9,8 @@
 	import LoadingItemSearchChannel from '$lib/components/Search/LoadingItemSearchChannel.svelte'
 	import ItemSearchUser from '$lib/components/Search/ItemSearchUser.svelte'
 	import LoadingItemSearchUser from '$lib/components/Search/LoadingItemSearchUser.svelte'
+	import { createEffect } from '$lib/utils'
+
 	// @ts-ignore
 	import NProgress from 'nprogress'
 	$: {
@@ -19,9 +21,11 @@
 		}
 	}
 
-	let sectionId = $page.url.searchParams.get('section') || ''
-	let query = $page.url.searchParams.get('query') || ''
+	const useOueryEffect = createEffect()
 
+	let sectionId = $page.url.searchParams.get('section') || ''
+	let queryInUrl = $page.url.searchParams.get('query') || ''
+	let query:string = queryInUrl
 	let title = '',
 		skip = 0,
 		limit = 10,
@@ -29,20 +33,44 @@
 		searchList: any[] = [],
 		placeholderText = 'channels',
 		initialLoad = true
+	let listElement: any
+	let allLoaded = false
+	let time = Date.now()
 
 	const loadMore = async () => {
+		if(isLoading)return
 		isLoading = true
 		const url = getSectionUrl({ sectionId, query, skip, limit })
 		const moreChannels = await get(`${url}&userId=${$page.data.user?.userId}`, {
 			userId: $page.data.user?.userId,
 			token: $page.data.user?.token
 		})
-		searchList = skip === 0 ? moreChannels : [...searchList, ...moreChannels]
+		allLoaded = moreChannels.length === 0
+		searchList = searchList.concat(moreChannels) 
 		skip += limit
 		isLoading = false
 	}
 
+	const resetSkipLimit = () => {
+		skip = 0
+		limit = 10
+		allLoaded = false
+		searchList = []
+	}
+
 	onMount(async () => {
+		if (listElement) {
+			listElement.addEventListener('scroll', async () => {
+				if (!allLoaded && listElement.scrollTop + listElement.clientHeight >= listElement.scrollHeight) {
+					loadMore()
+				}
+			})
+		}
+	})
+
+	$: useOueryEffect(async () => {
+		initialLoad = true
+		resetSkipLimit()
 		switch (sectionId) {
 			case 'weekly':
 				title = `Weekly`
@@ -64,18 +92,15 @@
 		}
 		await loadMore()
 		initialLoad = false
-	})
+		time = Date.now()
+	}, [$page.url])
 
-	const resetSkipLimit = () => {
-		skip = 0
-		limit = 10
-	}
 </script>
 
-<div class="px-9 py-9 md:px-24">
-	<div class="flex flex-col md:flex-row gap-4 pb-10">
+<div bind:this={listElement}  class="px-9 py-9 md:px-24 flex flex-col h-screen overflow-auto">
+	<div class="flex flex-col md:flex-row gap-4 pb-10 sticky top-0 z-10">
 		<div class="flex flex-col md:flex-row gap-4">
-			<form on:submit|preventDefault={loadMore}>
+			<form action="/search">
 				<div class="form-control">
 					<div class="input-group relative">
 						<input
@@ -84,25 +109,25 @@
 							type="search"
 							placeholder="Search {placeholderText}"
 							class="input input-bordered input-primary w-96" />
+						<input type="hidden" name="time" value={time}/>
 						<button
 							class="btn btn-square btn-neutral text-white"
-							on:click={() => {
-								resetSkipLimit()
-								loadMore()
-							}}>
+						>
 							<IconSearch />
 						</button>
 					</div>
 				</div>
 			</form>
 		</div>
+
+		{#if title}
+			<div class="font-semibold py-5">
+				<a class="link link-secondary text-lg">{title}</a>
+			</div>
+		{/if}
 	</div>
 
-	{#if title}
-		<div class="font-semibold py-5">
-			<a class="link link-secondary text-lg">{title}</a>
-		</div>
-	{/if}
+	
 
 	<div class="flex flex-col gap-4 justify-around">
 		{#if initialLoad}
@@ -124,6 +149,9 @@
 				<h2>No {placeholderText} found</h2>
 			{/each}
 			<span use:LastItemInViewport on:loadMore={loadMore} />
+		{/if}
+		{#if isLoading}
+			<progress class="progress w-full" />
 		{/if}
 	</div>
 </div>
