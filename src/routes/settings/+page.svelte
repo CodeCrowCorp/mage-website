@@ -3,7 +3,7 @@
 	import { themeChange } from 'theme-change'
 	import { current_theme } from '$lib/stores/helperStore'
 
-	let themes = ['dark', 'light'] //, 'cyberpunk', 'synthwave']
+	let themes = ['dark', 'light', 'synthwave', 'cyberpunk']
 
 	onMount(() => {
 		themeChange(false)
