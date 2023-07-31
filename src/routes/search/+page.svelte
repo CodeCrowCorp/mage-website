@@ -58,21 +58,6 @@
 	}
 
 	onMount(async () => {
-		if (listElement) {
-			listElement.addEventListener('scroll', async () => {
-				if (
-					!allLoaded &&
-					listElement.scrollTop + listElement.clientHeight >= listElement.scrollHeight
-				) {
-					loadMore()
-				}
-			})
-		}
-	})
-
-	$: useOueryEffect(async () => {
-		initialLoad = true
-		resetSkipLimit()
 		switch (sectionId) {
 			case 'weekly':
 				title = `Weekly`
@@ -92,6 +77,21 @@
 				title = `Fav channels`
 				break
 		}
+		if (listElement) {
+			listElement.addEventListener('scroll', async () => {
+				if (
+					!allLoaded &&
+					listElement.scrollTop + listElement.clientHeight >= listElement.scrollHeight
+				) {
+					loadMore()
+				}
+			})
+		}
+	})
+
+	$: useOueryEffect(async () => {
+		initialLoad = true
+		resetSkipLimit()
 		await loadMore()
 		initialLoad = false
 	}, [$page.url])
@@ -109,6 +109,9 @@
 							type="search"
 							placeholder="Search {placeholderText}"
 							class="input input-bordered input-primary w-96" />
+						{#if sectionId}
+							<input type="hidden" name="section" value={sectionId} />
+						{/if}
 						<button class="btn btn-square btn-neutral text-white">
 							<IconSearch />
 						</button>
