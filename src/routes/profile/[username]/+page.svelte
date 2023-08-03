@@ -43,7 +43,7 @@
 						interests={data.lazy.interests}
 						totalPageViews={data.lazy.totalPageViews}
 						highestAndCurrentStreak={data.lazy.highestAndCurrentStreak}
-						totalAndAvgHours={data.lazy.totalAndAvgHours} />
+						totalAndAvgHours={data.lazy.totalHours} />
 				</div>
 			</div>
 		</div>

@@ -37,6 +37,10 @@
 	let progressBarColor = colorFromLevel(1)
 	let streakCount: number = 0
 	let hoursStreamed: number = 0
+	let totalViews: number = 0
+	let hoursMonthlyIncr: number = 0
+	let streakMonthlyIncr: number = 0
+	let viewsMonthlyIncr: number = 0
 	onMount(async () => {
 		if (currentUser) {
 			let exp = currentUser.exp || 0
@@ -49,6 +53,23 @@
 				token: $page.data.user?.token
 			})
 			hoursStreamed = await get(`stats/stream/total-hours`, {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
+			totalViews = await get(`stats/profile/views/four-weeks?profileType=user&id=${$page.data.user?.userId}`, {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
+			viewsMonthlyIncr = await get(`stats/profile/views/monthly?profileType=user&id=${$page.data.user?.userId}`, {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
+			streakMonthlyIncr = await get(`stats/stream/streak/monthly?userId=${$page.data.user?.userId}`, {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
+
+			hoursMonthlyIncr = await get(`stats/stream/total-hours/monthly?userId=${$page.data.user?.userId}`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
