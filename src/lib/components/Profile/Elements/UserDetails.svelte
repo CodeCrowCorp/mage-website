@@ -1,5 +1,6 @@
 <script lang="ts">
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
+	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 
 	export let profile: any
@@ -12,8 +13,13 @@
 		</h3>
 	{/if}
 	{#if profile.username}
-		<div class="text-lg leading-normal mt-0 mb-2 font-bold text-pink-500">
+		<div class="text-lg leading-normal mt-0 mb-2 font-bold flex gap-1">
 			@{profile.username || ''}
+			{#if profile?.planDetails?.planTier > 1}
+				<div class="text-accent font-bold">
+					<IconDrawerVerification />
+				</div>
+			{/if}
 		</div>
 	{/if}
 	{#if profile.bio}

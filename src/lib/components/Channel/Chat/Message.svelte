@@ -5,14 +5,17 @@
 	import IconChatQuote from '$lib/assets/icons/chat/IconChatQuote.svelte'
 	import IconChatDelete from '$lib/assets/icons/chat/IconChatDelete.svelte'
 	import IconChatHorizontalMore from '$lib/assets/icons/chat/IconChatHorizontalMore.svelte'
-	import ProfileCard from '$lib/components/Channel/Chat/ProfileCard.svelte'
 	import { emitChannelUpdate, emitDeleteMessageToChannel } from '$lib/websocket'
 	import { copyToClipboard, getColoredRole, setRole } from '$lib/utils'
 	import { page } from '$app/stores'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
+	import { onMount } from 'svelte'
+	import ProfilePopup from './ProfilePopup.svelte'
 
-	export let sender: any, hostId: string, channel: any
+	export let sender: any, hostId: string, channel: any, onUsernameClick: any
 	let role: string, coloredRole: any
+	let profileElt: any = null
+	let ignoreOutsideClick = false
 
 	$: isGuest = channel?.guests?.includes(sender.user?.userId)
 
@@ -130,10 +133,32 @@
 		}
 	}
 
+	const hightlightUsername = (match: string) => {
+		return `
+			<span 
+				class="text-success font-medium cursor-pointer link"
+				name="username"
+				id=${match}
+			>
+				${match}
+			</span>
+		`
+	}
+
+	const parse = (msg: string) => {
+		const m = msg + ' '
+		return m.replace(/@[\w-]+[,\s]/g, hightlightUsername).trim()
+	}
+
+	onMount(() => {
+		const spans = document.querySelectorAll('span[name="username"]')
+		spans.forEach((span: any) => {
+			span.onclick = onUsernameClick
+		})
+	})
+
 	$: codeSnippet = isCodeSnippet(sender.message) ? getCodeSnippet(sender.message) : false
 </script>
-
-
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <ul class="menu" on:click={copy}>
@@ -147,17 +172,12 @@
 						>{role}</span>
 				{/if}
 				{#if role !== '🤖 AI'}
-						<!-- <span
-							id="b1"
-							class="{coloredRole.textColor} font-medium">@{sender.user?.username}</span> -->
-
-							<ProfileCard userId={sender.user?.userId}>
-								<span
-									class="{coloredRole.textColor} font-medium"
-								>
-									@{sender.user?.username}
-								</span>
-							</ProfileCard>
+					<span
+						class="{coloredRole.textColor} font-medium cursor-pointer"
+						on:click={onUsernameClick}
+						id={'@' + sender.user?.username}>
+						@{sender.user?.username}
+					</span>
 				{/if}
 				{#if isImage(sender.message)}
 					<img class="py-2 pr-2" src={sender.message} alt="imgs" />
@@ -176,52 +196,51 @@
 						<span class="break-all">{codeSnippet.endText}</span>
 					{/if}
 				{:else}
-					<span class="break-all">{sender.message}</span>
+					<span class="break-all">{@html parse(sender.message)}</span>
 				{/if}
 			</label>
 
 			<div
 				class="group-hover:block dropdown-menu absolute hidden right-0 dropdown dropdown-left dropdown-end"
-			>
-			<div class="rounded-lg bg-base-200 m-1 border-base-100 border-2">
-				<IconChatHorizontalMore />
+				tabindex="1">
+				<div class="rounded-lg bg-base-200 m-1 border-base-100 border-2">
+					<IconChatHorizontalMore />
+				</div>
+				<ul tabindex="1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 z-10">
+					<!-- svelte-ignore a11y-missing-attribute -->
+					<li class="disabled"><a><IconChatReact /> React </a></li>
+					<!-- svelte-ignore a11y-missing-attribute -->
+					<li class="disabled"><a><IconChatQuote /> Quote </a></li>
+					{#if showRoleItem && !channel.bans.includes(sender.user?.userId)}
+						<li>
+							<!-- svelte-ignore a11y-missing-attribute -->
+							<a on:click={() => toggleMod()}
+								><IconChatMod /> {role === 'Mod' ? 'Revoke Mod' : 'Grant Mod'}
+							</a>
+						</li>
+						<li>
+							<!-- svelte-ignore a11y-missing-attribute -->
+							<a on:click={() => toggleGuest()}
+								><IconChatGuest /> {isGuest ? 'Revoke Guest' : 'Grant Guest'}
+							</a>
+						</li>
+					{/if}
+					{#if showBanItem}
+						<li>
+							<!-- svelte-ignore a11y-missing-attribute -->
+							<a on:click={() => toggleBan()}
+								><IconChatBan /> {channel.bans?.includes(sender.user?.userId) ? 'Unban' : 'Ban'}
+							</a>
+						</li>
+					{/if}
+					{#if hostId === $page.data.user?.userId || sender.user?.userId === $page.data.user?.userId}
+						<li>
+							<!-- svelte-ignore a11y-missing-attribute -->
+							<a on:click={() => deleteMessage()}><IconChatDelete /> Delete</a>
+						</li>
+					{/if}
+				</ul>
 			</div>
-			<ul class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 z-10">
-				<!-- svelte-ignore a11y-missing-attribute -->
-				<li class="disabled"><a><IconChatReact /> React </a></li>
-				<!-- svelte-ignore a11y-missing-attribute -->
-				<li class="disabled"><a><IconChatQuote /> Quote </a></li>
-				{#if showRoleItem && !channel.bans.includes(sender.user?.userId)}
-					<li>
-						<!-- svelte-ignore a11y-missing-attribute -->
-						<a on:click={() => toggleMod()}
-							><IconChatMod /> {role === 'Mod' ? 'Revoke Mod' : 'Grant Mod'}
-						</a>
-					</li>
-					<li>
-						<!-- svelte-ignore a11y-missing-attribute -->
-						<a on:click={() => toggleGuest()}
-							><IconChatGuest /> {isGuest ? 'Revoke Guest' : 'Grant Guest'}
-						</a>
-					</li>
-				{/if}
-				{#if showBanItem}
-					<li>
-						<!-- svelte-ignore a11y-missing-attribute -->
-						<a on:click={() => toggleBan()}
-							><IconChatBan /> {channel.bans?.includes(sender.user?.userId) ? 'Unban' : 'Ban'}
-						</a>
-					</li>
-				{/if}
-				{#if hostId === $page.data.user?.userId || sender.user?.userId === $page.data.user?.userId}
-					<li>
-						<!-- svelte-ignore a11y-missing-attribute -->
-						<a on:click={() => deleteMessage()}><IconChatDelete /> Delete</a>
-					</li>
-				{/if}
-			</ul>
-			</div>
-		
 		</div>
 	</li>
 </ul>
@@ -231,5 +250,4 @@
 		pointer-events: none;
 		color: #ccc;
 	}
-	
 </style>

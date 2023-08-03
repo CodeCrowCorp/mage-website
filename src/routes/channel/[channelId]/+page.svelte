@@ -20,8 +20,7 @@
 		is_sharing_screen,
 		is_sharing_webcam,
 		is_sharing_audio,
-		updateVideoItems,
-		video_items
+		updateVideoItems
 	} from '$lib/stores/streamStore'
 
 	let channel: any,
@@ -29,10 +28,13 @@
 		showEditChannelDrawer = false,
 		channels: any = [],
 		skip = 0,
-		limit = 10
+		limit = 10,
+		viewers: any[] = [],
+		chatHistory: any[] = []
 
 	$: userCount = 0
-	$: isHostOrGuest = false
+	$: isHostOrGuest =
+		channel?.user === $page.data.user?.userId || channel?.guests?.includes($page.data.user?.userId)
 
 	$: if (channel) {
 		if (channel._id !== $page.params.channelId) {
@@ -77,13 +79,14 @@
 
 	const loadChannel = async () => {
 		const chan = await get(`channel?channelId=${$page.params.channelId}`)
+		chan.videoItems = []
 		channels.push(chan)
 	}
 
 	const initChannel = (chan: any) => {
 		$channel_connection = `open-${$page.params.channelId}`
 		$channel_message = ''
-		$video_items = []
+		chan.videoItems = []
 		if (chan.socket.readyState === WebSocket.OPEN) {
 			emitChannelSubscribeByUser({
 				channelSocket: chan.socket,
@@ -102,6 +105,7 @@
 	const handleWebsocket = async () => {
 		try {
 			channel = channels.find((ch: any) => ch._id === $page.params.channelId)
+			chatHistory = []
 			isHostOrGuest =
 				channel.user === $page.data.user?.userId ||
 				channel.guests?.includes($page.data.user?.userId)
@@ -187,34 +191,42 @@
 		newchannels = newchannels.filter(
 			(newChannel: any) => !channels.some((channel: any) => channel._id === newChannel._id)
 		)
+		newchannels.forEach((channel: any) => {
+			channel.videoItems = []
+		})
 		channels = [...channels, ...newchannels]
 		skip += limit
 	}
 
 	channel_message.subscribe(async (value: any) => {
-		if (!value) return
+		if (!value || (channel && $page.params.channelId !== channel._id)) return
 		var parsedMsg = JSON.parse(value)
 		switch (parsedMsg.eventName) {
 			case `channel-update-${$page.params.channelId}`:
 				console.log('channel-update', parsedMsg)
-				channel = { ...parsedMsg.channel, socket: channel.socket }
+				channel = {
+					...parsedMsg.channel,
+					socket: channel.socket,
+					videoItems: channel.videoItems,
+					userDetails: channel.userDetails,
+					planDetails: channel.planDetails
+				}
 
 				if (parsedMsg.roleUpdate) {
-					let videoItems = [...$video_items]
 					switch (parsedMsg.roleUpdate.roleEvent) {
 						case 'ban':
 							if (parsedMsg.roleUpdate.isEnabled) {
-								$video_items = videoItems.filter(
+								channel.videoItems = channel.videoItems.filter(
 									(video: any) => video._id !== parsedMsg.roleUpdate.userId
 								)
 							}
 							break
 						case 'guest':
 							if (parsedMsg.roleUpdate.isEnabled) {
-								videoItems.push(parsedMsg.roleUpdate.user)
-								$video_items = videoItems
+								channel.videoItems.push(parsedMsg.roleUpdate.user)
+								channel.videoItems = channel.videoItems
 							} else {
-								$video_items = videoItems.filter(
+								channel.videoItems = channel.videoItems.filter(
 									(video: any) => video._id !== parsedMsg.roleUpdate.userId
 								)
 							}
@@ -225,15 +237,20 @@
 			case `channel-subscribe-${$page.params.channelId}`:
 				userCount = parsedMsg.userCount
 				if (parsedMsg.quitUserId) {
-					$video_items = $video_items.filter((video: any) => video._id !== parsedMsg.quitUserId)
+					channel.videoItems = channel.videoItems.filter(
+						(video: any) => video._id !== parsedMsg.quitUserId
+					)
+					console.log('channel.videoItems on quit : ', channel.videoItems)
 				} else {
 					const activeGuests = parsedMsg.activeGuests
 					if (activeGuests?.length) {
-						if ($video_items.length) {
+						if (channel.videoItems.length) {
 							// for users that are in the channel and new users join
 							// add new users but dont overwrite the existing ones streaming
-							$video_items = activeGuests.map((guest: any) => {
-								const foundVideoItem = $video_items.find((video: any) => guest._id === video._id)
+							channel.videoItems = activeGuests.map((guest: any) => {
+								const foundVideoItem = channel.videoItems.find(
+									(video: any) => guest._id === video._id
+								)
 								return foundVideoItem || guest
 							})
 						} else {
@@ -241,7 +258,7 @@
 							const liveInputs = await get(
 								`cloudflare/live-inputs?channelId=${$page.params.channelId}`
 							)
-							$video_items = updateVideoItems([...activeGuests], liveInputs)
+							channel.videoItems = updateVideoItems([...activeGuests], liveInputs)
 						}
 					}
 				}
@@ -249,12 +266,14 @@
 			case `channel-streaming-action-${$page.params.channelId}`:
 				switch (parsedMsg.data.action) {
 					case 'toggleTrack':
-						if ($page.data.user?.userId) {
-							if ($page.data.user.userId !== parsedMsg.data.video._id) {
-								$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
+						if (channel) {
+							if ($page.data.user?.userId) {
+								if ($page.data.user.userId !== parsedMsg.data.video._id) {
+									channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
+								}
+							} else {
+								channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
 							}
-						} else {
-							$video_items = updateVideoItems($video_items, [parsedMsg.data.video])
 						}
 						break
 				}
@@ -273,7 +292,8 @@
 				bind:userCount
 				bind:channels
 				on:loadMore={loadMoreChannels}
-				bind:isHostOrGuest />
+				bind:isHostOrGuest
+				bind:viewers />
 
 			{#if showEditChannelDrawer}
 				<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />
@@ -291,7 +311,7 @@
 						<label for="chat-drawer" class="drawer-overlay lg:hidden" />
 						<div
 							class="h-full pt-12 lg:p-5 md:w-fit lg:ml-0 md:ml-0 w-max-full mobile-margin lg:drop-shadow-lg">
-							<DrawerChat bind:channel bind:showEditChannelDrawer />
+							<DrawerChat bind:channel bind:showEditChannelDrawer bind:viewers {chatHistory} />
 						</div>
 					</div>
 				</div>

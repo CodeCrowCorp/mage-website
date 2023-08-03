@@ -8,8 +8,9 @@
 	import EmojiPicker from '$lib/components/Channel/Chat/EmojiPicker.svelte'
 	import GifPicker from '$lib/components/Channel/Chat/GifPicker.svelte'
 
-	export let channel: any
-	export let users: any
+	export let channel: any,
+		viewers: any[] = []
+
 	let selectedCommand = 0
 	let selectedUser = 0
 	let inputBox: any = null
@@ -19,14 +20,20 @@
 		$channel_connection === `open-${channel._id}` && $page.data.user?.userId
 	$: isHost = channel.user === $page.data.user?.userId
 
+	$: viewersWithOutHost = viewers.filter(
+		(viewer) => viewer.userId !== channel.user && viewer.userId === 'anon'
+	)
+	$: console.log('viewers : ', viewers)
 	function insert(str: string, index: number, value: string) {
 		return str.substr(0, index) + value + str.substr(index)
 	}
 
 	const sendMessage = () => {
-		if (messageIsCommand) {
-			if (selectedCommand && selectedUser >= 0) {
-				const user = users[selectedUser]
+		if (messageIsCommand && !chatMessage.startsWith('/ai ')) {
+			if (selectedCommand) {
+				const usernameFromMsg = chatMessage.substring(chatMessage.indexOf('@') + 1)
+				const user = viewersWithOutHost.find((viewer: any) => viewer.username === usernameFromMsg)
+				if (!user) return
 				executeCommand(selectedCommand, user.userId)
 			}
 		} else if (!chatMessage.startsWith('/') || chatMessage.startsWith('/ai')) {
@@ -55,17 +62,24 @@
 	}
 
 	const slectCommandfromKey = (key: string) => {
-		if (key === 'ArrowDown' && selectedCommand < 3) {
+		if (key === 'ArrowDown' && selectedCommand < 4) {
 			selectedCommand++
-		} else if (key === 'ArrowUp' && selectedCommand >= 1) {
+		} else if (key === 'ArrowUp' && selectedCommand >= 2) {
 			selectedCommand--
 		}
 	}
 
 	const slectUserfromKey = (key: string) => {
-		if (key === 'ArrowDown' && selectedUser < users.length) {
+		if (selectedUser >= viewersWithOutHost.length - 1) {
+			selectedUser = 0
+			return
+		} else if (selectedUser === 0) {
+			selectedUser = viewersWithOutHost.length - 1
+			return
+		}
+		if (key === 'ArrowDown' && selectedUser < viewersWithOutHost.length - 1) {
 			selectedUser++
-		} else if (key === 'ArrowUp' && selectedUser >= 0) {
+		} else if (key === 'ArrowUp' && selectedUser > 0) {
 			selectedUser--
 		}
 	}
@@ -109,6 +123,7 @@
 	// toggle commands handlers
 
 	const toggleBan = (userId: string) => {
+		if (channel.user === userId) return
 		let isEnabled = false
 		if (!channel.bans.includes(userId)) {
 			channel.bans.push(userId)
@@ -126,6 +141,7 @@
 	}
 
 	const toggleMod = (userId: string) => {
+		if (channel.user === userId) return
 		if (!channel.bans.includes(userId)) {
 			let isEnabled = false
 			if (!channel.mods?.includes(userId)) {
@@ -143,6 +159,7 @@
 	}
 
 	const toggleGuest = (userId: string) => {
+		if (channel.user === userId) return
 		if (!channel.bans.includes(userId)) {
 			let isEnabled = false
 			if (!channel.guests.includes(userId) && channel.guests.length < 9) {
@@ -187,16 +204,14 @@
 	]
 
 	$: messageIsCommand =
-		chatMessage &&
-		chatMessage.startsWith('/') &&
-		/[a-z] @[a-z]/.test(chatMessage.substr(1)) &&
-		chatMessage.startsWith('/ai ')
+		chatMessage && chatMessage.startsWith('/') && /[a-z] @[a-z]/.test(chatMessage.substr(1))
 
 	$: showUsers = chatMessage && chatMessage.endsWith('@')
 	$: showCommandOptions =
 		chatMessage &&
 		chatMessage.startsWith('/') &&
 		!chatMessage.startsWith('/ai ') &&
+		!chatMessage.includes('@') &&
 		(channel.user === $page.data.user?.userId || channel.mods?.includes($page.data.user?.userId)) &&
 		!showUsers
 </script>
@@ -253,12 +268,12 @@
 			</div>
 		{/if}
 
-		{#if users.length > 0 && showUsers}
+		{#if viewersWithOutHost.length > 0 && showUsers}
 			<div
 				class={'dropdown dropdown-top w-full rounded-box bg-white ' +
 					(showUsers ? 'dropdown-open' : '')}>
 				<ul class="dropdown-content menu p-2 shadow bg-base-300 rounded-box w-full">
-					{#each users as user, idx}
+					{#each viewersWithOutHost as user, idx}
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<li
 							on:click={() => {
@@ -293,8 +308,8 @@
 							e.preventDefault()
 							if (showUsers) {
 								if (selectedUser >= 0) {
-									const user = users[selectedUser]
-									chatMessage = chatMessage.replace(/@/, '@' + user.username) + ' '
+									const user = viewersWithOutHost[selectedUser]
+									chatMessage = chatMessage.replace(/@/, '@' + user.username)
 								}
 							} else {
 								if (selectedCommand) {

@@ -1,5 +1,4 @@
 <script lang="ts">
-	// import IconLock from '$lib/assets/icons/IconLock.svelte'
 	// import VirtualList from '@sveltejs/svelte-virtual-list'
 	import LoadingItemTable from '$lib/components/Browse/Sections/LoadingItemTable.svelte'
 	import ItemTable from '$lib/components/Browse/Sections/ItemTable.svelte'
@@ -13,12 +12,12 @@
 	let limit = 100
 	let moreChannels: any[] = []
 	const loadMore = async () => {
-		let endpoint = profileId ? `channels/user?userId=${profileId}?` : 'channels?'
-		const infiniteChannels = await get(`${endpoint}skip=${skip}&limit=${limit}`)
-		if (infiniteChannels?.length) {
-			moreChannels = [...moreChannels, ...infiniteChannels]
-			skip += limit
-		}
+		// let endpoint = profileId ? `channels/user?userId=${profileId}?` : 'channels?'
+		// const infiniteChannels = await get(`${endpoint}skip=${skip}&limit=${limit}`)
+		// if (infiniteChannels?.length) {
+		// 	moreChannels = [...moreChannels, ...infiniteChannels]
+		// 	skip += limit
+		// }
 	}
 </script>
 

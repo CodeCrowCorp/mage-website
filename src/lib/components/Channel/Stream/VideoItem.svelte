@@ -11,6 +11,8 @@
 	import { getColoredRole, setRole } from '$lib/utils'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import { is_feature_stats_enabled } from '$lib/stores/remoteConfigStore'
+	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
+	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 
 	export let video: any, channel: any
 
@@ -48,6 +50,7 @@
 	$: showBanItem =
 		(channel.user === $page.data.user?.userId ||
 			channel?.mods?.includes($page.data.user?.userId)) &&
+		channel.user !== video._id &&
 		video._id !== $page.data.user?.userId &&
 		role !== '🤖 AI'
 
@@ -98,16 +101,30 @@
 			switch (trackType) {
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
-						screenWhip = new WHIPClient(
-							video.screen.webRTC.url,
-							screenElement,
-							video.screen.trackType
-						)
+						const key = video.screen.webRTCPlayback.url + '-' + video._id
+						const existed = getScreen(key)
+						screenWhip =
+							existed ||
+							new WHIPClient(video.screen.webRTC.url, screenElement, video.screen.trackType)
+						if (existed) {
+							existed.videoElement = screenElement
+							screenElement.srcObject = existed.localStream
+							$is_sharing_screen = true
+							isScreenLive = true
+						}
+						addScreen(key, screenWhip)
 						screenWhip.addEventListener(`localStreamStopped-${trackType}`, () => {
 							$is_sharing_screen = false
 							isScreenLive = false
+							removeScreen(key)
 						})
 						screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
+					} else if (!video.screen) {
+						if (screenElement) {
+							screenElement.srcObject = null
+						}
+						$is_sharing_screen = false
+						isScreenLive = false
 					}
 					break
 				case 'webcam':
@@ -122,6 +139,10 @@
 							isWebcamLive = false
 						})
 						webcamWhip.addEventListener(`isWebcamLive`, (ev: any) => (isWebcamLive = ev.detail))
+					} else if (!video.webcam) {
+						if (webcamElement) {
+							webcamElement.srcObject = null
+						}
 					}
 					break
 				case 'audio':
@@ -140,12 +161,19 @@
 		} else {
 			switch (trackType) {
 				case 'screen':
-					if (video.screen) {
-						screenWhep = new WHEPClient(
-							video.screen.webRTCPlayback.url,
-							screenElement,
-							video.screen.trackType
-						)
+					if (video.screen && screenElement) {
+						const key = video.screen.webRTCPlayback.url + '-' + video._id
+						const existed = getScreen(key)
+						screenWhep =
+							existed ||
+							new WHEPClient(video.screen.webRTCPlayback.url, screenElement, video.screen.trackType)
+						if (existed) {
+							existed.videoElement = screenElement
+							screenElement.srcObject = existed.stream
+							isScreenLive = true
+						}
+
+						addScreen(key, screenWhep)
 						screenElement.muted = false
 						screenElement.play()
 						screenWhep.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
@@ -155,7 +183,7 @@
 					}
 					break
 				case 'webcam':
-					if (video.webcam) {
+					if (video.webcam && webcamElement) {
 						webcamWhep = new WHEPClient(
 							video.webcam.webRTCPlayback.url,
 							webcamElement,
@@ -168,7 +196,7 @@
 					}
 					break
 				case 'audio':
-					if (video.audio) {
+					if (video.audio && audioElement) {
 						audioWhep = new WHEPClient(
 							video.audio.webRTCPlayback.url,
 							audioElement,
@@ -198,10 +226,6 @@
 
 	onMount(() => {
 		isGuest = channel?.guests?.includes(video._id)
-		screenElement = document.getElementById(`screen-${video._id}`) as HTMLVideoElement
-		webcamElement = document.getElementById(`webcam-${video._id}`) as HTMLVideoElement
-		audioElement = document.getElementById(`audio-${video._id}`) as HTMLAudioElement
-
 		if (screenElement) {
 			screenElement.addEventListener('dblclick', (event: any) => {
 				if (document.fullscreenElement) {
@@ -231,20 +255,19 @@
 	})
 
 	is_sharing_screen.subscribe((value) => {
-		//prevents duplicate calls from WHIPClient
-		if (value === false && screenElement?.srcObject) {
+		if (value === false) {
 			screenWhip?.disconnectStream()
 		}
 	})
 
 	is_sharing_webcam.subscribe((value) => {
-		if (value === false && webcamElement?.srcObject) {
+		if (value === false) {
 			webcamWhip?.disconnectStream()
 		}
 	})
 
 	is_sharing_audio.subscribe((value) => {
-		if (value === false && audioElement?.srcObject) {
+		if (value === false) {
 			audioWhip?.disconnectStream()
 		}
 	})
@@ -323,7 +346,7 @@
 		<img
 			src={video.avatar}
 			alt=""
-			class="absolute inset-0 w-24 md:w-24 mask {video?.isPaidPlan
+			class="absolute inset-0 w-24 md:w-24 mask {video.planDetails?.planTier > 1
 				? 'mask-hexagon'
 				: 'mask-squircle'} object-cover m-auto" />
 		<div class="absolute inset-0">
@@ -335,7 +358,12 @@
 					{formattedTime}
 				</span>
 			{/if}
-			<video id={`screen-${video._id}`} autoplay muted class="rounded-md w-full h-full" />
+			<video
+				bind:this={screenElement}
+				id={`screen-${video._id}`}
+				autoplay
+				muted
+				class="rounded-md w-full h-full" />
 			<div
 				use:draggable={{ bounds: 'parent' }}
 				on:mousedown={onMouseDown}
@@ -343,15 +371,28 @@
 				class={animate +
 					' absolute ' +
 					(!isScreenLive ? 'w-full bottom-0 left-0 h-full' : 'w-1/4 bottom-0 right-0')}>
-				<video id={`webcam-${video._id}`} autoplay muted class="rounded-md h-full w-full" />
+				<video
+					bind:this={webcamElement}
+					id={`webcam-${video._id}`}
+					autoplay
+					muted
+					class="rounded-md h-full w-full" />
 			</div>
-			<video id={`audio-${video._id}`} autoplay muted class="rounded-md w-0 h-0" />
+			<video bind:this={audioElement} autoplay muted class="rounded-md w-0 h-0" />
 			<div class="absolute left-2 bottom-2 rounded-md dropdown">
 				<label
 					tabindex="0"
-					class="{coloredRole.textColor} bg-base-100 btn btn-sm normal-case {speakingValue > 10
+					class="{coloredRole.textColor} bg-base-100 btn btn-sm normal-case flex gap-1 {speakingValue >
+					10
 						? 'btn-outline'
-						: 'border-transparent'}">@{video.username}</label>
+						: 'border-transparent'}"
+					>@{video.username}
+					{#if video.planDetails?.planTier > 1}
+						<div class="text-accent font-bold">
+							<IconDrawerVerification />
+						</div>
+					{/if}
+				</label>
 				{#if showBanItem || showRoleItem}
 					<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 						{#if showRoleItem && !channel.bans.includes(video._id)}

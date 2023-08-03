@@ -7,47 +7,43 @@
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
 	import { del, get, put } from '$lib/api'
+	import { createEffect } from '$lib/utils'
+	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 
 	export let channel: any = undefined,
 		showEditChannelDrawer: boolean = false
 
-	let host: any = {},
-		isHost: boolean = false,
-		isSubscribing: boolean = false,
+	const useEffect = createEffect()
+
+	let isHost: boolean = false,
+		isFollowing: boolean = false,
 		isFavorite: boolean = false
 
-	$: if (channel) {
-		getHostAndRelationship()
-	}
-
-	const getHostAndRelationship = async () => {
-		host = await get(`users/search/id?userId=${channel.user}`)
+	const getHostRelationship = async () => {
 		isHost = channel.user === $page?.data?.user?.userId
 		if ($page.data.user?.userId) {
-			const relationship = await get(`subscribes/relationship?source=${channel.user}`, {
+			const relationship = await get(`follows/relationship?source=${channel.user}`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
-			isSubscribing = relationship?.isInterested
+			isFollowing = relationship?.isFollowing
 		}
 	}
 
 	onMount(async () => {
-		if (!$page.data.user?.userId) return
-		await getHostAndRelationship()
 		isFavorite = $page.data.user?.user?.favChannelIds?.includes(channel._id)
 	})
 
-	const toggleSubscribe = async () => {
-		isSubscribing = !isSubscribing
-		if (isSubscribing) {
+	const toggleFollow = async () => {
+		isFollowing = !isFollowing
+		if (isFollowing) {
 			await put(
-				`subscribes`,
+				`follows`,
 				{ source1: channel.user, source2: $page.data.user?.userId },
 				{ userId: $page.data.user?.userId, token: $page.data.user?.token }
 			)
 		} else {
-			await del(`subscribes?source1=${channel.user}&source2=${$page.data.user?.userId}`, {
+			await del(`follows?source1=${channel.user}&source2=${$page.data.user?.userId}`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
@@ -69,6 +65,10 @@
 			})
 		}
 	}
+
+	$: useEffect(() => {
+		getHostRelationship()
+	}, [channel?._id])
 </script>
 
 <div class="menu dropdown dropdown-bottom z-10">
@@ -116,19 +116,27 @@
 			</a>
 		</li>
 		<li>
-			<a href="/profile/{host?.username}">
+			<a href="/profile/{channel.userDetails?.username}">
 				<div class="flex flex-wrap gap-2">
 					<div class="avatar online">
-						<div class="w-12 mask {host?.isPaidPlan ? 'mask-hexagon' : 'mask-squircle'}">
-							<img src={host?.avatar} alt="" />
+						<div
+							class="w-12 mask {channel.planDetails?.planTier > 1
+								? 'mask-hexagon'
+								: 'mask-squircle'}">
+							<img src={channel.userDetails?.avatar} alt="" />
 						</div>
 					</div>
 					<div>
-						<div class="col-span-3 tooltip flex" data-tip={host?.displayName}>
-							<p class="truncate">{host?.displayName}</p>
+						<div class="col-span-3 tooltip flex" data-tip={channel.userDetails?.displayName}>
+							<p class="truncate">{channel.userDetails?.displayName}</p>
 						</div>
-						<div class="col-span-3 tooltip flex" data-tip="@{host?.username}">
-							<p class=" text-pink-500 truncate">@{host?.username}</p>
+						<div class="col-span-3 tooltip flex gap-1" data-tip="@{channel.userDetails?.username}">
+							<p class="truncate">@{channel.userDetails?.username}</p>
+							{#if channel.planDetails?.planTier > 1}
+								<div class="text-accent font-bold">
+									<IconDrawerVerification />
+								</div>
+							{/if}
 						</div>
 					</div>
 				</div>
@@ -138,7 +146,7 @@
 			<div class="grid grid-cols-5 gap-2">
 				<label
 					for="edit-channel-drawer"
-					class="btn btn-neutral text-white col-span-4 flex"
+					class="btn btn-neutral text-white col-span-4 flex tooltip font-normal normal-case"
 					data-tip="Edit channel"
 					on:click={() => (showEditChannelDrawer = true)}>
 					Edit channel
@@ -154,12 +162,12 @@
 			<div class="grid grid-cols-5 gap-2">
 				<button
 					disabled={!$page.data.user?.userId}
-					class="btn btn-secondary {isSubscribing
+					class="btn btn-secondary {isFollowing
 						? 'btn-outline'
 						: ''} col-span-4 normal-case tooltip tooltip-top flex"
-					data-tip={isSubscribing ? 'Unsubscribe from host' : 'Subscribe to host'}
-					on:click={() => toggleSubscribe()}>
-					{isSubscribing ? 'Unsubscribe' : 'Subscribe'}
+					data-tip={isFollowing ? 'Unfollow host' : 'Follow host'}
+					on:click={() => toggleFollow()}>
+					{isFollowing ? 'Unfollow' : 'Follow'}
 				</button>
 				<button
 					disabled={!$page.data.user?.userId}

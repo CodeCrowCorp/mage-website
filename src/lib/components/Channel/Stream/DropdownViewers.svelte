@@ -29,8 +29,8 @@
 		var parsedMsg = JSON.parse(value)
 		if (parsedMsg.eventName === `channel-paginated-users-${channel?._id}`) {
 			let users = parsedMsg.users.map((user: any) => {
-				user.userId = user.userId || 'guest'
-				user.username = user.username || 'guest'
+				user.userId = user.userId || 'anonymous'
+				user.username = user.username || 'anonymous'
 				const role = setRole({
 					userId: user.userId,
 					channel,
@@ -40,7 +40,13 @@
 				user.coloredRole = getColoredRole(role)
 				return user
 			})
-			viewers = users
+			viewers = users.reduce((acc: any, cur: any) => {
+				let username = cur.username.toLowerCase()
+				if (!acc.find((viewer: any) => viewer.username.toLowerCase() === username)) {
+					acc.push(cur)
+				}
+				return acc
+			}, [])
 			cursor = parsedMsg.cursor
 		}
 

@@ -2,28 +2,31 @@
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
 	import { goto } from '$app/navigation'
 	import { category_list } from '$lib/stores/channelStore'
+	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	export let channel: any = {}
-
-	let thumbnailImage = channel.thumbnail || '/placeholder/programming-placeholder.jpg';
-
-	console.log(thumbnailImage)
 </script>
 
 <tr
 	class="cursor-pointer hover:btn-ghost border border-transparent"
 	on:click|preventDefault={() => goto(`/channel/${channel._id}`)}>
-	<!-- <ul class="menu">
-								<li> -->
 	<td>
 		<div class="flex items-center space-x-2 my-3 pl-3">
 			<div class="avatar">
-				<div class="w-12 mask {channel.isPaidPlan ? 'mask-hexagon' : 'mask-squircle'}">
-					<img src={thumbnailImage} alt="" />
+				<div
+					class="w-12 mask {channel.planDetails?.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
+					<img src={channel.userDetails.avatar} alt="" />
 				</div>
 			</div>
 			<div>
-				<div class="font-bold">{channel.createdByDisplayName || ''}</div>
-				<div class="text-sm text-pink-500">@{channel.createdByUsername || ''}</div>
+				<div class="font-bold">{channel.userDetails.displayName || ''}</div>
+				<div class="text-sm flex gap-1">
+					@{channel.userDetails.username || ''}
+					{#if channel.planDetails?.planTier > 1}
+						<div class="text-accent font-bold">
+							<IconDrawerVerification />
+						</div>
+					{/if}
+				</div>
 			</div>
 		</div>
 	</td>
@@ -70,6 +73,4 @@
 			{/if}
 		</div>
 	</td>
-	<!-- </li>
-							</ul> -->
 </tr>

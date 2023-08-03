@@ -12,7 +12,7 @@
 	import LoginPrompt from '$lib/components/Global/LoginPrompt.svelte'
 	import DrawerMain from '$lib/components/Global/DrawerMain.svelte'
 	import { onMount } from 'svelte'
-	import { get } from '$lib/api'
+	import { get, put } from '$lib/api'
 	import { emitUserConnection, initPlatformSocket, platformSocket } from '$lib/websocket'
 	import { platform_connection, platform_message } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
@@ -20,10 +20,9 @@
 	import { isOnline } from '$lib/stores/userStore'
 	import { current_theme } from '$lib/stores/helperStore'
 	import {
-		is_feature_premium_page_enabled,
-		is_feature_subscribes_enabled,
 		is_feature_video_responses_enabled,
-		is_feature_stats_enabled
+		is_feature_stats_enabled,
+		is_feature_affiliate_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import { env } from '$env/dynamic/public'
 	import { user_role } from '$lib/stores/authStore'
@@ -46,10 +45,9 @@
 
 	onMount(async () => {
 		$current_theme = localStorage.getItem('theme') || 'dark'
-		$is_feature_premium_page_enabled = env.PUBLIC_FEATURE_PREMIUM_PAGE === 'true'
 		$is_feature_video_responses_enabled = env.PUBLIC_FEATURE_VIDEO_RESPONSES === 'true'
-		$is_feature_subscribes_enabled = env.PUBLIC_FEATURE_SUBSCRIBES === 'true'
 		$is_feature_stats_enabled = env.PUBLIC_FEATURE_STATS === 'true'
+		$is_feature_affiliate_enabled = env.PUBLIC_FEATURE_AFFILIATE === 'true'
 		await handleWebsocket()
 		if (!$category_list.length) {
 			$category_list = imageUrlsJson

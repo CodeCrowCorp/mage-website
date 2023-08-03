@@ -15,18 +15,20 @@
 		is_sharing_audio,
 		is_sharing_screen,
 		is_sharing_webcam,
-		updateVideoItems,
-		video_items
+		updateVideoItems
 	} from '$lib/stores/streamStore'
 	import { channel_connection } from '$lib/stores/websocketStore'
 	import { onDestroy, onMount } from 'svelte'
 
 	export let isHostOrGuest: boolean = false,
-		channel: any
+		channel: any,
+		isScrollable: boolean = false
 
 	$: isChannelSocketConnected =
 		$channel_connection === `open-${$page.params.channelId}` && $page.data.user?.userId
-	$: videoItemIsActive = $video_items?.some((video: any) => video._id === $page.data.user?.userId)
+	$: videoItemIsActive = channel.videoItems.some(
+		(video: any) => video._id === $page.data.user?.userId
+	)
 
 	let screenUid: string = '',
 		webcamUid: string = '',
@@ -92,7 +94,7 @@
 			}
 		})
 		screenUid = liveInput.uid
-		$video_items = updateVideoItems($video_items, [liveInput])
+		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
 		emitAction({
 			channelSocket: channel?.socket,
 			channelId: $page.params.channelId,
@@ -110,7 +112,7 @@
 			trackType: 'screen',
 			inputId: screenUid
 		})
-		$video_items = updateVideoItems($video_items, [
+		channel.videoItems = updateVideoItems(channel.videoItems, [
 			{ _id: $page.data.user.userId, trackType: 'screen', isTrackActive: false }
 		])
 		emitAction({
@@ -142,7 +144,7 @@
 			}
 		})
 		webcamUid = liveInput.uid
-		$video_items = updateVideoItems($video_items, [liveInput])
+		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
 		emitAction({
 			channelSocket: channel?.socket,
 			channelId: $page.params.channelId,
@@ -160,7 +162,7 @@
 			trackType: 'webcam',
 			inputId: webcamUid
 		})
-		$video_items = updateVideoItems($video_items, [
+		channel.videoItems = updateVideoItems(channel.videoItems, [
 			{ _id: $page.data.user.userId, trackType: 'webcam', isTrackActive: false }
 		])
 		emitAction({
@@ -192,7 +194,7 @@
 			}
 		})
 		audioUid = liveInput.uid
-		$video_items = updateVideoItems($video_items, [liveInput])
+		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
 		emitAction({
 			channelSocket: channel?.socket,
 			channelId: $page.params.channelId,
@@ -210,7 +212,7 @@
 			trackType: 'audio',
 			inputId: audioUid
 		})
-		$video_items = updateVideoItems($video_items, [
+		channel.videoItems = updateVideoItems(channel.videoItems, [
 			{ _id: $page.data.user.userId, trackType: 'audio', isTrackActive: false }
 		])
 		emitAction({
@@ -309,3 +311,11 @@
 		<IconChatDrawer />
 	</button>
 </div>
+<input
+	type="checkbox"
+	class="toggle toggle-primary toggle-xs tooltip absolute right-20 hidden sm:block"
+	data-tip="Lock scroll"
+	bind:checked={isScrollable}
+	on:click={() => {
+		isScrollable = !isScrollable
+	}} />
