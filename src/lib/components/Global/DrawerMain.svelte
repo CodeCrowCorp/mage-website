@@ -165,15 +165,32 @@
 					Creator Space</a>
 			</li>
 		{/if}
-		{#if currentUser && $is_feature_affiliate_enabled}
+		{#if $is_feature_affiliate_enabled}
 			<li>
-				<a href="/affiliate" class="custom-menu-item text-accent hover:text-accent font-medium">
-					<IconDrawerVerification />
-					<span class={isChannelPage ? 'md:hidden' : ''}>Affiliate</span>
-					{#if !isChannelPage}
-						<span class="badge badge-accent text-black">New</span>
-					{/if}
-				</a>
+				{#if currentUser}
+					<a href="/affiliate" class="custom-menu-item text-accent hover:text-accent font-medium">
+						<IconDrawerVerification />
+						<span class={isChannelPage ? 'md:hidden' : ''}>Affiliate</span>
+						{#if !isChannelPage}
+							<span class="badge badge-accent text-black">New</span>
+						{/if}
+					</a>
+				{:else}
+					<button
+						class="custom-menu-item text-accent hover:text-accent font-medium"
+						on:click={() => {
+							$is_login_modal_open = true
+							if (nav_drawer.checked) {
+								nav_drawer.checked = false
+							}
+						}}>
+						<IconDrawerVerification />
+						<span class={isChannelPage ? 'md:hidden' : ''}>Affiliate</span>
+						{#if !isChannelPage}
+							<span class="badge badge-accent text-black">New</span>
+						{/if}
+					</button>
+				{/if}
 			</li>
 		{/if}
 		{#if $is_feature_apps_enabled}
