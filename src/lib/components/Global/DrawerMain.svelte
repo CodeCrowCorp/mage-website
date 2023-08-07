@@ -17,7 +17,8 @@
 	import { user_role } from '$lib/stores/authStore'
 	import {
 		is_feature_video_responses_enabled,
-		is_feature_affiliate_enabled
+		is_feature_affiliate_enabled,
+		is_feature_apps_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
 	import { is_login_modal_open } from '$lib/stores/helperStore'
@@ -27,6 +28,7 @@
 	import { get } from '$lib/api'
 	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
+	import IconDrawerGetApps from '$lib/assets/icons/drawer/IconDrawerGetApps.svelte'
 
 	export var nav_drawer: HTMLInputElement
 
@@ -170,6 +172,17 @@
 					<span class={isChannelPage ? 'md:hidden' : ''}>Affiliate</span>
 					{#if !isChannelPage}
 						<span class="badge badge-accent text-black">New</span>
+					{/if}
+				</a>
+			</li>
+		{/if}
+		{#if $is_feature_apps_enabled}
+			<li>
+				<a class="custom-menu-item" href="https://codecrow.io" target="_blank">
+					<IconDrawerGetApps />
+					<span class={isChannelPage ? 'md:hidden' : ''}>Get Apps</span>
+					{#if !isChannelPage}
+						<span class="badge badge-secondary">New</span>
 					{/if}
 				</a>
 			</li>
