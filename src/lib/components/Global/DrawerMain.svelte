@@ -17,7 +17,8 @@
 	import { user_role } from '$lib/stores/authStore'
 	import {
 		is_feature_video_responses_enabled,
-		is_feature_affiliate_enabled
+		is_feature_affiliate_enabled,
+		is_feature_apps_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
 	import { is_login_modal_open } from '$lib/stores/helperStore'
@@ -27,6 +28,7 @@
 	import { get } from '$lib/api'
 	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
+	import IconDrawerGetApps from '$lib/assets/icons/drawer/IconDrawerGetApps.svelte'
 
 	export var nav_drawer: HTMLInputElement
 
@@ -163,13 +165,41 @@
 					Creator Space</a>
 			</li>
 		{/if}
-		{#if currentUser && $is_feature_affiliate_enabled}
+		{#if $is_feature_affiliate_enabled}
 			<li>
-				<a href="/affiliate" class="custom-menu-item text-accent hover:text-accent font-medium">
-					<IconDrawerVerification />
-					<span class={isChannelPage ? 'md:hidden' : ''}>Affiliate</span>
+				{#if currentUser}
+					<a href="/affiliate" class="custom-menu-item text-accent hover:text-accent font-medium">
+						<IconDrawerVerification />
+						<span class={isChannelPage ? 'md:hidden' : ''}>Affiliate</span>
+						{#if !isChannelPage}
+							<span class="badge badge-accent text-black">New</span>
+						{/if}
+					</a>
+				{:else}
+					<button
+						class="custom-menu-item text-accent hover:text-accent font-medium"
+						on:click={() => {
+							$is_login_modal_open = true
+							if (nav_drawer.checked) {
+								nav_drawer.checked = false
+							}
+						}}>
+						<IconDrawerVerification />
+						<span class={isChannelPage ? 'md:hidden' : ''}>Affiliate</span>
+						{#if !isChannelPage}
+							<span class="badge badge-accent text-black">New</span>
+						{/if}
+					</button>
+				{/if}
+			</li>
+		{/if}
+		{#if $is_feature_apps_enabled}
+			<li>
+				<a class="custom-menu-item" href="https://codecrow.io" target="_blank">
+					<IconDrawerGetApps />
+					<span class={isChannelPage ? 'md:hidden' : ''}>Get Apps</span>
 					{#if !isChannelPage}
-						<span class="badge badge-accent text-black">New</span>
+						<span class="badge badge-secondary">New</span>
 					{/if}
 				</a>
 			</li>

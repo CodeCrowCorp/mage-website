@@ -22,7 +22,9 @@
 	import {
 		is_feature_video_responses_enabled,
 		is_feature_stats_enabled,
-		is_feature_affiliate_enabled
+		is_feature_affiliate_enabled,
+		is_feature_apps_enabled,
+		is_feature_calendar_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import { env } from '$env/dynamic/public'
 	import { user_role } from '$lib/stores/authStore'
@@ -48,6 +50,8 @@
 		$is_feature_video_responses_enabled = env.PUBLIC_FEATURE_VIDEO_RESPONSES === 'true'
 		$is_feature_stats_enabled = env.PUBLIC_FEATURE_STATS === 'true'
 		$is_feature_affiliate_enabled = env.PUBLIC_FEATURE_AFFILIATE === 'true'
+		$is_feature_apps_enabled = env.PUBLIC_FEATURE_APPS === 'true'
+		$is_feature_calendar_enabled = env.PUBLIC_FEATURE_CALENDAR === 'true'
 		await handleWebsocket()
 		if (!$category_list.length) {
 			$category_list = imageUrlsJson

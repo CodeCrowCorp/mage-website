@@ -65,7 +65,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		} else {
 			if (
 				pathname === '/maintenance' ||
-				(pathname === '/affiliate' && env.PUBLIC_FEATURE_AFFILIATE === 'false')
+				(pathname === '/affiliate' && (env.PUBLIC_FEATURE_AFFILIATE === 'false' || !user))
 			) {
 				throw redirect(302, '/browse')
 			} else {
