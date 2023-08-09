@@ -4,8 +4,12 @@
 	import IconProfileStreamDuration from '$lib/assets/icons/profile/IconProfileStreamDuration.svelte'
 	// import IconProfileSponsor from '$lib/assets/icons/profile/IconProfileSponsor.svelte'
 	export let totalPageViews: Promise<any>,
+		viewsMonthlyIncr: Promise<any>,
 		highestAndCurrentStreak: Promise<any>,
-		totalAndAvgHours: Promise<any>
+		streakMonthlyIncr: Promise<any>,
+		totalAndAvgHours: Promise<any>,
+		totalHoursMonthlyIncr: Promise<any>,
+		avgHours: Promise<any>
 </script>
 
 <div class="tooltip" data-tip="level 1">
@@ -17,8 +21,8 @@
 			<IconProfileViews />
 		</div>
 		<div class="stat-title">Page Views</div>
-		<div class="stat-value text-primary">2.6M</div>
-		<div class="stat-desc">21% more than last month</div>
+		<div class="stat-value text-primary">{totalPageViews[0]?.count}</div>
+		<div class="stat-desc">{viewsMonthlyIncr} more than last month</div>
 	</div>
 
 	<div class="stat">
@@ -26,8 +30,8 @@
 			<IconProfileStreak />
 		</div>
 		<div class="stat-title">Highest / Current Streak</div>
-		<div class="stat-value text-secondary">25 / 5</div>
-		<div class="stat-desc">21% more than last month</div>
+		<div class="stat-value text-secondary">{highestAndCurrentStreak.highest} / {highestAndCurrentStreak.current}</div>
+		<div class="stat-desc">{streakMonthlyIncr.monthlyChange} more than last month</div>
 	</div>
 
 	<div class="stat">
@@ -35,8 +39,8 @@
 			<IconProfileStreamDuration />
 		</div>
 		<div class="stat-title">Total / Avg Hours</div>
-		<div class="stat-value text-secondary">2,500 / 8</div>
-		<div class="stat-desc">21% more than last month</div>
+		<div class="stat-value text-secondary">{totalAndAvgHours} / {avgHours}</div>
+		<div class="stat-desc">{totalHoursMonthlyIncr.monthlyChange} more than last month</div>
 	</div>
 
 	<!-- <div class="stat">

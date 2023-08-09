@@ -35,8 +35,13 @@
 						profileId={data.profile?._id}
 						channels={data.lazy.channels}
 						totalPageViews={data.lazy.totalPageViews}
+						viewsMonthlyIncr={data.lazy.viewsMonthlyIncr}
 						highestAndCurrentStreak={data.lazy.highestAndCurrentStreak}
-						totalAndAvgHours={data.lazy.totalHours} />
+						streakMonthlyIncr={data.lazy.streakMonthlyIncr}
+						totalAndAvgHours={data.lazy.totalHours}
+						totalHoursMonthlyIncr={data.lazy.totalHoursMonthlyIncr}
+						avgHours={data.lazy.avgHours} />
+						
 				</div>
 			</div>
 		</div>

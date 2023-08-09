@@ -10,7 +10,11 @@
 		channels: Promise<any>,
 		totalPageViews: Promise<any>,
 		highestAndCurrentStreak: Promise<any>,
-		totalAndAvgHours: Promise<any>
+		totalAndAvgHours: Promise<any>,
+		viewsMonthlyIncr : Promise<any>,
+		streakMonthlyIncr : Promise<any>,
+		totalHoursMonthlyIncr : Promise<any>,
+		avgHours : Promise<any>
 
 	let tabs: string[] = []
 	let activeTab = 0
@@ -41,7 +45,7 @@
 			</div>
 			{#if $is_feature_stats_enabled}
 				<div class="grid h-full" class:hidden={activeTab != tabs.indexOf('Stats')}>
-					<Stats {totalPageViews} {highestAndCurrentStreak} {totalAndAvgHours} />
+					<Stats {avgHours} {viewsMonthlyIncr} {streakMonthlyIncr} {totalHoursMonthlyIncr} {totalPageViews} {highestAndCurrentStreak} {totalAndAvgHours} />
 				</div>
 			{/if}
 		</div>
