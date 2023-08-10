@@ -7,14 +7,14 @@
 	import { env } from '$env/dynamic/public'
 
 	export let profileId: string = '',
-		channels: Promise<any>,
-		totalPageViews: Promise<any>,
-		highestAndCurrentStreak: Promise<any>,
-		totalAndAvgHours: Promise<any>,
-		viewsMonthlyIncr : Promise<any>,
-		streakMonthlyIncr : Promise<any>,
-		totalHoursMonthlyIncr : Promise<any>,
-		avgHours : Promise<any>
+		channels: any,
+		totalPageViews: any,
+		highestAndCurrentStreak: any,
+		totalAndAvgHours: any,
+		viewsMonthlyIncr : any,
+		streakMonthlyIncr : any,
+		totalHoursMonthlyIncr : any,
+		avgHours : any
 
 	let tabs: string[] = []
 	let activeTab = 0

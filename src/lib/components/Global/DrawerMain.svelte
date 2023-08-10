@@ -35,7 +35,7 @@
 	let progressBarLevel = 1
 	let progressBarValue = 0
 	let progressBarColor = colorFromLevel(1)
-	let streakCount: number = 0
+	let streakCount: any = {current: 0, highest: 0}
 	let hoursStreamed: number = 0
 	let totalViews: number = 0
 	let hoursMonthlyIncr: number = 0
@@ -130,10 +130,10 @@
 								{/if}
 							</div>
 							<div class="flex gap-4 {isChannelPage ? 'md:hidden' : ''}">
-								<div class="flex gap-1 tooltip" data-tip="{streakCount} day streak">
+								<div class="flex gap-1 tooltip" data-tip="{streakCount.current} day streak">
 									<IconDrawerStreak />
 									<p class="text-start">
-										{streakCount} d
+										{streakCount.current} d
 									</p>
 								</div>
 								<div class="flex gap-1 tooltip" data-tip="{hoursStreamed} hours streamed today">
