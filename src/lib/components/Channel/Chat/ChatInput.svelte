@@ -7,6 +7,7 @@
 	import { channel_connection } from '$lib/stores/websocketStore'
 	import EmojiPicker from '$lib/components/Channel/Chat/EmojiPicker.svelte'
 	import GifPicker from '$lib/components/Channel/Chat/GifPicker.svelte'
+	import { is_login_modal_open } from '$lib/stores/helperStore'
 
 	export let channel: any,
 		viewers: any[] = []
@@ -16,9 +17,9 @@
 	let inputBox: any = null
 
 	$: chatMessage = ''
-	$: isChannelSocketConnected =
-		$channel_connection === `open-${channel._id}` && $page.data.user?.userId
+	$: isChannelSocketConnected = $channel_connection === `open-${channel._id}`
 	$: isHost = channel.user === $page.data.user?.userId
+	$: $page.data.user?.userId
 
 	$: viewersWithOutHost = viewers.filter(
 		(viewer) => viewer.userId !== channel.user && viewer.userId === 'anon'
@@ -298,6 +299,11 @@
 				disabled />
 		{:else}
 			<textarea
+				on:click={() => {
+					if (!$page.data.user?.userId) {
+						$is_login_modal_open = true
+					}
+				}}
 				on:keydown={(e) => {
 					if (showCommandOptions || showUsers) {
 						if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {

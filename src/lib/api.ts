@@ -1,4 +1,3 @@
-import { error } from '@sveltejs/kit'
 import { env } from '$env/dynamic/public'
 
 const base = env.PUBLIC_API_URL
@@ -19,11 +18,10 @@ async function send({
 	const opts: any = { method, headers: {} }
 
 	if (data) {
-		if(isImage){
+		if (isImage) {
 			opts.headers['Content-Type'] = 'multipart/form-data'
 			opts.body = data
-		}
-		else{
+		} else {
 			opts.headers['Content-Type'] = 'application/json'
 			opts.body = JSON.stringify(data)
 		}
