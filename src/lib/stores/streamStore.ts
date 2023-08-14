@@ -1,6 +1,7 @@
 import { writable, type Writable } from 'svelte/store'
 import { env } from '$env/dynamic/public'
 
+export const is_sharing_obs: Writable<boolean | undefined> = writable(undefined)
 export const is_sharing_screen: Writable<boolean | undefined> = writable(undefined)
 export const is_sharing_webcam: Writable<boolean | undefined> = writable(undefined)
 export const is_sharing_audio: Writable<boolean | undefined> = writable(undefined)
@@ -12,6 +13,9 @@ const updateVideoItems = (videoItems: any, liveInputs: any[]) => {
 			liveInputs.forEach((liveInput: any) => {
 				if (video._id === liveInput._id) {
 					switch (liveInput.trackType) {
+						case 'obs':
+							video.obs = liveInput.isTrackActive ? liveInput : null
+							break
 						case 'screen':
 							// isTrackActive required for real-time dismissal
 							video.screen = liveInput.isTrackActive ? liveInput : null

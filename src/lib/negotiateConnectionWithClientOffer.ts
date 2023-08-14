@@ -78,7 +78,7 @@ async function waitToCompleteICEGathering(peerConnection: RTCPeerConnection) {
 		setTimeout(function () {
 			resolve(peerConnection.localDescription)
 		}, 1000)
-		peerConnection.onicegatheringstatechange = (ev) =>
+		peerConnection.onicegatheringstatechange = () =>
 			peerConnection.iceGatheringState === 'complete' && resolve(peerConnection.localDescription)
 	})
 }

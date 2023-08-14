@@ -2,7 +2,7 @@
 	import DrawerChat from '$lib/components/Channel/Chat/DrawerChat.svelte'
 	import StreamContainer from '$lib/components/Channel/Stream/StreamContainer.svelte'
 	import { onDestroy, onMount } from 'svelte'
-	import { get, del } from '$lib/api'
+	import { get, del, post } from '$lib/api'
 	import {
 		emitChatHistoryToChannel,
 		initChannelSocket,
@@ -56,6 +56,16 @@
 		await loadChannel()
 		await handleWebsocket()
 		await loadMoreChannels()
+		if (channel?.user !== $page.data.user?.userId) {
+			await post(`stats/profile/views`, {
+				view: {
+					type: 'view',
+					userid: $page.data.user?.userId,
+					profile: 'channel',
+					profileId: channel?._id
+				}
+			})
+		}
 		$is_chat_drawer_destroy = false
 		setTimeout(() => {
 			$is_chat_drawer_open = true

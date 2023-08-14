@@ -7,6 +7,7 @@
 	import { channel_connection } from '$lib/stores/websocketStore'
 	import EmojiPicker from '$lib/components/Channel/Chat/EmojiPicker.svelte'
 	import GifPicker from '$lib/components/Channel/Chat/GifPicker.svelte'
+	import { is_login_modal_open } from '$lib/stores/helperStore'
 
 	export let channel: any,
 		viewers: any[] = []
@@ -16,14 +17,13 @@
 	let inputBox: any = null
 
 	$: chatMessage = ''
-	$: isChannelSocketConnected =
-		$channel_connection === `open-${channel._id}` && $page.data.user?.userId
+	$: isChannelSocketConnected = $channel_connection === `open-${channel._id}`
 	$: isHost = channel.user === $page.data.user?.userId
 
 	$: viewersWithOutHost = viewers.filter(
 		(viewer) => viewer.userId !== channel.user && viewer.userId === 'anon'
 	)
-	$: console.log('viewers : ', viewers)
+
 	function insert(str: string, index: number, value: string) {
 		return str.substr(0, index) + value + str.substr(index)
 	}
@@ -225,7 +225,7 @@
 		on:click={() => {
 			if (isHost) toggleAIChat()
 		}}
-		disabled={!isChannelSocketConnected}>
+		disabled={!isChannelSocketConnected || !$page.data.user?.userId}>
 		<IconChatAI />
 		<span class="sr-only">Enable AI</span>
 	</button>
@@ -236,7 +236,7 @@
 		class="btn btn-neutral text-white border-none tooltip font-normal normal-case"
 		data-tip="Code snippet"
 		on:click={makeCodeSnippet}
-		disabled={!isChannelSocketConnected}>
+		disabled={!isChannelSocketConnected || !$page.data.user?.userId}>
 		<IconChatCode />
 		<span class="sr-only">Add code snippet</span>
 	</button>
@@ -291,13 +291,19 @@
 	</div>
 
 	<div class="flex items-center py-2 rounded-lg">
-		{#if !isChannelSocketConnected || channel.bans?.includes($page.data.user.userId)}
+		{#if !isChannelSocketConnected || channel.bans?.includes($page.data.user?.userId)}
 			<input
 				class="animate-pulse block mx-1 p-2.5 w-full text-sm textarea textarea-bordered textarea-secondary"
 				placeholder="Disabled"
 				disabled />
 		{:else}
 			<textarea
+				readonly={!$page.data.user?.userId}
+				on:click={() => {
+					if (!$page.data.user?.userId) {
+						$is_login_modal_open = true
+					}
+				}}
 				on:keydown={(e) => {
 					if (showCommandOptions || showUsers) {
 						if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {

@@ -6,11 +6,15 @@
 	import { onMount } from 'svelte'
 	import { env } from '$env/dynamic/public'
 
-	export let profileId: string = '',
-		channels: Promise<any>,
-		totalPageViews: Promise<any>,
-		highestAndCurrentStreak: Promise<any>,
-		totalAndAvgHours: Promise<any>
+	export let profile: any,
+		channels: any,
+		totalPageViews: any,
+		viewsMonthlyIncr: any,
+		highestAndCurrentStreak: any,
+		totalAndAvgHours: any,
+		streakMonthlyIncr: any,
+		totalHoursMonthlyIncr: any,
+		avgHours: any
 
 	let tabs: string[] = []
 	let activeTab = 0
@@ -19,6 +23,7 @@
 		$is_feature_stats_enabled = env.PUBLIC_FEATURE_STATS === 'true'
 		tabs = ['Channels', 'Followers']
 		if ($is_feature_stats_enabled) tabs.push('Stats')
+		console.log('got here----', JSON.stringify(profile))
 	})
 </script>
 
@@ -34,14 +39,22 @@
 		</div>
 		<div class="w-full px-4">
 			<div class="flex-auto h-full text-left" class:hidden={activeTab != tabs.indexOf('Channels')}>
-				<SectionTable {channels} {profileId} />
+				<SectionTable {channels} profileId={profile._id} />
 			</div>
 			<div class="flex-auto h-full" class:hidden={activeTab != tabs.indexOf('Followers')}>
-				<ListSubscribe {profileId} />
+				<ListSubscribe profileId={profile._id} />
 			</div>
 			{#if $is_feature_stats_enabled}
 				<div class="grid h-full" class:hidden={activeTab != tabs.indexOf('Stats')}>
-					<Stats {totalPageViews} {highestAndCurrentStreak} {totalAndAvgHours} />
+					<Stats
+						{profile}
+						{avgHours}
+						{viewsMonthlyIncr}
+						{streakMonthlyIncr}
+						{totalHoursMonthlyIncr}
+						{totalPageViews}
+						{highestAndCurrentStreak}
+						{totalAndAvgHours} />
 				</div>
 			{/if}
 		</div>

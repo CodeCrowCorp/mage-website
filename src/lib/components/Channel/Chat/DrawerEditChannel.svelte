@@ -136,7 +136,7 @@
 					<div class="flex flex-col p-3">
 						<div class="flex flex-row justify-center w-full">
 							<div class="card w-60 shadow-xl" on:click={checkVideo}>
-								<div class="items-center max-h-40 {showThumbnail ? '!p-3' : ''}">
+								<div class="items-center max-h-40 cursor-pointer {showThumbnail ? '!p-3' : ''}">
 									{#if imageSrc || channel.thumbnail}
 										<img
 											bind:this={thumbnailRef}

@@ -1,6 +1,6 @@
 {
 	"name": "mage-website",
-	"version": "0.0.15",
+	"version": "0.0.16",
 	"license": "GPL-3.0",
 	"private": true,
 	"type": "module",
@@ -46,6 +46,7 @@
 		"tailwindcss": "^3.2.7",
 		"tslib": "^2.5.0",
 		"typescript": "^5.0.2",
+		"video.js": "^8.3.0",
 		"vite": "^4.1.4"
 	},
 	"dependencies": {
