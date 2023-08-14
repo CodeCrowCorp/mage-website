@@ -6,11 +6,16 @@
 	import IconChatMod from '$lib/assets/icons/chat/IconChatMod.svelte'
 	import IconChatGuest from '$lib/assets/icons/chat/IconChatGuest.svelte'
 	import { draggable } from '@neodrag/svelte'
-	import { is_sharing_audio, is_sharing_screen, is_sharing_webcam } from '$lib/stores/streamStore'
+	import {
+		is_sharing_audio,
+		is_sharing_screen,
+		is_sharing_webcam,
+		is_sharing_obs
+	} from '$lib/stores/streamStore'
 	import { emitChannelUpdate } from '$lib/websocket'
 	import { getColoredRole, setRole } from '$lib/utils'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
-	import { is_feature_stats_enabled } from '$lib/stores/remoteConfigStore'
+	import { is_feature_stats_enabled, is_feature_obs_enabled } from '$lib/stores/remoteConfigStore'
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 
@@ -19,15 +24,18 @@
 	let role = '',
 		coloredRole: any = {},
 		isGuest = false,
+		obsElement: HTMLVideoElement,
 		screenElement: HTMLVideoElement,
 		webcamElement: HTMLVideoElement,
 		audioElement: HTMLAudioElement,
+		obsWhep: WHIPClient,
 		screenWhip: WHIPClient,
 		screenWhep: WHEPClient,
 		webcamWhip: WHIPClient,
 		webcamWhep: WHEPClient,
 		audioWhip: WHIPClient,
 		audioWhep: WHEPClient,
+		prevObs: any,
 		prevScreen: any,
 		prevWebcam: any,
 		prevAudio: any,
@@ -37,8 +45,10 @@
 		streamTime: number = 0,
 		timerInterval: any,
 		formattedTime: string = '00:00:00',
-		isHoverVideo: boolean = false
+		isHoverVideo: boolean = false,
+		obs_modal: any = null
 
+	// WHIP/WHEP variables that determine if stream is coming in
 	$: isScreenLive = false
 	$: isWebcamLive = false
 
@@ -59,6 +69,10 @@
 		video._id !== $page.data.user?.userId &&
 		role !== '🤖 AI'
 
+	$: if (isMounted && video.obs !== prevObs) {
+		handleObsChanges()
+	}
+
 	$: if (isMounted && video.screen !== prevScreen) {
 		handleScreenChanges()
 	}
@@ -77,6 +91,12 @@
 
 	$: animate = isWebcamFocused ? '' : 'transition-all'
 
+	const handleObsChanges = () => {
+		prevScreen = video.obs
+		toggleClient({
+			trackType: 'obs'
+		})
+	}
 	const handleScreenChanges = () => {
 		prevScreen = video.screen
 		toggleClient({
@@ -99,9 +119,37 @@
 	const toggleClient = ({ trackType }: { trackType: string }) => {
 		if ($page.data.user?.userId === video._id) {
 			switch (trackType) {
+				case 'obs':
+					console.log('got here---- video.obs.playback?.hls', video.obs?.playback?.hls)
+					// if (video.obs && $is_sharing_obs) {
+					// 	const key = video.obs.webRTCPlayback.url + '-' + video._id
+					// 	const existed = getScreen(key)
+					// 	obsWhep =
+					// 		existed ||
+					// 		new WHEPClient(video.obs.webRTCPlayback.url, obsElement, video.obs.trackType)
+					// 	if (existed) {
+					// 		existed.videoElement = obsElement
+					// 		obsElement.srcObject = existed.localStream
+					// 		$is_sharing_obs = true
+					// 		isScreenLive = true
+					// 	}
+					// 	addScreen(key, obsWhep)
+					// 	obsWhep.addEventListener(`localStreamStopped-${trackType}`, () => {
+					// 		$is_sharing_obs = false
+					// 		isScreenLive = false
+					// 		removeScreen(key)
+					// 	})
+					// 	obsWhep.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
+					// } else if (!video.screen) {
+					// 	if (obsElement) {
+					// 		obsElement.srcObject = null
+					// 	}
+					// 	$is_sharing_obs = false
+					// }
+					break
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
-						const key = video.screen.webRTCPlayback.url + '-' + video._id
+						const key = video.screen.webRTC.url + '-' + video._id
 						const existed = getScreen(key)
 						screenWhip =
 							existed ||
@@ -160,6 +208,15 @@
 			}
 		} else {
 			switch (trackType) {
+				case 'obs':
+					if (video.obs && obsElement) {
+						obsElement.src = video.obs.rtmpsPlayback.url
+						obsElement.muted = false
+						obsElement.play()
+					} else {
+						if (obsElement) obsElement.srcObject = null
+					}
+					break
 				case 'screen':
 					if (video.screen && screenElement) {
 						const key = video.screen.webRTCPlayback.url + '-' + video._id
@@ -226,6 +283,17 @@
 
 	onMount(() => {
 		isGuest = channel?.guests?.includes(video._id)
+		if (obsElement) {
+			obsElement.addEventListener('dblclick', (event: any) => {
+				if (document.fullscreenElement) {
+					document.exitFullscreen()
+				} else {
+					obsElement.requestFullscreen()
+				}
+			})
+			handleObsChanges()
+		}
+
 		if (screenElement) {
 			screenElement.addEventListener('dblclick', (event: any) => {
 				if (document.fullscreenElement) {
@@ -254,19 +322,28 @@
 		isMounted = true
 	})
 
-	is_sharing_screen.subscribe((value) => {
+	is_sharing_obs.subscribe((value: any) => {
 		if (value === false) {
-			screenWhip?.disconnectStream()
+			obsWhep?.disconnectStream()
+		} else if (value === true) {
+			if (is_sharing_obs) obs_modal?.showModal()
 		}
 	})
 
-	is_sharing_webcam.subscribe((value) => {
+	is_sharing_screen.subscribe((value: any) => {
+		if (value === false) {
+			screenWhip?.disconnectStream()
+			clearInterval(timerInterval)
+		}
+	})
+
+	is_sharing_webcam.subscribe((value: any) => {
 		if (value === false) {
 			webcamWhip?.disconnectStream()
 		}
 	})
 
-	is_sharing_audio.subscribe((value) => {
+	is_sharing_audio.subscribe((value: any) => {
 		if (value === false) {
 			audioWhip?.disconnectStream()
 		}
@@ -358,6 +435,19 @@
 					{formattedTime}
 				</span>
 			{/if}
+			{#if $is_feature_obs_enabled}
+				<video-js
+					bind:this={obsElement}
+					id={`obs-${video._id}`}
+					controls
+					autoplay
+					muted
+					preload="auto"
+					class="rounded-md w-full h-full">
+					<source src={video.obs?.playback?.hls} type="application/x-mpegURL" />
+				</video-js>
+			{/if}
+
 			<video
 				bind:this={screenElement}
 				id={`screen-${video._id}`}
@@ -418,3 +508,30 @@
 		</div>
 	</div>
 </div>
+
+{#if $is_feature_obs_enabled}
+	<dialog bind:this={obs_modal} class="modal">
+		<form method="dialog" class="modal-box">
+			<h3 class="font-bold text-lg">Copy to OBS</h3>
+			<p class="py-4">
+				Server: <br />
+				{#if !video.obs?.rtmps?.url}
+					<span class="loading loading-dots loading-sm" />
+				{:else}
+					{video.obs?.rtmps?.url}
+				{/if}
+			</p>
+			<p class="py-4 break-all">
+				Stream Key: <br />
+				{#if !video.obs?.rtmps?.streamKey}
+					<span class="loading loading-dots loading-sm" />
+				{:else}
+					{video.obs?.rtmps?.streamKey}
+				{/if}
+			</p>
+			<div class="modal-action">
+				<button class="btn">Close</button>
+			</div>
+		</form>
+	</dialog>
+{/if}
