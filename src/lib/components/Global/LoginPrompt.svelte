@@ -29,18 +29,22 @@
 		on:click={(e) => {
 			e.stopPropagation()
 		}}>
-		<div class="py-4 space-y-5 px-4 md:px-10 ">
+		<div class="py-4 space-y-5 px-4 md:px-10">
 			<div class="flex justify-center">
 				<img class="w-20" src={IconMageLogo} alt="" />
 			</div>
 			{#if env.PUBLIC_CROSS_ORIGIN === 'false'}
-				<a class="btn w-full btn-primary gap-4" href="{env.PUBLIC_API_URL}/auth/discord">
+				<a
+					class="btn w-full bg-indigo-700 hover:bg-indigo-900 text-white gap-4 border-none"
+					href="{env.PUBLIC_API_URL}/auth/discord">
 					<IconSocialDiscordInverse />
 					Log in with Discord</a>
 				<a class="btn w-full btn-outline gap-4" href="{env.PUBLIC_API_URL}/auth/google">
 					<IconSocialGoogle />
 					Log in with Google</a>
-				<a class="btn w-full bg-black gap-4" href="{env.PUBLIC_API_URL}/auth/github">
+				<a
+					class="btn w-full bg-black hover:bg-gray-800 text-white gap-4 border-none"
+					href="{env.PUBLIC_API_URL}/auth/github">
 					<IconSocialGitHubInverse />
 					Log in with GitHub</a>
 			{:else}
