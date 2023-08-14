@@ -56,8 +56,15 @@
 		await loadChannel()
 		await handleWebsocket()
 		await loadMoreChannels()
-		if(channel?.user !== $page.data.user?.userId){
-			await post(`stats/profile/views`,{view:{type:'view', userid:page.data.user?.userId, profile:"channel", profileId: channel?._id, }})
+		if (channel?.user !== $page.data.user?.userId) {
+			await post(`stats/profile/views`, {
+				view: {
+					type: 'view',
+					userid: $page.data.user?.userId,
+					profile: 'channel',
+					profileId: channel?._id
+				}
+			})
 		}
 		$is_chat_drawer_destroy = false
 		setTimeout(() => {

@@ -15,10 +15,12 @@
 		is_sharing_audio,
 		is_sharing_screen,
 		is_sharing_webcam,
+		is_sharing_obs,
 		updateVideoItems
 	} from '$lib/stores/streamStore'
 	import { channel_connection } from '$lib/stores/websocketStore'
 	import { onDestroy, onMount } from 'svelte'
+	import IconShareObs from '$lib/assets/icons/channel/IconShareObs.svelte'
 
 	export let isHostOrGuest: boolean = false,
 		channel: any,
@@ -30,7 +32,8 @@
 		(video: any) => video._id === $page.data.user?.userId
 	)
 
-	let screenUid: string = '',
+	let obsUid: string = '',
+		screenUid: string = '',
 		webcamUid: string = '',
 		audioUid: string = '',
 		subcriptions: any[] = []
@@ -78,6 +81,56 @@
 				}
 			)
 		}
+	}
+
+	const startObsStream = async () => {
+		const liveInput = await createLiveInput({
+			channelId: `${$page.params.channelId}`,
+			userId: $page.data.user.userId,
+			trackType: 'obs',
+			isTrackActive: true,
+			liveInput: {
+				meta: {
+					name: `${$page.params.channelId}-${$page.data.user.userId}-obs`
+				},
+				recording: { mode: 'automatic' }
+			}
+		})
+		obsUid = liveInput.uid
+		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
+		emitAction({
+			channelSocket: channel?.socket,
+			channelId: $page.params.channelId,
+			message: {
+				action: 'toggleTrack',
+				video: liveInput
+			}
+		})
+	}
+
+	const stopObsStream = async () => {
+		await deleteLiveInput({
+			channelId: $page.params.channelId,
+			userId: $page.data.user.userId,
+			trackType: 'obs',
+			inputId: obsUid
+		})
+		channel.videoItems = updateVideoItems(channel.videoItems, [
+			{ _id: $page.data.user.userId, trackType: 'obs', isTrackActive: false }
+		])
+		emitAction({
+			channelSocket: channel?.socket,
+			channelId: $page.params.channelId,
+			message: {
+				action: 'toggleTrack',
+				video: {
+					trackType: 'obs',
+					isTrackActive: false,
+					_id: $page.data.user.userId
+				}
+			}
+		})
+		obsUid = ''
 	}
 
 	const startScreenStream = async () => {
@@ -255,7 +308,15 @@
 			}
 		})
 
-		subcriptions.push(sub1, sub2, sub3)
+		const sub4 = is_sharing_obs.subscribe((value) => {
+			if (value) {
+				startObsStream()
+			} else if (value === false) {
+				stopObsStream()
+			}
+		})
+
+		subcriptions.push(sub1, sub2, sub3, sub4)
 	})
 
 	onDestroy(() => {
@@ -274,7 +335,7 @@
 		on:click={() => {
 			$is_sharing_screen = !$is_sharing_screen
 		}}
-		disabled={!isHostOrGuest || !isChannelSocketConnected || !videoItemIsActive}>
+		disabled={$is_sharing_obs || !isHostOrGuest || !isChannelSocketConnected || !videoItemIsActive}>
 		<IconShareScreen />
 	</button>
 
@@ -286,7 +347,7 @@
 		on:click={() => {
 			$is_sharing_webcam = !$is_sharing_webcam
 		}}
-		disabled={!isHostOrGuest || !isChannelSocketConnected || !videoItemIsActive}>
+		disabled={$is_sharing_obs || !isHostOrGuest || !isChannelSocketConnected || !videoItemIsActive}>
 		<IconShareWebcam />
 	</button>
 
@@ -298,8 +359,25 @@
 		on:click={() => {
 			$is_sharing_audio = !$is_sharing_audio
 		}}
-		disabled={!isHostOrGuest || !isChannelSocketConnected || !videoItemIsActive}>
+		disabled={$is_sharing_obs || !isHostOrGuest || !isChannelSocketConnected || !videoItemIsActive}>
 		<IconShareAudio />
+	</button>
+
+	<button
+		class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_obs
+			? 'btn-primary'
+			: 'btn-neutral'}"
+		data-tip="OBS"
+		on:click={() => {
+			$is_sharing_obs = !$is_sharing_obs
+		}}
+		disabled={$is_sharing_screen ||
+			$is_sharing_webcam ||
+			$is_sharing_audio ||
+			!isHostOrGuest ||
+			!isChannelSocketConnected ||
+			!videoItemIsActive}>
+		<IconShareObs />
 	</button>
 
 	<button
