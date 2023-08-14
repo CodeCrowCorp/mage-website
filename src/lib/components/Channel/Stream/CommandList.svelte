@@ -1,9 +1,10 @@
+<div class="flex divider mb-16">No active streams</div>
 <div class="grid grid-cols-2 gap-2">
 	<div class="grid grid-rows-3 gap-y-4">
-		<div class="flex items-center justify-end">Chat with AI</div>
-		<div class="flex items-center justify-end">Toggle mod status</div>
-		<div class="flex items-center justify-end">Toggle guest status</div>
-		<div class="flex items-center justify-end">Ban user</div>
+		<div class="flex items-center justify-end text-info">Chat with AI</div>
+		<div class="flex items-center justify-end text-pink-600">Toggle mod status</div>
+		<div class="flex items-center justify-end text-pink-600">Toggle guest status</div>
+		<div class="flex items-center justify-end text-pink-600">Ban user</div>
 	</div>
 	<div class="grid grid-rows-3 gap-y-4">
 		<div class="text-left"><kbd class="text-left kbd">/ai sometext</kbd></div>

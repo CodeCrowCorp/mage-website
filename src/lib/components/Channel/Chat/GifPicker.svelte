@@ -8,7 +8,7 @@
 
 	export let onSelect: any, isChannelSocketConnected: any
 
-	$: if (isChannelSocketConnected) {
+	$: if (isChannelSocketConnected && $page.data.user?.userId) {
 		getTrending()
 	}
 
