@@ -12,12 +12,12 @@
 	let limit = 100
 	let moreChannels: any[] = []
 	const loadMore = async () => {
-		// let endpoint = profileId ? `channels/user?userId=${profileId}?` : 'channels?'
-		// const infiniteChannels = await get(`${endpoint}skip=${skip}&limit=${limit}`)
-		// if (infiniteChannels?.length) {
-		// 	moreChannels = [...moreChannels, ...infiniteChannels]
-		// 	skip += limit
-		// }
+		let endpoint = profileId ? `channels/user?userId=${profileId}&` : 'channels?'
+		const infiniteChannels = await get(`${endpoint}skip=${skip}&limit=${limit}`)
+		if (infiniteChannels?.length) {
+			moreChannels = [...moreChannels, ...infiniteChannels]
+			skip += limit
+		}
 	}
 </script>
 
