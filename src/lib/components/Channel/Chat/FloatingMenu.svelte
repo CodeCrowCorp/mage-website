@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores'
 	import { clickOutside } from '$lib/utils'
 	export let id: string = 'float-menu'
 	export let icon: any = null
@@ -35,7 +36,7 @@
 	on:click={() => {
 		isFocused = true
 	}}
-	disabled={!isChannelSocketConnected}>
+	disabled={!isChannelSocketConnected || !$page.data.user?.userId}>
 	<svelte:component this={icon} {id} />
 	<span class="sr-only">Add emoji</span>
 </button>
