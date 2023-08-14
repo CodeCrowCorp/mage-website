@@ -37,12 +37,12 @@
 	let progressBarLevel = 1
 	let progressBarValue = 0
 	let progressBarColor = colorFromLevel(1)
-	let streakCount: any = {current: 0, highest: 0}
+	let streakCount: any = { current: 0, highest: 0 }
 	let hoursStreamed: number = 0
-	let totalViews: number = 0
-	let hoursMonthlyIncr: number = 0
-	let streakMonthlyIncr: number = 0
-	let viewsMonthlyIncr: number = 0
+	// let totalViews: number = 0
+	// let hoursMonthlyIncr: number = 0
+	// let streakMonthlyIncr: number = 0
+	// let viewsMonthlyIncr: number = 0
 	onMount(async () => {
 		if (currentUser) {
 			let exp = currentUser.exp || 0
@@ -54,27 +54,17 @@
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
-			hoursStreamed = await get(`stats/stream/total-hours`, {
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			})
-			totalViews = await get(`stats/profile/views/four-weeks?profileType=user&id=${$page.data.user?.userId}`, {
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			})
-			viewsMonthlyIncr = await get(`stats/profile/views/monthly?profileType=user&id=${$page.data.user?.userId}`, {
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			})
-			streakMonthlyIncr = await get(`stats/stream/streak/monthly?userId=${$page.data.user?.userId}`, {
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			})
-
-			hoursMonthlyIncr = await get(`stats/stream/total-hours/monthly?userId=${$page.data.user?.userId}`, {
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			})
+			hoursStreamed = await get(`stats/stream/total-hours`)
+			// totalViews = await get(
+			// 	`stats/profile/views/four-weeks?profileType=user&id=${$page.data.user?.userId}`
+			// )
+			// viewsMonthlyIncr = await get(
+			// 	`stats/profile/views/monthly?profileType=user&id=${$page.data.user?.userId}`
+			// )
+			// streakMonthlyIncr = await get(`stats/stream/streak/monthly?userId=${$page.data.user?.userId}`)
+			// hoursMonthlyIncr = await get(
+			// 	`stats/stream/total-hours/monthly?userId=${$page.data.user?.userId}`
+			// )
 		}
 	})
 	let isChannelPage = false
@@ -146,7 +136,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="tooltip" data-tip="level {progressBarLevel}">
+						<div class="tooltip tooltip-primary" data-tip="level {progressBarLevel}">
 							<progress
 								class="tooltip progress w-[17rem] mt-3 {isChannelPage ? 'md:w-12' : ''}"
 								style="--progress-bar-color: {progressBarColor}"

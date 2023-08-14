@@ -7,15 +7,15 @@ export const load = (async ({ params }: { params: any }) => {
 	return {
 		profile: profile,
 		lazy: {
-			channels: await get(`channels/user?userId=${profile._id}&skip=${0}&limit=${10}`),
-			totalPageViews: await get(`stats/profile/views/four-weeks?profileType=user&id=${profile._id}`),
-			viewsMonthlyIncr: await get(`stats/profile/views/monthly?profileType=user&id=${profile._id}`),
-			highestAndCurrentStreak: await get(`stats/stream/streak?userId=${profile._id}`),
-			streakMonthlyIncr: await get(`stats/stream/streak/monthly?userId=${profile._id}`),
-			totalHours: await get(`stats/stream/total-hours?userId=${profile._id}`),
-			totalHoursMonthlyIncr: await get(`stats/stream/total-hours/monthly?userId=${profile._id}`),
-			avgHours: await get(`stats/stream/avg-length?userId=${profile._id}`),
-			avgHoursMonthlyIncr: await get(`stats/stream/total-hours?userId=${profile._id}`),
+			channels: get(`channels/user?userId=${profile._id}&skip=${0}&limit=${10}`),
+			totalPageViews: get(`stats/profile/views/four-weeks?profileType=user&id=${profile._id}`),
+			viewsMonthlyIncr: get(`stats/profile/views/monthly?profileType=user&id=${profile._id}`),
+			highestAndCurrentStreak: get(`stats/stream/streak?userId=${profile._id}`),
+			streakMonthlyIncr: get(`stats/stream/streak/monthly?userId=${profile._id}`),
+			totalHours: get(`stats/stream/total-hours?userId=${profile._id}`),
+			totalHoursMonthlyIncr: get(`stats/stream/total-hours/monthly?userId=${profile._id}`),
+			avgHours: get(`stats/stream/avg-length?userId=${profile._id}`),
+			avgHoursMonthlyIncr: get(`stats/stream/total-hours?userId=${profile._id}`)
 		}
 	}
 }) satisfies PageServerLoad
@@ -74,7 +74,7 @@ export const actions = {
 			}
 		}
 	},
-	sponsor: async ({ request, locals }: { request: any; locals: any }) => {
+	sponsor: async () => {
 		await new Promise<any>((resolve) => setTimeout(resolve, 1000))
 	}
 } satisfies Actions

@@ -32,7 +32,7 @@
 					<TopSection profile={data.profile} bind:showDrawer />
 					<UserDetails profile={data.profile} />
 					<TabSection
-						profileId={data.profile?._id}
+						profile={data.profile}
 						channels={data.lazy.channels}
 						totalPageViews={data.lazy.totalPageViews}
 						viewsMonthlyIncr={data.lazy.viewsMonthlyIncr}
@@ -41,7 +41,6 @@
 						totalAndAvgHours={data.lazy.totalHours}
 						totalHoursMonthlyIncr={data.lazy.totalHoursMonthlyIncr}
 						avgHours={data.lazy.avgHours} />
-						
 				</div>
 			</div>
 		</div>
