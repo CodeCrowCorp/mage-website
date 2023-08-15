@@ -21,6 +21,7 @@
 	import { channel_connection } from '$lib/stores/websocketStore'
 	import { onDestroy, onMount } from 'svelte'
 	import IconShareObs from '$lib/assets/icons/channel/IconShareObs.svelte'
+	import { is_feature_obs_enabled } from '$lib/stores/remoteConfigStore'
 
 	export let isHostOrGuest: boolean = false,
 		channel: any,
@@ -363,22 +364,24 @@
 		<IconShareAudio />
 	</button>
 
-	<button
-		class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_obs
-			? 'btn-primary'
-			: 'btn-neutral'}"
-		data-tip="OBS"
-		on:click={() => {
-			$is_sharing_obs = !$is_sharing_obs
-		}}
-		disabled={$is_sharing_screen ||
-			$is_sharing_webcam ||
-			$is_sharing_audio ||
-			!isHostOrGuest ||
-			!isChannelSocketConnected ||
-			!videoItemIsActive}>
-		<IconShareObs />
-	</button>
+	{#if $is_feature_obs_enabled}
+		<button
+			class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_obs
+				? 'btn-primary'
+				: 'btn-neutral'}"
+			data-tip="OBS"
+			on:click={() => {
+				$is_sharing_obs = !$is_sharing_obs
+			}}
+			disabled={$is_sharing_screen ||
+				$is_sharing_webcam ||
+				$is_sharing_audio ||
+				!isHostOrGuest ||
+				!isChannelSocketConnected ||
+				!videoItemIsActive}>
+			<IconShareObs />
+		</button>
+	{/if}
 
 	<button
 		class="btn text-white border-none tooltip font-normal normal-case {$is_chat_drawer_open
