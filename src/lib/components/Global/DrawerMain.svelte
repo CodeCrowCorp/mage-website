@@ -14,7 +14,7 @@
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
 	import { env } from '$env/dynamic/public'
 	import { page } from '$app/stores'
-	import { user_role } from '$lib/stores/authStore'
+	import { user_role } from '$lib/stores/userStore'
 	import {
 		is_feature_video_responses_enabled,
 		is_feature_affiliate_enabled,
