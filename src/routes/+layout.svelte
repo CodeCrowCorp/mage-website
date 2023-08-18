@@ -28,7 +28,7 @@
 		is_feature_obs_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import { env } from '$env/dynamic/public'
-	import { user_role } from '$lib/stores/authStore'
+	import { user_role } from '$lib/stores/userStore'
 
 	NProgress.configure({
 		minimum: 0.75,
@@ -62,24 +62,8 @@
 	})
 
 	const getUserRole = async () => {
-		if ($page.data.user?.userId && !$user_role) {
-			const allRoles = await get('roles', {
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			})
-			if (Array.isArray(allRoles)) {
-				const userRole = await get('roles/role-mapping', {
-					userId: $page.data.user?.userId,
-					token: $page.data.user?.token
-				})
-				if (userRole && userRole.role) {
-					const usersRoleName = allRoles.find((item) => {
-						return item._id == userRole.role
-					})?.name
-					$user_role = usersRoleName
-				}
-			}
-		}
+		//TODO: get role from Auth0
+		$user_role = 'user'
 	}
 
 	const handleWebsocket = async () => {
