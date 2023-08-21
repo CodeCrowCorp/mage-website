@@ -4,21 +4,19 @@
 	import Calendar from '@event-calendar/core'
 	import TimeGrid from '@event-calendar/time-grid'
 	import { get, put, del } from '$lib/api'
-	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
 	import { getWeekNumber } from '$lib/utils'
   import Field from '$lib/components/Profile/Elements/Field.svelte'
   import moment from 'moment'
   
-
 	export let profileId
 	const plugins = [TimeGrid]
 
-	let events = []
   let formData = {}
 	let loading = false
   let formClass = ""
   let optionClass = ""
+  let ec
 
 	$: auth = {
 		userId: $page.data.user?.userId,
@@ -43,31 +41,31 @@
 		)
 		loading = false
     hideForm()
-    getEvents()
+    ec.refetchEvents();
 	}
 
   const removeEvent = async () => {
     loading = true
     await del(
 			`schedule${formData.id ? "?scheduleId="+formData.id : ""}`)
-    getEvents()
+    ec.refetchEvents();
     hideOptions()
     formData = {}
     loading = false
   }
 
-	const getEvents = async () => {
+	const getEvents = async (date) => {
     loading = true
-		const wn = getWeekNumber()
+		const wn = getWeekNumber(date)
 		let resp = await get(`/schedules?userId=${profileId}&weekNumber=${wn}`)
-		events = resp.map((i) => ({
+		loading = false
+    return resp.map((i) => ({
 			title: i.text,
 			start: new Date(i.startDate),
 			end: new Date(i.duration),
 			id: i._id,
       editable: true
 		}))
-    loading = false
 	}
 
   const onClick = ({ event }) => {
@@ -96,11 +94,6 @@
   const hideOptions = () => {
     optionClass = ""
   }
-
-  onMount(async () => {
-		getEvents()
-	})
-
 
 </script>
 
@@ -174,9 +167,18 @@
 	<Calendar
 		{plugins}
 		options={{
-			events: events,
       eventClick: onClick,
-      editable: true
+      editable: true,
+      loading,
+      lazyFetching:true,
+      eventSources: [{
+        events: async(dates)=> {
+          return await getEvents(dates.start)
+        }}
+      ],
+      listDaySideFormat: (date) => "Hello"
 		}} 
+    onChange
+    bind:this={ec}
   />
 </div>
