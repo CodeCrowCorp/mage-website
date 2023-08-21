@@ -19,6 +19,8 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
+		"@fullcalendar/core": "^6.1.8",
+		"@fullcalendar/daygrid": "^6.1.8",
 		"@playwright/test": "1.37.0",
 		"@sveltejs/adapter-cloudflare": "^2.2.0",
 		"@sveltejs/kit": "^1.10.0",
@@ -38,6 +40,7 @@
 		"prettier-plugin-svelte": "^2.10.1",
 		"svelte": "^3.55.1",
 		"svelte-check": "^3.0.4",
+		"svelte-fullcalendar": "^2.0.0-beta.0",
 		"svelte-preprocess": "^5.0.1",
 		"svgo": "^3.0.2",
 		"swiper": "^10.0.3",
@@ -50,12 +53,15 @@
 		"vite": "^4.1.4"
 	},
 	"dependencies": {
+		"@event-calendar/core": "^2.0.0",
+		"@event-calendar/time-grid": "^2.0.0",
 		"@neodrag/svelte": "^2.0.3",
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/typography": "^0.5.9",
 		"animate.css": "^4.1.1",
 		"daisyui": "^3.2.1",
 		"emoji-picker-element": "^1.18.1",
+		"moment": "^2.29.4",
 		"nprogress": "^0.2.0",
 		"playwright-e2e-coverage-report": "^1.0.28",
 		"svelte-tags-input": "^5.0.0",

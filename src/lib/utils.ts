@@ -283,3 +283,9 @@ export const createEffect = (...initialDeps: any[]) => {
 		}
 	}
 }
+
+export const getWeekNumber = () => {
+	const now = new Date();
+	const onejan = new Date(now.getFullYear(), 0, 1);
+	return Math.ceil((((now.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7);
+}
