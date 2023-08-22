@@ -106,8 +106,7 @@
 					{#if channel.tags && channel.tags.length}
 						{#each channel.tags as tag}
 							<div>
-								<span
-									class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold border-none"
+								<span class="badge badge-md text-secondary rounded-md font-semibold border-none"
 									>{tag}</span>
 							</div>
 						{/each}
@@ -116,7 +115,7 @@
 			</a>
 		</li>
 		<li>
-			<a href="/profile/{channel.userDetails?.username}">
+			<a href="/{channel.userDetails?.username}">
 				<div class="flex flex-wrap gap-2">
 					<div class="avatar online">
 						<div
