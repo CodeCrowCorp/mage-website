@@ -135,7 +135,7 @@
 						{profileData?.profile?.displayName}
 					</p>
 					<p class="mb-3 text-sm font-normal">
-						<a class="link link-hover flex gap-1" href="/profile/{profileData?.profile?.username}"
+						<a class="link link-hover flex gap-1" href="/{profileData?.profile?.username}"
 							>@{profileData?.profile?.username}
 							{#if profileData?.profile?.planDetails?.planTier > 1}
 								<div class="text-accent font-bold">

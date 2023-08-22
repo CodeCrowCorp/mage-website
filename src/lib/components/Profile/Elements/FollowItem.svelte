@@ -69,7 +69,7 @@
 			</button>
 			<ul tabindex="-1" class="z-20 dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 				<li>
-					<a href="/profile/{followItem.username}">Profile</a>
+					<a href="/{followItem.username}">Profile</a>
 				</li>
 			</ul>
 		</div>

@@ -93,7 +93,7 @@
 		{#if currentUser}
 			<li class={isChannelPage ? 'md:w-full' : ''}>
 				<a
-					href="/profile/{currentUser.username}"
+					href="/{currentUser.username}"
 					class="{isChannelPage ? 'justify-center md:w-full hero' : ''} rounded-md cursor-pointer">
 					<div class={isChannelPage ? 'md:text-center' : ''}>
 						<div class={isChannelPage ? '' : 'my-1'}>
