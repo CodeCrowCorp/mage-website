@@ -6,7 +6,7 @@
 	export let item: any
 </script>
 
-<a href={`/profile/${item.username}`} class="menu p-4 bg-base-100 rounded-md hover:bg-base-300">
+<a href={`/${item.username}`} class="menu p-4 bg-base-100 rounded-md hover:bg-base-300">
 	<div class="flex-col md:flex-row gap-4 w-full contents">
 		<div class="max-w-md">
 			<div class="avatar">
@@ -29,7 +29,7 @@
 				{item.displayName || ''}
 			</h2>
 			<div class="flex items-center">
-				<a class="link link-hover flex gap-1" href="/profile/{item.username}"
+				<a class="link link-hover flex gap-1" href="/{item.username}"
 					>@{item.username || ''}
 					<div class="text-accent font-bold">
 						<IconDrawerVerification />

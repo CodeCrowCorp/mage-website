@@ -1,9 +1,12 @@
 import type { Actions, PageServerLoad } from './$types'
 import { get, patch, putImage } from '$lib/api'
-import { redirect, fail } from '@sveltejs/kit'
+import { redirect, fail, error } from '@sveltejs/kit'
 
 export const load = (async ({ params }: { params: any }) => {
 	const profile = await get(`users/search/username?username=${params.username}`)
+	if (profile.error) {
+		throw error(404)
+	}
 	return {
 		profile: profile,
 		lazy: {
@@ -68,7 +71,7 @@ export const actions = {
 		} else {
 			if (updatedUser._id) {
 				locals.user.user = updatedUser
-				throw redirect(303, `/profile/${updatedUser.username}`)
+				throw redirect(303, `/${updatedUser.username}`)
 			} else {
 				throw redirect(303, 'browse')
 			}
