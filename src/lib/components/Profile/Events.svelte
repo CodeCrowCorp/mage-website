@@ -84,6 +84,7 @@
 	}
 
 	const hideForm = () => {
+    formData = {}
 		formClass = ''
 	}
 
