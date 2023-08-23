@@ -64,7 +64,7 @@
 			start: new Date(i.startDate),
 			end: new Date(i.duration),
 			id: i._id,
-      editable: true
+      editable: true,
 		}))
 	}
 
@@ -168,7 +168,6 @@
 		{plugins}
 		options={{
       eventClick: onClick,
-      editable: true,
       loading,
       lazyFetching:true,
       eventSources: [{
@@ -176,7 +175,12 @@
           return await getEvents(dates.start)
         }}
       ],
-      listDaySideFormat: (date) => "Hello"
+      dragScroll: true,
+      headerToolbar: {
+          start: 'prev,next today',
+          center: 'title',
+          end: 'timeGridWeek,timeGridDay,listWeek, addNew'
+      },
 		}} 
     onChange
     bind:this={ec}
