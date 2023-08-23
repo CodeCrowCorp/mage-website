@@ -7,6 +7,7 @@
 	import { page } from '$app/stores'
 	import { getWeekNumber } from '$lib/utils'
 	import Field from '$lib/components/Profile/Elements/Field.svelte'
+  import { onMount } from 'svelte'
 	import moment from 'moment'
 
 	export let profileId
@@ -93,13 +94,20 @@
 	const hideOptions = () => {
 		optionClass = ''
 	}
+
+  onMount(() => {
+    let buttons = document.getElementsByClassName("ec-button ec-addNew") 
+    const addButton = buttons[0]
+
+    addButton.innerHTML = "Add Event"
+    addButton.onclick = showForm
+  })
 </script>
 
 <div class="bg-white p-8 rounded">
 	<!-- Form component -->
 	<div class="flex justify-between mb-4">
 		<span />
-		<button class="btn" on:click={showForm}>Add Event</button>
 
 		<dialog class={'modal ' + formClass}>
 			<form method="dialog" class="modal-box event-form">
@@ -171,7 +179,7 @@
 			headerToolbar: {
 				start: 'title',
 				center: '',
-				end: 'prev,next,today,timeGridWeek,timeGridDay'
+				end: 'prev,next,today,timeGridWeek,timeGridDay, addNew'
 			},
 			allDaySlot: false,
 			dayHeaderFormat: (date) => {
@@ -191,7 +199,7 @@
 		@apply border rounded-md overflow-hidden;
 	}
 	.ec-toolbar {
-		@apply mb-0 bg-gray-200 py-3 px-6;
+		@apply mb-0 bg-white py-3 px-6;
 	}
 	.ec-title {
 		@apply font-semibold text-gray-800;
@@ -212,5 +220,12 @@
 	}
   .ec-time, .ec-line{
     /* @apply h-12 */
+  }
+  .ec-addNew {
+    background: #5f00e5!important;
+    color: white !important;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
   }
 </style>
