@@ -18,6 +18,7 @@
 	import { is_feature_stats_enabled, is_feature_obs_enabled } from '$lib/stores/remoteConfigStore'
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
+	import { Player, DefaultUi, Hls } from '@vime/svelte'
 
 	export let video: any, channel: any
 
@@ -51,6 +52,7 @@
 	// WHIP/WHEP variables that determine if stream is coming in
 	$: isScreenLive = false
 	$: isWebcamLive = false
+	$: hlsUrl = ''
 
 	$: if (channel) {
 		role = setRole({ userId: video._id, channel, currentUserId: $page.data.user?.userId })
@@ -120,7 +122,8 @@
 		if ($page.data.user?.userId === video._id) {
 			switch (trackType) {
 				case 'obs':
-					console.log('got here---- video.obs.playback?.hls', video.obs?.playback?.hls)
+					hlsUrl = video.obs?.playback?.hls
+					console.log('got here---- video.obs.playback?.hls', hlsUrl)
 					// if (video.obs && $is_sharing_obs) {
 					// 	const key = video.obs.webRTCPlayback.url + '-' + video._id
 					// 	const existed = getScreen(key)
@@ -210,7 +213,7 @@
 			switch (trackType) {
 				case 'obs':
 					if (video.obs && obsElement) {
-						obsElement.src = video.obs.rtmpsPlayback.url
+						obsElement.src = video.obs?.playback?.hls
 						obsElement.muted = false
 						obsElement.play()
 					} else {
@@ -415,6 +418,8 @@
 	}
 </script>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@vime/core@^5/themes/default.css" />
+
 <div
 	class={isScreenLive || isWebcamLive ? 'w-full h-full' : 'w-[500px] max-h-80'}
 	on:mouseenter={() => (isHoverVideo = true)}
@@ -436,7 +441,7 @@
 				</span>
 			{/if}
 			{#if $is_feature_obs_enabled}
-				<video-js
+				<!-- <video-js
 					bind:this={obsElement}
 					id={`obs-${video._id}`}
 					controls
@@ -444,8 +449,16 @@
 					muted
 					preload="auto"
 					class="rounded-md w-full h-full">
-					<source src={video.obs?.playback?.hls} type="application/x-mpegURL" />
-				</video-js>
+					<source src={video.obs?.hlsPlayback} type="application/x-mpegURL" />
+				</video-js> -->
+
+				<Player theme="dark" style="--vm-player-theme: #e86c8b;">
+					<Hls crossOrigin>
+						<source data-src={hlsUrl} type="application/x-mpegURL" />
+					</Hls>
+
+					<DefaultUi />
+				</Player>
 			{/if}
 
 			<video
