@@ -7,7 +7,7 @@
 	import { page } from '$app/stores'
 	import { getWeekNumber } from '$lib/utils'
 	import Field from '$lib/components/Profile/Elements/Field.svelte'
-  import { onMount } from 'svelte'
+	import { onMount } from 'svelte'
 	import moment from 'moment'
 
 	export let profileId
@@ -47,7 +47,7 @@
 
 	const removeEvent = async () => {
 		loading = true
-		await del(`schedule${formData.id ? '?scheduleId=' + formData.id : ''}`)
+		await del(`schedule?scheduleId=${formData.id}`, auth)
 		ec.refetchEvents()
 		hideOptions()
 		formData = {}
@@ -57,7 +57,7 @@
 	const getEvents = async (date) => {
 		loading = true
 		const wn = getWeekNumber(date)
-		let resp = await get(`/schedules?userId=${profileId}&weekNumber=${wn}`)
+		let resp = await get(`schedules?userId=${profileId}&weekNumber=${wn}`)
 		loading = false
 		return resp.map((i) => ({
 			title: i.text,
@@ -84,7 +84,7 @@
 	}
 
 	const hideForm = () => {
-    formData = {}
+		formData = {}
 		formClass = ''
 	}
 
@@ -96,13 +96,13 @@
 		optionClass = ''
 	}
 
-  onMount(() => {
-    let buttons = document.getElementsByClassName("ec-button ec-addNew") 
-    const addButton = buttons[0]
+	onMount(() => {
+		let buttons = document.getElementsByClassName('ec-button ec-addNew')
+		const addButton = buttons[0]
 
-    addButton.innerHTML = "Add Event"
-    addButton.onclick = showForm
-  })
+		addButton.innerHTML = 'Add Event'
+		addButton.onclick = showForm
+	})
 </script>
 
 <div class="bg-white p-8 rounded">
@@ -219,14 +219,15 @@
 	.ec-line:not(:first-child):after {
 		@apply border-b-gray-800/5;
 	}
-  .ec-time, .ec-line{
-    /* @apply h-12 */
-  }
-  .ec-addNew {
-    background: #5f00e5!important;
-    color: white !important;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-  }
+	.ec-time,
+	.ec-line {
+		/* @apply h-12 */
+	}
+	.ec-addNew {
+		background: #5f00e5 !important;
+		color: white !important;
+		border-radius: 8px;
+		font-size: 16px;
+		font-weight: 500;
+	}
 </style>
