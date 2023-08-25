@@ -21,7 +21,7 @@
 				><img alt="Get it on Google Play" src={IconMobileAppAndroid} /></a>
 			<a
 				href="https://apps.apple.com/us/app/telegram-messenger/id686449807?itsct=apps_box_badge&amp;itscg=30200">
-				<img src={IconMobileAppiOS} alt="Download on the App Store" class="w-full h-full p-8" /></a>
+				<img src={IconMobileAppiOS} alt="Download on the App Store" class="w-full h-full p-6" /></a>
 		</div>
 		<div class="modal-action">
 			<button class="btn" on:click={() => ($is_apps_modal_open = false)}>Close</button>
