@@ -102,10 +102,11 @@
 
     addButton.innerHTML = "Add Event"
     addButton.onclick = showForm
+
   })
 </script>
 
-<div class="bg-white p-8 rounded">
+<div class="bg-base-100 p-8 rounded">
 	<!-- Form component -->
 	<div class="flex justify-between mb-4">
 		<span />
@@ -200,33 +201,21 @@
 		@apply border rounded-md overflow-hidden;
 	}
 	.ec-toolbar {
-		@apply mb-0 bg-white py-3 px-6;
+		@apply mb-0 bg-base-100 py-3 px-6;
 	}
 	.ec-title {
-		@apply font-semibold text-gray-800;
-	}
-	.ec-days {
-		/* @apply  */
+		@apply font-semibold text-base-content;
 	}
 	.ec-day {
-		@apply py-4 text-gray-800;
+		@apply py-4 text-base-content;
 	}
-
 	.ec-body:not(.ec-compact) .ec-line:nth-child(even):after {
 		@apply border-solid;
 	}
-
-	.ec-line:not(:first-child):after {
-		@apply border-b-gray-800/5;
+	.ec-button {
+		@apply btn !text-base-content;
 	}
-  .ec-time, .ec-line{
-    /* @apply h-12 */
-  }
-  .ec-addNew {
-    background: #5f00e5!important;
-    color: white !important;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-  }
+	.ec-addNew {
+		@apply btn !bg-base-100;
+	}
 </style>
