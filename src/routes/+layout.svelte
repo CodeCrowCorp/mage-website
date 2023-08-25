@@ -28,7 +28,8 @@
 		is_feature_obs_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import { env } from '$env/dynamic/public'
-	import { user_role } from '$lib/stores/authStore'
+	import { user_role } from '$lib/stores/userStore'
+	import MobileAppsPrompt from '$lib/components/Global/MobileAppsPrompt.svelte'
 
 	NProgress.configure({
 		minimum: 0.75,
@@ -62,24 +63,8 @@
 	})
 
 	const getUserRole = async () => {
-		if ($page.data.user?.userId && !$user_role) {
-			const allRoles = await get('roles', {
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			})
-			if (Array.isArray(allRoles)) {
-				const userRole = await get('roles/role-mapping', {
-					userId: $page.data.user?.userId,
-					token: $page.data.user?.token
-				})
-				if (userRole && userRole.role) {
-					const usersRoleName = allRoles.find((item) => {
-						return item._id == userRole.role
-					})?.name
-					$user_role = usersRoleName
-				}
-			}
-		}
+		//TODO: get role from Auth0
+		$user_role = 'user'
 	}
 
 	const handleWebsocket = async () => {
@@ -131,6 +116,7 @@
 
 <svelte:head>
 	<link rel="stylesheet" href="/fonts/montserrat.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@vime/core@^5/themes/default.css" />
 	{@html `<script> 
           const theme = localStorage.getItem('theme') || 'dark';
           document.querySelector('html').dataset.theme = theme;
@@ -157,6 +143,9 @@
 
 		<slot />
 		<LoginPrompt />
+		{#if $is_feature_apps_enabled}
+			<MobileAppsPrompt />
+		{/if}
 	</div>
 	<div class="drawer-side z-10">
 		<label for="main-drawer" class="drawer-overlay" />

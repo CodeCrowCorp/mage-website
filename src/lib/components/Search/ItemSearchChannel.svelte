@@ -57,7 +57,7 @@
 						<img src={item.avatar} alt="" />
 					</div>
 				</div>
-				<a class="ml-2 link link-hover flex gap-1" href="/profile/{item.userDetails.username}"
+				<a class="ml-2 link link-hover flex gap-1" href="/{item.userDetails.username}"
 					>@{item.userDetails.username || ''}
 					{#if item.planDetails?.planTier > 1}
 						<div class="text-accent font-bold">
@@ -70,8 +70,7 @@
 				{#if item.tags && item.tags.length}
 					{#each item.tags as tag}
 						<div>
-							<span
-								class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold border-none"
+							<span class="badge badge-md text-secondary rounded-md font-semibold border-none"
 								>{tag}</span>
 						</div>
 					{/each}

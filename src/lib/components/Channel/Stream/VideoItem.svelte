@@ -18,17 +18,16 @@
 	import { is_feature_stats_enabled, is_feature_obs_enabled } from '$lib/stores/remoteConfigStore'
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
+	import { Player, DefaultUi, Hls } from '@vime/svelte'
 
 	export let video: any, channel: any
 
 	let role = '',
 		coloredRole: any = {},
 		isGuest = false,
-		obsElement: HTMLVideoElement,
 		screenElement: HTMLVideoElement,
 		webcamElement: HTMLVideoElement,
 		audioElement: HTMLAudioElement,
-		obsWhep: WHIPClient,
 		screenWhip: WHIPClient,
 		screenWhep: WHEPClient,
 		webcamWhip: WHIPClient,
@@ -46,11 +45,16 @@
 		timerInterval: any,
 		formattedTime: string = '00:00:00',
 		isHoverVideo: boolean = false,
-		obs_modal: any = null
+		obs_modal: any = null,
+		player: any,
+		hlsUrl: string = '',
+		hasActiveObsStream = false
 
 	// WHIP/WHEP variables that determine if stream is coming in
 	$: isScreenLive = false
 	$: isWebcamLive = false
+
+	$: console.log('TESTING HLS', hlsUrl)
 
 	$: if (channel) {
 		role = setRole({ userId: video._id, channel, currentUserId: $page.data.user?.userId })
@@ -85,14 +89,14 @@
 		handleAudioChanges()
 	}
 
-	$: if ($is_feature_stats_enabled && (isScreenLive || isWebcamLive)) {
+	$: if ($is_feature_stats_enabled && (isScreenLive || isWebcamLive || hasActiveObsStream)) {
 		toggleTimer()
 	}
 
 	$: animate = isWebcamFocused ? '' : 'transition-all'
 
 	const handleObsChanges = () => {
-		prevScreen = video.obs
+		prevObs = video.obs
 		toggleClient({
 			trackType: 'obs'
 		})
@@ -120,32 +124,8 @@
 		if ($page.data.user?.userId === video._id) {
 			switch (trackType) {
 				case 'obs':
-					console.log('got here---- video.obs.playback?.hls', video.obs?.playback?.hls)
-					// if (video.obs && $is_sharing_obs) {
-					// 	const key = video.obs.webRTCPlayback.url + '-' + video._id
-					// 	const existed = getScreen(key)
-					// 	obsWhep =
-					// 		existed ||
-					// 		new WHEPClient(video.obs.webRTCPlayback.url, obsElement, video.obs.trackType)
-					// 	if (existed) {
-					// 		existed.videoElement = obsElement
-					// 		obsElement.srcObject = existed.localStream
-					// 		$is_sharing_obs = true
-					// 		isScreenLive = true
-					// 	}
-					// 	addScreen(key, obsWhep)
-					// 	obsWhep.addEventListener(`localStreamStopped-${trackType}`, () => {
-					// 		$is_sharing_obs = false
-					// 		isScreenLive = false
-					// 		removeScreen(key)
-					// 	})
-					// 	obsWhep.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
-					// } else if (!video.screen) {
-					// 	if (obsElement) {
-					// 		obsElement.srcObject = null
-					// 	}
-					// 	$is_sharing_obs = false
-					// }
+					hlsUrl = video.obs?.playback?.hls
+					console.log('got here---- video.obs.playback?.hls', hlsUrl)
 					break
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
@@ -209,13 +189,8 @@
 		} else {
 			switch (trackType) {
 				case 'obs':
-					if (video.obs && obsElement) {
-						obsElement.src = video.obs.rtmpsPlayback.url
-						obsElement.muted = false
-						obsElement.play()
-					} else {
-						if (obsElement) obsElement.srcObject = null
-					}
+					hlsUrl = video.obs?.playback?.hls
+					console.log('got here---- video.obs.playback?.hls', hlsUrl)
 					break
 				case 'screen':
 					if (video.screen && screenElement) {
@@ -283,16 +258,7 @@
 
 	onMount(() => {
 		isGuest = channel?.guests?.includes(video._id)
-		if (obsElement) {
-			obsElement.addEventListener('dblclick', (event: any) => {
-				if (document.fullscreenElement) {
-					document.exitFullscreen()
-				} else {
-					obsElement.requestFullscreen()
-				}
-			})
-			handleObsChanges()
-		}
+		handleObsChanges()
 
 		if (screenElement) {
 			screenElement.addEventListener('dblclick', (event: any) => {
@@ -324,7 +290,8 @@
 
 	is_sharing_obs.subscribe((value: any) => {
 		if (value === false) {
-			obsWhep?.disconnectStream()
+			// obsWhep?.disconnectStream()
+			//TODO: check if stream is coming, if not, hide video
 		} else if (value === true) {
 			if (is_sharing_obs) obs_modal?.showModal()
 		}
@@ -413,10 +380,17 @@
 			}, 1000)
 		}
 	}
+
+	const onPlaybackReady = (e: any) => {
+		console.log('onPlaybackReady', e)
+		hasActiveObsStream = true
+	}
 </script>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@vime/core@^5/themes/default.css" />
+
 <div
-	class={isScreenLive || isWebcamLive ? 'w-full h-full' : 'w-[500px] max-h-80'}
+	class={hlsUrl || isScreenLive || isWebcamLive ? 'w-full h-full' : 'w-[500px] max-h-80'}
 	on:mouseenter={() => (isHoverVideo = true)}
 	on:mouseleave={() => (isHoverVideo = false)}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
@@ -427,7 +401,7 @@
 				? 'mask-hexagon'
 				: 'mask-squircle'} object-cover m-auto" />
 		<div class="absolute inset-0">
-			{#if $is_feature_stats_enabled && (isScreenLive || isWebcamLive)}
+			{#if $is_feature_stats_enabled && (isScreenLive || isWebcamLive || hasActiveObsStream)}
 				<span
 					class="btn btn-sm btn-neutral font-medium text-white border-none items-center w-fit absolute top-2 left-2 {isHoverVideo
 						? 'opacity-100'
@@ -435,17 +409,22 @@
 					{formattedTime}
 				</span>
 			{/if}
-			{#if $is_feature_obs_enabled}
-				<video-js
-					bind:this={obsElement}
-					id={`obs-${video._id}`}
-					controls
-					autoplay
-					muted
-					preload="auto"
-					class="rounded-md w-full h-full">
-					<source src={video.obs?.playback?.hls} type="application/x-mpegURL" />
-				</video-js>
+			{#if $is_feature_obs_enabled && hlsUrl}
+				<div class="absolute rounded-md w-full h-full">
+					<Player
+						theme="dark"
+						on:vmPlaybackReady={onPlaybackReady}
+						bind:this={player}
+						controls
+						autoplay
+						muted>
+						<Hls crossOrigin>
+							<source data-src={hlsUrl} type="application/x-mpegURL" />
+						</Hls>
+
+						<DefaultUi />
+					</Player>
+				</div>
 			{/if}
 
 			<video
@@ -535,3 +514,23 @@
 		</form>
 	</dialog>
 {/if}
+
+<!-- <style>
+	:global(html),
+	:global(body) {
+		width: 100%;
+		height: 100%;
+	}
+
+	:global(body) {
+		margin: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	#container {
+		width: 100%;
+		max-width: 960px;
+	}
+</style> -->
