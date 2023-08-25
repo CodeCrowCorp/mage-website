@@ -25,11 +25,9 @@
 	let role = '',
 		coloredRole: any = {},
 		isGuest = false,
-		obsElement: HTMLVideoElement,
 		screenElement: HTMLVideoElement,
 		webcamElement: HTMLVideoElement,
 		audioElement: HTMLAudioElement,
-		obsWhep: WHIPClient,
 		screenWhip: WHIPClient,
 		screenWhep: WHEPClient,
 		webcamWhip: WHIPClient,
@@ -94,7 +92,7 @@
 	$: animate = isWebcamFocused ? '' : 'transition-all'
 
 	const handleObsChanges = () => {
-		prevScreen = video.obs
+		prevObs = video.obs
 		toggleClient({
 			trackType: 'obs'
 		})
@@ -212,13 +210,14 @@
 		} else {
 			switch (trackType) {
 				case 'obs':
-					if (video.obs && obsElement) {
-						obsElement.src = video.obs?.playback?.hls
-						obsElement.muted = false
-						obsElement.play()
-					} else {
-						if (obsElement) obsElement.srcObject = null
-					}
+					//TODO: check if stream is coming, if not, hide video
+					// if (video.obs && obsElement) {
+					// 	obsElement.src = video.obs?.playback?.hls
+					// 	obsElement.muted = false
+					// 	obsElement.play()
+					// } else {
+					// 	if (obsElement) obsElement.srcObject = null
+					// }
 					break
 				case 'screen':
 					if (video.screen && screenElement) {
@@ -286,16 +285,7 @@
 
 	onMount(() => {
 		isGuest = channel?.guests?.includes(video._id)
-		if (obsElement) {
-			obsElement.addEventListener('dblclick', (event: any) => {
-				if (document.fullscreenElement) {
-					document.exitFullscreen()
-				} else {
-					obsElement.requestFullscreen()
-				}
-			})
-			handleObsChanges()
-		}
+		handleObsChanges()
 
 		if (screenElement) {
 			screenElement.addEventListener('dblclick', (event: any) => {
@@ -327,7 +317,8 @@
 
 	is_sharing_obs.subscribe((value: any) => {
 		if (value === false) {
-			obsWhep?.disconnectStream()
+			// obsWhep?.disconnectStream()
+			//TODO: check if stream is coming, if not, hide video
 		} else if (value === true) {
 			if (is_sharing_obs) obs_modal?.showModal()
 		}
@@ -440,7 +431,7 @@
 					{formattedTime}
 				</span>
 			{/if}
-			{#if $is_feature_obs_enabled}
+			{#if $is_feature_obs_enabled && hlsUrl}
 				<!-- <video-js
 					bind:this={obsElement}
 					id={`obs-${video._id}`}

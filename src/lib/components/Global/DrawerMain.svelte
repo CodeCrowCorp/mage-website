@@ -21,7 +21,7 @@
 		is_feature_apps_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
-	import { is_login_modal_open } from '$lib/stores/helperStore'
+	import { is_apps_modal_open, is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
 	import { onMount } from 'svelte'
 	import { isOnline } from '$lib/stores/userStore'
@@ -190,7 +190,7 @@
 					<button
 						class="custom-menu-item text-accent hover:text-accent font-medium"
 						on:click={() => {
-							$is_login_modal_open = true
+							$is_apps_modal_open = true
 							if (nav_drawer.checked) {
 								nav_drawer.checked = false
 							}
@@ -206,13 +206,20 @@
 		{/if}
 		{#if $is_feature_apps_enabled}
 			<li>
-				<a class="custom-menu-item" href="https://codecrow.io" target="_blank">
+				<button
+					class="custom-menu-item"
+					on:click={() => {
+						$is_apps_modal_open = true
+						if (nav_drawer.checked) {
+							nav_drawer.checked = false
+						}
+					}}>
 					<IconDrawerGetApps />
 					<span class={isChannelPage ? 'md:hidden' : ''}>Get Apps</span>
 					{#if !isChannelPage}
 						<span class="badge badge-secondary">New</span>
 					{/if}
-				</a>
+				</button>
 			</li>
 		{/if}
 		<li>
