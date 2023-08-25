@@ -2,7 +2,7 @@ import { redirect, type Handle } from '@sveltejs/kit'
 import { get as getWritableVal } from 'svelte/store'
 import { Authenticate } from '$lib/authentication/authentication'
 import { get } from '$lib/api'
-import { user_role } from '$lib/stores/authStore'
+import { user_role } from '$lib/stores/userStore'
 import { env } from '$env/dynamic/public'
 
 export const handle: Handle = async ({ event, resolve }) => {

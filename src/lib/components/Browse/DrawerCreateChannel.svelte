@@ -148,7 +148,7 @@
 							{#if $tags && $tags.length > 0}
 								{#each $tags as tag}
 									<span
-										class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold mx-1 cursor-pointer border-none my-1"
+										class="badge badge-md text-secondary rounded-md font-semibold mx-1 cursor-pointer border-none my-1"
 										on:click={() => addTag(tag.name)}>{tag.name}</span>
 								{/each}
 							{:else}

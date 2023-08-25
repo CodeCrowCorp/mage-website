@@ -54,8 +54,7 @@
 				{/if}
 				{#each channel.tags as tag}
 					<div>
-						<span
-							class="badge badge-md text-primary bg-gray-200 rounded-md font-semibold border-none"
+						<span class="badge badge-md text-secondary rounded-md font-semibold border-none"
 							>{tag}</span>
 					</div>
 				{/each}
