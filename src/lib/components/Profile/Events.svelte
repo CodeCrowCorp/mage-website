@@ -47,7 +47,7 @@
 
 	const removeEvent = async () => {
 		loading = true
-		await del(`schedule?scheduleId=${formData.id}`, auth)
+		await del(`schedule?scheduleId=${formData._id}`, auth)
 		ec.refetchEvents()
 		hideOptions()
 		formData = {}
@@ -72,7 +72,7 @@
 		formData.text = event.title
 		formData.startDate = moment(event.start).format('YYYY-MM-DDTHH:MM')
 		formData.duration = moment(event.end).format('YYYY-MM-DDTHH:MM')
-		formData.id = event.id
+		formData._id = event.id
 		showOptions()
 	}
 
@@ -105,7 +105,7 @@
 	})
 </script>
 
-<div class="bg-base-100 p-8 rounded">
+<div id="events-board" class="bg-base-100 p-8 rounded">
 	<!-- Form component -->
 	<div class="flex justify-between mb-4">
 		<span />
@@ -215,6 +215,7 @@
 		@apply btn !text-base-content;
 	}
 	.ec-addNew {
-		@apply btn !bg-base-100;
+		@apply btn !bg-primary;
 	}
+
 </style>
