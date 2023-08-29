@@ -148,7 +148,7 @@
 					formData = {}
 				}}>✕</button>
 			<h3 class="font-bold text-lg">Options</h3>
-			<ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full">
+			<ul class="p-2 menu dropdown-content z-[1] bg-base-100 rounded-box w-full">
 				<!-- svelte-ignore a11y-missing-attribute -->
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<li on:click={showForm}><a>Edit</a></li>
@@ -217,5 +217,7 @@
 	.ec-addNew {
 		@apply btn !bg-primary;
 	}
-
+	.ec-line:not(:first-child):after {
+		opacity: 0.05;
+	}
 </style>
