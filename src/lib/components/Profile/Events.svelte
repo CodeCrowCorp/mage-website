@@ -212,12 +212,15 @@
 		@apply border-solid;
 	}
 	.ec-button {
-		@apply btn !text-base-content !border-none;
+		@apply !btn !border-none;
 	}
 	.ec-addNew {
-		@apply btn !bg-primary !text-white;
+		@apply !btn !btn-primary !text-white;
 	}
 	.ec-line:not(:first-child):after {
 		opacity: 0.05;
 	}
+	/* .ec-button-group {
+		@apply !join;
+	} */
 </style>
