@@ -112,9 +112,7 @@
 
 		<dialog class={'modal ' + formClass}>
 			<form method="dialog" class="modal-box event-form">
-				<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" on:click={hideForm}
-					>✕</button>
-				<h3 class="font-bold text-lg mb-8">{formData.id ? 'Edit Event' : 'Add Event'}</h3>
+				<h3 class="font-bold text-lg mb-8 w-fit">{formData.id ? 'Edit Event' : 'Add Event'}</h3>
 				<Field label="Title" bind:value={formData.text} type="text" />
 				<Field
 					label="Start Date"
@@ -140,22 +138,24 @@
 	<!-- Options -->
 
 	<dialog class={'modal ' + optionClass}>
-		<form method="dialog" class="modal-box px-0">
-			<button
-				class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-				on:click={() => {
-					hideOptions()
-					formData = {}
-				}}>✕</button>
+		<form method="dialog" class="modal-box">
 			<h3 class="font-bold text-lg">Options</h3>
 			<ul class="p-2 menu dropdown-content z-[1] bg-base-100 rounded-box w-full">
 				<!-- svelte-ignore a11y-missing-attribute -->
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<li on:click={showForm}><a>Edit</a></li>
+				<li on:click={showForm}><a>Edit event</a></li>
 				<!-- svelte-ignore a11y-missing-attribute -->
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<li on:click={removeEvent}><a>Remove</a></li>
+				<li on:click={removeEvent}><a>Remove event</a></li>
 			</ul>
+			<div class="modal-action">
+				<button
+					class="btn"
+					on:click={() => {
+						hideOptions()
+						formData = {}
+					}}>Close</button>
+			</div>
 		</form>
 	</dialog>
 
@@ -212,10 +212,10 @@
 		@apply border-solid;
 	}
 	.ec-button {
-		@apply btn !text-base-content;
+		@apply btn !text-base-content !border-none;
 	}
 	.ec-addNew {
-		@apply btn !bg-primary;
+		@apply btn !bg-primary !text-white;
 	}
 	.ec-line:not(:first-child):after {
 		opacity: 0.05;
