@@ -81,6 +81,7 @@
 			put('stats/stream/end', 
 							{
 								streamId: streamId,
+								end: Date.now()
 							},
 							{
 							userId: $page.data.user?.userId,
