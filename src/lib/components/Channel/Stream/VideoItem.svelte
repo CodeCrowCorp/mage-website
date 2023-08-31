@@ -19,8 +19,9 @@
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { Player, DefaultUi, Hls } from '@vime/svelte'
+	import { post, put } from '$lib/api'
 
-	export let video: any, channel: any
+	export let streamId: any, video: any, channel: any
 
 	let role = '',
 		coloredRole: any = {},
@@ -120,7 +121,7 @@
 		})
 	}
 
-	const toggleClient = ({ trackType }: { trackType: string }) => {
+	const toggleClient = async ({ trackType }: { trackType: string }) => {
 		if ($page.data.user?.userId === video._id) {
 			switch (trackType) {
 				case 'obs':
@@ -129,6 +130,24 @@
 					break
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
+						//TODO: put call to create stream record in stats here
+						if(streamId == '') {
+							const streamData = await post('stats/stream',
+							{
+								type: "stream",
+            					userId: $page.data.user?.userId,
+            					user: $page.data.user,
+            					start: Date.now(),
+            					end: 0,
+            					duration: 0
+							},
+							{
+							userId: $page.data.user?.userId,
+							token: $page.data.user?.token
+							})
+							streamId = streamData.insertedId
+						}
+
 						const key = video.screen.webRTC.url + '-' + video._id
 						const existed = getScreen(key)
 						screenWhip =
@@ -141,12 +160,24 @@
 							isScreenLive = true
 						}
 						addScreen(key, screenWhip)
-						screenWhip.addEventListener(`localStreamStopped-${trackType}`, () => {
+						screenWhip.addEventListener(`localStreamStopped-${trackType}`, async () => {
 							$is_sharing_screen = false
 							isScreenLive = false
 							removeScreen(key)
+							//TODO: put call to update stream record in stats with the duration streamTime
+							await put('stats/stream', 
+							{
+								streamId: streamId,
+								duration: streamTime
+							},
+							{
+							userId: $page.data.user?.userId,
+							token: $page.data.user?.token
+							})
 						})
 						screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
+
+
 					} else if (!video.screen) {
 						if (screenElement) {
 							screenElement.srcObject = null
@@ -162,9 +193,38 @@
 							webcamElement,
 							video.webcam.trackType
 						)
-						webcamWhip.addEventListener(`localStreamStopped-${trackType}`, () => {
+						//TODO: put call to create stream record in stats here 
+						if(streamId == '') {
+							const streamData = await post('stats/stream',
+							{
+								type: "stream",
+            					userId: $page.data.user?.userId,
+            					user: $page.data.user,
+            					start: Date.now(),
+            					end: 0,
+            					duration: 0
+							},
+							{
+							userId: $page.data.user?.userId,
+							token: $page.data.user?.token
+							})
+							streamId = streamData.insertedId
+						}
+
+
+						webcamWhip.addEventListener(`localStreamStopped-${trackType}`, async () => {
 							$is_sharing_webcam = false
 							isWebcamLive = false
+							//TODO: put call to update stream record in stats with the duration streamTime
+							await put('stats/stream', 
+							{
+								streamId: streamId,
+								duration: streamTime
+							},
+							{
+							userId: $page.data.user?.userId,
+							token: $page.data.user?.token
+							})
 						})
 						webcamWhip.addEventListener(`isWebcamLive`, (ev: any) => (isWebcamLive = ev.detail))
 					} else if (!video.webcam) {
@@ -377,6 +437,21 @@
 				formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
 					.toString()
 					.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+				if(streamTime % 5 == 0){
+					 put('stats/stream', 
+							{
+								streamId: streamId,
+								duration: streamTime
+							},
+							{
+							userId: $page.data.user?.userId,
+							token: $page.data.user?.token
+							}).then((result)=>{
+								console.log(result)
+							}).catch((err)=>{
+								console.log(err)
+							})
+				}	
 			}, 1000)
 		}
 	}

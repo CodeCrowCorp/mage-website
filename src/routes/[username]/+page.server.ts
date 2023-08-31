@@ -1,11 +1,23 @@
 import type { Actions, PageServerLoad } from './$types'
-import { get, patch, putImage } from '$lib/api'
+import { get, patch, post, putImage } from '$lib/api'
 import { redirect, fail, error } from '@sveltejs/kit'
 
-export const load = (async ({ params }: { params: any }) => {
+export const load = (async ({ params, locals }: { params: any, locals: any }) => {
 	const profile = await get(`users/search/username?username=${params.username}`)
 	if (profile.error) {
 		throw error(404)
+	}
+	console.log({type:'view', userid:locals.user.userId, profileType:"user", profileId: profile._id})
+
+	if(locals.user.userId !== profile._id){
+		const registerView = await post(`stats/profile/views`,
+		{type:'view', userid:locals.user.userId, profileType:"user", profileId: profile._id},
+		{
+			userId: locals.user.userId,
+			token: locals.user.token
+		}
+		)
+		console.log(registerView)
 	}
 	return {
 		profile: profile,

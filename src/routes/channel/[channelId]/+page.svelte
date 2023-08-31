@@ -2,7 +2,7 @@
 	import DrawerChat from '$lib/components/Channel/Chat/DrawerChat.svelte'
 	import StreamContainer from '$lib/components/Channel/Stream/StreamContainer.svelte'
 	import { onDestroy, onMount } from 'svelte'
-	import { get, del, post } from '$lib/api'
+	import { get, del, post, put } from '$lib/api'
 	import {
 		emitChatHistoryToChannel,
 		initChannelSocket,
@@ -30,7 +30,8 @@
 		skip = 0,
 		limit = 10,
 		viewers: any[] = [],
-		chatHistory: any[] = []
+		chatHistory: any[] = [],
+		streamId = ''
 
 	$: userCount = 0
 	$: isHostOrGuest =
@@ -77,6 +78,18 @@
 			if ($is_sharing_screen) $is_sharing_screen = false
 			if ($is_sharing_webcam) $is_sharing_webcam = false
 			if ($is_sharing_audio) $is_sharing_audio = false
+			put('stats/stream/end', 
+							{
+								streamId: streamId,
+							},
+							{
+							userId: $page.data.user?.userId,
+							token: $page.data.user?.token
+							}).then((result)=>{
+								console.log(result)
+							}).catch((err)=>{
+								console.log(err)
+							})
 		} else {
 			$is_sharing_screen = undefined
 			$is_sharing_webcam = undefined
@@ -303,7 +316,9 @@
 				bind:channels
 				on:loadMore={loadMoreChannels}
 				bind:isHostOrGuest
-				bind:viewers />
+				bind:viewers
+				bind:streamId 
+				/>
 
 			{#if showEditChannelDrawer}
 				<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />

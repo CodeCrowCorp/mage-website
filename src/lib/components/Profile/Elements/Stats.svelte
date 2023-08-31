@@ -56,7 +56,7 @@
 		</div>
 		<div class="stat-title">Page Views</div>
 		<div class="stat-value text-primary">{totalPageViews}</div>
-		<div class="stat-desc">{viewsMonthlyIncr.monthlyChange} more than last month</div>
+		<div class="stat-desc">{viewsMonthlyIncr.monthlyChange} % more than last month</div>
 	</div>
 
 	<div class="stat">
@@ -67,7 +67,7 @@
 		<div class="stat-value text-secondary">
 			{highestAndCurrentStreak.highest} / {highestAndCurrentStreak.current}
 		</div>
-		<div class="stat-desc">{streakMonthlyIncr.monthlyChange} more than last month</div>
+		<div class="stat-desc">{streakMonthlyIncr.monthlyChange} % more than last month</div>
 	</div>
 
 	<div class="stat">
@@ -76,7 +76,7 @@
 		</div>
 		<div class="stat-title">Total / Avg Hours</div>
 		<div class="stat-value text-secondary">{totalAndAvgHours} / {avgHours}</div>
-		<div class="stat-desc">{totalHoursMonthlyIncr.monthlyChange} more than last month</div>
+		<div class="stat-desc">{totalHoursMonthlyIncr.monthlyChange} % more than last month</div>
 	</div>
 
 	<!-- <div class="stat">
