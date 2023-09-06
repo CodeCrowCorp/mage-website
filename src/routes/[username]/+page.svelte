@@ -5,6 +5,8 @@
 	import UserDetails from '$lib/components/Profile/Elements/UserDetails.svelte'
 	import WholePageSkeleton from '$lib/components/Profile/Elements/WholePageSkeleton.svelte'
 	import type { PageData } from './$types'
+	import { onMount } from 'svelte'
+	import { page } from '$app/stores'
 
 	export let data: PageData
 
@@ -12,6 +14,12 @@
 	let banner =
 		data.profile?.banner ||
 		'https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2710&amp;q=80'
+
+	onMount(async () => {
+		if ($page.data.user?.userId !== data.profile._id) {
+			await data.lazy.profileViews
+		}
+	})
 </script>
 
 {#if !data.profile}
