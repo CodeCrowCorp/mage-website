@@ -131,20 +131,22 @@
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
 						//TODO: put call to create stream record in stats here
-						if(streamId == '') {
-							const streamData = await post('stats/stream',
-							{
-								type: "stream",
-            					userId: $page.data.user?.userId,
-            					user: $page.data.user,
-            					start: Date.now(),
-            					end: 0,
-            					duration: 0
-							},
-							{
-							userId: $page.data.user?.userId,
-							token: $page.data.user?.token
-							})
+						if (streamId == '') {
+							const streamData = await post(
+								'stats/stream',
+								{
+									type: 'stream',
+									userId: $page.data.user?.userId,
+									user: $page.data.user,
+									start: Date.now(),
+									end: 0,
+									duration: 0
+								},
+								{
+									userId: $page.data.user?.userId,
+									token: $page.data.user?.token
+								}
+							)
 							streamId = streamData.insertedId
 						}
 
@@ -165,19 +167,19 @@
 							isScreenLive = false
 							removeScreen(key)
 							//TODO: put call to update stream record in stats with the duration streamTime
-							await put('stats/stream', 
-							{
-								streamId: streamId,
-								duration: streamTime
-							},
-							{
-							userId: $page.data.user?.userId,
-							token: $page.data.user?.token
-							})
+							await put(
+								'stats/stream',
+								{
+									streamId: streamId,
+									duration: streamTime
+								},
+								{
+									userId: $page.data.user?.userId,
+									token: $page.data.user?.token
+								}
+							)
 						})
 						screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
-
-
 					} else if (!video.screen) {
 						if (screenElement) {
 							screenElement.srcObject = null
@@ -193,38 +195,9 @@
 							webcamElement,
 							video.webcam.trackType
 						)
-						//TODO: put call to create stream record in stats here 
-						if(streamId == '') {
-							const streamData = await post('stats/stream',
-							{
-								type: "stream",
-            					userId: $page.data.user?.userId,
-            					user: $page.data.user,
-            					start: Date.now(),
-            					end: 0,
-            					duration: 0
-							},
-							{
-							userId: $page.data.user?.userId,
-							token: $page.data.user?.token
-							})
-							streamId = streamData.insertedId
-						}
-
-
 						webcamWhip.addEventListener(`localStreamStopped-${trackType}`, async () => {
 							$is_sharing_webcam = false
 							isWebcamLive = false
-							//TODO: put call to update stream record in stats with the duration streamTime
-							await put('stats/stream', 
-							{
-								streamId: streamId,
-								duration: streamTime
-							},
-							{
-							userId: $page.data.user?.userId,
-							token: $page.data.user?.token
-							})
 						})
 						webcamWhip.addEventListener(`isWebcamLive`, (ev: any) => (isWebcamLive = ev.detail))
 					} else if (!video.webcam) {
@@ -429,7 +402,7 @@
 			clearInterval(timerInterval)
 			timerInterval = null
 		} else {
-			timerInterval = setInterval(() => {
+			timerInterval = setInterval(async () => {
 				streamTime++
 				const hours = Math.floor(streamTime / 3600)
 				const minutes = Math.floor((streamTime % 3600) / 60)
@@ -437,21 +410,19 @@
 				formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
 					.toString()
 					.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-				if(streamTime % 5 == 0){
-					 put('stats/stream', 
-							{
-								streamId: streamId,
-								duration: streamTime
-							},
-							{
+				if (streamTime % 5 == 0) {
+					await put(
+						'stats/stream',
+						{
+							streamId: streamId,
+							duration: streamTime
+						},
+						{
 							userId: $page.data.user?.userId,
 							token: $page.data.user?.token
-							}).then((result)=>{
-								console.log(result)
-							}).catch((err)=>{
-								console.log(err)
-							})
-				}	
+						}
+					)
+				}
 			}, 1000)
 		}
 	}

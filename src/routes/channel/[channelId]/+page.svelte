@@ -73,24 +73,22 @@
 		}, 600)
 	})
 
-	onDestroy(() => {
+	onDestroy(async () => {
 		if (isHostOrGuest) {
 			if ($is_sharing_screen) $is_sharing_screen = false
 			if ($is_sharing_webcam) $is_sharing_webcam = false
 			if ($is_sharing_audio) $is_sharing_audio = false
-			put('stats/stream/end', 
-							{
-								streamId: streamId,
-								end: Date.now()
-							},
-							{
-							userId: $page.data.user?.userId,
-							token: $page.data.user?.token
-							}).then((result)=>{
-								console.log(result)
-							}).catch((err)=>{
-								console.log(err)
-							})
+			await put(
+				'stats/stream/end',
+				{
+					streamId: streamId,
+					end: Date.now()
+				},
+				{
+					userId: $page.data.user?.userId,
+					token: $page.data.user?.token
+				}
+			)
 		} else {
 			$is_sharing_screen = undefined
 			$is_sharing_webcam = undefined
@@ -318,8 +316,7 @@
 				on:loadMore={loadMoreChannels}
 				bind:isHostOrGuest
 				bind:viewers
-				bind:streamId 
-				/>
+				bind:streamId />
 
 			{#if showEditChannelDrawer}
 				<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />
