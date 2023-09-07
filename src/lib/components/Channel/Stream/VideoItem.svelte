@@ -456,7 +456,7 @@
 			{/if}
 			{#if $is_feature_obs_enabled && hlsUrl}
 				<div class="absolute rounded-md w-full h-full">
-					<Player
+					<!-- <Player
 						theme="dark"
 						on:vmPlaybackReady={onPlaybackReady}
 						bind:this={player}
@@ -468,7 +468,7 @@
 						</Hls>
 
 						<DefaultUi />
-					</Player>
+					</Player> -->
 				</div>
 			{/if}
 
