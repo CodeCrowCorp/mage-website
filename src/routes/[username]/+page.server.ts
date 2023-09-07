@@ -1,8 +1,8 @@
 import type { Actions, PageServerLoad } from './$types'
-import { get, patch, post, putImage } from '$lib/api'
+import { get, patch, putImage } from '$lib/api'
 import { redirect, fail, error } from '@sveltejs/kit'
 
-export const load = (async ({ params, locals }: { params: any; locals: any }) => {
+export const load = (async ({ params }: { params: any }) => {
 	const profile = await get(`users/search/username?username=${params.username}`)
 	if (profile.error) {
 		throw error(404)
@@ -10,28 +10,19 @@ export const load = (async ({ params, locals }: { params: any; locals: any }) =>
 	return {
 		profile: profile,
 		lazy: {
-			profileViews: post(
-				`stats/profile/views`,
-				{
-					type: 'view',
-					userid: locals.user.userId,
-					profileType: 'user',
-					profileId: profile._id
-				},
-				{
-					userId: locals.user.userId,
-					token: locals.user.token
-				}
-			),
 			channels: get(`channels/user?userId=${profile._id}&skip=${0}&limit=${10}`),
-			totalPageViews: get(`stats/profile/views/four-weeks?profileType=user&id=${profile._id}`),
-			viewsMonthlyIncr: get(`stats/profile/views/monthly?profileType=user&id=${profile._id}`),
+			totalPageViews: get(`stats/views/total-views?viewType=user&viewId=${profile._id}`),
+			totalChannelViews: get(`stats/views/total-views?viewType=channel&userId=${profile._id}`),
+			totalChannelViews4Weeks: get(
+				`stats/views/total-views/4-weeks?viewType=channel&userId=${profile._id}`
+			),
+			viewsMonthlyIncr: get(`stats/views/monthly-increase?viewType=channel&userId=${profile._id}`),
 			highestAndCurrentStreak: get(`stats/stream/streak?userId=${profile._id}`),
-			streakMonthlyIncr: get(`stats/stream/streak/monthly?userId=${profile._id}`),
+			streakMonthlyIncr: get(`stats/stream/streak/monthly-increase?userId=${profile._id}`),
 			totalHours: get(`stats/stream/total-hours?userId=${profile._id}`),
-			totalHoursMonthlyIncr: get(`stats/stream/total-hours/monthly?userId=${profile._id}`),
-			avgHours: get(`stats/stream/avg-length?userId=${profile._id}`),
-			avgHoursMonthlyIncr: get(`stats/stream/total-hours?userId=${profile._id}`)
+			totalHoursMonthlyIncr: get(`stats/stream/total-hours/monthly-increase?userId=${profile._id}`),
+			avgHours: get(`stats/stream/avg-hours?userId=${profile._id}`),
+			avgHoursMonthlyIncr: get(`stats/stream/avg-hours/monthly-increase?userId=${profile._id}`)
 		}
 	}
 }) satisfies PageServerLoad

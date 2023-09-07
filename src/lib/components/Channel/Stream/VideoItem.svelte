@@ -19,7 +19,7 @@
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { Player, DefaultUi, Hls } from '@vime/svelte'
-	import { post, put } from '$lib/api'
+	import { get, patch, post, put } from '$lib/api'
 
 	export let streamId: any, video: any, channel: any
 
@@ -130,7 +130,6 @@
 					break
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
-						//TODO: put call to create stream record in stats here
 						if (streamId == '') {
 							const streamData = await post(
 								'stats/stream',
@@ -166,18 +165,17 @@
 							$is_sharing_screen = false
 							isScreenLive = false
 							removeScreen(key)
-							//TODO: put call to update stream record in stats with the duration streamTime
-							await put(
-								'stats/stream',
-								{
-									streamId: streamId,
-									duration: streamTime
-								},
-								{
-									userId: $page.data.user?.userId,
-									token: $page.data.user?.token
-								}
-							)
+							if (streamId) {
+								await patch(
+									`stats/stream/end?streamId=${streamId}`,
+									{},
+									{
+										userId: $page.data.user?.userId,
+										token: $page.data.user?.token
+									}
+								)
+								streamId = ''
+							}
 						})
 						screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 					} else if (!video.screen) {
@@ -236,6 +234,9 @@
 							existed.videoElement = screenElement
 							screenElement.srcObject = existed.stream
 							isScreenLive = true
+							const streamRecord = await get(`stats/stream?streamId=${streamId}`)
+							streamTime = streamRecord ? (Date.now() - streamRecord.start) / 1000 : 0
+							toggleTimer()
 						}
 
 						addScreen(key, screenWhep)
@@ -330,7 +331,7 @@
 		}
 	})
 
-	is_sharing_screen.subscribe((value: any) => {
+	is_sharing_screen.subscribe(async (value: any) => {
 		if (value === false) {
 			screenWhip?.disconnectStream()
 			clearInterval(timerInterval)
@@ -410,13 +411,11 @@
 				formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
 					.toString()
 					.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-				if (streamTime % 5 == 0) {
-					await put(
-						'stats/stream',
-						{
-							streamId: streamId,
-							duration: streamTime
-						},
+				//NOTE: check if mine and has been 5 seconds
+				if (video._id === $page.data.user?.userId && streamTime % 5 == 0) {
+					await patch(
+						`stats/stream?streamId=${streamId}`,
+						{},
 						{
 							userId: $page.data.user?.userId,
 							token: $page.data.user?.token

@@ -29,6 +29,8 @@
 	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import IconDrawerGetApps from '$lib/assets/icons/drawer/IconDrawerGetApps.svelte'
+	import IconViews from '$lib/assets/icons/IconViews.svelte'
+	import IconFollowers from '$lib/assets/icons/IconFollowers.svelte'
 
 	export var nav_drawer: HTMLInputElement
 
@@ -39,10 +41,7 @@
 	let progressBarColor = colorFromLevel(1)
 	let streakCount: any = { current: 0, highest: 0 }
 	let hoursStreamed: number = 0
-	// let totalViews: number = 0
-	// let hoursMonthlyIncr: number = 0
-	// let streakMonthlyIncr: number = 0
-	// let viewsMonthlyIncr: number = 0
+	let followers: number = 0
 	onMount(async () => {
 		if (currentUser) {
 			let exp = currentUser.exp || 0
@@ -50,21 +49,14 @@
 			progressBarLevel = levelAndBarValue.level
 			progressBarValue = levelAndBarValue.barValue
 			progressBarColor = colorFromLevel(progressBarLevel)
-			streakCount = await get(`stats/stream/streak`, {
+			streakCount = await get(`stats/stream/streak?userId=${$page.data.user?.userId}`)
+			hoursStreamed = await get(
+				`stats/stream/total-hours/24-hours?userId=${$page.data.user?.userId}`
+			)
+			followers = await get(`follows/count?source=${$page.data.user?.userId}&sourceType=source1`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
-			hoursStreamed = await get(`stats/stream/total-hours`)
-			// totalViews = await get(
-			// 	`stats/profile/views/four-weeks?profileType=user&id=${$page.data.user?.userId}`
-			// )
-			// viewsMonthlyIncr = await get(
-			// 	`stats/profile/views/monthly?profileType=user&id=${$page.data.user?.userId}`
-			// )
-			// streakMonthlyIncr = await get(`stats/stream/streak/monthly?userId=${$page.data.user?.userId}`)
-			// hoursMonthlyIncr = await get(
-			// 	`stats/stream/total-hours/monthly?userId=${$page.data.user?.userId}`
-			// )
 		}
 	})
 	let isChannelPage = false
@@ -122,16 +114,26 @@
 								{/if}
 							</div>
 							<div class="flex gap-4 {isChannelPage ? 'md:hidden' : ''}">
-								<div class="flex gap-1 tooltip" data-tip="{streakCount.current} day streak">
+								<div
+									class="flex gap-1 tooltip tooltip-primary"
+									data-tip="{streakCount.current} day streak">
 									<IconDrawerStreak />
 									<p class="text-start">
 										{streakCount.current} d
 									</p>
 								</div>
-								<div class="flex gap-1 tooltip" data-tip="{hoursStreamed} hours streamed today">
+								<div
+									class="flex gap-1 tooltip tooltip-primary"
+									data-tip="{hoursStreamed} hours streamed today">
 									<IconDrawerStreamDuration />
 									<p class="text-start">
 										{hoursStreamed} h
+									</p>
+								</div>
+								<div class="flex gap-1 tooltip tooltip-primary" data-tip="{followers} followers">
+									<IconFollowers />
+									<p class="text-start">
+										{followers}
 									</p>
 								</div>
 							</div>

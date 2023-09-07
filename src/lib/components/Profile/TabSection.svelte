@@ -9,10 +9,11 @@
 
 	export let profile: any,
 		channels: any,
-		totalPageViews: any,
+		totalChannelViews: any,
+		totalChannelViews4Weeks: any,
 		viewsMonthlyIncr: any,
 		highestAndCurrentStreak: any,
-		totalAndAvgHours: any,
+		totalHours: any,
 		streakMonthlyIncr: any,
 		totalHoursMonthlyIncr: any,
 		avgHours: any
@@ -24,7 +25,6 @@
 		$is_feature_stats_enabled = env.PUBLIC_FEATURE_STATS === 'true'
 		tabs = ['Channels', 'Followers', 'Events']
 		if ($is_feature_stats_enabled) tabs.push('Stats')
-		console.log('got here----', JSON.stringify(profile))
 	})
 </script>
 
@@ -56,9 +56,10 @@
 						{viewsMonthlyIncr}
 						{streakMonthlyIncr}
 						{totalHoursMonthlyIncr}
-						{totalPageViews}
+						{totalChannelViews}
+						{totalChannelViews4Weeks}
 						{highestAndCurrentStreak}
-						{totalAndAvgHours} />
+						{totalHours} />
 				</div>
 			{/if}
 		</div>

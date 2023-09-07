@@ -139,7 +139,7 @@
 
 	<dialog class={'modal ' + optionClass}>
 		<form method="dialog" class="modal-box">
-			<h3 class="font-bold text-lg">Options</h3>
+			<h3 class="font-bold text-lg w-fit">Options</h3>
 			<ul class="p-2 menu dropdown-content z-[1] bg-base-100 rounded-box w-full">
 				<!-- svelte-ignore a11y-missing-attribute -->
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -219,6 +219,9 @@
 	}
 	.ec-line:not(:first-child):after {
 		opacity: 0.05;
+	}
+	.ec-today {
+		@apply !bg-base-300;
 	}
 	/* .ec-button-group {
 		@apply !join;
