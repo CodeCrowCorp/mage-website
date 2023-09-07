@@ -284,8 +284,20 @@ export const createEffect = (...initialDeps: any[]) => {
 	}
 }
 
-export const getWeekNumber = (date:Date) => {
-	const now = date;
-	const onejan = new Date(now.getFullYear(), 0, 1);
-	return Math.ceil((((now.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7);
+export const getWeekNumber = (date: Date) => {
+	const now = date
+	const onejan = new Date(now.getFullYear(), 0, 1)
+	return Math.ceil(((now.getTime() - onejan.getTime()) / 86400000 + onejan.getDay() + 1) / 7)
+}
+
+export const getNumberInThousands = (number: number) => {
+	if (number >= 1000000000) {
+		return Math.floor(number / 1000000000) + 'b'
+	} else if (number >= 1000000) {
+		return Math.floor(number / 1000000) + 'm'
+	} else if (number >= 1000) {
+		return Math.floor(number / 1000) + 'k'
+	} else {
+		return number.toString()
+	}
 }

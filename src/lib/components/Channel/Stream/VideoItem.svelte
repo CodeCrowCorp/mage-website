@@ -19,8 +19,9 @@
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { Player, DefaultUi, Hls } from '@vime/svelte'
+	import { get, patch, post, put } from '$lib/api'
 
-	export let video: any, channel: any
+	export let streamId: any, video: any, channel: any
 
 	let role = '',
 		coloredRole: any = {},
@@ -120,7 +121,7 @@
 		})
 	}
 
-	const toggleClient = ({ trackType }: { trackType: string }) => {
+	const toggleClient = async ({ trackType }: { trackType: string }) => {
 		if ($page.data.user?.userId === video._id) {
 			switch (trackType) {
 				case 'obs':
@@ -129,6 +130,25 @@
 					break
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
+						if (streamId == '') {
+							const streamData = await post(
+								'stats/stream',
+								{
+									type: 'stream',
+									userId: $page.data.user?.userId,
+									user: $page.data.user,
+									start: Date.now(),
+									end: 0,
+									duration: 0
+								},
+								{
+									userId: $page.data.user?.userId,
+									token: $page.data.user?.token
+								}
+							)
+							streamId = streamData.insertedId
+						}
+
 						const key = video.screen.webRTC.url + '-' + video._id
 						const existed = getScreen(key)
 						screenWhip =
@@ -141,10 +161,21 @@
 							isScreenLive = true
 						}
 						addScreen(key, screenWhip)
-						screenWhip.addEventListener(`localStreamStopped-${trackType}`, () => {
+						screenWhip.addEventListener(`localStreamStopped-${trackType}`, async () => {
 							$is_sharing_screen = false
 							isScreenLive = false
 							removeScreen(key)
+							if (streamId) {
+								await patch(
+									`stats/stream/end?streamId=${streamId}`,
+									{},
+									{
+										userId: $page.data.user?.userId,
+										token: $page.data.user?.token
+									}
+								)
+								streamId = ''
+							}
 						})
 						screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 					} else if (!video.screen) {
@@ -162,7 +193,7 @@
 							webcamElement,
 							video.webcam.trackType
 						)
-						webcamWhip.addEventListener(`localStreamStopped-${trackType}`, () => {
+						webcamWhip.addEventListener(`localStreamStopped-${trackType}`, async () => {
 							$is_sharing_webcam = false
 							isWebcamLive = false
 						})
@@ -203,6 +234,9 @@
 							existed.videoElement = screenElement
 							screenElement.srcObject = existed.stream
 							isScreenLive = true
+							const streamRecord = await get(`stats/stream?streamId=${streamId}`)
+							streamTime = streamRecord ? (Date.now() - streamRecord.start) / 1000 : 0
+							toggleTimer()
 						}
 
 						addScreen(key, screenWhep)
@@ -297,7 +331,7 @@
 		}
 	})
 
-	is_sharing_screen.subscribe((value: any) => {
+	is_sharing_screen.subscribe(async (value: any) => {
 		if (value === false) {
 			screenWhip?.disconnectStream()
 			clearInterval(timerInterval)
@@ -369,7 +403,7 @@
 			clearInterval(timerInterval)
 			timerInterval = null
 		} else {
-			timerInterval = setInterval(() => {
+			timerInterval = setInterval(async () => {
 				streamTime++
 				const hours = Math.floor(streamTime / 3600)
 				const minutes = Math.floor((streamTime % 3600) / 60)
@@ -377,6 +411,17 @@
 				formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
 					.toString()
 					.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+				//NOTE: check if mine and has been 5 seconds
+				if (video._id === $page.data.user?.userId && streamTime % 5 == 0) {
+					await patch(
+						`stats/stream?streamId=${streamId}`,
+						{},
+						{
+							userId: $page.data.user?.userId,
+							token: $page.data.user?.token
+						}
+					)
+				}
 			}, 1000)
 		}
 	}

@@ -2,7 +2,7 @@
 	import DrawerChat from '$lib/components/Channel/Chat/DrawerChat.svelte'
 	import StreamContainer from '$lib/components/Channel/Stream/StreamContainer.svelte'
 	import { onDestroy, onMount } from 'svelte'
-	import { get, del, post } from '$lib/api'
+	import { get, del, post, put, patch } from '$lib/api'
 	import {
 		emitChatHistoryToChannel,
 		initChannelSocket,
@@ -30,7 +30,8 @@
 		skip = 0,
 		limit = 10,
 		viewers: any[] = [],
-		chatHistory: any[] = []
+		chatHistory: any[] = [],
+		streamId = ''
 
 	$: userCount = 0
 	$: isHostOrGuest =
@@ -56,15 +57,20 @@
 		await loadChannel()
 		await handleWebsocket()
 		await loadMoreChannels()
-		if (channel?.user !== $page.data.user?.userId) {
-			await post(`stats/profile/views`, {
-				view: {
+		if ($page.data.user?.userId && channel?.user !== $page.data.user?.userId) {
+			await post(
+				`stats/view`,
+				{
 					type: 'view',
-					userid: $page.data.user?.userId,
-					profile: 'channel',
-					profileId: channel?._id
+					userId: $page.data.user?.userId,
+					viewType: 'channel',
+					viewId: channel?._id
+				},
+				{
+					userId: $page.data.user?.userId,
+					token: $page.data.user?.token
 				}
-			})
+			)
 		}
 		$is_chat_drawer_destroy = false
 		setTimeout(() => {
@@ -72,11 +78,22 @@
 		}, 600)
 	})
 
-	onDestroy(() => {
+	onDestroy(async () => {
 		if (isHostOrGuest) {
 			if ($is_sharing_screen) $is_sharing_screen = false
 			if ($is_sharing_webcam) $is_sharing_webcam = false
 			if ($is_sharing_audio) $is_sharing_audio = false
+			if (streamId) {
+				await patch(
+					`stats/stream/end?streamId=${streamId}`,
+					{},
+					{
+						userId: $page.data.user?.userId,
+						token: $page.data.user?.token
+					}
+				)
+				streamId = ''
+			}
 		} else {
 			$is_sharing_screen = undefined
 			$is_sharing_webcam = undefined
@@ -303,7 +320,8 @@
 				bind:channels
 				on:loadMore={loadMoreChannels}
 				bind:isHostOrGuest
-				bind:viewers />
+				bind:viewers
+				bind:streamId />
 
 			{#if showEditChannelDrawer}
 				<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />

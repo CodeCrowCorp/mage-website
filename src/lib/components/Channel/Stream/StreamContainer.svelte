@@ -12,7 +12,8 @@
 		channel: any,
 		channels: any = [],
 		isHostOrGuest: boolean = false,
-		viewers: any[] = []
+		viewers: any[] = [],
+		streamId: any
 
 	let isScrollable = false
 
@@ -69,7 +70,7 @@
 						</div>
 					</div>
 					{#if channel && nextchannel?._id === $page.params.channelId}
-						<VideoGrid bind:channel />
+						<VideoGrid bind:streamId bind:channel />
 					{/if}
 				</div>
 			</div>

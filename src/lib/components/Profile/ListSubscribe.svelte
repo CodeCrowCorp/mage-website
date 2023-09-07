@@ -4,6 +4,7 @@
 	import { get } from '$lib/api.js'
 	import LoadMoreContaier from './LoadMore.svelte'
 	import { page } from '$app/stores'
+	import { getNumberInThousands } from '$lib/utils'
 
 	export let profileId: string
 
@@ -43,7 +44,7 @@
 
 <div class="flex flex-row justify-center gap-5 mt-8">
 	<div class="card flex flex-col w-1/2 gap-2 bg-base-200 py-4 px-8">
-		<p class="text-start font-semibold">Followers ({$follower_count})</p>
+		<p class="text-start font-semibold">Followers ({getNumberInThousands($follower_count || 0)})</p>
 
 		<LoadMoreContaier
 			let:list
@@ -57,7 +58,9 @@
 		</LoadMoreContaier>
 	</div>
 	<div class="card flex flex-col w-1/2 gap-2 bg-base-200 py-4 px-8">
-		<p class="text-start font-semibold">Following ({$following_count})</p>
+		<p class="text-start font-semibold">
+			Following ({getNumberInThousands($following_count || 0)})
+		</p>
 
 		<LoadMoreContaier
 			let:list

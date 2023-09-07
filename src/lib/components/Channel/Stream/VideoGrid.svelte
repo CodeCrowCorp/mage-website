@@ -3,7 +3,7 @@
 	import { getVideoGrids } from '$lib/utils'
 	import CommandList from '$lib/components/Channel/Stream/CommandList.svelte'
 
-	export let channel: any
+	export let channel: any, streamId: any
 
 	$: grid = getVideoGrids(channel.videoItems, 9)
 </script>
@@ -15,7 +15,7 @@
 				{#each grid as row}
 					<div class="flex flex-row gap-4 justify-center h-full">
 						{#each row as video (video._id)}
-							<VideoItem bind:video {channel} />
+							<VideoItem bind:streamId bind:video {channel} />
 						{/each}
 					</div>
 				{/each}
