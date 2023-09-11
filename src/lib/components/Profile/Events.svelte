@@ -97,9 +97,10 @@
 	}
 
 	onMount(() => {
+		let group = document.getElementsByClassName('ec-button-group')
 		let buttons = document.getElementsByClassName('ec-button ec-addNew')
 		const addButton = buttons[0]
-
+		group[0].classList.add('join')
 		addButton.innerHTML = 'Add Event'
 		addButton.onclick = showForm
 	})
@@ -212,18 +213,27 @@
 		@apply border-solid;
 	}
 	.ec-button {
-		@apply !btn !border-none;
+		@apply !btn !join-item !border-none;
 	}
 	.ec-addNew {
 		@apply !btn !btn-primary !text-white;
 	}
+	.ec-timeGridDay {
+		@apply !rounded-r-lg;
+	}
+	.ec-prev {
+		@apply !rounded-l-lg;
+	}
 	.ec-line:not(:first-child):after {
 		opacity: 0.05;
 	}
+
+	.ec-icon.ec-prev:after,
+	.ec-icon.ec-next:after {
+		@apply border-2 border-base-content border-l-0 border-b-0;
+	}
+
 	.ec-today {
 		@apply !bg-base-300;
 	}
-	/* .ec-button-group {
-		@apply !join;
-	} */
 </style>
