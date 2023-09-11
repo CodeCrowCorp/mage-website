@@ -236,4 +236,12 @@
 	.ec-today {
 		@apply !bg-base-300;
 	}
+
+	.ec-events {
+		@apply m-2;
+	}
+
+	.ec-event {
+		@apply bg-primary;
+	}
 </style>
