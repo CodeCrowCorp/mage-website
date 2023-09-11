@@ -19,9 +19,9 @@
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { Player, DefaultUi, Hls } from '@vime/svelte'
-	import { get, patch, post, put } from '$lib/api'
+	import { get, patch } from '$lib/api'
 
-	export let streamId: any, video: any, channel: any
+	export let video: any, channel: any
 
 	let role = '',
 		coloredRole: any = {},
@@ -49,7 +49,8 @@
 		obs_modal: any = null,
 		player: any,
 		hlsUrl: string = '',
-		hasActiveObsStream = false
+		hasActiveObsStream = false,
+		streamId = ''
 
 	// WHIP/WHEP variables that determine if stream is coming in
 	$: isScreenLive = false
@@ -90,8 +91,10 @@
 		handleAudioChanges()
 	}
 
-	$: if ($is_feature_stats_enabled && (isScreenLive || isWebcamLive || hasActiveObsStream)) {
-		toggleTimer()
+	$: if ($is_feature_stats_enabled && (isScreenLive || hasActiveObsStream)) {
+		toggleTimer(true)
+	} else {
+		toggleTimer(false)
 	}
 
 	$: animate = isWebcamFocused ? '' : 'transition-all'
@@ -130,25 +133,6 @@
 					break
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
-						if (streamId == '') {
-							const streamData = await post(
-								'stats/stream',
-								{
-									type: 'stream',
-									userId: $page.data.user?.userId,
-									user: $page.data.user,
-									start: Date.now(),
-									end: 0,
-									duration: 0
-								},
-								{
-									userId: $page.data.user?.userId,
-									token: $page.data.user?.token
-								}
-							)
-							streamId = streamData.insertedId
-						}
-
 						const key = video.screen.webRTC.url + '-' + video._id
 						const existed = getScreen(key)
 						screenWhip =
@@ -165,17 +149,6 @@
 							$is_sharing_screen = false
 							isScreenLive = false
 							removeScreen(key)
-							if (streamId) {
-								await patch(
-									`stats/stream/end?streamId=${streamId}`,
-									{},
-									{
-										userId: $page.data.user?.userId,
-										token: $page.data.user?.token
-									}
-								)
-								streamId = ''
-							}
 						})
 						screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 					} else if (!video.screen) {
@@ -202,6 +175,8 @@
 						if (webcamElement) {
 							webcamElement.srcObject = null
 						}
+						$is_sharing_webcam = false
+						isWebcamLive = false
 					}
 					break
 				case 'audio':
@@ -233,15 +208,11 @@
 						if (existed) {
 							existed.videoElement = screenElement
 							screenElement.srcObject = existed.stream
-							isScreenLive = true
-							const streamRecord = await get(`stats/stream?streamId=${streamId}`)
-							streamTime = streamRecord ? (Date.now() - streamRecord.start) / 1000 : 0
-							toggleTimer()
+							isScreenLive = true //TODO: fixes scrolling to new stream, but breaks when host ends stream
+							screenElement.muted = false
+							screenElement.play()
 						}
-
 						addScreen(key, screenWhep)
-						screenElement.muted = false
-						screenElement.play()
 						screenWhep.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 					} else {
 						if (screenElement) screenElement.srcObject = null
@@ -291,6 +262,7 @@
 	}
 
 	onMount(() => {
+		toggleTimer(false)
 		isGuest = channel?.guests?.includes(video._id)
 		handleObsChanges()
 
@@ -334,7 +306,18 @@
 	is_sharing_screen.subscribe(async (value: any) => {
 		if (value === false) {
 			screenWhip?.disconnectStream()
-			clearInterval(timerInterval)
+			toggleTimer(false)
+			if (streamId) {
+				await patch(
+					`stats/stream/end?streamId=${streamId}`,
+					{},
+					{
+						userId: $page.data.user?.userId,
+						token: $page.data.user?.token
+					}
+				)
+				streamId = ''
+			}
 		}
 	})
 
@@ -398,29 +381,44 @@
 		})
 	}
 
-	const toggleTimer = () => {
-		if (timerInterval) {
+	const toggleTimer = (isTimerEnabled: boolean) => {
+		if (!isTimerEnabled) {
 			clearInterval(timerInterval)
 			timerInterval = null
+			streamTime = 0
+			formattedTime = '00:00:00'
+			streamId = ''
 		} else {
+			if (timerInterval) return
 			timerInterval = setInterval(async () => {
-				streamTime++
-				const hours = Math.floor(streamTime / 3600)
-				const minutes = Math.floor((streamTime % 3600) / 60)
-				const seconds = streamTime % 60
-				formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
-					.toString()
-					.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-				//NOTE: check if mine and has been 5 seconds
-				if (video._id === $page.data.user?.userId && streamTime % 5 == 0) {
-					await patch(
-						`stats/stream?streamId=${streamId}`,
-						{},
-						{
-							userId: $page.data.user?.userId,
-							token: $page.data.user?.token
-						}
-					)
+				try {
+					streamId = video.screen.streamId
+					if (!streamId) return
+					console.log('got here----', video.screen.streamId)
+					if (streamId && streamTime === 0) {
+						const streamRecord = await get(`stats/stream?streamId=${streamId}`)
+						streamTime = streamRecord ? (Date.now() - streamRecord.start) / 1000 : 0
+					}
+					streamTime = Math.floor(streamTime) + 1
+					const hours = Math.floor(streamTime / 3600)
+					const minutes = Math.floor((streamTime % 3600) / 60)
+					const seconds = streamTime % 60
+					formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
+						.toString()
+						.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+					//NOTE: check if mine and has been 5 seconds
+					if (video._id === $page.data.user?.userId && streamTime % 5 == 0) {
+						await patch(
+							`stats/stream?streamId=${streamId}`,
+							{},
+							{
+								userId: $page.data.user?.userId,
+								token: $page.data.user?.token
+							}
+						)
+					}
+				} catch (e) {
+					console.log(e)
 				}
 			}, 1000)
 		}
@@ -448,7 +446,7 @@
 		<div class="absolute inset-0">
 			{#if $is_feature_stats_enabled && (isScreenLive || isWebcamLive || hasActiveObsStream)}
 				<span
-					class="btn btn-sm btn-neutral font-medium text-white border-none items-center w-fit absolute top-2 left-2 {isHoverVideo
+					class="z-10 btn btn-sm btn-neutral font-medium text-white border-none items-center w-fit absolute top-2 left-2 {isHoverVideo
 						? 'opacity-100'
 						: 'opacity-50'}">
 					{formattedTime}
@@ -492,7 +490,7 @@
 					muted
 					class="rounded-md h-full w-full" />
 			</div>
-			<video bind:this={audioElement} autoplay muted class="rounded-md w-0 h-0" />
+			<video bind:this={audioElement} autoplay class="rounded-md w-0 h-0" />
 			<div class="absolute left-2 bottom-2 rounded-md dropdown">
 				<label
 					tabindex="0"

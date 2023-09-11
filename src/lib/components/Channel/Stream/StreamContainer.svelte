@@ -6,14 +6,14 @@
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { createEventDispatcher } from 'svelte'
+	import { is_sharing_audio, is_sharing_screen, is_sharing_webcam } from '$lib/stores/streamStore'
 
 	const dispatch = createEventDispatcher()
 	export let userCount: number = 1,
 		channel: any,
 		channels: any = [],
 		isHostOrGuest: boolean = false,
-		viewers: any[] = [],
-		streamId: any
+		viewers: any[] = []
 
 	let isScrollable = false
 
@@ -33,7 +33,8 @@
 				goto(`${id}`, {
 					keepFocus: true,
 					replaceState: true,
-					noScroll: true
+					noScroll: true,
+					invalidateAll: true
 				})
 			}
 		}
@@ -44,7 +45,11 @@
 
 <div class="flex justify-center h-full">
 	<div
-		class="carousel carousel-vertical rounded-lg bg-base-100 w-full m-5 mb-24 {isScrollable
+		class="carousel carousel-vertical rounded-lg bg-base-100 w-full m-5 mb-24 {isScrollable ||
+		$is_sharing_audio ||
+		$is_sharing_screen ||
+		$is_sharing_webcam ||
+		$is_sharing_audio
 			? 'overflow-y-hidden'
 			: ''}">
 		{#each channels as nextchannel}
@@ -70,7 +75,7 @@
 						</div>
 					</div>
 					{#if channel && nextchannel?._id === $page.params.channelId}
-						<VideoGrid bind:streamId bind:channel />
+						<VideoGrid bind:channel />
 					{/if}
 				</div>
 			</div>

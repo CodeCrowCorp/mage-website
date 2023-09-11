@@ -30,8 +30,7 @@
 		skip = 0,
 		limit = 10,
 		viewers: any[] = [],
-		chatHistory: any[] = [],
-		streamId = ''
+		chatHistory: any[] = []
 
 	$: userCount = 0
 	$: isHostOrGuest =
@@ -83,17 +82,6 @@
 			if ($is_sharing_screen) $is_sharing_screen = false
 			if ($is_sharing_webcam) $is_sharing_webcam = false
 			if ($is_sharing_audio) $is_sharing_audio = false
-			if (streamId) {
-				await patch(
-					`stats/stream/end?streamId=${streamId}`,
-					{},
-					{
-						userId: $page.data.user?.userId,
-						token: $page.data.user?.token
-					}
-				)
-				streamId = ''
-			}
 		} else {
 			$is_sharing_screen = undefined
 			$is_sharing_webcam = undefined
@@ -320,8 +308,7 @@
 				bind:channels
 				on:loadMore={loadMoreChannels}
 				bind:isHostOrGuest
-				bind:viewers
-				bind:streamId />
+				bind:viewers />
 
 			{#if showEditChannelDrawer}
 				<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />
