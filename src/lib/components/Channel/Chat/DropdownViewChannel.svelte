@@ -19,6 +19,15 @@
 		isFollowing: boolean = false,
 		isFavorite: boolean = false
 
+	onMount(async () => {
+		if ($page.data.user?.userId) {
+			isFavorite = await get(`favorite?channelId=${channel._id}`, {
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			})
+		}
+	})
+
 	const getHostRelationship = async () => {
 		isHost = channel.user === $page?.data?.user?.userId
 		if ($page.data.user?.userId) {
@@ -29,10 +38,6 @@
 			isFollowing = relationship?.isFollowing
 		}
 	}
-
-	onMount(async () => {
-		isFavorite = $page.data.user?.user?.favChannelIds?.includes(channel._id)
-	})
 
 	const toggleFollow = async () => {
 		isFollowing = !isFollowing
@@ -54,12 +59,12 @@
 		isFavorite = !isFavorite
 		if (isFavorite) {
 			await put(
-				`users/channel?channelId=${channel._id}`,
+				`favorite?channelId=${channel._id}`,
 				{},
 				{ userId: $page.data.user?.userId, token: $page.data.user?.token }
 			)
 		} else {
-			await del(`users/channel?channelId=${channel._id}`, {
+			await del(`favorite?channelId=${channel._id}`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
