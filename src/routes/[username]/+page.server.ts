@@ -19,10 +19,10 @@ export const load = (async ({ params }: { params: any }) => {
 			viewsMonthlyIncr: get(`stats/views/monthly-increase?viewType=channel&userId=${profile._id}`),
 			highestAndCurrentStreak: get(`stats/stream/streak?userId=${profile._id}`),
 			streakMonthlyIncr: get(`stats/stream/streak/monthly-increase?userId=${profile._id}`),
-			totalHours: get(`stats/stream/total-hours?userId=${profile._id}`),
-			totalHoursMonthlyIncr: get(`stats/stream/total-hours/monthly-increase?userId=${profile._id}`),
-			avgHours: get(`stats/stream/avg-hours?userId=${profile._id}`),
-			avgHoursMonthlyIncr: get(`stats/stream/avg-hours/monthly-increase?userId=${profile._id}`)
+			totalMins: get(`stats/stream/total-mins?userId=${profile._id}`),
+			totalMinsMonthlyIncr: get(`stats/stream/total-mins/monthly-increase?userId=${profile._id}`),
+			avgMins: get(`stats/stream/avg-mins?userId=${profile._id}`),
+			avgMinsMonthlyIncr: get(`stats/stream/avg-mins/monthly-increase?userId=${profile._id}`)
 		}
 	}
 }) satisfies PageServerLoad

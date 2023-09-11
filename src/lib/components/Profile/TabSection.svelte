@@ -13,10 +13,10 @@
 		totalChannelViews4Weeks: any,
 		viewsMonthlyIncr: any,
 		highestAndCurrentStreak: any,
-		totalHours: any,
+		totalMins: any,
 		streakMonthlyIncr: any,
-		totalHoursMonthlyIncr: any,
-		avgHours: any
+		totalMinsMonthlyIncr: any,
+		avgMins: any
 
 	let tabs: string[] = []
 	let activeTab = 0
@@ -52,14 +52,14 @@
 				<div class="grid h-full" class:hidden={activeTab != tabs.indexOf('Stats')}>
 					<Stats
 						{profile}
-						{avgHours}
+						{avgMins}
 						{viewsMonthlyIncr}
 						{streakMonthlyIncr}
-						{totalHoursMonthlyIncr}
+						{totalMinsMonthlyIncr}
 						{totalChannelViews}
 						{totalChannelViews4Weeks}
 						{highestAndCurrentStreak}
-						{totalHours} />
+						{totalMins} />
 				</div>
 			{/if}
 		</div>
