@@ -223,7 +223,12 @@
 	.ec-today {
 		@apply !bg-base-300;
 	}
-	/* .ec-button-group {
-		@apply !join;
-	} */
+
+	.ec-events {
+		@apply m-2;
+	}
+
+	.ec-event {
+		@apply bg-primary;
+	}
 </style>
