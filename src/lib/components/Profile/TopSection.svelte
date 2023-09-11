@@ -4,11 +4,12 @@
 	import { follower_count, following_count } from '$lib/stores/profileStore'
 	import { put, del } from '$lib/api'
 	import { get } from '$lib/api'
-	import { createEffect } from '$lib/utils'
+	import { createEffect, getNumberInThousands } from '$lib/utils'
 	import { is_feature_affiliate_enabled } from '$lib/stores/remoteConfigStore'
 
 	export let profile: any,
-		showDrawer = false
+		showDrawer = false,
+		totalPageViews: any
 
 	const useOueryEffect = createEffect()
 
@@ -107,17 +108,25 @@
 	</div>
 	<div class="w-full lg:w-4/12 px-4 lg:order-1">
 		<div class="flex justify-center py-4 lg:pt-4 pt-8">
-			<div class="mr-4 p-3 text-center tooltip" data-tip="{$follower_count || 0} followers">
-				<span class="text-xl font-bold block uppercase tracking-wide">{$follower_count || 0}</span
+			<div
+				class="mr-4 p-3 text-center tooltip"
+				data-tip="{getNumberInThousands($follower_count || 0)} followers">
+				<span class="text-xl font-bold block uppercase tracking-wide"
+					>{getNumberInThousands($follower_count || 0)}</span
 				><span class="text-sm">Followers</span>
 			</div>
-			<div class="mr-4 p-3 text-center tooltip" data-tip="{$following_count || 0} followers">
-				<span class="text-xl font-bold block uppercase tracking-wide">{$following_count || 0}</span
+			<div
+				class="mr-4 p-3 text-center tooltip"
+				data-tip="{getNumberInThousands($following_count || 0)} following">
+				<span class="text-xl font-bold block uppercase tracking-wide"
+					>{getNumberInThousands($following_count || 0)}</span
 				><span class="text-sm">Following</span>
 			</div>
-			<div class="lg:mr-4 p-3 text-center tooltip" data-tip="coming soon...">
-				<!--{profile.views || 0} unique profile views-->
-				<span class="text-xl font-bold block uppercase tracking-wide">{profile.views || 0}</span
+			<div
+				class="lg:mr-4 p-3 text-center tooltip"
+				data-tip="{getNumberInThousands(totalPageViews || 0)} page views">
+				<span class="text-xl font-bold block uppercase tracking-wide"
+					>{getNumberInThousands(totalPageViews || 0)}</span
 				><span class="text-sm">Views</span>
 			</div>
 		</div>

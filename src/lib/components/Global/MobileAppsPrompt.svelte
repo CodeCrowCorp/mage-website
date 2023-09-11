@@ -14,7 +14,7 @@
 		on:click={(e) => {
 			e.stopPropagation()
 		}}>
-		<h3 class="font-bold text-lg">Download the mobile app</h3>
+		<h3 class="font-bold text-lg">Download the apps</h3>
 		<div class="py-4 space-y-5 px-4 md:px-10">
 			<a
 				href="https://play.google.com/store/apps/details?id=com.google.android.apps.messaging&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"

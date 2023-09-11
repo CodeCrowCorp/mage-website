@@ -68,11 +68,19 @@ export default class WHEPClient extends EventTarget {
 				console.log('got unknown track ' + track)
 			}
 
-			if (trackType === 'screen' && track.readyState === 'live') {
-				this.dispatchEvent(new CustomEvent(`isScreenLive`, { detail: true }))
+			if (trackType === 'screen' && track.kind === 'video') {
+				if (track.readyState === 'live') {
+					this.dispatchEvent(new CustomEvent(`isScreenLive`, { detail: true }))
+				} else {
+					this.dispatchEvent(new CustomEvent(`isScreenLive`, { detail: false }))
+				}
 			}
-			if (trackType === 'webcam' && track.readyState === 'live') {
-				this.dispatchEvent(new CustomEvent(`isWebcamLive`, { detail: true }))
+			if (trackType === 'webcam' && track.kind === 'video') {
+				if (track.readyState === 'live') {
+					this.dispatchEvent(new CustomEvent(`isWebcamLive`, { detail: true }))
+				} else {
+					this.dispatchEvent(new CustomEvent(`isWebcamLive`, { detail: false }))
+				}
 			}
 		}
 
