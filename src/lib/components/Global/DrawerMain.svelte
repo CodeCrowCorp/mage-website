@@ -22,7 +22,7 @@
 	} from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
 	import { is_apps_modal_open, is_login_modal_open } from '$lib/stores/helperStore'
-	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
+	import { colorFromLevel, getNumberInThousands, levelAndBarValueFromExp } from '$lib/utils'
 	import { onMount } from 'svelte'
 	import { isOnline } from '$lib/stores/userStore'
 	import { get } from '$lib/api'
@@ -40,7 +40,7 @@
 	let progressBarValue = 0
 	let progressBarColor = colorFromLevel(1)
 	let streakCount: any = { current: 0, highest: 0 }
-	let hoursStreamed: number = 0
+	let minsStreamed: number = 0
 	let followers: number = 0
 	onMount(async () => {
 		if (currentUser) {
@@ -50,9 +50,7 @@
 			progressBarValue = levelAndBarValue.barValue
 			progressBarColor = colorFromLevel(progressBarLevel)
 			streakCount = await get(`stats/stream/streak?userId=${$page.data.user?.userId}`)
-			hoursStreamed = await get(
-				`stats/stream/total-hours/24-hours?userId=${$page.data.user?.userId}`
-			)
+			minsStreamed = await get(`stats/stream/total-mins/24-hours?userId=${$page.data.user?.userId}`)
 			followers = await get(`follows/count?source=${$page.data.user?.userId}&sourceType=source1`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
@@ -124,16 +122,18 @@
 								</div>
 								<div
 									class="flex gap-1 tooltip tooltip-primary"
-									data-tip="{hoursStreamed} hours streamed today">
+									data-tip="{getNumberInThousands(minsStreamed || 0)} mins streamed today">
 									<IconDrawerStreamDuration />
 									<p class="text-start">
-										{hoursStreamed} h
+										{getNumberInThousands(minsStreamed || 0)} m
 									</p>
 								</div>
-								<div class="flex gap-1 tooltip tooltip-primary" data-tip="{followers} followers">
+								<div
+									class="flex gap-1 tooltip tooltip-primary"
+									data-tip="{getNumberInThousands(followers || 0)} followers">
 									<IconFollowers />
 									<p class="text-start">
-										{followers}
+										{getNumberInThousands(followers || 0)}
 									</p>
 								</div>
 							</div>

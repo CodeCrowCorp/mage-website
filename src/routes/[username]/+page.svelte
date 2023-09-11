@@ -65,9 +65,9 @@
 						viewsMonthlyIncr={data.lazy.viewsMonthlyIncr}
 						highestAndCurrentStreak={data.lazy.highestAndCurrentStreak}
 						streakMonthlyIncr={data.lazy.streakMonthlyIncr}
-						totalHours={data.lazy.totalHours}
-						totalHoursMonthlyIncr={data.lazy.totalHoursMonthlyIncr}
-						avgHours={data.lazy.avgHours} />
+						totalMins={data.lazy.totalMins}
+						totalMinsMonthlyIncr={data.lazy.totalMinsMonthlyIncr}
+						avgMins={data.lazy.avgMins} />
 				</div>
 			</div>
 		</div>

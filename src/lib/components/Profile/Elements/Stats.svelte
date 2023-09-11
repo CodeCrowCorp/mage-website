@@ -12,18 +12,18 @@
 		viewsMonthlyIncr: any,
 		highestAndCurrentStreak: any,
 		streakMonthlyIncr: any,
-		totalHours: any,
-		totalHoursMonthlyIncr: any,
-		avgHours: any
+		totalMins: any,
+		totalMinsMonthlyIncr: any,
+		avgMins: any
 
 	onMount(async () => {
 		if (profile) {
 			viewsMonthlyIncr = (await viewsMonthlyIncr) || 0
 			highestAndCurrentStreak = (await highestAndCurrentStreak) || 0
 			streakMonthlyIncr = (await streakMonthlyIncr) || 0
-			totalHours = (await totalHours) || 0
-			totalHoursMonthlyIncr = (await totalHoursMonthlyIncr) || 0
-			avgHours = (await avgHours) || 0
+			totalMins = (await totalMins) || 0
+			totalMinsMonthlyIncr = (await totalMinsMonthlyIncr) || 0
+			avgMins = (await avgMins) || 0
 		}
 	})
 </script>
@@ -57,9 +57,9 @@
 		<div class="stat-figure text-secondary">
 			<IconProfileStreamDuration />
 		</div>
-		<div class="stat-title">Total / Avg Hours</div>
-		<div class="stat-value text-secondary">{totalHours} / {avgHours}</div>
-		<div class="stat-desc">{totalHoursMonthlyIncr.monthlyChange} % more than last month</div>
+		<div class="stat-title">Total / Avg Mins</div>
+		<div class="stat-value text-secondary">{totalMins} / {avgMins}</div>
+		<div class="stat-desc">{totalMinsMonthlyIncr.monthlyChange} % more than last month</div>
 	</div>
 
 	<!-- <div class="stat">
