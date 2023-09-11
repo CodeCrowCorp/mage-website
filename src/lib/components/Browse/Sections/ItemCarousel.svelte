@@ -1,8 +1,9 @@
 <script lang="ts">
+	import IconViews from '$lib/assets/icons/IconViews.svelte'
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
-	// import IconBrowseItemPlay from '$lib/assets/icons/browse/IconBrowseItemPlay.svelte'
 	import { category_list } from '$lib/stores/channelStore'
+	import { getNumberInThousands } from '$lib/utils'
 
 	export let channel: any = {}
 
@@ -22,14 +23,19 @@
 						LIVE
 					</span>
 				{/if}
-				<div class="dropdown dropdown-bottom">
-					<label
-						for=""
-						class="btn btn-sm rounded-md font-medium gap-2 btn-neutral text-white border-none"
-						tabindex="-1">
+				<div
+					class="tooltip"
+					data-tip="{getNumberInThousands(channel.viewDetails?.count || 0)} views">
+					<span class="btn btn-sm rounded-md font-medium gap-2 btn-neutral text-white border-none">
+						<IconViews />
+						{getNumberInThousands(channel.viewDetails.count || 0)}
+					</span>
+				</div>
+				<div class="tooltip" data-tip="{getNumberInThousands(channel.memberCount || 0)} watching">
+					<span class="btn btn-sm rounded-md font-medium gap-2 btn-neutral text-white border-none">
 						<IconViewers />
-						{channel.memberCount || '0'}
-					</label>
+						{getNumberInThousands(channel.memberCount || 0)}
+					</span>
 				</div>
 			</div>
 			<div class="flex flex-wrap">
@@ -42,9 +48,6 @@
 				{/if}
 			</div>
 		</div>
-		<!-- <div class="flex justify-center w-full">
-			<IconBrowseItemPlay />
-		</div> -->
 		<div class="space-y-2">
 			<p class="text-2xl truncate text-white font-semibold">{channel.title || ''}</p>
 			<div class="flex flex-row items-center gap-2">

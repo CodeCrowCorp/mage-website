@@ -41,11 +41,15 @@
 	</td>
 	<td>
 		<div class="flex gap-4">
-			<!-- <div class="flex gap-2 my-3">
+			<div
+				class="flex gap-2 my-3 tooltip"
+				data-tip="{getNumberInThousands(channel.viewDetails?.count || 0)} views">
 				<IconViews />
 				<span>{getNumberInThousands(channel.viewDetails?.count || 0)}</span>
-			</div> -->
-			<div class="flex gap-2 my-3">
+			</div>
+			<div
+				class="flex gap-2 my-3 tooltip"
+				data-tip="{getNumberInThousands(channel.memberCount || 0)} watching">
 				<IconViewers />
 				<span>{getNumberInThousands(channel?.memberCount || 0)}</span>
 			</div>
