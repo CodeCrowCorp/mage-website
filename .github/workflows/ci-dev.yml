@@ -51,7 +51,7 @@ jobs:
           node ./reportConverter.js
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v3.1.3
         if: always()
         with:
           name: results.json
