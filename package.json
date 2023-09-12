@@ -1,6 +1,6 @@
 {
 	"name": "mage-website",
-	"version": "0.0.17",
+	"version": "0.0.18",
 	"license": "GPL-3.0",
 	"private": true,
 	"type": "module",
@@ -54,8 +54,6 @@
 		"@neodrag/svelte": "^2.0.3",
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/typography": "^0.5.9",
-		"@vime/core": "^5.4.1",
-		"@vime/svelte": "^5.4.1",
 		"animate.css": "^4.1.1",
 		"daisyui": "^3.2.1",
 		"emoji-picker-element": "^1.18.1",

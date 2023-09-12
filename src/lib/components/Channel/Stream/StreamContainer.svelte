@@ -1,12 +1,19 @@
 <script lang="ts">
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
+	import IconViews from '$lib/assets/icons/IconViews.svelte'
 	import StreamControls from '$lib/components/Channel/Stream/StreamControls.svelte'
 	import DropdownViewers from '$lib/components/Channel/Stream/DropdownViewers.svelte'
 	import VideoGrid from '$lib/components/Channel/Stream/VideoGrid.svelte'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { createEventDispatcher } from 'svelte'
-	import { is_sharing_audio, is_sharing_screen, is_sharing_webcam } from '$lib/stores/streamStore'
+	import {
+		is_sharing_obs,
+		is_sharing_audio,
+		is_sharing_screen,
+		is_sharing_webcam
+	} from '$lib/stores/streamStore'
+	import { getNumberInThousands } from '$lib/utils'
 
 	const dispatch = createEventDispatcher()
 	export let userCount: number = 1,
@@ -46,7 +53,7 @@
 <div class="flex justify-center h-full">
 	<div
 		class="carousel carousel-vertical rounded-lg bg-base-100 w-full m-5 mb-24 {isScrollable ||
-		$is_sharing_audio ||
+		$is_sharing_obs ||
 		$is_sharing_screen ||
 		$is_sharing_webcam ||
 		$is_sharing_audio
@@ -63,13 +70,23 @@
 								: ''}">
 							LIVE
 						</span>
-						<div class="dropdown dropdown-bottom">
+						<div
+							class="tooltip tooltip-bottom"
+							data-tip="{getNumberInThousands(channel.viewDetails?.count || 0)} views">
+							<span class="btn btn-sm btn-neutral font-medium gap-2 text-white border-none">
+								<IconViews />
+								{getNumberInThousands(channel.viewDetails.count || 0)}
+							</span>
+						</div>
+						<div
+							class="dropdown dropdown-bottom tooltip tooltip-bottom"
+							data-tip="{getNumberInThousands(userCount || 0)} watching">
 							<label
 								for=""
 								class="btn btn-sm btn-neutral font-medium gap-2 text-white border-none"
 								tabindex="-1">
 								<IconViewers />
-								{userCount}
+								{getNumberInThousands(userCount || 0)}
 							</label>
 							<DropdownViewers {channel} bind:viewers />
 						</div>
