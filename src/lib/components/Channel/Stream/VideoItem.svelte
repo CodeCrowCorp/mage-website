@@ -18,7 +18,6 @@
 	import { is_feature_stats_enabled, is_feature_obs_enabled } from '$lib/stores/remoteConfigStore'
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
-	import { Player, DefaultUi, Hls } from '@vime/svelte'
 	import { get, patch } from '$lib/api'
 
 	export let video: any, channel: any
@@ -26,9 +25,10 @@
 	let role = '',
 		coloredRole: any = {},
 		isGuest = false,
-		screenElement: HTMLVideoElement,
-		webcamElement: HTMLVideoElement,
-		audioElement: HTMLAudioElement,
+		obs_element: HTMLIFrameElement,
+		screen_element: HTMLVideoElement,
+		webcam_element: HTMLVideoElement,
+		audio_element: HTMLAudioElement,
 		screenWhip: WHIPClient,
 		screenWhep: WHEPClient,
 		webcamWhip: WHIPClient,
@@ -47,16 +47,13 @@
 		formattedTime: string = '00:00:00',
 		isHoverVideo: boolean = false,
 		obs_modal: any = null,
-		player: any,
-		hlsUrl: string = '',
-		hasActiveObsStream = false,
-		streamId = ''
+		iframeUrl: string = '',
+		streamId = '',
+		scriptStreamPlayer: any
 
 	// WHIP/WHEP variables that determine if stream is coming in
 	$: isScreenLive = false
 	$: isWebcamLive = false
-
-	$: console.log('TESTING HLS', hlsUrl)
 
 	$: if (channel) {
 		role = setRole({ userId: video._id, channel, currentUserId: $page.data.user?.userId })
@@ -91,7 +88,7 @@
 		handleAudioChanges()
 	}
 
-	$: if ($is_feature_stats_enabled && (isScreenLive || hasActiveObsStream)) {
+	$: if ($is_feature_stats_enabled && (isScreenLive || iframeUrl)) {
 		toggleTimer(true)
 	} else {
 		toggleTimer(false)
@@ -128,8 +125,8 @@
 		if ($page.data.user?.userId === video._id) {
 			switch (trackType) {
 				case 'obs':
-					hlsUrl = video.obs?.playback?.hls
-					console.log('got here---- video.obs.playback?.hls', hlsUrl)
+					iframeUrl = video.obs?.playback?.iframe
+					console.log('got here---- video.obs.playback?.iframeUrl', iframeUrl)
 					break
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
@@ -137,10 +134,10 @@
 						const existed = getScreen(key)
 						screenWhip =
 							existed ||
-							new WHIPClient(video.screen.webRTC.url, screenElement, video.screen.trackType)
+							new WHIPClient(video.screen.webRTC.url, screen_element, video.screen.trackType)
 						if (existed) {
-							existed.videoElement = screenElement
-							screenElement.srcObject = existed.localStream
+							existed.videoElement = screen_element
+							screen_element.srcObject = existed.localStream
 							$is_sharing_screen = true
 							isScreenLive = true
 						}
@@ -152,8 +149,8 @@
 						})
 						screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 					} else if (!video.screen) {
-						if (screenElement) {
-							screenElement.srcObject = null
+						if (screen_element) {
+							screen_element.srcObject = null
 						}
 						$is_sharing_screen = false
 						isScreenLive = false
@@ -163,7 +160,7 @@
 					if (video.webcam && $is_sharing_webcam) {
 						webcamWhip = new WHIPClient(
 							video.webcam.webRTC.url,
-							webcamElement,
+							webcam_element,
 							video.webcam.trackType
 						)
 						webcamWhip.addEventListener(`localStreamStopped-${trackType}`, async () => {
@@ -172,8 +169,8 @@
 						})
 						webcamWhip.addEventListener(`isWebcamLive`, (ev: any) => (isWebcamLive = ev.detail))
 					} else if (!video.webcam) {
-						if (webcamElement) {
-							webcamElement.srcObject = null
+						if (webcam_element) {
+							webcam_element.srcObject = null
 						}
 						$is_sharing_webcam = false
 						isWebcamLive = false
@@ -181,7 +178,7 @@
 					break
 				case 'audio':
 					if (video.audio && $is_sharing_audio) {
-						audioWhip = new WHIPClient(video.audio.webRTC.url, audioElement, video.audio.trackType)
+						audioWhip = new WHIPClient(video.audio.webRTC.url, audio_element, video.audio.trackType)
 						audioWhip.addEventListener(`localStreamStopped-${trackType}`, () => {
 							$is_sharing_audio = false
 							audioWhip.removeEventListener(`localAudioSpeakingValue`, () => {})
@@ -195,57 +192,61 @@
 		} else {
 			switch (trackType) {
 				case 'obs':
-					hlsUrl = video.obs?.playback?.hls
-					console.log('got here---- video.obs.playback?.hls', hlsUrl)
+					iframeUrl = video.obs?.playback?.iframe
+					console.log('got here---- video.obs.playback?.iframeUrl', iframeUrl)
 					break
 				case 'screen':
-					if (video.screen && screenElement) {
+					if (video.screen && screen_element) {
 						const key = video.screen.webRTCPlayback.url + '-' + video._id
 						const existed = getScreen(key)
 						screenWhep =
 							existed ||
-							new WHEPClient(video.screen.webRTCPlayback.url, screenElement, video.screen.trackType)
+							new WHEPClient(
+								video.screen.webRTCPlayback.url,
+								screen_element,
+								video.screen.trackType
+							)
 						if (existed) {
-							existed.videoElement = screenElement
-							screenElement.srcObject = existed.stream
+							existed.videoElement = screen_element
+							screen_element.srcObject = existed.stream
 							isScreenLive = true //TODO: fixes scrolling to new stream, but breaks when host ends stream
-							screenElement.muted = false
-							screenElement.play()
+							screen_element.muted = false
+							screen_element.play()
 						}
 						addScreen(key, screenWhep)
 						screenWhep.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 					} else {
-						if (screenElement) screenElement.srcObject = null
+						if (screen_element) screen_element.srcObject = null
 						isScreenLive = false
 					}
 					break
 				case 'webcam':
-					if (video.webcam && webcamElement) {
+					if (video.webcam && webcam_element) {
 						webcamWhep = new WHEPClient(
 							video.webcam.webRTCPlayback.url,
-							webcamElement,
+							webcam_element,
 							video.webcam.trackType
 						)
 						webcamWhep.addEventListener(`isWebcamLive`, (ev: any) => (isWebcamLive = ev.detail))
 					} else {
-						if (webcamElement) webcamElement.srcObject = null
+						if (webcam_element) webcam_element.srcObject = null
 						isWebcamLive = false
 					}
 					break
 				case 'audio':
-					if (video.audio && audioElement) {
+					if (video.audio && audio_element) {
 						audioWhep = new WHEPClient(
 							video.audio.webRTCPlayback.url,
-							audioElement,
+							audio_element,
 							video.audio.trackType
 						)
 						audioWhep.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
 							speakingValue = ev.detail
 						})
-						audioElement.muted = false
-						audioElement.play()
+						audio_element.muted = false
+						audio_element.play()
 					} else {
-						if (audioElement) audioElement.srcObject = null
+						if (audio_element) audio_element.srcObject = null
 						audioWhep?.removeEventListener(`localAudioSpeakingValue`, () => {})
 					}
 					break
@@ -266,40 +267,54 @@
 		isGuest = channel?.guests?.includes(video._id)
 		handleObsChanges()
 
-		if (screenElement) {
-			screenElement.addEventListener('dblclick', (event: any) => {
+		if (screen_element) {
+			screen_element.addEventListener('dblclick', (event: any) => {
 				if (document.fullscreenElement) {
 					document.exitFullscreen()
 				} else {
-					screenElement.requestFullscreen()
+					screen_element.requestFullscreen()
 				}
 			})
 			handleScreenChanges()
 		}
 
-		if (webcamElement) {
-			webcamElement.addEventListener('dblclick', (event: any) => {
+		if (webcam_element) {
+			webcam_element.addEventListener('dblclick', (event: any) => {
 				if (document.fullscreenElement) {
 					document.exitFullscreen()
 				} else {
-					webcamElement.requestFullscreen()
+					webcam_element.requestFullscreen()
 				}
 			})
 			handleWebcamChanges()
 		}
 
-		if (audioElement) {
+		if (audio_element) {
 			handleAudioChanges()
 		}
 		isMounted = true
 	})
 
-	is_sharing_obs.subscribe((value: any) => {
+	is_sharing_obs.subscribe(async (value: any) => {
 		if (value === false) {
-			// obsWhep?.disconnectStream()
-			//TODO: check if stream is coming, if not, hide video
+			toggleTimer(false)
+			if (streamId) {
+				await patch(
+					`stats/stream/end?streamId=${streamId}`,
+					{},
+					{
+						userId: $page.data.user?.userId,
+						token: $page.data.user?.token
+					}
+				)
+				streamId = ''
+			}
 		} else if (value === true) {
-			if (is_sharing_obs) obs_modal?.showModal()
+			obs_modal?.showModal()
+			const player = scriptStreamPlayer.Stream(obs_element)
+			player.muted = true
+			player.autoplay = true
+			player.controls = false
 		}
 	})
 
@@ -392,9 +407,8 @@
 			if (timerInterval) return
 			timerInterval = setInterval(async () => {
 				try {
-					streamId = video.screen.streamId
+					streamId = video.screen?.streamId || video.obs?.streamId
 					if (!streamId) return
-					console.log('got here----', video.screen.streamId)
 					if (streamId && streamTime === 0) {
 						const streamRecord = await get(`stats/stream?streamId=${streamId}`)
 						streamTime = streamRecord ? (Date.now() - streamRecord.start) / 1000 : 0
@@ -417,23 +431,22 @@
 							}
 						)
 					}
-				} catch (e) {
-					console.log(e)
+				} catch (err) {
+					console.log('err', err)
 				}
 			}, 1000)
 		}
 	}
-
-	const onPlaybackReady = (e: any) => {
-		console.log('onPlaybackReady', e)
-		hasActiveObsStream = true
-	}
 </script>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@vime/core@^5/themes/default.css" />
+<svelte:head>
+	<script
+		bind:this={scriptStreamPlayer}
+		src="https://embed.cloudflarestream.com/embed/sdk.latest.js"></script>
+</svelte:head>
 
 <div
-	class={hlsUrl || isScreenLive || isWebcamLive ? 'w-full h-full' : 'w-[500px] max-h-80'}
+	class={iframeUrl || isScreenLive || isWebcamLive ? 'w-full h-full' : 'w-[500px] max-h-80'}
 	on:mouseenter={() => (isHoverVideo = true)}
 	on:mouseleave={() => (isHoverVideo = false)}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
@@ -444,7 +457,7 @@
 				? 'mask-hexagon'
 				: 'mask-squircle'} object-cover m-auto" />
 		<div class="absolute inset-0">
-			{#if $is_feature_stats_enabled && (isScreenLive || isWebcamLive || hasActiveObsStream)}
+			{#if $is_feature_stats_enabled && (isScreenLive || isWebcamLive || iframeUrl)}
 				<span
 					class="z-10 btn btn-sm btn-neutral font-medium text-white border-none items-center w-fit absolute top-2 left-2 {isHoverVideo
 						? 'opacity-100'
@@ -452,45 +465,38 @@
 					{formattedTime}
 				</span>
 			{/if}
-			{#if $is_feature_obs_enabled && hlsUrl}
+			{#if $is_feature_obs_enabled && iframeUrl}
 				<div class="absolute rounded-md w-full h-full">
-					<!-- <Player
-						theme="dark"
-						on:vmPlaybackReady={onPlaybackReady}
-						bind:this={player}
-						controls
-						autoplay
-						muted>
-						<Hls crossOrigin>
-							<source data-src={hlsUrl} type="application/x-mpegURL" />
-						</Hls>
-
-						<DefaultUi />
-					</Player> -->
+					<iframe
+						bind:this={obs_element}
+						src={iframeUrl}
+						class="rounded-md w-full h-full"
+						allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; muted;" />
 				</div>
 			{/if}
-
-			<video
-				bind:this={screenElement}
-				id={`screen-${video._id}`}
-				autoplay
-				muted
-				class="rounded-md w-full h-full" />
-			<div
-				use:draggable={{ bounds: 'parent' }}
-				on:mousedown={onMouseDown}
-				on:mouseup={onMouseUp}
-				class={animate +
-					' absolute ' +
-					(!isScreenLive ? 'w-full bottom-0 left-0 h-full' : 'w-1/4 bottom-0 right-0')}>
+			{#if !iframeUrl}
 				<video
-					bind:this={webcamElement}
-					id={`webcam-${video._id}`}
+					bind:this={screen_element}
+					id={`screen-${video._id}`}
 					autoplay
 					muted
-					class="rounded-md h-full w-full" />
-			</div>
-			<video bind:this={audioElement} autoplay class="rounded-md w-0 h-0" />
+					class="rounded-md w-full h-full" />
+				<div
+					use:draggable={{ bounds: 'parent' }}
+					on:mousedown={onMouseDown}
+					on:mouseup={onMouseUp}
+					class={animate +
+						' absolute ' +
+						(!isScreenLive ? 'w-full bottom-0 left-0 h-full' : 'w-1/4 bottom-0 right-0')}>
+					<video
+						bind:this={webcam_element}
+						id={`webcam-${video._id}`}
+						autoplay
+						muted
+						class="rounded-md h-full w-full" />
+				</div>
+				<video bind:this={audio_element} autoplay class="rounded-md w-0 h-0" />
+			{/if}
 			<div class="absolute left-2 bottom-2 rounded-md dropdown">
 				<label
 					tabindex="0"
@@ -557,23 +563,3 @@
 		</form>
 	</dialog>
 {/if}
-
-<!-- <style>
-	:global(html),
-	:global(body) {
-		width: 100%;
-		height: 100%;
-	}
-
-	:global(body) {
-		margin: 0;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	#container {
-		width: 100%;
-		max-width: 960px;
-	}
-</style> -->
