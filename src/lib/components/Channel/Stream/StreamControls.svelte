@@ -33,11 +33,7 @@
 		(video: any) => video._id === $page.data.user?.userId
 	)
 
-	let obsUid: string = '',
-		screenUid: string = '',
-		webcamUid: string = '',
-		audioUid: string = '',
-		subcriptions: any[] = []
+	let subcriptions: any[] = []
 
 	const handleChatDrawer = () => {
 		if ($is_chat_drawer_open) {
@@ -65,17 +61,15 @@
 	const deleteLiveInput = async ({
 		channelId,
 		userId,
-		trackType,
-		inputId
+		trackType
 	}: {
 		channelId: string
 		userId: string
 		trackType: string
-		inputId: string
 	}) => {
-		if (inputId) {
+		if (channelId && userId && trackType) {
 			return await del(
-				`cloudflare/live-input?channelId=${channelId}&userId=${userId}&trackType=${trackType}&inputId=${inputId}`,
+				`cloudflare/live-input?channelId=${channelId}&userId=${userId}&trackType=${trackType}`,
 				{
 					userId: $page.data.user?.userId,
 					token: $page.data.user?.token
@@ -97,7 +91,6 @@
 				recording: { mode: 'automatic' }
 			}
 		})
-		obsUid = liveInput.uid
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
 		emitAction({
 			channelSocket: channel?.socket,
@@ -113,8 +106,7 @@
 		await deleteLiveInput({
 			channelId: $page.params.channelId,
 			userId: $page.data.user.userId,
-			trackType: 'obs',
-			inputId: obsUid
+			trackType: 'obs'
 		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [
 			{ _id: $page.data.user.userId, trackType: 'obs', isTrackActive: false }
@@ -131,7 +123,6 @@
 				}
 			}
 		})
-		obsUid = ''
 	}
 
 	const startScreenStream = async () => {
@@ -147,7 +138,6 @@
 				recording: { mode: 'off' }
 			}
 		})
-		screenUid = liveInput.uid
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
 		emitAction({
 			channelSocket: channel?.socket,
@@ -163,8 +153,7 @@
 		await deleteLiveInput({
 			channelId: $page.params.channelId,
 			userId: $page.data.user.userId,
-			trackType: 'screen',
-			inputId: screenUid
+			trackType: 'screen'
 		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [
 			{ _id: $page.data.user.userId, trackType: 'screen', isTrackActive: false }
@@ -181,7 +170,6 @@
 				}
 			}
 		})
-		screenUid = ''
 	}
 
 	const startWebcamStream = async () => {
@@ -197,7 +185,6 @@
 				recording: { mode: 'off' }
 			}
 		})
-		webcamUid = liveInput.uid
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
 		emitAction({
 			channelSocket: channel?.socket,
@@ -213,8 +200,7 @@
 		await deleteLiveInput({
 			channelId: $page.params.channelId,
 			userId: $page.data.user.userId,
-			trackType: 'webcam',
-			inputId: webcamUid
+			trackType: 'webcam'
 		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [
 			{ _id: $page.data.user.userId, trackType: 'webcam', isTrackActive: false }
@@ -231,7 +217,6 @@
 				}
 			}
 		})
-		webcamUid = ''
 	}
 
 	const startAudioStream = async () => {
@@ -247,7 +232,6 @@
 				recording: { mode: 'off' }
 			}
 		})
-		audioUid = liveInput.uid
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
 		emitAction({
 			channelSocket: channel?.socket,
@@ -263,8 +247,7 @@
 		await deleteLiveInput({
 			channelId: $page.params.channelId,
 			userId: $page.data.user.userId,
-			trackType: 'audio',
-			inputId: audioUid
+			trackType: 'audio'
 		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [
 			{ _id: $page.data.user.userId, trackType: 'audio', isTrackActive: false }
@@ -281,7 +264,6 @@
 				}
 			}
 		})
-		audioUid = ''
 	}
 
 	onMount(() => {

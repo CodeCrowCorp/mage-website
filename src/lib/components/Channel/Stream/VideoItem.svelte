@@ -126,8 +126,13 @@
 		if ($page.data.user?.userId === video._id) {
 			switch (trackType) {
 				case 'obs':
-					iframeUrl = video.obs?.playback?.iframe
-					// console.log('got here---- video.obs.playback?.iframeUrl', iframeUrl)
+					if ($is_sharing_obs) {
+						iframeUrl = video.obs?.playback?.iframe
+						// console.log('got here---- video.obs.playback?.iframeUrl', iframeUrl)
+					} else {
+						$is_sharing_obs = false
+						iframeUrl = ''
+					}
 					break
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
@@ -187,6 +192,11 @@
 						audioWhip.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
 							speakingValue = ev.detail
 						})
+					} else if (!video.audio) {
+						if (audio_element) {
+							audio_element.srcObject = null
+						}
+						$is_sharing_audio = false
 					}
 					break
 			}
@@ -468,7 +478,7 @@
 				? 'mask-hexagon'
 				: 'mask-squircle'} object-cover m-auto" />
 		<div class="absolute inset-0">
-			{#if $is_feature_stats_enabled && (isScreenLive || isWebcamLive || iframeUrl)}
+			{#if $is_feature_stats_enabled && (isScreenLive || iframeUrl)}
 				<span
 					class="z-10 btn btn-sm btn-neutral font-medium text-white border-none items-center w-fit absolute top-2 left-2 {isHoverVideo
 						? 'opacity-100'
@@ -508,7 +518,7 @@
 				</div>
 				<video bind:this={audio_element} autoplay class="rounded-md w-0 h-0" />
 			{/if}
-			<div class="absolute left-2 bottom-2 rounded-md dropdown">
+			<div class="absolute left-2 bottom-2 rounded-md dropdown {iframeUrl ? 'mb-16' : ''}">
 				<label
 					tabindex="0"
 					class="{coloredRole.textColor} bg-base-100 btn btn-sm normal-case flex gap-1 {speakingValue >
