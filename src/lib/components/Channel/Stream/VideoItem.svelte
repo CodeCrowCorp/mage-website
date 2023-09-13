@@ -508,7 +508,7 @@
 				</div>
 				<video bind:this={audio_element} autoplay class="rounded-md w-0 h-0" />
 			{/if}
-			<div class="absolute left-2 bottom-2 rounded-md dropdown">
+			<div class="absolute left-2 bottom-2 rounded-md dropdown {iframeUrl ? 'mb-16' : ''}">
 				<label
 					tabindex="0"
 					class="{coloredRole.textColor} bg-base-100 btn btn-sm normal-case flex gap-1 {speakingValue >
