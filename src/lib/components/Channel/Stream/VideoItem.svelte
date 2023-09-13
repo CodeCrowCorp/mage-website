@@ -19,6 +19,7 @@
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { get, patch } from '$lib/api'
+	import LibLoader from '$lib/components/Global/LibLoader.svelte'
 
 	export let video: any, channel: any
 
@@ -49,7 +50,7 @@
 		obs_modal: any = null,
 		iframeUrl: string = '',
 		streamId = '',
-		scriptStreamPlayer: any
+		streamPlayer: any
 
 	// WHIP/WHEP variables that determine if stream is coming in
 	$: isScreenLive = false
@@ -126,7 +127,7 @@
 			switch (trackType) {
 				case 'obs':
 					iframeUrl = video.obs?.playback?.iframe
-					console.log('got here---- video.obs.playback?.iframeUrl', iframeUrl)
+					// console.log('got here---- video.obs.playback?.iframeUrl', iframeUrl)
 					break
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
@@ -193,7 +194,7 @@
 			switch (trackType) {
 				case 'obs':
 					iframeUrl = video.obs?.playback?.iframe
-					console.log('got here---- video.obs.playback?.iframeUrl', iframeUrl)
+					// console.log('got here---- video.obs.playback?.iframeUrl', iframeUrl)
 					break
 				case 'screen':
 					if (video.screen && screen_element) {
@@ -209,7 +210,7 @@
 						if (existed) {
 							existed.videoElement = screen_element
 							screen_element.srcObject = existed.stream
-							isScreenLive = true //TODO: fixes scrolling to new stream, but breaks when host ends stream
+							isScreenLive = true //TODO: fixes scrolling to new stream, but breaks when host refreshes stream without ending
 							screen_element.muted = false
 							screen_element.play()
 						}
@@ -297,7 +298,7 @@
 
 	is_sharing_obs.subscribe(async (value: any) => {
 		if (value === false) {
-			toggleTimer(false)
+			if (timerInterval) toggleTimer(false)
 			if (streamId) {
 				await patch(
 					`stats/stream/end?streamId=${streamId}`,
@@ -311,17 +312,13 @@
 			}
 		} else if (value === true) {
 			obs_modal?.showModal()
-			const player = scriptStreamPlayer.Stream(obs_element)
-			player.muted = true
-			player.autoplay = true
-			player.controls = false
 		}
 	})
 
 	is_sharing_screen.subscribe(async (value: any) => {
 		if (value === false) {
 			screenWhip?.disconnectStream()
-			toggleTimer(false)
+			if (timerInterval) toggleTimer(false)
 			if (streamId) {
 				await patch(
 					`stats/stream/end?streamId=${streamId}`,
@@ -437,13 +434,27 @@
 			}, 1000)
 		}
 	}
+
+	const onLibLoaded = (event: any) => {
+		if (obs_element && iframeUrl) {
+			try {
+				// The Cloudflare Stream SDK is ready to use
+				streamPlayer = event.detail.library(obs_element)
+				streamPlayer.muted = video._id === $page.data.user?.userId
+				streamPlayer.autoplay = true
+				// streamPlayer.controls = false
+				// streamPlayer.play()
+			} catch (err) {
+				console.log('err', err)
+			}
+		}
+	}
 </script>
 
-<svelte:head>
-	<script
-		bind:this={scriptStreamPlayer}
-		src="https://embed.cloudflarestream.com/embed/sdk.latest.js"></script>
-</svelte:head>
+<LibLoader
+	src="https://embed.cloudflarestream.com/embed/sdk.latest.js"
+	libraryDetectionObject="Stream"
+	on:loaded={onLibLoaded} />
 
 <div
 	class={iframeUrl || isScreenLive || isWebcamLive ? 'w-full h-full' : 'w-[500px] max-h-80'}
@@ -471,7 +482,7 @@
 						bind:this={obs_element}
 						src={iframeUrl}
 						class="rounded-md w-full h-full"
-						allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; muted;" />
+						allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;" />
 				</div>
 			{/if}
 			{#if !iframeUrl}
