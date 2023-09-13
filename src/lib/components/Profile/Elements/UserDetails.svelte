@@ -1,6 +1,9 @@
 <script lang="ts">
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
+	import IconSocialTwitter from '$lib/assets/icons/social/IconSocialTwitter.svelte'
+	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svg'
+	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
 	import { onMount } from 'svelte'
@@ -51,6 +54,20 @@
 					>{profile.website || ''}</a>
 			</div>
 		{/if}
+		<!-- {#if profile.website}
+			<div class="flex gap-4 items-center">
+				<a href={profile.website} target="_blank" rel="noreferrer">
+					<IconSocialGitHub />
+				</a>
+				<a href={profile.website} target="_blank" rel="noreferrer">
+					<img src={IconSocialDiscord} alt="" />
+				</a>
+				<a href={profile.website} target="_blank" rel="noreferrer">
+					<IconSocialTwitter />
+				</a>
+			</div>
+		{/if} -->
+
 		{#if profile.category?.length}
 			<div class="flex gap-2 justify-center">
 				{#each profile.category as category}

@@ -2,11 +2,23 @@
 	import { enhance } from '$app/forms'
 	import { page } from '$app/stores'
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
+	import IconLink from '$lib/assets/icons/IconLink.svelte'
+	import IconSocialTwitter from '$lib/assets/icons/social/IconSocialTwitter.svelte'
+	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svg'
+	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 	import { createEffect } from '$lib/utils'
 
 	export let showDrawer: boolean
 	export let profile: any
+	// export let profile: { website: string[]; [key: string]: any } = { website: [''] }
+
+	let inputFields = [profile.urls]
+
+	function addInputField() {
+		inputFields = [...inputFields, '']
+		// profile.website = [...profile.website, '']
+	}
 
 	let params = $page.params
 
@@ -54,6 +66,8 @@
 			}
 		}
 	}, [$page.params])
+
+	$: console.log('profile: ', profile)
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
@@ -71,6 +85,7 @@
 			<DrawerAddCategory bind:showAddCategory bind:categories={profile.category} />
 		{:else}
 			<form
+				enctype="multipart/form-data"
 				class="flex h-full p-5"
 				action="?/update-profile"
 				method="post"
@@ -82,7 +97,7 @@
 				on:submit={() => {
 					submitBtn.disabled = true
 				}}>
-				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col rounded-lg">
+				<div class="bg-base-200 w-80 md:w-[30rem] h-max flex flex-col rounded-lg">
 					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 						Update Profile
 					</p>
@@ -109,13 +124,33 @@
 								username.setCustomValidity('')
 							}} />
 
-						<input
+						<!-- <input
 							bind:value={profile.website}
 							type="url"
 							name="website"
 							id="website"
 							class="input input-primary input-bordered mt-5 w-full"
-							placeholder="Your website URL" />
+							placeholder="Your website URL" /> -->
+
+						{#each inputFields as url, index (url)}
+							<div class="mt-5 relative">
+								<input
+									bind:value={inputFields[index]}
+									type="url"
+									name={`urls[${index}]`}
+									id={`urls-${index}`}
+									class="input input-primary input-bordered w-full"
+									placeholder="Your website URL" />
+								<div class="bg-primary w-max absolute right-0 top-0 p-2 h-[48px] rounded-r-lg">
+									<IconLink />
+								</div>
+							</div>
+						{/each}
+
+						<div class="flex w-max mt-5">
+							<button type="button" class="btn btn-primary text-white grow" on:click={addInputField}
+								>+</button>
+						</div>
 
 						<div class="form-control mt-5 w-full">
 							<!-- svelte-ignore a11y-label-has-associated-control -->
