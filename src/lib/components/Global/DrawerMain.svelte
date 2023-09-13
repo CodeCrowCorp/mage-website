@@ -8,7 +8,7 @@
 	import IconDrawerHelpAndLegal from '$lib/assets/icons/drawer/IconDrawerHelpAndLegal.svelte'
 	import IconDrawerSettings from '$lib/assets/icons/drawer/IconDrawerSettings.svelte'
 	import IconDrawerLogOut from '$lib/assets/icons/drawer/IconDrawerLogOut.svelte'
-	import IconSocialTwitter from '$lib/assets/icons/social/IconSocialTwitter.svelte'
+	import IconSocialTwitter2 from '$lib/assets/icons/social/IconSocialTwitter2.svelte'
 	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svg'
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
@@ -29,7 +29,6 @@
 	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import IconDrawerGetApps from '$lib/assets/icons/drawer/IconDrawerGetApps.svelte'
-	import IconViews from '$lib/assets/icons/IconViews.svelte'
 	import IconFollowers from '$lib/assets/icons/IconFollowers.svelte'
 
 	export var nav_drawer: HTMLInputElement
@@ -282,7 +281,7 @@
 				<img src={IconSocialDiscord} alt="" />
 			</a>
 			<a href="https://twitter.com/CodeCrowCorp" target="_blank" rel="noreferrer">
-				<IconSocialTwitter />
+				<IconSocialTwitter2 />
 			</a>
 		</div>
 		<p>
