@@ -1,8 +1,5 @@
-import type { Actions, PageServerLoad } from './$types'
-import { get, post } from '$lib/api'
-import { redirect } from '@sveltejs/kit'
-import { getSectionUrl } from '$lib/utils'
+import type { PageServerLoad } from './$types'
 
-export const load = (async ({ locals }) => {
+export const load = (async () => {
 	return {}
 }) satisfies PageServerLoad
