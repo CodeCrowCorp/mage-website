@@ -63,7 +63,8 @@
 					type: 'view',
 					userId: $page.data.user?.userId,
 					viewType: 'channel',
-					viewId: channel?._id
+					viewId: channel?._id,
+					host: channel?.user
 				},
 				{
 					userId: $page.data.user?.userId,
