@@ -12,11 +12,11 @@ export const load = (async ({ params }: { params: any }) => {
 		lazy: {
 			channels: get(`channels/user?userId=${profile._id}&skip=${0}&limit=${10}`),
 			totalPageViews: get(`stats/views/total-views?viewType=user&viewId=${profile._id}`),
-			totalChannelViews: get(`stats/views/total-views?viewType=channel&userId=${profile._id}`),
+			totalChannelViews: get(`stats/views/total-views?viewType=channel&host=${profile._id}`),
 			totalChannelViews4Weeks: get(
-				`stats/views/total-views/4-weeks?viewType=channel&userId=${profile._id}`
+				`stats/views/total-views/4-weeks?viewType=channel&host=${profile._id}`
 			),
-			viewsMonthlyIncr: get(`stats/views/monthly-increase?viewType=channel&userId=${profile._id}`),
+			viewsMonthlyIncr: get(`stats/views/monthly-increase?viewType=channel&host=${profile._id}`),
 			highestAndCurrentStreak: get(`stats/stream/streak?userId=${profile._id}`),
 			streakMonthlyIncr: get(`stats/stream/streak/monthly-increase?userId=${profile._id}`),
 			totalMins: get(`stats/stream/total-mins?userId=${profile._id}`),
