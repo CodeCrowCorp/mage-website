@@ -23,6 +23,7 @@
 			progressBarColor = colorFromLevel(progressBarLevel)
 		}
 	})
+
 </script>
 
 <div class="text-center flex flex-col items-center">

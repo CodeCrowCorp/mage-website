@@ -3,21 +3,37 @@
 	import { page } from '$app/stores'
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
-	import IconSocialTwitter from '$lib/assets/icons/social/IconSocialTwitter.svelte'
-	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svg'
-	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 	import { createEffect } from '$lib/utils'
 
 	export let showDrawer: boolean
 	export let profile: any
-	// export let profile: { website: string[]; [key: string]: any } = { website: [''] }
+	// export let profile: { urls: string[]; [key: string]: any } = { urls: [''] }
 
 	let inputFields = [profile.urls]
 
-	function addInputField() {
-		inputFields = [...inputFields, '']
-		// profile.website = [...profile.website, '']
+	const removeInputField = (index: number) => {
+		inputFields = inputFields.filter((_, i) => i !== index)
+	}
+
+	const addInputField = () => {
+		const lastField = inputFields[inputFields.length - 1]
+
+		if (isValidURL(lastField)) {
+			inputFields = [...inputFields, '']
+		}
+	}
+
+	let isLastFieldValid = false
+
+	const isValidURL = (url: string) => {
+		const urlPattern = /^https?:\/\/\S+$/i
+		return urlPattern.test(url)
+	}
+
+	$: {
+		const lastField = inputFields[inputFields.length - 1]
+		isLastFieldValid = isValidURL(lastField)
 	}
 
 	let params = $page.params
@@ -67,7 +83,29 @@
 		}
 	}, [$page.params])
 
-	$: console.log('profile: ', profile)
+	// const handleSubmit = async (event: any) => {
+	// 	try {
+	// 		event.preventDefault()
+	// 		submitBtn.disabled = true
+
+	// 		const form = event.target
+	// 		const formData = new FormData(form)
+	// 		formData.set('urls', JSON.stringify(inputFields))
+
+	// 		const response = await fetch(form.action, {
+	// 			method: form.method,
+	// 			body: formData
+	// 		})
+
+	// 		if (response.ok) {
+	// 			console.log('response', response.ok)
+	// 		} else {
+	// 			console.error('Server returned an error:', response.status)
+	// 		}
+	// 	} catch (error) {
+	// 		console.error('An error occurred during form submission:', error)
+	// 	}
+	// }
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
@@ -124,91 +162,112 @@
 								username.setCustomValidity('')
 							}} />
 
-						<!-- <input
+						<input
 							bind:value={profile.website}
 							type="url"
 							name="website"
 							id="website"
 							class="input input-primary input-bordered mt-5 w-full"
-							placeholder="Your website URL" /> -->
+							placeholder="Your website URL" />
 
-						{#each inputFields as url, index (url)}
-							<div class="mt-5 relative">
-								<input
-									bind:value={inputFields[index]}
-									type="url"
-									name={`urls[${index}]`}
-									id={`urls-${index}`}
-									class="input input-primary input-bordered w-full"
-									placeholder="Your website URL" />
-								<div class="bg-primary w-max absolute right-0 top-0 p-2 h-[48px] rounded-r-lg">
-									<IconLink />
+						<div class="form-control mt-5 w-full">
+							<!-- svelte-ignore a11y-label-has-associated-control -->
+							<label class="label">
+								<span class="label-text">Social Links</span>
+							</label>
+
+							{#each inputFields as url, index (index)}
+								<div class="flex flex-1 items-baseline mb-2 gap-3 w-full">
+									<div class="relative w-full">
+										<input
+											bind:value={inputFields[index]}
+											type="url"
+											name={`urls`}
+											id={`urls`}
+											class="input input-primary input-bordered w-full"
+											placeholder="Your website URL" />
+										<div class="bg-primary w-max absolute right-0 top-0 p-2 h-[48px] rounded-r-lg">
+											<IconLink />
+										</div>
+									</div>
+									{#if index === inputFields.length - 1}
+										<button
+											type="button"
+											class="btn btn-primary text-white"
+											disabled={!isLastFieldValid}
+											on:click={addInputField}>
+											+
+										</button>
+									{:else}
+										<button
+											type="button"
+											class="btn btn-neutral text-white"
+											on:click={() => removeInputField(index)}>
+											-
+										</button>
+									{/if}
 								</div>
+							{/each}
+
+							<div class="form-control mt-5 w-full">
+								<!-- svelte-ignore a11y-label-has-associated-control -->
+								<label class="label">
+									<span class="label-text">Banner</span>
+								</label>
+								<input
+									type="file"
+									accept="image/png, image/jpeg"
+									name="banner"
+									id="banner"
+									class="file-input file-input-bordered file-input-primary w-full" />
 							</div>
-						{/each}
 
-						<div class="flex w-max mt-5">
-							<button type="button" class="btn btn-primary text-white grow" on:click={addInputField}
-								>+</button>
+							<div class="form-control mt-5 w-full">
+								<!-- svelte-ignore a11y-label-has-associated-control -->
+								<label class="label">
+									<span class="label-text">Avatar</span>
+								</label>
+								<input
+									type="file"
+									accept="image/png, image/jpeg"
+									name="avatar"
+									id="avatar"
+									class="file-input file-input-bordered file-input-primary w-full" />
+							</div>
+
+							<div class="relative">
+								<input
+									on:click={() => (showAddCategory = true)}
+									type="text"
+									name="category-search"
+									placeholder={profile?.category?.length ? '' : 'Category'}
+									class="input input-primary input-bordered mt-5 w-full" />
+								<span class="absolute right-0 top-1/2 text-gray-400 pr-3"
+									>({maxCategoryLabel})</span>
+								<span class="absolute flex flex-row gap-2 left-0 top-1/2 pl-5">
+									{#if profile?.category?.length}
+										{#each profile?.category as icon}
+											<img src={$category_list[icon]} alt="" class="h-5 w-5" />
+										{/each}
+									{/if}
+								</span>
+							</div>
+
+							<textarea
+								bind:value={profile.bio}
+								id="bio"
+								name="bio"
+								class="block w-full mt-5 textarea h-28 input-primary"
+								placeholder="Your bio here" />
 						</div>
 
-						<div class="form-control mt-5 w-full">
-							<!-- svelte-ignore a11y-label-has-associated-control -->
-							<label class="label">
-								<span class="label-text">Banner</span>
-							</label>
-							<input
-								type="file"
-								accept="image/png, image/jpeg"
-								name="banner"
-								id="banner"
-								class="file-input file-input-bordered file-input-primary w-full" />
+						<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
+							<button
+								type="button"
+								class="btn btn-neutral text-white grow"
+								on:click={() => toggleDrawer()}>Cancel</button>
+							<button type="submit" class="btn btn-primary grow" bind:this={submitBtn}>Save</button>
 						</div>
-
-						<div class="form-control mt-5 w-full">
-							<!-- svelte-ignore a11y-label-has-associated-control -->
-							<label class="label">
-								<span class="label-text">Avatar</span>
-							</label>
-							<input
-								type="file"
-								accept="image/png, image/jpeg"
-								name="avatar"
-								id="avatar"
-								class="file-input file-input-bordered file-input-primary w-full" />
-						</div>
-
-						<div class="relative">
-							<input
-								on:click={() => (showAddCategory = true)}
-								type="text"
-								name="category-search"
-								placeholder={profile?.category?.length ? '' : 'Category'}
-								class="input input-primary input-bordered mt-5 w-full" />
-							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxCategoryLabel})</span>
-							<span class="absolute flex flex-row gap-2 left-0 top-1/2 pl-5">
-								{#if profile?.category?.length}
-									{#each profile?.category as icon}
-										<img src={$category_list[icon]} alt="" class="h-5 w-5" />
-									{/each}
-								{/if}
-							</span>
-						</div>
-
-						<textarea
-							bind:value={profile.bio}
-							id="bio"
-							name="bio"
-							class="block w-full mt-5 textarea h-28 input-primary"
-							placeholder="Your bio here" />
-					</div>
-
-					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
-						<button
-							type="button"
-							class="btn btn-neutral text-white grow"
-							on:click={() => toggleDrawer()}>Cancel</button>
-						<button type="submit" class="btn btn-primary grow" bind:this={submitBtn}>Save</button>
 					</div>
 				</div>
 			</form>
