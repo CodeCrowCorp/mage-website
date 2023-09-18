@@ -80,9 +80,9 @@ export const getSectionUrl = ({
 		case 'highest-ranked':
 			return `users/highest-ranked?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'rising-stars':
-			//stats/stream/getRisingStars?skip=${0}&limit=${10}
+			//analytics/stream/getRisingStars?skip=${0}&limit=${10}
 			//users/rising-stars?searchQuery=${query}&skip=${skip}&limit=${limit}
-			return `stats/stream/rising-stars?skip=${skip}&limit=${limit}`
+			return `analytics/stream/rising-stars?skip=${skip}&limit=${limit}`
 		case 'my':
 			return `channels/user?searchQuery=${query}&skip=${skip}&limit=${limit}`
 		case 'fav':

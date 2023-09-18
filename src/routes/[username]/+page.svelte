@@ -21,7 +21,7 @@
 	onMount(async () => {
 		if ($page.data.user?.userId !== data.profile._id) {
 			await post(
-				`stats/view`,
+				`analytics/view`,
 				{
 					type: 'view',
 					userId: $page.data.user?.userId,

@@ -48,8 +48,10 @@
 			progressBarLevel = levelAndBarValue.level
 			progressBarValue = levelAndBarValue.barValue
 			progressBarColor = colorFromLevel(progressBarLevel)
-			streakCount = await get(`stats/stream/streak?userId=${$page.data.user?.userId}`)
-			minsStreamed = await get(`stats/stream/total-mins/24-hours?userId=${$page.data.user?.userId}`)
+			streakCount = await get(`analytics/stream/streak?userId=${$page.data.user?.userId}`)
+			minsStreamed = await get(
+				`analytics/stream/total-mins/24-hours?userId=${$page.data.user?.userId}`
+			)
 			followers = await get(`follows/count?source=${$page.data.user?.userId}&sourceType=source1`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
