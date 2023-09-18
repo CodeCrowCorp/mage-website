@@ -75,7 +75,7 @@
 							data-tip="{getNumberInThousands(channel.viewDetails?.count || 0)} views">
 							<span class="btn btn-sm btn-neutral font-medium gap-2 text-white border-none">
 								<IconViews />
-								{getNumberInThousands(channel.viewDetails.count || 0)}
+								{getNumberInThousands(channel.viewDetails?.count || 0)}
 							</span>
 						</div>
 						<div
