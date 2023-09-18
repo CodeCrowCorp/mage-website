@@ -12,7 +12,7 @@
 		}
 		script.addEventListener('load', () => {
 			library = window[libraryDetectionObject] // Assign the library object to the variable
-			console.log('load event from script')
+			// console.log('load event from script')
 			dispatch('loaded', { library })
 		})
 		script.addEventListener('error', (event: any) => {

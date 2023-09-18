@@ -81,7 +81,9 @@
 	const startObsStream = async () => {
 		const liveInput = await createLiveInput({
 			channelId: `${$page.params.channelId}`,
-			userId: $page.data.user.userId,
+			channelTitle: `${channel.title}`,
+			username: `${$page.data.user?.user?.username}`,
+			userId: $page.data.user?.userId,
 			trackType: 'obs',
 			isTrackActive: true,
 			liveInput: {
@@ -128,7 +130,9 @@
 	const startScreenStream = async () => {
 		const liveInput = await createLiveInput({
 			channelId: `${$page.params.channelId}`,
-			userId: $page.data.user.userId,
+			channelTitle: `${channel.title}`,
+			username: `${$page.data.user?.user?.username}`,
+			userId: $page.data.user?.userId,
 			trackType: 'screen',
 			isTrackActive: true,
 			liveInput: {
@@ -175,7 +179,9 @@
 	const startWebcamStream = async () => {
 		const liveInput = await createLiveInput({
 			channelId: `${$page.params.channelId}`,
-			userId: $page.data.user.userId,
+			channelTitle: `${channel.title}`,
+			username: `${$page.data.user?.user?.username}`,
+			userId: $page.data.user?.userId,
 			trackType: 'webcam',
 			isTrackActive: true,
 			liveInput: {
@@ -222,7 +228,9 @@
 	const startAudioStream = async () => {
 		const liveInput = await createLiveInput({
 			channelId: `${$page.params.channelId}`,
-			userId: $page.data.user.userId,
+			channelTitle: `${channel.title}`,
+			username: `${$page.data.user?.user?.username}`,
+			userId: $page.data.user?.userId,
 			trackType: 'audio',
 			isTrackActive: true,
 			liveInput: {
