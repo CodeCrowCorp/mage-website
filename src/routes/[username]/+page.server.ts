@@ -11,18 +11,21 @@ export const load = (async ({ params }: { params: any }) => {
 		profile: profile,
 		lazy: {
 			channels: get(`channels/user?userId=${profile._id}&skip=${0}&limit=${10}`),
-			totalPageViews: get(`stats/views/total-views?viewType=user&viewId=${profile._id}`),
-			totalChannelViews: get(`stats/views/total-views?viewType=channel&host=${profile._id}`),
+			totalPageViews: get(`analytics/views/total-views?viewType=user&viewId=${profile._id}`),
+			totalChannelViews: get(`analytics/views/total-views?viewType=channel&host=${profile._id}`),
 			totalChannelViews4Weeks: get(
-				`stats/views/total-views/4-weeks?viewType=channel&host=${profile._id}`
+				`analytics/views/total-views/4-weeks?viewType=channel&host=${profile._id}`
 			),
-			viewsMonthlyIncr: get(`stats/views/monthly-increase?viewType=channel&host=${profile._id}`),
-			highestAndCurrentStreak: get(`stats/stream/streak?userId=${profile._id}`),
-			streakMonthlyIncr: get(`stats/stream/streak/monthly-increase?userId=${profile._id}`),
-			totalMins: get(`stats/stream/total-mins?userId=${profile._id}`),
-			totalMinsMonthlyIncr: get(`stats/stream/total-mins/monthly-increase?userId=${profile._id}`),
-			avgMins: get(`stats/stream/avg-mins?userId=${profile._id}`),
-			avgMinsMonthlyIncr: get(`stats/stream/avg-mins/monthly-increase?userId=${profile._id}`)
+			viewsMonthlyIncr: get(
+				`analytics/views/monthly-increase?viewType=channel&host=${profile._id}`
+			),
+			highestAndCurrentStreak: get(`analytics/stream/streak?userId=${profile._id}`),
+			streakMonthlyIncr: get(`analytics/stream/streak/monthly-increase?userId=${profile._id}`),
+			totalMins: get(`analytics/stream/total-mins?userId=${profile._id}`),
+			totalMinsMonthlyIncr: get(
+				`analytics/stream/total-mins/monthly-increase?userId=${profile._id}`
+			),
+			avgMins: get(`analytics/stream/avg-mins?userId=${profile._id}`)
 		}
 	}
 }) satisfies PageServerLoad

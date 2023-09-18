@@ -58,7 +58,7 @@
 		await loadMoreChannels()
 		if ($page.data.user?.userId && channel?.user !== $page.data.user?.userId) {
 			await post(
-				`stats/view`,
+				`analytics/view`,
 				{
 					type: 'view',
 					userId: $page.data.user?.userId,
