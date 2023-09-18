@@ -57,7 +57,7 @@
 		<div class="stat-figure text-secondary">
 			<IconProfileStreamDuration />
 		</div>
-		<div class="stat-title">Total / Avg Mins</div>
+		<div class="stat-title">Total / Avg Mins Streamed</div>
 		<div class="stat-value text-secondary">{totalMins} / {avgMins}</div>
 		<div class="stat-desc">{totalMinsMonthlyIncr.monthlyChange} % more than last month</div>
 	</div>

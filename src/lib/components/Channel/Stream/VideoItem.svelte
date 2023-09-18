@@ -311,7 +311,7 @@
 			if (timerInterval) toggleTimer(false)
 			if (streamId) {
 				await patch(
-					`stats/stream/end?streamId=${streamId}`,
+					`analytics/stream/end?streamId=${streamId}`,
 					{},
 					{
 						userId: $page.data.user?.userId,
@@ -331,7 +331,7 @@
 			if (timerInterval) toggleTimer(false)
 			if (streamId) {
 				await patch(
-					`stats/stream/end?streamId=${streamId}`,
+					`analytics/stream/end?streamId=${streamId}`,
 					{},
 					{
 						userId: $page.data.user?.userId,
@@ -417,7 +417,7 @@
 					streamId = video.screen?.streamId || video.obs?.streamId
 					if (!streamId) return
 					if (streamId && streamTime === 0) {
-						const streamRecord = await get(`stats/stream?streamId=${streamId}`)
+						const streamRecord = await get(`analytics/stream?streamId=${streamId}`)
 						streamTime = streamRecord ? (Date.now() - streamRecord.start) / 1000 : 0
 					}
 					streamTime = Math.floor(streamTime) + 1
@@ -430,7 +430,7 @@
 					//NOTE: check if mine and has been 5 seconds
 					if (video._id === $page.data.user?.userId && streamTime % 5 == 0) {
 						await patch(
-							`stats/stream?streamId=${streamId}`,
+							`analytics/stream?streamId=${streamId}`,
 							{},
 							{
 								userId: $page.data.user?.userId,
