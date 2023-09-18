@@ -1,8 +1,10 @@
 <script lang="ts">
+	import IconViews from '$lib/assets/icons/IconViews.svelte'
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
 	import { goto } from '$app/navigation'
 	import { category_list } from '$lib/stores/channelStore'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
+	import { getNumberInThousands } from '$lib/utils'
 	export let channel: any = {}
 </script>
 
@@ -38,9 +40,19 @@
 		</div>
 	</td>
 	<td>
-		<div class="flex gap-2 my-3">
-			<IconViewers />
-			<span>{channel.memberCount || '0'}</span>
+		<div class="flex gap-4">
+			<div
+				class="flex gap-2 my-3 tooltip"
+				data-tip="{getNumberInThousands(channel.viewDetails?.count || 0)} views">
+				<IconViews />
+				<span>{getNumberInThousands(channel.viewDetails?.count || 0)}</span>
+			</div>
+			<div
+				class="flex gap-2 my-3 tooltip"
+				data-tip="{getNumberInThousands(channel.memberCount || 0)} watching">
+				<IconViewers />
+				<span>{getNumberInThousands(channel?.memberCount || 0)}</span>
+			</div>
 		</div>
 	</td>
 	<td>

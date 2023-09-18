@@ -29,6 +29,7 @@
 	} from '$lib/stores/remoteConfigStore'
 	import { env } from '$env/dynamic/public'
 	import { user_role } from '$lib/stores/userStore'
+	import MobileAppsPrompt from '$lib/components/Global/MobileAppsPrompt.svelte'
 
 	NProgress.configure({
 		minimum: 0.75,
@@ -141,6 +142,9 @@
 
 		<slot />
 		<LoginPrompt />
+		{#if $is_feature_apps_enabled}
+			<MobileAppsPrompt />
+		{/if}
 	</div>
 	<div class="drawer-side z-10">
 		<label for="main-drawer" class="drawer-overlay" />

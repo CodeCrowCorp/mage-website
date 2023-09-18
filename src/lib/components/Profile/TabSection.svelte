@@ -2,28 +2,29 @@
 	import ListSubscribe from '$lib/components/Profile/ListSubscribe.svelte'
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	import Stats from '$lib/components/Profile/Elements/Stats.svelte'
+	import Events from '$lib/components/Profile/Events.svelte'
 	import { is_feature_stats_enabled } from '$lib/stores/remoteConfigStore'
 	import { onMount } from 'svelte'
 	import { env } from '$env/dynamic/public'
 
 	export let profile: any,
 		channels: any,
-		totalPageViews: any,
+		totalChannelViews: any,
+		totalChannelViews4Weeks: any,
 		viewsMonthlyIncr: any,
 		highestAndCurrentStreak: any,
-		totalAndAvgHours: any,
+		totalMins: any,
 		streakMonthlyIncr: any,
-		totalHoursMonthlyIncr: any,
-		avgHours: any
+		totalMinsMonthlyIncr: any,
+		avgMins: any
 
 	let tabs: string[] = []
 	let activeTab = 0
 
 	onMount(() => {
 		$is_feature_stats_enabled = env.PUBLIC_FEATURE_STATS === 'true'
-		tabs = ['Channels', 'Followers']
+		tabs = ['Channels', 'Followers', 'Events']
 		if ($is_feature_stats_enabled) tabs.push('Stats')
-		console.log('got here----', JSON.stringify(profile))
 	})
 </script>
 
@@ -44,17 +45,21 @@
 			<div class="flex-auto h-full" class:hidden={activeTab != tabs.indexOf('Followers')}>
 				<ListSubscribe profileId={profile._id} />
 			</div>
+			<div class="flex-auto h-full" class:hidden={activeTab != tabs.indexOf('Events')}>
+				<Events profileId={profile._id} />
+			</div>
 			{#if $is_feature_stats_enabled}
 				<div class="grid h-full" class:hidden={activeTab != tabs.indexOf('Stats')}>
 					<Stats
 						{profile}
-						{avgHours}
+						{avgMins}
 						{viewsMonthlyIncr}
 						{streakMonthlyIncr}
-						{totalHoursMonthlyIncr}
-						{totalPageViews}
+						{totalMinsMonthlyIncr}
+						{totalChannelViews}
+						{totalChannelViews4Weeks}
 						{highestAndCurrentStreak}
-						{totalAndAvgHours} />
+						{totalMins} />
 				</div>
 			{/if}
 		</div>

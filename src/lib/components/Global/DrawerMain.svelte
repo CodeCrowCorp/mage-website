@@ -8,7 +8,7 @@
 	import IconDrawerHelpAndLegal from '$lib/assets/icons/drawer/IconDrawerHelpAndLegal.svelte'
 	import IconDrawerSettings from '$lib/assets/icons/drawer/IconDrawerSettings.svelte'
 	import IconDrawerLogOut from '$lib/assets/icons/drawer/IconDrawerLogOut.svelte'
-	import IconSocialTwitter from '$lib/assets/icons/social/IconSocialTwitter.svelte'
+	import IconSocialTwitter2 from '$lib/assets/icons/social/IconSocialTwitter2.svelte'
 	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svg'
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
@@ -21,14 +21,15 @@
 		is_feature_apps_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
-	import { is_login_modal_open } from '$lib/stores/helperStore'
-	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
+	import { is_apps_modal_open, is_login_modal_open } from '$lib/stores/helperStore'
+	import { colorFromLevel, getNumberInThousands, levelAndBarValueFromExp } from '$lib/utils'
 	import { onMount } from 'svelte'
 	import { isOnline } from '$lib/stores/userStore'
 	import { get } from '$lib/api'
 	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import IconDrawerGetApps from '$lib/assets/icons/drawer/IconDrawerGetApps.svelte'
+	import IconFollowers from '$lib/assets/icons/IconFollowers.svelte'
 
 	export var nav_drawer: HTMLInputElement
 
@@ -38,11 +39,8 @@
 	let progressBarValue = 0
 	let progressBarColor = colorFromLevel(1)
 	let streakCount: any = { current: 0, highest: 0 }
-	let hoursStreamed: number = 0
-	// let totalViews: number = 0
-	// let hoursMonthlyIncr: number = 0
-	// let streakMonthlyIncr: number = 0
-	// let viewsMonthlyIncr: number = 0
+	let minsStreamed: number = 0
+	let followers: number = 0
 	onMount(async () => {
 		if (currentUser) {
 			let exp = currentUser.exp || 0
@@ -50,21 +48,12 @@
 			progressBarLevel = levelAndBarValue.level
 			progressBarValue = levelAndBarValue.barValue
 			progressBarColor = colorFromLevel(progressBarLevel)
-			streakCount = await get(`stats/stream/streak`, {
+			streakCount = await get(`stats/stream/streak?userId=${$page.data.user?.userId}`)
+			minsStreamed = await get(`stats/stream/total-mins/24-hours?userId=${$page.data.user?.userId}`)
+			followers = await get(`follows/count?source=${$page.data.user?.userId}&sourceType=source1`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
-			hoursStreamed = await get(`stats/stream/total-hours`)
-			// totalViews = await get(
-			// 	`stats/profile/views/four-weeks?profileType=user&id=${$page.data.user?.userId}`
-			// )
-			// viewsMonthlyIncr = await get(
-			// 	`stats/profile/views/monthly?profileType=user&id=${$page.data.user?.userId}`
-			// )
-			// streakMonthlyIncr = await get(`stats/stream/streak/monthly?userId=${$page.data.user?.userId}`)
-			// hoursMonthlyIncr = await get(
-			// 	`stats/stream/total-hours/monthly?userId=${$page.data.user?.userId}`
-			// )
 		}
 	})
 	let isChannelPage = false
@@ -122,16 +111,28 @@
 								{/if}
 							</div>
 							<div class="flex gap-4 {isChannelPage ? 'md:hidden' : ''}">
-								<div class="flex gap-1 tooltip" data-tip="{streakCount.current} day streak">
+								<div
+									class="flex gap-1 tooltip tooltip-primary"
+									data-tip="{streakCount.current} day streak">
 									<IconDrawerStreak />
 									<p class="text-start">
 										{streakCount.current} d
 									</p>
 								</div>
-								<div class="flex gap-1 tooltip" data-tip="{hoursStreamed} hours streamed today">
+								<div
+									class="flex gap-1 tooltip tooltip-primary"
+									data-tip="{getNumberInThousands(minsStreamed || 0)} mins streamed today">
 									<IconDrawerStreamDuration />
 									<p class="text-start">
-										{hoursStreamed} h
+										{getNumberInThousands(minsStreamed || 0)} m
+									</p>
+								</div>
+								<div
+									class="flex gap-1 tooltip tooltip-primary"
+									data-tip="{getNumberInThousands(followers || 0)} followers">
+									<IconFollowers />
+									<p class="text-start">
+										{getNumberInThousands(followers || 0)}
 									</p>
 								</div>
 							</div>
@@ -190,7 +191,7 @@
 					<button
 						class="custom-menu-item text-accent hover:text-accent font-medium"
 						on:click={() => {
-							$is_login_modal_open = true
+							$is_apps_modal_open = true
 							if (nav_drawer.checked) {
 								nav_drawer.checked = false
 							}
@@ -206,13 +207,20 @@
 		{/if}
 		{#if $is_feature_apps_enabled}
 			<li>
-				<a class="custom-menu-item" href="https://codecrow.io" target="_blank">
+				<button
+					class="custom-menu-item"
+					on:click={() => {
+						$is_apps_modal_open = true
+						if (nav_drawer.checked) {
+							nav_drawer.checked = false
+						}
+					}}>
 					<IconDrawerGetApps />
 					<span class={isChannelPage ? 'md:hidden' : ''}>Get Apps</span>
 					{#if !isChannelPage}
 						<span class="badge badge-secondary">New</span>
 					{/if}
-				</a>
+				</button>
 			</li>
 		{/if}
 		<li>
@@ -273,7 +281,7 @@
 				<img src={IconSocialDiscord} alt="" />
 			</a>
 			<a href="https://twitter.com/CodeCrowCorp" target="_blank" rel="noreferrer">
-				<IconSocialTwitter />
+				<IconSocialTwitter2 />
 			</a>
 		</div>
 		<p>
