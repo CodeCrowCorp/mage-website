@@ -28,7 +28,7 @@
 					data-tip="{getNumberInThousands(channel.viewDetails?.count || 0)} views">
 					<span class="btn btn-sm rounded-md font-medium gap-2 btn-neutral text-white border-none">
 						<IconViews />
-						{getNumberInThousands(channel.viewDetails.count || 0)}
+						{getNumberInThousands(channel.viewDetails?.count || 0)}
 					</span>
 				</div>
 				<div class="tooltip" data-tip="{getNumberInThousands(channel.memberCount || 0)} watching">
