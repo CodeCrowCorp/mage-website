@@ -13,12 +13,12 @@
 		is_sharing_obs
 	} from '$lib/stores/streamStore'
 	import { emitChannelUpdate } from '$lib/websocket'
-	import { getColoredRole, setRole } from '$lib/utils'
+	import { captureScreenShot, dataURLtoFile, getColoredRole, setRole } from '$lib/utils'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import { is_feature_stats_enabled, is_feature_obs_enabled } from '$lib/stores/remoteConfigStore'
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
-	import { get, patch } from '$lib/api'
+	import { get, patch, putImage } from '$lib/api'
 	import LibLoader from '$lib/components/Global/LibLoader.svelte'
 
 	export let video: any, channel: any
@@ -437,6 +437,27 @@
 								token: $page.data.user?.token
 							}
 						)
+					}
+
+					if (
+						!channel.thumbnail &&
+						video._id === channel.user &&
+						video._id === $page.data.user.userId &&
+						streamTime === 60
+					) {
+						const imageSrc = captureScreenShot(channel)
+						const file = dataURLtoFile(imageSrc, 'thumbnail-image')
+						if (file !== null && file.size > 0 && file.type !== '') {
+							await putImage(
+								`channels/thumbnail?channelId=${channel._id}&bucketName=thumbnails`,
+								file,
+								{
+									userId: $page.data.user?.userId,
+									token: $page.data.user?.token
+								}
+							)
+							channel.thumbnail = imageSrc
+						}
 					}
 				} catch (err) {
 					console.log('err', err)
