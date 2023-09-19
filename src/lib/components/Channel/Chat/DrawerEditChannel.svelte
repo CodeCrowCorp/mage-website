@@ -9,6 +9,7 @@
 	import { category_list } from '$lib/stores/channelStore'
 	import { emitChannelUpdate } from '$lib/websocket'
 	import IconChatScreenshot from '$lib/assets/icons/chat/IconChatScreenshot.svelte'
+	import { captureScreenShot } from '$lib/utils'
 
 	export let channel: any, showDrawer: boolean
 
@@ -18,7 +19,7 @@
 		showAddCategory = false,
 		maxTag = 3,
 		maxCategory = 4,
-		imageSrc = ''
+		imageSrc: string = ''
 
 	$: maxTagLabel = channel?.tags.length == maxTag ? 'max reached' : 'max ' + maxTag
 	$: maxCategoryLabel =
@@ -55,30 +56,7 @@
 		e.preventDefault()
 		showThumbnail = true
 		if (channel.videoItems.length > 0) {
-			let screenElement = document.getElementById(
-				`screen-${channel.videoItems[0]._id}`
-			) as HTMLVideoElement
-			let webcamElement = document.getElementById(
-				`webcam-${channel.videoItems[0]._id}`
-			) as HTMLVideoElement
-			let canvas = document.createElement('canvas')
-			canvas.width = 1920
-			canvas.height = 1080
-
-			let ctx = canvas.getContext('2d')
-
-			console.log(screenElement)
-			console.log(webcamElement)
-
-			if (ctx !== null && screenElement !== null && webcamElement !== null) {
-				ctx.drawImage(screenElement, 0, 0, canvas.width, canvas.height)
-				ctx.globalAlpha = 1
-				ctx.drawImage(webcamElement, 1400, 750, canvas.width - 1400, canvas.height - 750)
-			}
-
-			let screenshot = canvas.toDataURL('image/jpeg')
-			imageSrc = screenshot
-			//thumbnailRef.setAttribute('src', screenshot);
+			imageSrc = captureScreenShot(channel)
 		}
 	}
 

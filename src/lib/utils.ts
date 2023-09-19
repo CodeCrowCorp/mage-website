@@ -301,3 +301,41 @@ export const getNumberInThousands = (number: number) => {
 		return number.toString()
 	}
 }
+
+export const captureScreenShot = (channel: any) => {
+	const screenElement = document.getElementById(
+		`screen-${channel.videoItems[0]._id}`
+	) as HTMLVideoElement
+	const webcamElement = document.getElementById(
+		`webcam-${channel.videoItems[0]._id}`
+	) as HTMLVideoElement
+	const canvas = document.createElement('canvas')
+	canvas.width = 1920
+	canvas.height = 1080
+
+	const ctx = canvas.getContext('2d')
+
+	console.log(screenElement)
+	console.log(webcamElement)
+
+	if (ctx !== null && screenElement !== null && webcamElement !== null) {
+		ctx.drawImage(screenElement, 0, 0, canvas.width, canvas.height)
+		ctx.globalAlpha = 1
+		ctx.drawImage(webcamElement, 1400, 750, canvas.width - 1400, canvas.height - 750)
+	}
+
+	return canvas.toDataURL('image/jpeg')
+	//thumbnailRef.setAttribute('src', screenshot);
+}
+
+export const dataURLtoFile = (dataurl: string, filename: string) => {
+	const arr = dataurl.split(',')
+	const mime = (arr[0] && arr[0].match(/:(.*?);/)?.[1]) || ''
+	const bstr = atob(arr[1])
+	let n = bstr.length
+	const u8arr = new Uint8Array(n)
+	while (n--) {
+		u8arr[n] = bstr.charCodeAt(n)
+	}
+	return new File([u8arr], filename, { type: mime })
+}

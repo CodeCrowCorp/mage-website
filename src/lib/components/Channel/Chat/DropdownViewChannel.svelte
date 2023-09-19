@@ -91,6 +91,16 @@
 		</li>
 	</ul>
 	<ul tabindex="-1" class="dropdown-content menu shadow bg-base-200 rounded-box md:w-[23rem]">
+		{#if channel.thumbnail}
+			<li class="flex flex-row justify-center w-full">
+				<div class="w-full shadow-xl">
+					<div class="items-center cursor-pointer">
+						<img src={channel.thumbnail} alt="Preview" class="rounded-lg h-full" />
+					</div>
+				</div>
+			</li>
+		{/if}
+
 		<li on:click={() => copyToClipboard(channel.description)} on:keyup>
 			<a class="text-sm max-w-md flex">{channel.description || 'No description'}</a>
 		</li>

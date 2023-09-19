@@ -8,8 +8,7 @@
 		<div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
 			<h2 class="mb-4 text-4xl tracking-tight font-extrabold">Designed for dedicated streamers</h2>
 			<p class="mb-5 font-light text-gray-500 sm:text-xl">
-				Collaborative streaming powered by AI. Our platform is designed to expand your reach and
-				grow your brand.
+				Collaborative streaming powered by AI. Expand your reach and grow your brand.
 			</p>
 			<a class="mb-5 link link-secondary" href={env.PUBLIC_STRIPE_BILLING_URL}
 				>Manage your subscription</a>
