@@ -39,6 +39,7 @@ export const actions = {
 		addPropertyIfDefined(data, 'website', newUser)
 		addPropertyIfDefined(data, 'category', newUser)
 		addPropertyIfDefined(data, 'bio', newUser)
+		addPropertyIfDefined(data, 'urls', newUser, true)
 
 		const avatar = data.get('avatar') as File
 
@@ -92,9 +93,10 @@ export const actions = {
 const addPropertyIfDefined = (
 	data: FormData,
 	property: string,
-	newUser: { [key: string]: any }
+	newUser: { [key: string]: any },
+	list?:boolean
 ) => {
-	const propertyValue = data.get(property)
+	const propertyValue = list ? data.getAll(property) : data.get(property)
 	if (propertyValue !== null && propertyValue !== undefined) {
 		newUser[property] =
 			property === 'category' ? JSON.parse(propertyValue.toString()) : propertyValue

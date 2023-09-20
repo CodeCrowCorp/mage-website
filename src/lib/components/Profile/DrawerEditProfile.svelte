@@ -8,7 +8,6 @@
 
 	export let showDrawer: boolean
 	export let profile: any
-	// export let profile: { urls: string[]; [key: string]: any } = { urls: [''] }
 
 	let inputFields = [profile.urls]
 
@@ -83,29 +82,6 @@
 		}
 	}, [$page.params])
 
-	// const handleSubmit = async (event: any) => {
-	// 	try {
-	// 		event.preventDefault()
-	// 		submitBtn.disabled = true
-
-	// 		const form = event.target
-	// 		const formData = new FormData(form)
-	// 		formData.set('urls', JSON.stringify(inputFields))
-
-	// 		const response = await fetch(form.action, {
-	// 			method: form.method,
-	// 			body: formData
-	// 		})
-
-	// 		if (response.ok) {
-	// 			console.log('response', response.ok)
-	// 		} else {
-	// 			console.error('Server returned an error:', response.status)
-	// 		}
-	// 	} catch (error) {
-	// 		console.error('An error occurred during form submission:', error)
-	// 	}
-	// }
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-0 right-0">

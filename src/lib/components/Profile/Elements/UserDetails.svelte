@@ -55,6 +55,17 @@
 					>{profile.website || ''}</a>
 			</div>
 		{/if}
+		
+		{#each (profile.urls || []) as url, index (index)}
+			{#if url}
+				<div class="flex gap-2 justify-center p-4">
+					<IconLink />
+					<a class="link link-info" href={url} target="_blank" rel="noreferrer"
+						>{url || ''}</a>
+				</div>
+			{/if}
+		{/each}
+
 		<!-- {#if profile.website}
 			<div class="flex gap-4 items-center">
 				<a href={profile.website} target="_blank" rel="noreferrer">
