@@ -9,7 +9,7 @@
 	export let showDrawer: boolean
 	export let profile: any
 
-	let inputFields = [profile.urls]
+	let inputFields = [...profile.urls]
 
 	const removeInputField = (index: number) => {
 		inputFields = inputFields.filter((_, i) => i !== index)
@@ -82,6 +82,7 @@
 		}
 	}, [$page.params])
 
+	console.info('profile', profile)
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-0 right-0">

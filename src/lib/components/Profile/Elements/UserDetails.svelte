@@ -1,9 +1,7 @@
 <script lang="ts">
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
-	import IconSocialTwitter from '$lib/assets/icons/social/IconSocialTwitter.svelte'
-	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svg'
-	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
+	import Favicon from '$lib/components/Profile/Favicon.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
 	import { onMount } from 'svelte'
@@ -23,7 +21,6 @@
 			progressBarColor = colorFromLevel(progressBarLevel)
 		}
 	})
-
 </script>
 
 <div class="text-center flex flex-col items-center">
@@ -55,30 +52,16 @@
 					>{profile.website || ''}</a>
 			</div>
 		{/if}
-		
-		{#each (profile.urls || []) as url, index (index)}
-			{#if url}
-				<div class="flex gap-2 justify-center p-4">
-					<IconLink />
-					<a class="link link-info" href={url} target="_blank" rel="noreferrer"
-						>{url || ''}</a>
-				</div>
-			{/if}
-		{/each}
 
-		<!-- {#if profile.website}
-			<div class="flex gap-4 items-center">
-				<a href={profile.website} target="_blank" rel="noreferrer">
-					<IconSocialGitHub />
-				</a>
-				<a href={profile.website} target="_blank" rel="noreferrer">
-					<img src={IconSocialDiscord} alt="" />
-				</a>
-				<a href={profile.website} target="_blank" rel="noreferrer">
-					<IconSocialTwitter />
-				</a>
-			</div>
-		{/if} -->
+		<div class="flex gap-2 justify-center items-center p-4">
+			{#each profile.urls || [] as url, index (index)}
+				{#if url}
+					<div class="tooltip" data-tip={url}>
+						<Favicon {url} />
+					</div>
+				{/if}
+			{/each}
+		</div>
 
 		{#if profile.category?.length}
 			<div class="flex gap-2 justify-center">
