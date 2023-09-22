@@ -1,24 +1,24 @@
 <script lang="ts">
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
+	import { onMount } from 'svelte'
 
 	export let url: string
 	let faviconUrl = ''
 
-	async function fetchFavicon() {
+	const fetchFavicon = async () => {
 		try {
-			faviconUrl = `https://www.google.com/s2/favicons?domain=${url}`
+			faviconUrl = `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=256`
 		} catch (error) {
 			faviconUrl = ''
 		}
 	}
 
-	import { onMount } from 'svelte'
 	onMount(fetchFavicon)
 </script>
 
 {#if faviconUrl}
 	<a class="link link-info" href={url} target="_blank" rel="noreferrer">
-		<img class='w-4 h-4' src={faviconUrl} alt="Favicon" />
+		<img class="w-10 h-10" src={faviconUrl} alt="Favicon" />
 	</a>
 {:else}
 	<a class="link link-info" href={url} target="_blank" rel="noreferrer">

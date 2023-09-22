@@ -36,7 +36,6 @@ export const actions = {
 		const newUser: any = {}
 		addPropertyIfDefined(data, 'displayName', newUser)
 		addPropertyIfDefined(data, 'username', newUser)
-		addPropertyIfDefined(data, 'website', newUser)
 		addPropertyIfDefined(data, 'category', newUser)
 		addPropertyIfDefined(data, 'bio', newUser)
 		addPropertyIfDefined(data, 'urls', newUser, true)
@@ -94,7 +93,7 @@ const addPropertyIfDefined = (
 	data: FormData,
 	property: string,
 	newUser: { [key: string]: any },
-	list?:boolean
+	list?: boolean
 ) => {
 	const propertyValue = list ? data.getAll(property) : data.get(property)
 	if (propertyValue !== null && propertyValue !== undefined) {

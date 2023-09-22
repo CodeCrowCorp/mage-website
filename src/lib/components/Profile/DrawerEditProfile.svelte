@@ -117,35 +117,36 @@
 						Update Profile
 					</p>
 					<div class="flex flex-col p-3">
-						<input
-							bind:value={profile.displayName}
-							type="text"
-							name="displayName"
-							id="displayName"
-							required
-							class="input input-primary input-bordered w-full"
-							placeholder="Display name" />
-
-						<input
-							bind:value={profile.username}
-							type="text"
-							name="username"
-							id="username"
-							required
-							class="input input-primary input-bordered mt-5 w-full"
-							placeholder="Username"
-							bind:this={username}
-							on:input={() => {
-								username.setCustomValidity('')
-							}} />
-
-						<input
-							bind:value={profile.website}
-							type="url"
-							name="website"
-							id="website"
-							class="input input-primary input-bordered mt-5 w-full"
-							placeholder="Your website URL" />
+						<div class="form-control w-full">
+							<label class="label">
+								<span class="label-text">Display Name</span>
+							</label>
+							<input
+								bind:value={profile.displayName}
+								type="text"
+								name="displayName"
+								id="displayName"
+								required
+								class="input input-primary input-bordered"
+								placeholder="Display name" />
+						</div>
+						<div class="form-control mt-5 w-full">
+							<label class="label">
+								<span class="label-text">Username</span>
+							</label>
+							<input
+								bind:value={profile.username}
+								type="text"
+								name="username"
+								id="username"
+								required
+								class="input input-primary input-bordered"
+								placeholder="Username"
+								bind:this={username}
+								on:input={() => {
+									username.setCustomValidity('')
+								}} />
+						</div>
 
 						<div class="form-control mt-5 w-full">
 							<!-- svelte-ignore a11y-label-has-associated-control -->
@@ -162,7 +163,7 @@
 											name={`urls`}
 											id={`urls`}
 											class="input input-primary input-bordered w-full"
-											placeholder="Your website URL" />
+											placeholder="Social URL" />
 										<div class="bg-primary w-max absolute right-0 top-0 p-2 h-[48px] rounded-r-lg">
 											<IconLink />
 										</div>
@@ -212,13 +213,16 @@
 									class="file-input file-input-bordered file-input-primary w-full" />
 							</div>
 
-							<div class="relative">
+							<div class="form-control mt-5 w-full relative">
+								<label class="label">
+									<span class="label-text">Category</span>
+								</label>
 								<input
 									on:click={() => (showAddCategory = true)}
 									type="text"
 									name="category-search"
 									placeholder={profile?.category?.length ? '' : 'Category'}
-									class="input input-primary input-bordered mt-5 w-full" />
+									class="input input-primary input-bordered" />
 								<span class="absolute right-0 top-1/2 text-gray-400 pr-3"
 									>({maxCategoryLabel})</span>
 								<span class="absolute flex flex-row gap-2 left-0 top-1/2 pl-5">
@@ -229,13 +233,17 @@
 									{/if}
 								</span>
 							</div>
-
-							<textarea
-								bind:value={profile.bio}
-								id="bio"
-								name="bio"
-								class="block w-full mt-5 textarea h-28 input-primary"
-								placeholder="Your bio here" />
+							<div class="form-control mt-5 w-full">
+								<label class="label">
+									<span class="label-text">Bio</span>
+								</label>
+								<textarea
+									bind:value={profile.bio}
+									id="bio"
+									name="bio"
+									class="block textarea h-28 input-primary"
+									placeholder="Your bio here" />
+							</div>
 						</div>
 
 						<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
