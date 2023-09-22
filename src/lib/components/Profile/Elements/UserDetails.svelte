@@ -1,6 +1,7 @@
 <script lang="ts">
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
+	import Favicon from '$lib/components/Profile/Favicon.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 	import { colorFromLevel, levelAndBarValueFromExp } from '$lib/utils'
 	import { onMount } from 'svelte'
@@ -44,13 +45,16 @@
 		</div>
 	{/if}
 	<div class="pt-4 mb-2">
-		{#if profile.website}
-			<div class="flex gap-2 justify-center p-4">
-				<IconLink />
-				<a class="link link-info" href={profile.website} target="_blank" rel="noreferrer"
-					>{profile.website || ''}</a>
-			</div>
-		{/if}
+		<div class="flex gap-2 justify-center items-center p-4">
+			{#each profile.urls || [] as url, index (index)}
+				{#if url}
+					<div class="tooltip" data-tip={url}>
+						<Favicon {url} />
+					</div>
+				{/if}
+			{/each}
+		</div>
+
 		{#if profile.category?.length}
 			<div class="flex gap-2 justify-center">
 				{#each profile.category as category}
