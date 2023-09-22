@@ -11,9 +11,9 @@
 </script>
 
 <a
-	class="swiper-slide rounded-md"
+	class="swiper-slide rounded-md bg-black h-fit"
 	href="/channel/{channel._id}"
-	style="background-image: url({bg_cover});">
+	style="background-image: url({bg_cover}); background-size: cover; background-repeat: no-repeat;">
 	<div class="flex flex-col justify-between p-3 w-full h-full">
 		<div class="flex flex-row justify-between">
 			<div class="flex gap-2 mb-3">
