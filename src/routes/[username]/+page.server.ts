@@ -3,7 +3,7 @@ import { get, patch, putImage } from '$lib/api'
 import { redirect, fail, error } from '@sveltejs/kit'
 
 export const load = (async ({ params }: { params: any }) => {
-	const profile = await get(`users/search/username?username=${params.username}`)
+	const profile = await get(`users/search/username?username=${params.username.toLowerCase()}`)
 	if (profile.error) {
 		throw error(404)
 	}
