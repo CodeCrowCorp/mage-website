@@ -4,10 +4,12 @@
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import { category_list } from '$lib/stores/channelStore'
-	import { createEffect } from '$lib/utils'
+	import { createEffect, objectMonitor } from '$lib/utils'
 
 	export let showDrawer: boolean
 	export let profile: any
+	
+	let isProfileUpdated = objectMonitor($page.data.profile)
 
 	let inputFields = [...profile.urls]
 
@@ -82,7 +84,13 @@
 		}
 	}, [$page.params])
 
-	console.info('profile', profile)
+	$: useOueryEffect(() => {
+		if(isProfileUpdated($page.data.profile)){
+			if (submitBtn) submitBtn.disabled = false
+			toggleDrawer()
+		}
+	}, [$page.data.profile])
+
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
@@ -168,7 +176,7 @@
 											<IconLink />
 										</div>
 									</div>
-									{#if index === inputFields.length - 1}
+									{#if index === inputFields.length - 1 && inputFields.length < 10}
 										<button
 											type="button"
 											class="btn btn-primary text-white"
