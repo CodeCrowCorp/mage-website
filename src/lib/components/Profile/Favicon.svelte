@@ -17,11 +17,11 @@
 </script>
 
 {#if faviconUrl}
-	<a class="link link-info" href={url} target="_blank" rel="noreferrer">
-		<img class="w-10 h-10" src={faviconUrl} alt="Favicon" />
+	<a class="link link-info w-10 tooltip" href={url} data-tip={url} target="_blank" rel="noreferrer">
+		<img class="w-full" src={faviconUrl} alt="Favicon" />
 	</a>
 {:else}
-	<a class="link link-info" href={url} target="_blank" rel="noreferrer">
+	<a class="w-10 h-10 link link-info tooltip" href={url} data-tip={url} target="_blank" rel="noreferrer">
 		<IconLink />
 	</a>
 {/if}

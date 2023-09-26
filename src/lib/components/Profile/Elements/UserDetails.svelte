@@ -44,13 +44,12 @@
 			{profile.bio || ''}
 		</div>
 	{/if}
+	
 	<div class="pt-4 mb-2">
-		<div class="flex gap-2 justify-center items-center p-4">
+		<div class="flex gap-2 justify-center items-center lg:overflow-hidden overflow-auto max-w-full ">
 			{#each profile.urls || [] as url, index (index)}
 				{#if url}
-					<div class="tooltip" data-tip={url}>
-						<Favicon {url} />
-					</div>
+					<Favicon {url} />
 				{/if}
 			{/each}
 		</div>
