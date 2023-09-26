@@ -55,7 +55,7 @@
 		</div>
 
 		{#if profile.category?.length}
-			<div class="flex gap-2 justify-center">
+			<div class="flex gap-2 justify-center mt-8">
 				{#each profile.category as category}
 					<div class="tooltip" data-tip={category}>
 						<img src={$category_list[category]} alt="" class="h-7 w-7 m-1" />
