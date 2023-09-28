@@ -44,23 +44,28 @@
 			{profile.bio || ''}
 		</div>
 	{/if}
-	
-	<div class="pt-4 mb-2">
-		<div class="flex gap-2 justify-center items-center lg:overflow-hidden overflow-auto max-w-full ">
-			{#each profile.urls || [] as url, index (index)}
-				{#if url}
-					<Favicon {url} />
-				{/if}
-			{/each}
+
+	<div class="pt-4 mb-2 flex flex-col">
+		<div class="card bg-base-200 p-3 tooltip tooltip-left" data-tip="social">
+			<div
+				class="flex gap-2 justify-center items-center lg:overflow-hidden overflow-auto max-w-full">
+				{#each profile.urls || [] as url, index (index)}
+					{#if url}
+						<Favicon {url} />
+					{/if}
+				{/each}
+			</div>
 		</div>
 
 		{#if profile.category?.length}
-			<div class="flex gap-2 justify-center mt-8">
-				{#each profile.category as category}
-					<div class="tooltip" data-tip={category}>
-						<img src={$category_list[category]} alt="" class="h-7 w-7 m-1" />
-					</div>
-				{/each}
+			<div class="card bg-base-200 p-3 mt-4 tooltip tooltip-left" data-tip="category">
+				<div class="flex gap-2 justify-center">
+					{#each profile.category as category}
+						<div class="tooltip" data-tip={category}>
+							<img src={$category_list[category]} alt="" class="h-7 w-7 m-1" />
+						</div>
+					{/each}
+				</div>
 			</div>
 		{/if}
 	</div>
