@@ -21,7 +21,7 @@
 	$: isHost = channel.user === $page.data.user?.userId
 
 	$: viewersWithOutHost = viewers.filter(
-		(viewer) => viewer.userId !== channel.user && viewer.userId === 'anon'
+		(viewer) => viewer.userId !== channel.user && viewer.userId !== 'anon'
 	)
 
 	function insert(str: string, index: number, value: string) {
