@@ -10,7 +10,7 @@
 	export let profile: any
 
 	let isProfileUpdated = objectMonitor($page.data.profile)
-	$: inputFields = profile.urls ? [...profile.urls] : ['']
+	$: inputFields = profile.urls ? [...profile.urls] : []
 
 	const removeInputField = (index: number) => {
 		inputFields = inputFields.filter((_, i) => i !== index)
