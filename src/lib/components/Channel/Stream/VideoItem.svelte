@@ -15,7 +15,6 @@
 	import { emitChannelUpdate } from '$lib/websocket'
 	import { captureScreenShot, dataURLtoFile, getColoredRole, setRole } from '$lib/utils'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
-	import { is_feature_stats_enabled, is_feature_obs_enabled } from '$lib/stores/remoteConfigStore'
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { get, patch, putImage } from '$lib/api'
@@ -89,7 +88,7 @@
 		handleAudioChanges()
 	}
 
-	$: if ($is_feature_stats_enabled && (isScreenLive || iframeUrl)) {
+	$: if (isScreenLive || iframeUrl) {
 		toggleTimer(true)
 	} else {
 		toggleTimer(false)
@@ -499,7 +498,7 @@
 				? 'mask-hexagon'
 				: 'mask-squircle'} object-cover m-auto" />
 		<div class="absolute inset-0">
-			{#if $is_feature_stats_enabled && (isScreenLive || iframeUrl)}
+			{#if isScreenLive || iframeUrl}
 				<span
 					class="z-10 btn btn-sm btn-neutral font-medium text-white border-none items-center w-fit absolute top-2 left-2 {isHoverVideo
 						? 'opacity-100'
@@ -507,7 +506,7 @@
 					{formattedTime}
 				</span>
 			{/if}
-			{#if $is_feature_obs_enabled && iframeUrl}
+			{#if iframeUrl}
 				<div class="absolute rounded-md w-full h-full">
 					<iframe
 						bind:this={obs_element}
@@ -579,29 +578,27 @@
 	</div>
 </div>
 
-{#if $is_feature_obs_enabled}
-	<dialog bind:this={obs_modal} class="modal">
-		<form method="dialog" class="modal-box">
-			<h3 class="font-bold text-lg">Copy to OBS</h3>
-			<p class="py-4">
-				Server: <br />
-				{#if !video.obs?.rtmps?.url}
-					<span class="loading loading-dots loading-sm" />
-				{:else}
-					{video.obs?.rtmps?.url}
-				{/if}
-			</p>
-			<p class="py-4 break-all">
-				Stream Key: <br />
-				{#if !video.obs?.rtmps?.streamKey}
-					<span class="loading loading-dots loading-sm" />
-				{:else}
-					{video.obs?.rtmps?.streamKey}
-				{/if}
-			</p>
-			<div class="modal-action">
-				<button class="btn">Close</button>
-			</div>
-		</form>
-	</dialog>
-{/if}
+<dialog bind:this={obs_modal} class="modal">
+	<form method="dialog" class="modal-box">
+		<h3 class="font-bold text-lg">Copy to OBS</h3>
+		<p class="py-4">
+			Server: <br />
+			{#if !video.obs?.rtmps?.url}
+				<span class="loading loading-dots loading-sm" />
+			{:else}
+				{video.obs?.rtmps?.url}
+			{/if}
+		</p>
+		<p class="py-4 break-all">
+			Stream Key: <br />
+			{#if !video.obs?.rtmps?.streamKey}
+				<span class="loading loading-dots loading-sm" />
+			{:else}
+				{video.obs?.rtmps?.streamKey}
+			{/if}
+		</p>
+		<div class="modal-action">
+			<button class="btn">Close</button>
+		</div>
+	</form>
+</dialog>

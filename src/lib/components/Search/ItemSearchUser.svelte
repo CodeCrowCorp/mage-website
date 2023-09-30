@@ -16,15 +16,16 @@
 			</div>
 		</div>
 		<div class="flex-auto flex flex-col gap-2">
-			<div class="flex flex-wrap">
-				{#if item.category && item.category.length}
+			{#if item.category?.length}
+				<div class="flex flex-wrap">
 					{#each item.category as category}
 						<div class="tooltip" data-tip={category}>
 							<img src={$category_list[category]} alt="" class="h-10 w-10 m-1" />
 						</div>
 					{/each}
-				{/if}
-			</div>
+				</div>
+			{/if}
+
 			<h2 class="text-xl font-semibold">
 				{item.displayName || ''}
 			</h2>
@@ -41,15 +42,17 @@
 			<h2 class="text-md">
 				{item.bio || ''}
 			</h2>
-			<div class="flex gap-2 items-center">
-				{#each item.urls || [] as url, index (index)}
-					{#if url}
-						<div class="tooltip" data-tip={url}>
-							<Favicon {url} />
-						</div>
-					{/if}
-				{/each}
-			</div>
+			{#if item.urls?.length}
+				<div class="flex gap-2 items-center">
+					{#each item.urls || [] as url, index (index)}
+						{#if url}
+							<div class="tooltip" data-tip={url}>
+								<Favicon {url} />
+							</div>
+						{/if}
+					{/each}
+				</div>
+			{/if}
 		</div>
 	</div>
 </a>

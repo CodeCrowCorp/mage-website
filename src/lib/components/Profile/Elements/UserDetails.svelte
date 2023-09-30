@@ -46,16 +46,18 @@
 	{/if}
 
 	<div class="pt-4 mb-2 flex flex-col">
-		<div class="card bg-base-200 p-3 tooltip tooltip-left" data-tip="social">
-			<div
-				class="flex gap-2 justify-center items-center lg:overflow-hidden overflow-auto max-w-full">
-				{#each profile.urls || [] as url, index (index)}
-					{#if url}
-						<Favicon {url} />
-					{/if}
-				{/each}
+		{#if profile.urls?.length}
+			<div class="card bg-base-200 p-3 tooltip tooltip-left" data-tip="social">
+				<div
+					class="flex gap-2 justify-center items-center lg:overflow-hidden overflow-auto max-w-full">
+					{#each profile.urls || [] as url, index (index)}
+						{#if url}
+							<Favicon {url} />
+						{/if}
+					{/each}
+				</div>
 			</div>
-		</div>
+		{/if}
 
 		{#if profile.category?.length}
 			<div class="card bg-base-200 p-3 mt-4 tooltip tooltip-left" data-tip="category">
