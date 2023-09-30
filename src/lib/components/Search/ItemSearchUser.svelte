@@ -1,7 +1,7 @@
 <script lang="ts">
-	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { category_list } from '$lib/stores/channelStore'
+	import Favicon from '$lib/components/Profile/Favicon.svelte'
 
 	export let item: any
 </script>
@@ -31,21 +31,25 @@
 			<div class="flex items-center">
 				<a class="link link-hover flex gap-1" href="/{item.username}"
 					>@{item.username || ''}
-					<div class="text-accent font-bold">
-						<IconDrawerVerification />
-					</div>
+					{#if item.planDetails?.planTier > 1}
+						<div class="text-accent font-bold">
+							<IconDrawerVerification />
+						</div>
+					{/if}
 				</a>
 			</div>
 			<h2 class="text-md">
 				{item.bio || ''}
 			</h2>
-			{#if item.website}
-				<div class="flex gap-2">
-					<IconLink />
-					<a class="link link-info" href={item.website} target="_blank" rel="noreferrer"
-						>{item.website || ''}</a>
-				</div>
-			{/if}
+			<div class="flex gap-2 items-center">
+				{#each item.urls || [] as url, index (index)}
+					{#if url}
+						<div class="tooltip" data-tip={url}>
+							<Favicon {url} />
+						</div>
+					{/if}
+				{/each}
+			</div>
 		</div>
 	</div>
 </a>

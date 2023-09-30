@@ -10,8 +10,15 @@
 			<p class="mb-5 font-light text-gray-500 sm:text-xl">
 				Collaborative streaming powered by AI. Expand your reach and grow your brand.
 			</p>
-			<a class="mb-5 link link-secondary" href={env.PUBLIC_STRIPE_BILLING_URL}
-				>Manage your subscription</a>
+			<div class="flex gap-2 justify-center">
+				<span>
+					<a class="mb-5 link link-secondary" href={env.PUBLIC_STRIPE_BILLING_URL}
+						>Manage your subscription</a>
+					🔹
+					<a class="mb-5 link link-secondary" href="https://forms.gle/mBtByR6jdoJeQd367"
+						>Apply for verification</a>
+				</span>
+			</div>
 		</div>
 
 		<script async src="https://js.stripe.com/v3/pricing-table.js"></script>
