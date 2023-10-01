@@ -93,7 +93,6 @@
 			ignoreOutsideClick = false
 		}, 100)
 	}
-
 </script>
 
 <div class="bg-base-100 flex flex-col overflow-y-hidden w-72 md:w-full h-full rounded-lg">
