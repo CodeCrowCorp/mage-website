@@ -39,7 +39,7 @@
 				totalChannelViews4Weeks || 0
 			)}
 		</div>
-		<div class="stat-desc">{viewsMonthlyIncr.monthlyChange} % more than last month</div>
+		<div class="stat-desc">{viewsMonthlyIncr.monthlyChange>=0 ? `${viewsMonthlyIncr.monthlyChange}% more` : `0%`} more than last month</div>
 	</div>
 
 	<div class="stat">
@@ -50,7 +50,7 @@
 		<div class="stat-value text-secondary">
 			{highestAndCurrentStreak.highest} / {highestAndCurrentStreak.current}
 		</div>
-		<div class="stat-desc">{streakMonthlyIncr.monthlyChange} % more than last month</div>
+		<div class="stat-desc">{streakMonthlyIncr.monthlyChange>=0 ? `${streakMonthlyIncr.monthlyChange}%` : `0%` } more than last month</div>
 	</div>
 
 	<div class="stat">
@@ -59,7 +59,7 @@
 		</div>
 		<div class="stat-title">Total / Avg Mins Streamed</div>
 		<div class="stat-value text-secondary">{totalMins} / {avgMins}</div>
-		<div class="stat-desc">{totalMinsMonthlyIncr.monthlyChange} % more than last month</div>
+		<div class="stat-desc">{totalMinsMonthlyIncr.monthlyChange>=0 ? `${totalMinsMonthlyIncr.monthlyChange}%` : `0%` } more than last month</div>
 	</div>
 
 	<!-- <div class="stat">
