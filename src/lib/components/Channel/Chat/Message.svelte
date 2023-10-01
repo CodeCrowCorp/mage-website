@@ -10,12 +10,9 @@
 	import { page } from '$app/stores'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import { onMount } from 'svelte'
-	import ProfilePopup from './ProfilePopup.svelte'
 
 	export let sender: any, hostId: string, channel: any, onUsernameClick: any
 	let role: string, coloredRole: any
-	let profileElt: any = null
-	let ignoreOutsideClick = false
 
 	$: isGuest = channel?.guests?.includes(sender.user?.userId)
 
@@ -164,9 +161,9 @@
 <ul class="menu" on:click={copy}>
 	<li class="group relative">
 		<!--Host, Mod, You or Rando-->
-		<div class="p-1 border border-transparent rounded-lg flex gap-2 overflow-x-hidden">
+		<div class="p-1 border border-transparent rounded-lg gap-2">
 			<!-- svelte-ignore a11y-label-has-associated-control -->
-			<label>
+			<label style="text-wrap:wrap">
 				{#if role === '🤖 AI' || role === 'Host' || role === 'Mod' || role === 'You'}
 					<span class="{coloredRole.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
 						>{role}</span>
@@ -196,7 +193,7 @@
 						<span class="break-all">{codeSnippet.endText}</span>
 					{/if}
 				{:else}
-					<span class="break-all">{@html parse(sender.message)}</span>
+					<span style="overflow-wrap: anywhere">{@html parse(sender.message)}</span>
 				{/if}
 			</label>
 
