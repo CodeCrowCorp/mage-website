@@ -277,7 +277,7 @@
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<li
 							on:click={() => {
-								chatMessage = chatMessage.replace(/@/g, '@' + user.username) + ' '
+								chatMessage = chatMessage.replace(/@/g, '@' + user.username)
 								selectedUser = idx
 							}}>
 							<span class={'text-sm w-full' + (selectedUser == idx ? ' bg-gray-600' : '')}>
