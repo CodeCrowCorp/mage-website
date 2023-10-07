@@ -8,13 +8,13 @@
 
 	export let showDrawer: boolean
 	export let profile: any
-	
+
 	let isProfileUpdated = objectMonitor($page.data.profile)
 
 	let inputFields = [...profile.urls]
 
-	$: if(!inputFields.length){
-		inputFields = [""]
+	$: if (!inputFields.length) {
+		inputFields = ['']
 	}
 
 	const removeInputField = (index: number) => {
@@ -89,14 +89,11 @@
 	}, [$page.params])
 
 	$: useOueryEffect(() => {
-		if(isProfileUpdated($page.data.profile)){
+		if (isProfileUpdated($page.data.profile)) {
 			if (submitBtn) submitBtn.disabled = false
 			toggleDrawer()
 		}
 	}, [$page.data.profile])
-
-	$: console.log(profile)
-
 </script>
 
 <div class="drawer drawer-end absolute w-full z-20 top-0 right-0">
