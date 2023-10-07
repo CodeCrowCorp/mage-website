@@ -8,7 +8,7 @@
 		is_chat_drawer_destroy,
 		was_chat_drawer_closed
 	} from '$lib/stores/channelStore'
-	import { del, put } from '$lib/api'
+	import { del, post, put } from '$lib/api'
 	import { page } from '$app/stores'
 	import { emitAction } from '$lib/websocket'
 	import {
@@ -59,6 +59,25 @@
 		})
 	}
 
+	const sendFcm = async ({
+		channelId,
+		channelTitle,
+		username
+	}: {
+		channelId: string
+		channelTitle: string
+		username: string
+	}) => {
+		return await post(
+			`firebase/send-fcm`,
+			{ channelId, channelTitle, username },
+			{
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			}
+		)
+	}
+
 	const deleteLiveInput = async ({
 		channelId,
 		userId,
@@ -82,8 +101,6 @@
 	const startObsStream = async () => {
 		const liveInput = await createLiveInput({
 			channelId: `${$page.params.channelId}`,
-			channelTitle: `${channel.title}`,
-			username: `${$page.data.user?.user?.username}`,
 			userId: $page.data.user?.userId,
 			trackType: 'obs',
 			isTrackActive: true,
@@ -102,6 +119,11 @@
 				action: 'toggleTrack',
 				video: liveInput
 			}
+		})
+		await sendFcm({
+			channelId: $page.params.channelId,
+			channelTitle: channel.title,
+			username: $page.data.user?.user?.username
 		})
 	}
 
@@ -131,8 +153,6 @@
 	const startScreenStream = async () => {
 		const liveInput = await createLiveInput({
 			channelId: `${$page.params.channelId}`,
-			channelTitle: `${channel.title}`,
-			username: `${$page.data.user?.user?.username}`,
 			userId: $page.data.user?.userId,
 			trackType: 'screen',
 			isTrackActive: true,
@@ -151,6 +171,11 @@
 				action: 'toggleTrack',
 				video: liveInput
 			}
+		})
+		await sendFcm({
+			channelId: $page.params.channelId,
+			channelTitle: channel.title,
+			username: $page.data.user?.user?.username
 		})
 	}
 
@@ -180,8 +205,6 @@
 	const startWebcamStream = async () => {
 		const liveInput = await createLiveInput({
 			channelId: `${$page.params.channelId}`,
-			channelTitle: `${channel.title}`,
-			username: `${$page.data.user?.user?.username}`,
 			userId: $page.data.user?.userId,
 			trackType: 'webcam',
 			isTrackActive: true,
@@ -200,6 +223,11 @@
 				action: 'toggleTrack',
 				video: liveInput
 			}
+		})
+		await sendFcm({
+			channelId: $page.params.channelId,
+			channelTitle: channel.title,
+			username: $page.data.user?.user?.username
 		})
 	}
 
@@ -229,8 +257,6 @@
 	const startAudioStream = async () => {
 		const liveInput = await createLiveInput({
 			channelId: `${$page.params.channelId}`,
-			channelTitle: `${channel.title}`,
-			username: `${$page.data.user?.user?.username}`,
 			userId: $page.data.user?.userId,
 			trackType: 'audio',
 			isTrackActive: true,
@@ -249,6 +275,11 @@
 				action: 'toggleTrack',
 				video: liveInput
 			}
+		})
+		await sendFcm({
+			channelId: $page.params.channelId,
+			channelTitle: channel.title,
+			username: $page.data.user?.user?.username
 		})
 	}
 
