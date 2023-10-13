@@ -33,12 +33,14 @@ export const load = (async ({ params }: { params: any }) => {
 export const actions = {
 	'update-profile': async ({ request, locals }: { request: any; locals: any }) => {
 		const data: FormData = await request.formData()
-		const newUser: any = {}
+		let newUser: any = {}
 		addPropertyIfDefined(data, 'displayName', newUser)
 		addPropertyIfDefined(data, 'username', newUser)
 		addPropertyIfDefined(data, 'category', newUser)
 		addPropertyIfDefined(data, 'bio', newUser)
 		addPropertyIfDefined(data, 'urls', newUser, true)
+
+		newUser.urls = newUser.urls.filter((i:string) => i)
 
 		const avatar = data.get('avatar') as File
 
