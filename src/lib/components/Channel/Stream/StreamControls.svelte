@@ -21,8 +21,11 @@
 	import { channel_connection } from '$lib/stores/websocketStore'
 	import { onDestroy, onMount } from 'svelte'
 	import IconShareObs from '$lib/assets/icons/channel/IconShareObs.svelte'
-	import { is_feature_multistream_enabled } from '$lib/stores/remoteConfigStore'
-	import IconMultistream from '$lib/assets/icons/channel/IconMultistream.svelte'
+	import {
+		is_feature_apps_enabled,
+		is_feature_restream_enabled
+	} from '$lib/stores/remoteConfigStore'
+	import IconRestream from '$lib/assets/icons/channel/IconRestream.svelte'
 
 	export let isHostOrGuest: boolean = false,
 		channel: any,
@@ -53,7 +56,7 @@
 	}
 
 	const createLiveInput = async (trackData: any) => {
-		return await put(`cloudflare/live-input`, trackData, {
+		return await put(`live-input`, trackData, {
 			userId: $page.data.user?.userId,
 			token: $page.data.user?.token
 		})
@@ -68,14 +71,16 @@
 		channelTitle: string
 		username: string
 	}) => {
-		return await post(
-			`firebase/send-fcm`,
-			{ channelId, channelTitle, username },
-			{
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			}
-		)
+		if ($is_feature_apps_enabled) {
+			return await post(
+				`firebase/send-fcm`,
+				{ channelId, channelTitle, username },
+				{
+					userId: $page.data.user?.userId,
+					token: $page.data.user?.token
+				}
+			)
+		}
 	}
 
 	const deleteLiveInput = async ({
@@ -89,7 +94,7 @@
 	}) => {
 		if (channelId && userId && trackType) {
 			return await del(
-				`cloudflare/live-input?channelId=${channelId}&userId=${userId}&trackType=${trackType}`,
+				`live-input?channelId=${channelId}&userId=${userId}&trackType=${trackType}`,
 				{
 					userId: $page.data.user?.userId,
 					token: $page.data.user?.token
@@ -349,66 +354,59 @@
 	})
 </script>
 
-<div class="flex gap-4">
-	<button
-		class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_screen
-			? 'btn-primary'
-			: 'btn-neutral'}"
-		data-tip="Screen"
-		on:click={() => {
-			$is_sharing_screen = !$is_sharing_screen
-		}}
-		disabled={$is_sharing_obs || !isHostOrGuest || !isChannelSocketConnected || !videoItemIsActive}>
-		<IconShareScreen />
-	</button>
+<div class="flex flex-col sm:flex-row gap-4">
+	<div class="flex flex-row gap-4 card p-3 bg-base-300">
+		<button
+			class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_screen
+				? 'btn-primary'
+				: 'btn-neutral'}"
+			data-tip="Screen"
+			on:click={() => {
+				$is_sharing_screen = !$is_sharing_screen
+			}}
+			disabled={$is_sharing_obs ||
+				!isHostOrGuest ||
+				!isChannelSocketConnected ||
+				!videoItemIsActive}>
+			<IconShareScreen />
+		</button>
 
-	<button
-		class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_webcam
-			? 'btn-primary'
-			: 'btn-neutral'}"
-		data-tip="Webcam"
-		on:click={() => {
-			$is_sharing_webcam = !$is_sharing_webcam
-		}}
-		disabled={$is_sharing_obs || !isHostOrGuest || !isChannelSocketConnected || !videoItemIsActive}>
-		<IconShareWebcam />
-	</button>
+		<button
+			class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_webcam
+				? 'btn-primary'
+				: 'btn-neutral'}"
+			data-tip="Webcam"
+			on:click={() => {
+				$is_sharing_webcam = !$is_sharing_webcam
+			}}
+			disabled={$is_sharing_obs ||
+				!isHostOrGuest ||
+				!isChannelSocketConnected ||
+				!videoItemIsActive}>
+			<IconShareWebcam />
+		</button>
 
-	<button
-		class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_audio
-			? 'btn-primary'
-			: 'btn-neutral'}"
-		data-tip="Audio"
-		on:click={() => {
-			$is_sharing_audio = !$is_sharing_audio
-		}}
-		disabled={$is_sharing_obs || !isHostOrGuest || !isChannelSocketConnected || !videoItemIsActive}>
-		<IconShareAudio />
-	</button>
-
-	<button
-		class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_obs
-			? 'btn-primary'
-			: 'btn-neutral'}"
-		data-tip="OBS"
-		on:click={() => {
-			$is_sharing_obs = !$is_sharing_obs
-		}}
-		disabled={$is_sharing_screen ||
-			$is_sharing_webcam ||
-			$is_sharing_audio ||
-			!isHostOrGuest ||
-			!isChannelSocketConnected ||
-			!videoItemIsActive}>
-		<IconShareObs />
-	</button>
-
-	{#if $is_feature_multistream_enabled}
+		<button
+			class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_audio
+				? 'btn-primary'
+				: 'btn-neutral'}"
+			data-tip="Audio"
+			on:click={() => {
+				$is_sharing_audio = !$is_sharing_audio
+			}}
+			disabled={$is_sharing_obs ||
+				!isHostOrGuest ||
+				!isChannelSocketConnected ||
+				!videoItemIsActive}>
+			<IconShareAudio />
+		</button>
+	</div>
+	<div class="flex flex-row gap-4 card p-3">
 		<button
 			class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_obs
 				? 'btn-primary'
 				: 'btn-neutral'}"
-			data-tip="Multistream"
+			data-tip="OBS"
 			on:click={() => {
 				$is_sharing_obs = !$is_sharing_obs
 			}}
@@ -418,18 +416,37 @@
 				!isHostOrGuest ||
 				!isChannelSocketConnected ||
 				!videoItemIsActive}>
-			<IconMultistream />
+			<IconShareObs />
 		</button>
-	{/if}
 
-	<button
-		class="btn text-white border-none tooltip font-normal normal-case {$is_chat_drawer_open
-			? 'btn-primary'
-			: 'btn-neutral'}"
-		data-tip="Chat"
-		on:click={() => handleChatDrawer()}>
-		<IconChatDrawer />
-	</button>
+		{#if $is_feature_restream_enabled}
+			<button
+				class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_obs
+					? 'btn-primary'
+					: 'btn-neutral'}"
+				data-tip="Restream"
+				on:click={() => {
+					$is_sharing_obs = !$is_sharing_obs
+				}}
+				disabled={$is_sharing_screen ||
+					$is_sharing_webcam ||
+					$is_sharing_audio ||
+					!isHostOrGuest ||
+					!isChannelSocketConnected ||
+					!videoItemIsActive}>
+				<IconRestream />
+			</button>
+		{/if}
+
+		<button
+			class="btn text-white border-none tooltip font-normal normal-case {$is_chat_drawer_open
+				? 'btn-primary'
+				: 'btn-neutral'}"
+			data-tip="Chat"
+			on:click={() => handleChatDrawer()}>
+			<IconChatDrawer />
+		</button>
+	</div>
 </div>
 <input
 	type="checkbox"
