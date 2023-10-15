@@ -99,7 +99,7 @@
 		{/each}
 	</div>
 
-	<div class="absolute lg:bottom-0 bottom-10 m-7 w-full items-center justify-center flex">
+	<div class="absolute lg:bottom-0 bottom-10 m-3 w-full items-center justify-center flex">
 		<StreamControls bind:isHostOrGuest bind:channel bind:isScrollable />
 	</div>
 </div>
