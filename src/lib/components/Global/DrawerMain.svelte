@@ -1,4 +1,5 @@
 <script lang="ts">
+	import IconDrawerBrand from '$lib/assets/icons/drawer/IconDrawerBrand.svelte'
 	import IconDrawerStreak from '$lib/assets/icons/drawer/IconDrawerStreak.svelte'
 	import IconDrawerStreamDuration from '$lib/assets/icons/drawer/IconDrawerStreamDuration.svelte'
 	import IconDrawerHome from '$lib/assets/icons/drawer/IconDrawerHome.svelte'
@@ -229,6 +230,12 @@
 			<a class="custom-menu-item" href="https://codecrow.io/careers" target="_blank">
 				<IconDrawerCareers />
 				<span class={isChannelPage ? 'md:hidden' : ''}>Careers</span>
+			</a>
+		</li>
+		<li>
+			<a class="custom-menu-item" href="https://brand.mage.stream/IconMageLogo.zip" target="_blank">
+				<IconDrawerBrand />
+				<span class={isChannelPage ? 'md:hidden' : ''}>Brand</span>
 			</a>
 		</li>
 		<li>
