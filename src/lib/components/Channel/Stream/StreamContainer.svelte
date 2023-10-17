@@ -1,5 +1,7 @@
 <script lang="ts">
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
+	import IconChatDrawerChevronOpen from '$lib/assets/icons/channel/IconChatDrawerChevronOpen.svelte'
+	import IconChatDrawerChevronClose from '$lib/assets/icons/channel/IconChatDrawerChevronClose.svelte'
 	import IconViews from '$lib/assets/icons/IconViews.svelte'
 	import StreamControls from '$lib/components/Channel/Stream/StreamControls.svelte'
 	import DropdownViewers from '$lib/components/Channel/Stream/DropdownViewers.svelte'
@@ -14,6 +16,11 @@
 		is_sharing_webcam
 	} from '$lib/stores/streamStore'
 	import { getNumberInThousands } from '$lib/utils'
+	import {
+		is_chat_drawer_open,
+		is_chat_drawer_destroy,
+		was_chat_drawer_closed
+	} from '$lib/stores/channelStore'
 
 	const dispatch = createEventDispatcher()
 	export let userCount: number = 1,
@@ -47,6 +54,24 @@
 		}
 
 		return { destroy: () => observer.disconnect() }
+	}
+
+	$: handleChatDrawer()
+
+	const handleChatDrawer = () => {
+		if ($is_chat_drawer_open) {
+			$is_chat_drawer_open = false
+			$was_chat_drawer_closed = true
+			setTimeout(() => {
+				$is_chat_drawer_destroy = true
+			}, 300)
+			return
+		}
+
+		$is_chat_drawer_destroy = false
+		setTimeout(() => {
+			$is_chat_drawer_open = !$is_chat_drawer_open
+		}, 100)
 	}
 </script>
 
@@ -90,6 +115,11 @@
 							</label>
 							<DropdownViewers {channel} bind:viewers />
 						</div>
+						<label class="swap swap-rotate ml-auto">
+							<input type="checkbox" bind:checked={$is_chat_drawer_open} />
+							<IconChatDrawerChevronOpen />
+							<IconChatDrawerChevronClose />
+						</label>
 					</div>
 					{#if channel && nextchannel?._id === $page.params.channelId}
 						<VideoGrid bind:channel />
