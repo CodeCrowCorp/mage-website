@@ -196,17 +196,20 @@
 					disabled={!$page.data.user?.userId}
 					class="btn btn-secondary {isFollowing
 						? 'btn-outline'
-						: ''} col-span-4 normal-case tooltip tooltip-top flex"
+						: ''} col-span-3 normal-case tooltip tooltip-top flex"
 					data-tip={isFollowing ? 'Unfollow host' : 'Follow host'}
 					on:click={() => toggleFollow()}>
 					{isFollowing ? 'Unfollow' : 'Follow'}
 				</button>
-				<button
-					class="btn text-white border-none tooltip tooltip-bottom font-normal normal-case btn-neutral"
-					data-tip="Share"
-					on:click={() => copyToClipboard($page.url.toString())}>
+				<label
+					class="btn col-span-1 text-white border-none tooltip tooltip-top font-normal normal-case btn-neutral flex"
+					data-tip={copyText}
+					on:click={() => {
+						copyToClipboard($page.url.toString())
+						changeCopyText()
+					}}>
 					<IconShare />
-				</button>
+				</label>
 				<button
 					disabled={!$page.data.user?.userId}
 					class="btn btn-neutral col-span-1 {isFavorite
