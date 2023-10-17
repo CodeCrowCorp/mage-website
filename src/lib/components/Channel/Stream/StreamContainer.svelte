@@ -85,8 +85,8 @@
 			? 'overflow-y-hidden'
 			: ''}">
 		{#each channels as nextchannel}
-			<div class="carousel-item h-full p-3" id={nextchannel?._id} use:autoActive>
-				<div class="flex flex-col w-full">
+			<div class="carousel-item h-full" id={nextchannel?._id} use:autoActive>
+				<div class="flex flex-col w-full m-3">
 					<div class="flex gap-2 mb-3">
 						<span
 							class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center {channel
@@ -128,7 +128,6 @@
 			</div>
 		{/each}
 	</div>
-
 	<div class="absolute lg:bottom-0 bottom-10 m-3 w-full items-center justify-center flex">
 		<StreamControls bind:isHostOrGuest bind:channel bind:isScrollable />
 	</div>
