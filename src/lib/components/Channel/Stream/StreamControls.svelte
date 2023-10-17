@@ -1,13 +1,8 @@
 <script lang="ts">
+	import IconShare from '$lib/assets/icons/channel/IconShare.svelte'
 	import IconShareScreen from '$lib/assets/icons/channel/IconShareScreen.svelte'
 	import IconShareWebcam from '$lib/assets/icons/channel/IconShareWebcam.svelte'
 	import IconShareAudio from '$lib/assets/icons/channel/IconShareAudio.svelte'
-	import IconChatDrawer from '$lib/assets/icons/channel/IconChatDrawer.svelte'
-	import {
-		is_chat_drawer_open,
-		is_chat_drawer_destroy,
-		was_chat_drawer_closed
-	} from '$lib/stores/channelStore'
 	import { del, post, put } from '$lib/api'
 	import { page } from '$app/stores'
 	import { emitAction } from '$lib/websocket'
@@ -38,22 +33,6 @@
 	)
 
 	let subcriptions: any[] = []
-
-	const handleChatDrawer = () => {
-		if ($is_chat_drawer_open) {
-			$is_chat_drawer_open = false
-			$was_chat_drawer_closed = true
-			setTimeout(() => {
-				$is_chat_drawer_destroy = true
-			}, 300)
-			return
-		}
-
-		$is_chat_drawer_destroy = false
-		setTimeout(() => {
-			$is_chat_drawer_open = !$is_chat_drawer_open
-		}, 100)
-	}
 
 	const createLiveInput = async (trackData: any) => {
 		return await put(`live-input`, trackData, {
@@ -437,15 +416,6 @@
 				<IconRestream />
 			</button>
 		{/if}
-
-		<button
-			class="btn text-white border-none tooltip font-normal normal-case {$is_chat_drawer_open
-				? 'btn-primary'
-				: 'btn-neutral'}"
-			data-tip="Chat"
-			on:click={() => handleChatDrawer()}>
-			<IconChatDrawer />
-		</button>
 	</div>
 </div>
 <input

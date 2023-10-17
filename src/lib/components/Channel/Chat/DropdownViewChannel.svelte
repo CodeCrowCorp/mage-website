@@ -9,6 +9,7 @@
 	import { del, get, put } from '$lib/api'
 	import { createEffect } from '$lib/utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
+	import IconShare from '$lib/assets/icons/channel/IconShare.svelte'
 
 	export let channel: any = undefined,
 		showEditChannelDrawer: boolean = false
@@ -74,6 +75,14 @@
 	$: useEffect(() => {
 		getHostRelationship()
 	}, [channel?._id])
+
+	let copyText = 'Share'
+	const changeCopyText = () => {
+		copyText = 'Copied!'
+		setTimeout(() => {
+			copyText = 'Share'
+		}, 1000)
+	}
 </script>
 
 <div class="menu dropdown dropdown-bottom z-10">
@@ -160,10 +169,19 @@
 			<div class="grid grid-cols-5 gap-2">
 				<label
 					for="edit-channel-drawer"
-					class="btn btn-neutral text-white col-span-4 flex tooltip font-normal normal-case"
+					class="btn btn-neutral text-white col-span-3 flex tooltip font-normal normal-case"
 					data-tip="Edit channel"
 					on:click={() => (showEditChannelDrawer = true)}>
 					Edit channel
+				</label>
+				<label
+					class="btn col-span-1 text-white border-none tooltip tooltip-top font-normal normal-case btn-neutral flex"
+					data-tip={copyText}
+					on:click={() => {
+						copyToClipboard($page.url.toString())
+						changeCopyText()
+					}}>
+					<IconShare />
 				</label>
 				<label
 					for="modal-delete-channel"
@@ -182,6 +200,12 @@
 					data-tip={isFollowing ? 'Unfollow host' : 'Follow host'}
 					on:click={() => toggleFollow()}>
 					{isFollowing ? 'Unfollow' : 'Follow'}
+				</button>
+				<button
+					class="btn text-white border-none tooltip tooltip-bottom font-normal normal-case btn-neutral"
+					data-tip="Share"
+					on:click={() => copyToClipboard($page.url.toString())}>
+					<IconShare />
 				</button>
 				<button
 					disabled={!$page.data.user?.userId}

@@ -1,5 +1,7 @@
 <script lang="ts">
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
+	import IconChatDrawerChevronOpen from '$lib/assets/icons/channel/IconChatDrawerChevronOpen.svelte'
+	import IconChatDrawerChevronClose from '$lib/assets/icons/channel/IconChatDrawerChevronClose.svelte'
 	import IconViews from '$lib/assets/icons/IconViews.svelte'
 	import StreamControls from '$lib/components/Channel/Stream/StreamControls.svelte'
 	import DropdownViewers from '$lib/components/Channel/Stream/DropdownViewers.svelte'
@@ -14,6 +16,11 @@
 		is_sharing_webcam
 	} from '$lib/stores/streamStore'
 	import { getNumberInThousands } from '$lib/utils'
+	import {
+		is_chat_drawer_open,
+		is_chat_drawer_destroy,
+		was_chat_drawer_closed
+	} from '$lib/stores/channelStore'
 
 	const dispatch = createEventDispatcher()
 	export let userCount: number = 1,
@@ -48,6 +55,24 @@
 
 		return { destroy: () => observer.disconnect() }
 	}
+
+	$: handleChatDrawer()
+
+	const handleChatDrawer = () => {
+		if ($is_chat_drawer_open) {
+			$is_chat_drawer_open = false
+			$was_chat_drawer_closed = true
+			setTimeout(() => {
+				$is_chat_drawer_destroy = true
+			}, 300)
+			return
+		}
+
+		$is_chat_drawer_destroy = false
+		setTimeout(() => {
+			$is_chat_drawer_open = !$is_chat_drawer_open
+		}, 100)
+	}
 </script>
 
 <div class="flex justify-center h-full">
@@ -60,8 +85,8 @@
 			? 'overflow-y-hidden'
 			: ''}">
 		{#each channels as nextchannel}
-			<div class="carousel-item h-full p-3" id={nextchannel?._id} use:autoActive>
-				<div class="flex flex-col w-full">
+			<div class="carousel-item h-full" id={nextchannel?._id} use:autoActive>
+				<div class="flex flex-col w-full m-3">
 					<div class="flex gap-2 mb-3">
 						<span
 							class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center {channel
@@ -90,6 +115,11 @@
 							</label>
 							<DropdownViewers {channel} bind:viewers />
 						</div>
+						<label class="swap swap-rotate ml-auto">
+							<input type="checkbox" bind:checked={$is_chat_drawer_open} />
+							<IconChatDrawerChevronOpen />
+							<IconChatDrawerChevronClose />
+						</label>
 					</div>
 					{#if channel && nextchannel?._id === $page.params.channelId}
 						<VideoGrid bind:channel />
@@ -98,7 +128,6 @@
 			</div>
 		{/each}
 	</div>
-
 	<div class="absolute lg:bottom-0 bottom-10 m-3 w-full items-center justify-center flex">
 		<StreamControls bind:isHostOrGuest bind:channel bind:isScrollable />
 	</div>
