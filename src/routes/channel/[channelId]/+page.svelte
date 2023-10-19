@@ -271,9 +271,7 @@
 							})
 						} else {
 							// for new users joining the channel
-							const liveInputs = await get(
-								`cloudflare/live-inputs?channelId=${$page.params.channelId}`
-							)
+							const liveInputs = await get(`live-inputs?channelId=${$page.params.channelId}`)
 							channel.videoItems = updateVideoItems([...activeGuests], liveInputs)
 						}
 					}
