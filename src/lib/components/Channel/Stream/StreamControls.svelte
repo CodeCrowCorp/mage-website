@@ -1,5 +1,4 @@
 <script lang="ts">
-	import IconShare from '$lib/assets/icons/channel/IconShare.svelte'
 	import IconShareScreen from '$lib/assets/icons/channel/IconShareScreen.svelte'
 	import IconShareWebcam from '$lib/assets/icons/channel/IconShareWebcam.svelte'
 	import IconShareAudio from '$lib/assets/icons/channel/IconShareAudio.svelte'
@@ -21,7 +20,7 @@
 		is_feature_restream_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconRestream from '$lib/assets/icons/channel/IconRestream.svelte'
-	import RestreamDrawer from './RestreamDrawer.svelte'
+	import DrawerRestream from '$lib/components/Channel/Stream/DrawerRestream.svelte'
 
 	export let isHostOrGuest: boolean = false,
 		channel: any,
@@ -334,10 +333,9 @@
 		})
 	})
 
-	const overlayClick = (evt:any) => {
+	const overlayClick = (evt: any) => {
 		const elt = evt?.target
-		if(elt?.classList?.contains('drawer-overlay'))
-		restream_drawer = false
+		if (elt?.classList?.contains('drawer-overlay')) restream_drawer = false
 	}
 </script>
 
@@ -407,34 +405,31 @@
 		</button>
 
 		{#if $is_feature_restream_enabled}
-		<div class="drawer drawer-end">
-			<input id="restream-drawer" type="checkbox" class="drawer-toggle" />
-			<div class="drawer-content">
-			  <!-- Page content here -->
-			  <!-- svelte-ignore a11y-click-events-have-key-events -->
-			  <label 
-			  	for="restream-drawer" 
-			  	class="btn text-white border-none tooltip font-normal normal-case items-center flex {restream_drawer
-				? 'btn-primary'
-				: 'btn-neutral'}"
-				data-tip="Restream"
-				on:click={() => {restream_drawer = !restream_drawer}}
-			>
-				
-				<IconRestream />
-			
-			  </label>
-			</div> 
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div class="drawer-side z-50" on:click={overlayClick}>
-			  <label for="restream-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-			  <ul class="menu p-4 w-96 drawer-height bg-base-200 text-base-content m-4 rounded-lg">
-				<RestreamDrawer />
-			  </ul>
+			<div class="drawer drawer-end">
+				<input id="restream-drawer" type="checkbox" class="drawer-toggle" />
+				<div class="drawer-content">
+					<!-- Page content here -->
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<label
+						for="restream-drawer"
+						class="btn text-white border-none tooltip font-normal normal-case items-center flex {restream_drawer
+							? 'btn-primary'
+							: 'btn-neutral'}"
+						data-tip="Restream"
+						on:click={() => {
+							restream_drawer = !restream_drawer
+						}}>
+						<IconRestream />
+					</label>
+				</div>
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<div class="drawer-side z-50" on:click={overlayClick}>
+					<label for="restream-drawer" aria-label="close sidebar" class="drawer-overlay" />
+					<ul class="menu p-4 w-96 drawer-height bg-base-200 text-base-content m-4 rounded-lg">
+						<DrawerRestream />
+					</ul>
+				</div>
 			</div>
-		  </div>
-  
-			
 		{/if}
 	</div>
 </div>
