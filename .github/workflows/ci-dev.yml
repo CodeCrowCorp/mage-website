@@ -92,7 +92,7 @@ jobs:
           PUBLIC_ENV: ${{ secrets.PUBLIC_ENV }}
 
       - name: Publish
-        uses: cloudflare/wrangler-action@v3.1.1
+        uses: cloudflare/wrangler-action@v3.2.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
