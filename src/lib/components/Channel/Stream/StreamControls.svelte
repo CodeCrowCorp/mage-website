@@ -21,6 +21,7 @@
 		is_feature_restream_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconRestream from '$lib/assets/icons/channel/IconRestream.svelte'
+	import RestreamDrawer from './RestreamDrawer.svelte'
 
 	export let isHostOrGuest: boolean = false,
 		channel: any,
@@ -399,22 +400,29 @@
 		</button>
 
 		{#if $is_feature_restream_enabled}
-			<button
-				class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_obs
-					? 'btn-primary'
-					: 'btn-neutral'}"
-				data-tip="Restream"
-				on:click={() => {
-					$is_sharing_obs = !$is_sharing_obs
-				}}
-				disabled={$is_sharing_screen ||
-					$is_sharing_webcam ||
-					$is_sharing_audio ||
-					!isHostOrGuest ||
-					!isChannelSocketConnected ||
-					!videoItemIsActive}>
+		<div class="drawer drawer-end">
+			<input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
+			<div class="drawer-content">
+			  <!-- Page content here -->
+			  <label for="my-drawer-4" 
+			  class="btn text-white border-none tooltip font-normal normal-case items-center flex {$is_sharing_obs
+				? 'btn-primary'
+				: 'btn-neutral'}"
+			data-tip="Restream">
+				
 				<IconRestream />
-			</button>
+			
+			  </label>
+			</div> 
+			<div class="drawer-side z-50">
+			  <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
+			  <ul class="menu p-4 w-96 min-h-full bg-base-200 text-base-content">
+				<RestreamDrawer />
+			  </ul>
+			</div>
+		  </div>
+  
+			
 		{/if}
 	</div>
 </div>
