@@ -34,6 +34,7 @@
 	)
 
 	let subcriptions: any[] = []
+	let restream_drawer = false
 
 	const createLiveInput = async (trackData: any) => {
 		return await put(`live-input`, trackData, {
@@ -332,6 +333,12 @@
 			subs()
 		})
 	})
+
+	const overlayClick = (evt:any) => {
+		const elt = evt?.target
+		if(elt?.classList?.contains('drawer-overlay'))
+		restream_drawer = false
+	}
 </script>
 
 <div class="flex flex-col sm:flex-row gap-4">
@@ -401,22 +408,27 @@
 
 		{#if $is_feature_restream_enabled}
 		<div class="drawer drawer-end">
-			<input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
+			<input id="restream-drawer" type="checkbox" class="drawer-toggle" />
 			<div class="drawer-content">
 			  <!-- Page content here -->
-			  <label for="my-drawer-4" 
-			  class="btn text-white border-none tooltip font-normal normal-case items-center flex {$is_sharing_obs
+			  <!-- svelte-ignore a11y-click-events-have-key-events -->
+			  <label 
+			  	for="restream-drawer" 
+			  	class="btn text-white border-none tooltip font-normal normal-case items-center flex {restream_drawer
 				? 'btn-primary'
 				: 'btn-neutral'}"
-			data-tip="Restream">
+				data-tip="Restream"
+				on:click={() => {restream_drawer = !restream_drawer}}
+			>
 				
 				<IconRestream />
 			
 			  </label>
 			</div> 
-			<div class="drawer-side z-50">
-			  <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
-			  <ul class="menu p-4 w-96 min-h-full bg-base-200 text-base-content">
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<div class="drawer-side z-50" on:click={overlayClick}>
+			  <label for="restream-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+			  <ul class="menu p-4 w-96 drawer-height bg-base-200 text-base-content m-4 rounded-lg">
 				<RestreamDrawer />
 			  </ul>
 			</div>
@@ -434,3 +446,10 @@
 	on:click={() => {
 		isScrollable = !isScrollable
 	}} />
+
+<style>
+	.drawer-height {
+		height: calc(100% - 40px);
+		overflow: auto;
+	}
+</style>
