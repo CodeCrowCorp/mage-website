@@ -129,7 +129,10 @@
 			disabled={urlList.length > 9}
 			on:click={() => {
 				showAddModal = true
-			}}>Add url</button>
+				touched = false
+			}}>
+			Add url
+		</button>
 		<dialog class={`modal ${confirm_modal && 'modal-open'}`}>
 			<form on:keydown={(event) => event.key != 'Enter'} method="dialog" class="modal-box">
 				<h3 class="font-bold text-lg">Delete restream url</h3>
