@@ -345,3 +345,8 @@ export const objectMonitor = (object:any) => {
 		return JSON.stringify(object) !== JSON.stringify(currentState)
 	}
 }
+
+export const isValidURL = (url: string) => {
+	const urlPattern = /^https?:\/\/\S+$/i
+	return urlPattern.test(url)
+}

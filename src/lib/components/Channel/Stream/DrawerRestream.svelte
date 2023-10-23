@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { get, put, del, post } from '$lib/api.js'
+	import { get, put, del } from '$lib/api.js'
 	import { page } from '$app/stores'
+	import { isValidURL } from '$lib/utils'
 
 	$: auth = {
 		userId: $page.data.user?.userId,
@@ -17,6 +18,7 @@
 	let confirm_modal = false
 	let showAddModal = false
 	let selected = ''
+	let touched = false
 
 	const addNew = async () => {
 		loading = true
@@ -44,19 +46,31 @@
 		loading = false
 	}
 
-	onMount(() => {
-		getAll()
-	})
-
 	const confirm = (id: string) => {
 		selected = id
 		confirm_modal = true
 	}
+
+	const onBlur = () => {
+		touched = true
+	}
+
+	onMount(() => {
+		getAll()
+	})
+	
+	$: cloudFareUrl = payload.url.includes('cloudflare') 
+	$: invalidUrl = !isValidURL(payload.url)
+
+	$: disbaled = loading || 
+	!payload.url || 
+	!payload.streamKey ||
+	invalidUrl ||
+	cloudFareUrl
+
 </script>
 
-<div class="flex justify-between items-center">
-	<span class="font-semibold text-xl">Restream Urls</span>
-</div>
+
 <div class="flex flex-col">
 	{#each urlList as item}
 		<div class="bg-base-100 p-4 my-1 rounded flex justify-between items-center">
@@ -68,7 +82,8 @@
 						type="password"
 						placeholder="Type here"
 						class="bg-transparent"
-						disabled />
+						disabled 
+					/>
 				</div>
 			</div>
 			<button on:click={() => confirm(item._id)} class="btn btn-sm btn-circle btn-ghost">
@@ -106,7 +121,15 @@
 <dialog bind:this={add_output_modal} class={`modal ${showAddModal && 'modal-open'}`}>
 	<form method="dialog" class="modal-box">
 		<h3 class="font-bold text-lg">Add new stream</h3>
+
+		{#if touched && invalidUrl}
+			<div class="alert alert-warning mt-2">Please enter a valid URL</div>
+		{/if}
+		{#if touched && !invalidUrl && cloudFareUrl}
+			<div class="alert alert-warning">Cloudfare urls not allowed</div>
+		{/if}
 		<div class="form-control w-full pt-4">
+			<!-- svelte-ignore a11y-label-has-associated-control -->
 			<label class="label">
 				<span class="label-text">Server</span>
 			</label>
@@ -114,7 +137,11 @@
 				bind:value={payload.url}
 				type="text"
 				placeholder="Enter server url"
-				class="input input-bordered w-full max-w-xs input-primary" />
+				class="input input-bordered w-full max-w-xs input-primary" 
+				on:blur={onBlur}
+			/>
+			
+			<!-- svelte-ignore a11y-label-has-associated-control -->
 			<label class="label mt-5">
 				<span class="label-text">Stream Key</span>
 			</label>
@@ -136,7 +163,7 @@
 					}
 				}}>Cancel</button>
 			<button
-				disabled={loading || !payload.url || !payload.streamKey}
+				disabled={disbaled}
 				class="btn btn-primary"
 				on:click={addNew}>
 				Save

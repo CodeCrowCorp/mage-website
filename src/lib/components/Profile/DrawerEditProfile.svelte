@@ -4,7 +4,8 @@
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import { category_list } from '$lib/stores/channelStore'
-	import { createEffect, objectMonitor } from '$lib/utils'
+	import { createEffect, objectMonitor, isValidURL } from '$lib/utils'
+	
 
 	export let showDrawer: boolean
 	export let profile: any
@@ -30,11 +31,6 @@
 	}
 
 	let isLastFieldValid = false
-
-	const isValidURL = (url: string) => {
-		const urlPattern = /^https?:\/\/\S+$/i
-		return urlPattern.test(url)
-	}
 
 	$: {
 		const lastField = inputFields[inputFields.length - 1]

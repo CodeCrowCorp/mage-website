@@ -426,6 +426,14 @@
 				<div class="drawer-side z-50" on:click={overlayClick}>
 					<label for="restream-drawer" aria-label="close sidebar" class="drawer-overlay" />
 					<ul class="menu p-4 w-96 drawer-height bg-base-200 text-base-content m-4 rounded-lg">
+						<div class="flex justify-between items-center pb-4">
+							
+							<span class="font-semibold text-xl">Restream Urls</span>
+							<button on:click={()=> {}} class="btn btn-sm btn-circle btn-ghost">
+								✕
+							</button>
+						</div>
+						
 						<DrawerRestream />
 					</ul>
 				</div>
