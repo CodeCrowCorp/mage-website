@@ -424,12 +424,13 @@
 				</div>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<div class="drawer-side z-50" on:click={overlayClick}>
-					<label for="restream-drawer" aria-label="close sidebar" class="drawer-overlay" />
-					<ul class="menu p-4 w-96 drawer-height bg-base-200 text-base-content m-4 rounded-lg">
+					<label id="overlay" for="restream-drawer" aria-label="close sidebar" class="drawer-overlay" />
+					<ul class="menu p-4 w-96 h-[calc(100%-40px)] overflow-auto bg-base-200 text-base-content m-4 rounded-lg">
 						<div class="flex justify-between items-center pb-4">
-							
 							<span class="font-semibold text-xl">Restream Urls</span>
-							<button on:click={()=> {}} class="btn btn-sm btn-circle btn-ghost">
+							<button on:click={()=> {
+								document.getElementById("overlay")?.click()
+							}} class="btn btn-sm btn-circle btn-ghost">
 								✕
 							</button>
 						</div>
@@ -448,11 +449,5 @@
 	bind:checked={isScrollable}
 	on:click={() => {
 		isScrollable = !isScrollable
-	}} />
-
-<style>
-	.drawer-height {
-		height: calc(100% - 40px);
-		overflow: auto;
-	}
-</style>
+	}} 
+/>
