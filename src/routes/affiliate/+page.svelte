@@ -72,6 +72,15 @@
 				Collaborative streaming powered by AI. Our platform is designed to expand your reach and
 				grow your brand.
 			</p>
+			<div class="flex gap-2 justify-center">
+				<span>
+					<a class="mb-5 link link-secondary" href={env.PUBLIC_STRIPE_BILLING_URL}
+						>Manage your subscription</a>
+					🔹
+					<a class="mb-5 link link-secondary" href="https://forms.gle/mBtByR6jdoJeQd367"
+						>Apply for verification</a>
+				</span>
+			</div>
 		</div>
 		<div class="md:flex">
 			{#each plans as plan}
