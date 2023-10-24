@@ -20,6 +20,18 @@
 		isFollowing: boolean = false,
 		isFavorite: boolean = false
 
+	$: useEffect(() => {
+		getHostRelationship()
+	}, [channel?._id])
+
+	let copyText = 'Share'
+	const changeCopyText = () => {
+		copyText = 'Copied!'
+		setTimeout(() => {
+			copyText = 'Share'
+		}, 1000)
+	}
+
 	onMount(async () => {
 		if ($page.data.user?.userId) {
 			isFavorite = await get(`favorite?channelId=${channel._id}`, {
@@ -71,28 +83,15 @@
 			})
 		}
 	}
-
-	$: useEffect(() => {
-		getHostRelationship()
-	}, [channel?._id])
-
-	let copyText = 'Share'
-	const changeCopyText = () => {
-		copyText = 'Copied!'
-		setTimeout(() => {
-			copyText = 'Share'
-		}, 1000)
-	}
 </script>
 
 <div class="menu dropdown dropdown-bottom z-10">
 	<ul tabindex="-1">
 		<li>
-			<div class="p-3 text-xl mb-2 pb-2 border-purple-500 font-semibold border-b-2 flex">
-				<p>{channel.title || 'Chat'}</p>
-				<div
-					class="absolute right-0 mx-3 mt-1 center tooltip tooltip-left"
-					data-tip="View channel details">
+			<div
+				class="p-3 text-xl mb-2 pb-2 border-purple-500 font-semibold border-b-2 justify-between items-center">
+				<p class="truncate w-fill">{channel.title || 'Chat'}</p>
+				<div class="mt-1 tooltip tooltip-left" data-tip="View channel details">
 					<IconChatDownChevron />
 				</div>
 			</div>
@@ -110,7 +109,7 @@
 		{/if}
 
 		<li on:click={() => copyToClipboard(channel.description)} on:keyup>
-			<a class="text-sm max-w-md flex">{channel.description || 'No description'}</a>
+			<a class="text-sm max-w-md flex break-all">{channel.description || 'No description'}</a>
 		</li>
 		<li on:click={() => copyToClipboard(channel.category)} on:keyup>
 			<a
@@ -150,10 +149,10 @@
 						</div>
 					</div>
 					<div>
-						<div class="col-span-3 tooltip flex" data-tip={channel.userDetails?.displayName}>
+						<div class="col-span-3 flex">
 							<p class="truncate">{channel.userDetails?.displayName}</p>
 						</div>
-						<div class="col-span-3 tooltip flex gap-1" data-tip="@{channel.userDetails?.username}">
+						<div class="col-span-3 flex gap-1">
 							<p class="truncate">@{channel.userDetails?.username}</p>
 							{#if channel.planDetails?.planTier > 1}
 								<div class="text-accent font-bold">
