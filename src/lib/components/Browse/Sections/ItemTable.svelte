@@ -12,7 +12,7 @@
 	class="cursor-pointer hover:btn-ghost border border-transparent"
 	on:click|preventDefault={() => goto(`/channel/${channel._id}`)}>
 	<td>
-		<div class="flex items-center space-x-2 my-3 pl-3">
+		<div class="flex items-center space-x-2 pl-3">
 			<div class="avatar">
 				<div
 					class="w-12 mask {channel.planDetails?.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
@@ -33,22 +33,21 @@
 		</div>
 	</td>
 	<td>
-		<div class="my-3">
-			{channel.title}
-			<br />
-			<span class="text-sm">{channel.description}</span>
+		<div class="my-3 flex flex-col">
+			<span class="truncate max-w-xl">{channel.title}</span>
+			<span class="text-sm truncate max-w-xl">{channel.description}</span>
 		</div>
 	</td>
 	<td>
 		<div class="flex gap-4">
 			<div
-				class="flex gap-2 my-3 tooltip"
+				class="flex gap-2 tooltip"
 				data-tip="{getNumberInThousands(channel.viewDetails?.count || 0)} views">
 				<IconViews />
 				<span>{getNumberInThousands(channel.viewDetails?.count || 0)}</span>
 			</div>
 			<div
-				class="flex gap-2 my-3 tooltip"
+				class="flex gap-2 tooltip"
 				data-tip="{getNumberInThousands(channel.memberCount || 0)} watching">
 				<IconViewers />
 				<span>{getNumberInThousands(channel?.memberCount || 0)}</span>
@@ -56,7 +55,7 @@
 		</div>
 	</td>
 	<td>
-		<div class="flex flex-wrap gap-2 my-3">
+		<div class="flex flex-wrap gap-2">
 			{#if channel.tags && channel.tags.length}
 				{#if channel.isLive}
 					<div>
@@ -74,7 +73,7 @@
 		</div>
 	</td>
 	<td>
-		<div class="flex flex-wrap my-3">
+		<div class="flex flex-wrap">
 			{#if channel.category && channel.category.length}
 				{#each channel.category as category}
 					<div class="tooltip" data-tip={category}>
