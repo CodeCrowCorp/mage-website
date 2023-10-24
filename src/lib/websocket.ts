@@ -39,11 +39,13 @@ const emitChannelUpdate = ({
 const emitChannelSubscribeByUser = ({
 	channelSocket,
 	channelId,
+	hostId,
 	userId,
 	username
 }: {
 	channelSocket: WebSocket
 	channelId: string
+	hostId: string
 	userId: string
 	username: string
 }) => {
@@ -51,6 +53,7 @@ const emitChannelSubscribeByUser = ({
 		JSON.stringify({
 			eventName: `channel-subscribe`,
 			channel: channelId,
+			hostId,
 			user: { userId, username }
 		})
 	)
