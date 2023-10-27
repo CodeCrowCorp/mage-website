@@ -99,10 +99,19 @@
 	<div class="drawer-side z-50" on:click={overlayClick}>
 		<label id="overlay" for="restream-drawer" aria-label="close sidebar" class="drawer-overlay" />
 		<ul class="relative menu p-4 w-96 h-[calc(100%-40px)] overflow-auto bg-base-200 text-base-content m-4 rounded-lg">
-		<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
+		<p class="p-3 pt-0 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2 flex justify-between items-center">
 			Restream Urls
+			<button
+				class="btn btn-primary btn-sm"
+				disabled={urlList.length > 9}
+				on:click={() => {
+					showAddModal = true
+					touched = false
+				}}>
+				Add url
+			</button>
 		</p>	
-			
+		
 		<div class="flex flex-col">
 			{#each urlList as item}
 				<div class="bg-base-100 p-4 my-1 rounded flex justify-between items-center">
@@ -124,15 +133,7 @@
 				</div>
 			{/each}
 		</div>
-		<button
-			class="btn btn-primary mt-5"
-			disabled={urlList.length > 9}
-			on:click={() => {
-				showAddModal = true
-				touched = false
-			}}>
-			Add url
-		</button>
+		
 		<dialog class={`modal ${confirm_modal && 'modal-open'}`}>
 			<form on:keydown={(event) => event.key != 'Enter'} method="dialog" class="modal-box">
 				<h3 class="font-bold text-lg">Delete restream url</h3>
@@ -208,11 +209,15 @@
 		</dialog>
 
 		<div 
-			on:click={()=> {
-				document.getElementById("overlay")?.click()
-			}}
-			class="p-4 bg-base-100 absolute left-0 bottom-0 w-full text-center cursor-pointer">
-			Close
+			
+			class="p-4 absolute left-0 bottom-0 w-full text-center cursor-pointer">
+			<button
+				type="button"
+				class="btn btn-neutral text-white grow w-full"
+				on:click={()=> {
+					document.getElementById("overlay")?.click()
+				}}
+			>Cancel</button>
 		</div>
 		</ul>
 	</div>
