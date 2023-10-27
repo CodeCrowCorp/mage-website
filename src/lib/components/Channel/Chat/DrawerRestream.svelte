@@ -157,12 +157,7 @@
 			<div class="modal-box">
 				<h3 class="font-bold text-lg">Add new stream</h3>
 
-				{#if touched && invalidUrl}
-					<div class="alert alert-warning mt-4">Please enter a valid URL</div>
-				{/if}
-				{#if touched && !invalidUrl && cloudFareUrl}
-					<div class="alert alert-warning  mt-4">Cloudfare urls not allowed</div>
-				{/if}
+				
 				<div class="form-control w-full pt-4">
 					<!-- svelte-ignore a11y-label-has-associated-control -->
 					<label class="label">
@@ -175,7 +170,12 @@
 						class="input input-bordered w-full max-w-xs input-primary" 
 						on:blur={onBlur}
 					/>
-					
+					{#if touched && invalidUrl}
+						<div class="text-error text-sm mt-2">Please enter a valid URL</div>
+					{/if}
+					{#if touched && !invalidUrl && cloudFareUrl}
+						<div class="text-error text-sm mt-2">Cloudfare urls not allowed</div>
+					{/if}
 					<!-- svelte-ignore a11y-label-has-associated-control -->
 					<label class="label mt-5">
 						<span class="label-text">Stream Key</span>
