@@ -30,6 +30,7 @@ const emitChannelUpdate = ({
 	delete noSocketChannel.videoItems
 	delete noSocketChannel.userDetails
 	delete noSocketChannel.planDetails
+	delete noSocketChannel.viewDetails
 	channelSocket.send(
 		JSON.stringify({ eventName: `channel-update`, channel: noSocketChannel, roleUpdate })
 	)
@@ -38,11 +39,13 @@ const emitChannelUpdate = ({
 const emitChannelSubscribeByUser = ({
 	channelSocket,
 	channelId,
+	hostId,
 	userId,
 	username
 }: {
 	channelSocket: WebSocket
 	channelId: string
+	hostId: string
 	userId: string
 	username: string
 }) => {
@@ -50,6 +53,7 @@ const emitChannelSubscribeByUser = ({
 		JSON.stringify({
 			eventName: `channel-subscribe`,
 			channel: channelId,
+			hostId,
 			user: { userId, username }
 		})
 	)
