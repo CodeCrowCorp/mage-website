@@ -107,6 +107,7 @@
 			emitChannelSubscribeByUser({
 				channelSocket: chan.socket,
 				channelId: $page.params.channelId,
+				hostId: chan.user,
 				userId: $page.data.user?.userId,
 				username: $page.data.user?.user?.username
 			})
