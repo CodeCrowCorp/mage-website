@@ -91,7 +91,7 @@
 				meta: {
 					name: `${$page.params.channelId}-${$page.data.user.userId}-obs`
 				},
-				recording: { mode: 'automatic' }
+				recording: { mode: 'off' }
 			}
 		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
@@ -330,7 +330,6 @@
 			subs()
 		})
 	})
-
 </script>
 
 <div class="flex flex-col sm:flex-row gap-4">
@@ -410,5 +409,4 @@
 	bind:checked={isScrollable}
 	on:click={() => {
 		isScrollable = !isScrollable
-	}} 
-/>
+	}} />
