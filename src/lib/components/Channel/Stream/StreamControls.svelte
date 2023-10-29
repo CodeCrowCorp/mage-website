@@ -1,5 +1,4 @@
 <script lang="ts">
-	import IconShare from '$lib/assets/icons/channel/IconShare.svelte'
 	import IconShareScreen from '$lib/assets/icons/channel/IconShareScreen.svelte'
 	import IconShareWebcam from '$lib/assets/icons/channel/IconShareWebcam.svelte'
 	import IconShareAudio from '$lib/assets/icons/channel/IconShareAudio.svelte'
@@ -20,7 +19,7 @@
 		is_feature_apps_enabled,
 		is_feature_restream_enabled
 	} from '$lib/stores/remoteConfigStore'
-	import IconRestream from '$lib/assets/icons/channel/IconRestream.svelte'
+	import DrawerRestream from '$lib/components/Channel/Chat/DrawerRestream.svelte'
 
 	export let isHostOrGuest: boolean = false,
 		channel: any,
@@ -331,6 +330,7 @@
 			subs()
 		})
 	})
+
 </script>
 
 <div class="flex flex-col sm:flex-row gap-4">
@@ -399,22 +399,7 @@
 		</button>
 
 		{#if $is_feature_restream_enabled}
-			<button
-				class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_obs
-					? 'btn-primary'
-					: 'btn-neutral'}"
-				data-tip="Restream"
-				on:click={() => {
-					$is_sharing_obs = !$is_sharing_obs
-				}}
-				disabled={$is_sharing_screen ||
-					$is_sharing_webcam ||
-					$is_sharing_audio ||
-					!isHostOrGuest ||
-					!isChannelSocketConnected ||
-					!videoItemIsActive}>
-				<IconRestream />
-			</button>
+			<DrawerRestream />
 		{/if}
 	</div>
 </div>
@@ -425,4 +410,5 @@
 	bind:checked={isScrollable}
 	on:click={() => {
 		isScrollable = !isScrollable
-	}} />
+	}} 
+/>
