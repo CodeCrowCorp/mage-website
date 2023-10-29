@@ -40,7 +40,7 @@
 		"svelte-check": "^3.0.4",
 		"svelte-preprocess": "^5.0.1",
 		"svgo": "^3.0.2",
-		"swiper": "^10.0.3",
+		"swiper": "^11.0.1",
 		"tailwind-clip-path": "^1.0.0",
 		"tailwind-scrollbar": "^3.0.0",
 		"tailwindcss": "^3.2.7",
