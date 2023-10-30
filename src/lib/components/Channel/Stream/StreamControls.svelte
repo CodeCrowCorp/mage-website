@@ -81,6 +81,19 @@
 		}
 	}
 
+	const sendOutputs = async ({ liveInputUid }: { liveInputUid: string }) => {
+		if ($is_feature_restream_enabled) {
+			return await post(
+				`outputs/send`,
+				{ liveInputUid },
+				{
+					userId: $page.data.user?.userId,
+					token: $page.data.user?.token
+				}
+			)
+		}
+	}
+
 	const startObsStream = async () => {
 		const liveInput = await createLiveInput({
 			channelId: `${$page.params.channelId}`,
@@ -91,7 +104,7 @@
 				meta: {
 					name: `${$page.params.channelId}-${$page.data.user.userId}-obs`
 				},
-				recording: { mode: 'off' }
+				recording: { mode: 'automatic' }
 			}
 		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
@@ -103,6 +116,7 @@
 				video: liveInput
 			}
 		})
+		await sendOutputs({ liveInputUid: liveInput.uid })
 		await sendFcm({
 			channelId: $page.params.channelId,
 			channelTitle: channel.title,
@@ -155,6 +169,7 @@
 				video: liveInput
 			}
 		})
+		await sendOutputs({ liveInputUid: liveInput.uid })
 		await sendFcm({
 			channelId: $page.params.channelId,
 			channelTitle: channel.title,
@@ -207,6 +222,7 @@
 				video: liveInput
 			}
 		})
+		await sendOutputs({ liveInputUid: liveInput.uid })
 		await sendFcm({
 			channelId: $page.params.channelId,
 			channelTitle: channel.title,
@@ -259,6 +275,7 @@
 				video: liveInput
 			}
 		})
+		await sendOutputs({ liveInputUid: liveInput.uid })
 		await sendFcm({
 			channelId: $page.params.channelId,
 			channelTitle: channel.title,
