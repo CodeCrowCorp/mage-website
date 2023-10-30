@@ -20,9 +20,7 @@
 		is_feature_apps_enabled,
 		is_feature_restream_enabled
 	} from '$lib/stores/remoteConfigStore'
-	import {
-		is_restream_drawer_open
-	} from '$lib/stores/channelStore'
+	import { is_restream_drawer_open } from '$lib/stores/channelStore'
 
 	export let isHostOrGuest: boolean = false,
 		channel: any,
@@ -350,7 +348,6 @@
 			subs()
 		})
 	})
-
 </script>
 
 <div class="flex flex-col sm:flex-row gap-4">
@@ -417,12 +414,22 @@
 				!videoItemIsActive}>
 			<IconShareObs />
 		</button>
-		{#if $is_feature_restream_enabled}	
-			<button on:click={() => {
-				$is_restream_drawer_open = !$is_restream_drawer_open
-			}} class="flex items-center btn text-white border-none tooltip font-normal normal-case {$is_restream_drawer_open
-				? 'btn-primary'
-				: 'btn-neutral'}" >
+		{#if $is_feature_restream_enabled}
+			<button
+				class="flex items-center btn text-white border-none tooltip font-normal normal-case {$is_restream_drawer_open
+					? 'btn-primary'
+					: 'btn-neutral'}"
+				data-tip="Restream"
+				on:click={() => {
+					$is_restream_drawer_open = !$is_restream_drawer_open
+				}}
+				disabled={$is_sharing_obs ||
+					$is_sharing_screen ||
+					$is_sharing_webcam ||
+					$is_sharing_audio ||
+					!isHostOrGuest ||
+					!isChannelSocketConnected ||
+					!videoItemIsActive}>
 				<IconRestream />
 			</button>
 		{/if}
