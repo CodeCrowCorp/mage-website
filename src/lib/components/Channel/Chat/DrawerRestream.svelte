@@ -205,7 +205,7 @@
 					class="btn btn-neutral text-white grow w-full"
 					on:click={() => {
 						document.getElementById('overlay')?.click()
-					}}>Cancel</button>
+					}}>Close</button>
 			</div>
 		</ul>
 	</div>
