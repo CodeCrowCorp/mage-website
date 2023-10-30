@@ -340,23 +340,20 @@ export const dataURLtoFile = (dataurl: string, filename: string) => {
 	return new File([u8arr], filename, { type: mime })
 }
 
-export const objectMonitor = (object:any) => {
-	return (currentState:any) => {
+export const objectMonitor = (object: any) => {
+	return (currentState: any) => {
 		return JSON.stringify(object) !== JSON.stringify(currentState)
 	}
 }
 
 export const isValidURL = (url: string) => {
-	// const urlPattern = /^https?:\/\/\S+$/i
-	// return urlPattern.test(url)
 	const pattern = new RegExp(
-		'^(https?:\\/\\/)?' + // protocol
-		  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-		  '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-		  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-		  '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-		  '(\\#[-a-z\\d_]*)?$', // fragment locator
+		'^rtmp:\\/\\/' + // protocol
+			'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+			'((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+			'(\\/[-a-z\\d%_.~+]*)+' + // app name
+			'$',
 		'i'
-	);
-	return pattern.test(url);
+	)
+	return pattern.test(url)
 }
