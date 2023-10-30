@@ -22,6 +22,10 @@
 		is_sharing_audio,
 		updateVideoItems
 	} from '$lib/stores/streamStore'
+	import {
+		is_feature_restream_enabled
+	} from '$lib/stores/remoteConfigStore'
+	import DrawerRestream from '$lib/components/Channel/Chat/DrawerRestream.svelte'
 
 	let channel: any,
 		isDeleteModalOpen = false,
@@ -296,6 +300,11 @@
 		}
 	})
 </script>
+
+{#if $is_feature_restream_enabled}
+	<DrawerRestream />
+{/if}
+
 
 {#if channel && channel._id === $page.params.channelId}
 	<div class="relative h-full bg-base-200 overflow-hidden flex">

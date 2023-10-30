@@ -3,7 +3,7 @@
 	import { get, put, del } from '$lib/api.js'
 	import { page } from '$app/stores'
 	import { isValidURL } from '$lib/utils'
-	import IconRestream from '$lib/assets/icons/channel/IconRestream.svelte'
+	import { is_restream_drawer_open } from '$lib/stores/channelStore'
 
 	$: auth = {
 		userId: $page.data.user?.userId,
@@ -79,22 +79,8 @@
 </script>
 
 <div class="drawer drawer-end">
-	<input id="restream-drawer" type="checkbox" class="drawer-toggle" />
-	<div class="drawer-content">
-		<!-- Page content here -->
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<label
-			for="restream-drawer"
-			class="btn text-white border-none tooltip font-normal normal-case items-center flex {restream_drawer
-				? 'btn-primary'
-				: 'btn-neutral'}"
-			data-tip="Restream"
-			on:click={() => {
-				restream_drawer = !restream_drawer
-			}}>
-			<IconRestream />
-		</label>
-	</div>
+	<input id="restream-drawer" type="checkbox" class="drawer-toggle" bind:checked={$is_restream_drawer_open}/>
+	
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div class="drawer-side z-50" on:click={overlayClick}>
 		<label id="overlay" for="restream-drawer" aria-label="close sidebar" class="drawer-overlay" />
