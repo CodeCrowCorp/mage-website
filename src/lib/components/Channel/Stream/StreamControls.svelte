@@ -2,6 +2,7 @@
 	import IconShareScreen from '$lib/assets/icons/channel/IconShareScreen.svelte'
 	import IconShareWebcam from '$lib/assets/icons/channel/IconShareWebcam.svelte'
 	import IconShareAudio from '$lib/assets/icons/channel/IconShareAudio.svelte'
+	import IconRestream from '$lib/assets/icons/channel/IconRestream.svelte'
 	import { del, post, put } from '$lib/api'
 	import { page } from '$app/stores'
 	import { emitAction } from '$lib/websocket'
@@ -19,7 +20,7 @@
 		is_feature_apps_enabled,
 		is_feature_restream_enabled
 	} from '$lib/stores/remoteConfigStore'
-	import DrawerRestream from '$lib/components/Channel/Chat/DrawerRestream.svelte'
+	import { is_restream_drawer_open } from '$lib/stores/channelStore'
 
 	export let isHostOrGuest: boolean = false,
 		channel: any,
@@ -413,9 +414,24 @@
 				!videoItemIsActive}>
 			<IconShareObs />
 		</button>
-
 		{#if $is_feature_restream_enabled}
-			<DrawerRestream />
+			<button
+				class="flex items-center btn text-white border-none tooltip font-normal normal-case {$is_restream_drawer_open
+					? 'btn-primary'
+					: 'btn-neutral'}"
+				data-tip="Restream"
+				on:click={() => {
+					$is_restream_drawer_open = !$is_restream_drawer_open
+				}}
+				disabled={$is_sharing_obs ||
+					$is_sharing_screen ||
+					$is_sharing_webcam ||
+					$is_sharing_audio ||
+					!isHostOrGuest ||
+					!isChannelSocketConnected ||
+					!videoItemIsActive}>
+				<IconRestream />
+			</button>
 		{/if}
 	</div>
 </div>
