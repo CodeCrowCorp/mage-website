@@ -11,6 +11,7 @@
 	}
 	let urlList: any = []
 	let payload = {
+		title: '',
 		url: '',
 		streamKey: ''
 	}
@@ -30,6 +31,7 @@
 		showAddModal = false
 		touched = false
 		payload = {
+			title: '',
 			url: '',
 			streamKey: ''
 		}
@@ -72,12 +74,17 @@
 	$: cloudflareUrl = payload.url.includes('cloudflare')
 	$: invalidUrl = !isValidURL(payload.url)
 
-	$: disbaled = loading || !payload.url || !payload.streamKey || invalidUrl || cloudflareUrl
+	$: disbaled =
+		loading || !payload.title || !payload.url || !payload.streamKey || invalidUrl || cloudflareUrl
 </script>
 
 <div class="drawer drawer-end">
-	<input id="restream-drawer" type="checkbox" class="drawer-toggle" bind:checked={$is_restream_drawer_open}/>
-	
+	<input
+		id="restream-drawer"
+		type="checkbox"
+		class="drawer-toggle"
+		bind:checked={$is_restream_drawer_open} />
+
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div class="drawer-side z-50" on:click={overlayClick}>
 		<label id="overlay" for="restream-drawer" aria-label="close sidebar" class="drawer-overlay" />
@@ -101,6 +108,7 @@
 				{#each urlList as item}
 					<div class="bg-base-100 p-4 my-1 rounded flex justify-between items-center">
 						<div class="flex-1">
+							<div class="">{item.title}</div>
 							<div class="">{item.url}</div>
 							<div>
 								<input
@@ -143,6 +151,15 @@
 					<h3 class="font-bold text-lg">Add new stream</h3>
 
 					<div class="form-control w-full pt-4">
+						<label class="label">
+							<span class="label-text">Title</span>
+						</label>
+						<input
+							bind:value={payload.title}
+							type="text"
+							placeholder="Enter the destination name"
+							class="input input-bordered w-full max-w-xs input-primary"
+							maxlength="20" />
 						<!-- svelte-ignore a11y-label-has-associated-control -->
 						<label class="label">
 							<span class="label-text">Server</span>
@@ -176,6 +193,7 @@
 							on:click={() => {
 								showAddModal = false
 								payload = {
+									title: '',
 									url: '',
 									streamKey: ''
 								}
