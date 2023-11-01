@@ -58,7 +58,7 @@
 		}, 200)
 	}
 
-	let username: HTMLInputElement, submitBtn: any
+	let username: HTMLInputElement, lastUrl: HTMLInputElement, submitBtn: any
 	let prevUsername = ''
 
 	$: useOueryEffect(() => {
@@ -165,11 +165,20 @@
 									<div class="relative w-full">
 										<input
 											bind:value={inputFields[index]}
+											bind:this={lastUrl}
 											type="url"
 											name={`urls`}
 											id={`urls`}
 											class="input input-primary input-bordered w-full"
-											placeholder="Social URL" />
+											placeholder="Social URL"
+											on:input={() => {
+												if (index === inputFields.length - 1) {
+													const isValid = isValidUrl(inputFields[index])
+													lastUrl.setCustomValidity(
+														inputFields[index] === '' || isValid ? '' : 'Please enter a URL.'
+													)
+												}
+											}} />
 										<div class="bg-primary w-max absolute right-0 top-0 p-2 h-[48px] rounded-r-lg">
 											<IconLink />
 										</div>
@@ -229,9 +238,9 @@
 									name="category-search"
 									placeholder={profile?.category?.length ? '' : 'Category'}
 									class="input input-primary input-bordered" />
-								<span class="absolute right-0 top-1/2 text-gray-400 pr-3"
+								<span class="absolute right-0 top-[60%] text-gray-400 pr-3"
 									>({maxCategoryLabel})</span>
-								<span class="absolute flex flex-row gap-2 left-0 top-1/2 pl-5">
+								<span class="absolute flex flex-row gap-2 left-0 top-[60%] pl-5">
 									{#if profile?.category?.length}
 										{#each profile?.category as icon}
 											<img src={$category_list[icon]} alt="" class="h-5 w-5" />
