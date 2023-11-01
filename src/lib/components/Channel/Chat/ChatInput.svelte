@@ -332,7 +332,8 @@
 				bind:this={inputBox}
 				rows="1"
 				class="block mx-1 p-2.5 w-full text-sm textarea textarea-bordered textarea-secondary"
-				placeholder="Your message..." />
+				placeholder="Your message..."
+				maxlength="400" />
 			<button
 				on:click={() => {
 					sendMessage()
