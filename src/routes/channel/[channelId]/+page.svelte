@@ -22,7 +22,6 @@
 		is_sharing_audio,
 		updateVideoItems
 	} from '$lib/stores/streamStore'
-	import { is_feature_restream_enabled } from '$lib/stores/remoteConfigStore'
 	import DrawerRestream from '$lib/components/Channel/Chat/DrawerRestream.svelte'
 
 	let channel: any,
@@ -299,7 +298,7 @@
 	})
 </script>
 
-{#if $is_feature_restream_enabled && !$is_sharing_screen && !$is_sharing_webcam && !$is_sharing_audio && isHostOrGuest}
+{#if !$is_sharing_screen && !$is_sharing_webcam && !$is_sharing_audio && isHostOrGuest}
 	<DrawerRestream />
 {/if}
 

@@ -2,8 +2,7 @@
 	import IconInfo from '$lib/assets/icons/IconInfo.svelte'
 	import { onMount } from 'svelte'
 	import { category_assets, category_list } from '$lib/stores/channelStore'
-	import web2UrlsJson from '$lib/assets/svg-json/web2.json'
-	import web3UrlsJson from '$lib/assets/svg-json/web3.json'
+	import devUrlsJson from '$lib/assets/svg-json/dev.json'
 	import gameUrlsJson from '$lib/assets/svg-json/game.json'
 
 	export let showAddCategory: boolean = true,
@@ -11,7 +10,7 @@
 		classes: string = ''
 
 	let maxCategory = 4,
-		tabs = ['Game', 'Web2', 'Web3'],
+		tabs = ['Game', 'Dev'],
 		activeTab = 'Game',
 		assetIcons: any = {},
 		allIcons: any = {},
@@ -20,22 +19,12 @@
 		renderingAssets: Array<[string, string]>
 
 	const setActiveIcons = () => {
-		assetIcons =
-			activeTab == 'Game'
-				? $category_assets.game
-				: activeTab == 'Web2'
-				? $category_assets.web2
-				: $category_assets.web3
+		assetIcons = activeTab == 'Game' ? $category_assets.game : $category_assets.dev
 	}
 
-	const loadWeb2 = () => {
-		if (!Object.keys($category_assets.web2).length) {
-			$category_assets.web2 = web2UrlsJson
-		}
-	}
-	const loadWeb3 = () => {
-		if (!Object.keys($category_assets.web3).length) {
-			$category_assets.web3 = web3UrlsJson
+	const loadDev = () => {
+		if (!Object.keys($category_assets.dev).length) {
+			$category_assets.dev = devUrlsJson
 		}
 	}
 	const loadGame = () => {
@@ -46,13 +35,12 @@
 
 	const setActiveTab = async (tab: string) => {
 		activeTab = tab
-		loadWeb2()
+		loadDev()
 		loadGame()
-		loadWeb3()
 		setActiveIcons()
 	}
 
-	$: allIcons = { ...$category_assets.web2, ...$category_assets.web3, ...$category_assets.game }
+	$: allIcons = { ...$category_assets.dev, ...$category_assets.game }
 	$: maxCategoryLabel = categories.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 	$: renderingAssets = searchQuery != '' ? Object.entries(searchResult) : Object.entries(assetIcons)
 
