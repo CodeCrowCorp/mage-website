@@ -150,7 +150,8 @@
 								placeholder="Username"
 								bind:this={username}
 								on:input={() => {
-									username.setCustomValidity('')
+									const isValid = /^[a-z0-9-]+$/i.test(profile.username)
+									username.setCustomValidity(isValid ? '' : 'This username is already taken')
 								}} />
 						</div>
 
