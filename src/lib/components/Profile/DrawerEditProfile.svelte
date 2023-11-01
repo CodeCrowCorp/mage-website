@@ -134,7 +134,8 @@
 								id="displayName"
 								required
 								class="input input-primary input-bordered"
-								placeholder="Display name" />
+								placeholder="Display name"
+								maxlength="30" />
 						</div>
 						<div class="form-control mt-5 w-full">
 							<label class="label">
@@ -147,6 +148,7 @@
 								id="username"
 								required
 								class="input input-primary input-bordered"
+								maxlength="16"
 								placeholder="Username"
 								bind:this={username}
 								on:input={() => {
@@ -258,7 +260,8 @@
 									id="bio"
 									name="bio"
 									class="block textarea h-28 input-primary"
-									placeholder="Your bio here" />
+									placeholder="Your bio here"
+									maxlength="200" />
 							</div>
 						</div>
 
