@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte'
 	import { get, put, del } from '$lib/api.js'
 	import { page } from '$app/stores'
-	import { isValidURL } from '$lib/utils'
+	import { isValidRtmp } from '$lib/utils'
 	import { is_restream_drawer_open } from '$lib/stores/channelStore'
 
 	$: auth = {
@@ -72,7 +72,7 @@
 	})
 
 	$: cloudflareUrl = payload.url.includes('cloudflare')
-	$: invalidUrl = !isValidURL(payload.url)
+	$: invalidUrl = !isValidRtmp(payload.url)
 
 	$: disbaled =
 		loading || !payload.title || !payload.url || !payload.streamKey || invalidUrl || cloudflareUrl
@@ -130,7 +130,7 @@
 				<form on:keydown={(event) => event.key != 'Enter'} method="dialog" class="modal-box">
 					<h3 class="font-bold text-lg">Delete restream url</h3>
 					<p class="py-4">
-						{loading ? 'Please wait...' : 'Are you sure you want to delete this Stream Url?'}
+						{loading ? 'Please wait...' : 'Are you sure you want to delete this url?'}
 					</p>
 					<div class="modal-action">
 						{#if !loading}

@@ -4,8 +4,7 @@
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import { category_list } from '$lib/stores/channelStore'
-	import { createEffect, objectMonitor, isValidURL } from '$lib/utils'
-	
+	import { createEffect, objectMonitor, isValidUrl } from '$lib/utils'
 
 	export let showDrawer: boolean
 	export let profile: any
@@ -25,7 +24,7 @@
 	const addInputField = () => {
 		const lastField = inputFields[inputFields.length - 1]
 
-		if (isValidURL(lastField)) {
+		if (isValidUrl(lastField)) {
 			inputFields = [...inputFields, '']
 		}
 	}
@@ -34,7 +33,7 @@
 
 	$: {
 		const lastField = inputFields[inputFields.length - 1]
-		isLastFieldValid = isValidURL(lastField)
+		isLastFieldValid = isValidUrl(lastField)
 	}
 
 	let params = $page.params
