@@ -16,10 +16,7 @@
 	import { channel_connection } from '$lib/stores/websocketStore'
 	import { onDestroy, onMount } from 'svelte'
 	import IconShareObs from '$lib/assets/icons/channel/IconShareObs.svelte'
-	import {
-		is_feature_apps_enabled,
-		is_feature_restream_enabled
-	} from '$lib/stores/remoteConfigStore'
+	import { is_feature_apps_enabled } from '$lib/stores/remoteConfigStore'
 	import { is_restream_drawer_open } from '$lib/stores/channelStore'
 
 	export let isHostOrGuest: boolean = false,
@@ -83,16 +80,14 @@
 	}
 
 	const sendOutputs = async ({ liveInputUid }: { liveInputUid: string }) => {
-		if ($is_feature_restream_enabled) {
-			return await post(
-				`outputs/send`,
-				{ liveInputUid },
-				{
-					userId: $page.data.user?.userId,
-					token: $page.data.user?.token
-				}
-			)
-		}
+		return await post(
+			`outputs/send`,
+			{ liveInputUid },
+			{
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			}
+		)
 	}
 
 	const startObsStream = async () => {
@@ -414,25 +409,23 @@
 				!videoItemIsActive}>
 			<IconShareObs />
 		</button>
-		{#if $is_feature_restream_enabled}
-			<button
-				class="flex items-center btn text-white border-none tooltip font-normal normal-case {$is_restream_drawer_open
-					? 'btn-primary'
-					: 'btn-neutral'}"
-				data-tip="Restream"
-				on:click={() => {
-					$is_restream_drawer_open = !$is_restream_drawer_open
-				}}
-				disabled={$is_sharing_obs ||
-					$is_sharing_screen ||
-					$is_sharing_webcam ||
-					$is_sharing_audio ||
-					!isHostOrGuest ||
-					!isChannelSocketConnected ||
-					!videoItemIsActive}>
-				<IconRestream />
-			</button>
-		{/if}
+		<button
+			class="flex items-center btn text-white border-none tooltip font-normal normal-case {$is_restream_drawer_open
+				? 'btn-primary'
+				: 'btn-neutral'}"
+			data-tip="Restream"
+			on:click={() => {
+				$is_restream_drawer_open = !$is_restream_drawer_open
+			}}
+			disabled={$is_sharing_obs ||
+				$is_sharing_screen ||
+				$is_sharing_webcam ||
+				$is_sharing_audio ||
+				!isHostOrGuest ||
+				!isChannelSocketConnected ||
+				!videoItemIsActive}>
+			<IconRestream />
+		</button>
 	</div>
 </div>
 <input
