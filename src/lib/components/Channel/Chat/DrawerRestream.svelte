@@ -161,7 +161,7 @@
 							class="input input-bordered w-full max-w-xs input-primary"
 							maxlength="20" />
 						<!-- svelte-ignore a11y-label-has-associated-control -->
-						<label class="label">
+						<label class="label mt-5">
 							<span class="label-text">Server</span>
 						</label>
 						<input
