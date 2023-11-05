@@ -203,7 +203,7 @@
 						</div>
 					</div>
 
-					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
+					<div class="flex flex-row gap-2 mt-auto p-3">
 						<button
 							type="button"
 							class="btn btn-neutral text-white grow"
