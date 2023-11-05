@@ -31,6 +31,8 @@
 		newChannel.category.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 
 	onMount(async () => {
+		let inputTags = document.getElementById('tags')
+		inputTags?.setAttribute('maxlength', '20')
 		if (!$tags.length) {
 			const suggestedTags = await get(`tags`)
 			$tags = suggestedTags

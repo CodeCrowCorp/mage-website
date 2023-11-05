@@ -109,7 +109,8 @@
 		{/if}
 
 		<li on:click={() => copyToClipboard(channel.description)} on:keyup>
-			<a class="text-sm max-w-md flex break-all">{channel.description || 'No description'}</a>
+			<a class="text-sm max-w-md flex break-all whitespace-normal"
+				>{channel.description || 'No description'}</a>
 		</li>
 		<li on:click={() => copyToClipboard(channel.category)} on:keyup>
 			<a
