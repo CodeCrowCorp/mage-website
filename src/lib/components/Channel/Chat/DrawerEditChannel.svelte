@@ -26,6 +26,8 @@
 		channel?.category.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 
 	onMount(async () => {
+		let inputTags = document.getElementById('tags')
+		inputTags?.setAttribute('maxlength', '20')
 		if (!$tags.length) {
 			const suggestedTags = await get(`tags`)
 			$tags = suggestedTags
@@ -73,6 +75,12 @@
 		setTimeout(() => {
 			showDrawer = false
 		}, 200)
+	}
+
+	const onValidation = (evt: any) => {
+		if (Number(evt.target.value) < 1) {
+			evt.target.setCustomValidity('Please fill out this field.')
+		}
 	}
 </script>
 
@@ -176,6 +184,16 @@
 								id="tags"
 								placeholder={channel.tags.length > 0 ? '' : 'Tag'} />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxTagLabel})</span>
+							{#if channel.tags.length === 0}
+								<input
+									type="number"
+									name="mintags"
+									required
+									min="1"
+									class="opacity-0 pointer-events-none absolute left-0 right-0 mx-auto bottom-0"
+									bind:value={channel.tags.length}
+									on:invalid={onValidation} />
+							{/if}
 						</div>
 						<div class="relative">
 							<input

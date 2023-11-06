@@ -31,6 +31,8 @@
 		newChannel.category.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 
 	onMount(async () => {
+		let inputTags = document.getElementById('tags')
+		inputTags?.setAttribute('maxlength', '20')
 		if (!$tags.length) {
 			const suggestedTags = await get(`tags`)
 			$tags = suggestedTags
@@ -203,7 +205,7 @@
 						</div>
 					</div>
 
-					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
+					<div class="flex flex-row gap-2 mt-auto p-3">
 						<button
 							type="button"
 							class="btn btn-neutral text-white grow"
