@@ -581,7 +581,8 @@
 <dialog bind:this={obs_modal} class="modal">
 	<form method="dialog" class="modal-box">
 		<h3 class="font-bold text-lg">Copy to OBS</h3>
-		<p class="py-4">
+		<h5 class="font-semibold text-warning">This stream key is reset each time you go live</h5>
+		<p class="py-8">
 			Server: <br />
 			{#if !video.obs?.rtmps?.url}
 				<span class="loading loading-dots loading-sm" />
@@ -589,7 +590,7 @@
 				{video.obs?.rtmps?.url}
 			{/if}
 		</p>
-		<p class="py-4 break-all">
+		<p class="break-all">
 			Stream Key: <br />
 			{#if !video.obs?.rtmps?.streamKey}
 				<span class="loading loading-dots loading-sm" />
