@@ -21,7 +21,7 @@
 	import { current_theme } from '$lib/stores/helperStore'
 	import {
 		is_feature_video_responses_enabled,
-		is_feature_affiliate_enabled,
+		is_feature_premium_enabled,
 		is_feature_apps_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import { env } from '$env/dynamic/public'
@@ -47,7 +47,7 @@
 	onMount(async () => {
 		$current_theme = localStorage.getItem('theme') || 'dark'
 		$is_feature_video_responses_enabled = env.PUBLIC_FEATURE_VIDEO_RESPONSES === 'true'
-		$is_feature_affiliate_enabled = env.PUBLIC_FEATURE_AFFILIATE === 'true'
+		$is_feature_premium_enabled = env.PUBLIC_FEATURE_PREMIUM === 'true'
 		$is_feature_apps_enabled = env.PUBLIC_FEATURE_APPS === 'true'
 		await handleWebsocket()
 		if (!$category_list.length) {

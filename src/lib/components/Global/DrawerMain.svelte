@@ -18,7 +18,7 @@
 	import { user_role } from '$lib/stores/userStore'
 	import {
 		is_feature_video_responses_enabled,
-		is_feature_affiliate_enabled,
+		is_feature_premium_enabled,
 		is_feature_apps_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
@@ -180,12 +180,12 @@
 					Creator Space</a>
 			</li>
 		{/if}
-		{#if $is_feature_affiliate_enabled}
+		{#if $is_feature_premium_enabled}
 			<li>
 				{#if currentUser}
-					<a href="/affiliate" class="custom-menu-item text-accent hover:text-accent font-medium">
+					<a href="/premium" class="custom-menu-item text-accent hover:text-accent font-medium">
 						<IconDrawerVerification />
-						<span class={isChannelPage ? 'md:hidden' : ''}>Affiliate</span>
+						<span class={isChannelPage ? 'md:hidden' : ''}>Premium</span>
 						{#if !isChannelPage}
 							<span class="badge badge-accent text-black">New</span>
 						{/if}
@@ -200,7 +200,7 @@
 							}
 						}}>
 						<IconDrawerVerification />
-						<span class={isChannelPage ? 'md:hidden' : ''}>Affiliate</span>
+						<span class={isChannelPage ? 'md:hidden' : ''}>Premium</span>
 						{#if !isChannelPage}
 							<span class="badge badge-accent text-black">New</span>
 						{/if}
