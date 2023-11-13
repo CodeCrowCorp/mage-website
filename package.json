@@ -55,7 +55,7 @@
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/typography": "^0.5.9",
 		"animate.css": "^4.1.1",
-		"daisyui": "^3.2.1",
+		"daisyui": "^4.0.3",
 		"emoji-picker-element": "^1.18.1",
 		"moment": "^2.29.4",
 		"nprogress": "^0.2.0",
