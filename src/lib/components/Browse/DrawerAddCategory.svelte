@@ -143,10 +143,10 @@
 			</div>
 		</div>
 
-		<div class="flex flex-row mt-auto gap-2 md:mb-4 p-3">
+		<div class="flex flex-row mt-auto gap-2 p-3">
 			<button
 				type="button"
-				class="btn btn-neutral text-white grow"
+				class="btn btn-neutral grow"
 				on:click={() => ((categories = []), (showAddCategory = false))}>Cancel</button>
 			<button type="button" class="btn btn-primary grow" on:click={() => (showAddCategory = false)}
 				>Add</button>

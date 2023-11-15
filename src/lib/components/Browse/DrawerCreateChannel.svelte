@@ -206,15 +206,12 @@
 					</div>
 
 					<div class="flex flex-row gap-2 mt-auto p-3">
-						<button
-							type="button"
-							class="btn btn-neutral text-white grow"
-							on:click={() => toggleDrawer()}>Cancel</button>
+						<button type="button" class="btn btn-neutral grow" on:click={() => toggleDrawer()}
+							>Cancel</button>
 						<button
 							type="submit"
 							disabled={isLoadingChannel}
-							class="btn btn-primary text-white grow {isLoadingChannel ? 'loading' : ''}"
-							>Add</button>
+							class="btn btn-primary grow {isLoadingChannel ? 'loading' : ''}">Add</button>
 					</div>
 				</div>
 			</form>
