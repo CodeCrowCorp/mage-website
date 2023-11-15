@@ -22,7 +22,8 @@
 	import {
 		is_feature_video_responses_enabled,
 		is_feature_premium_enabled,
-		is_feature_apps_enabled
+		is_feature_apps_enabled,
+		is_feature_studio_mode_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import { env } from '$env/dynamic/public'
 	import { user_role } from '$lib/stores/userStore'
@@ -49,6 +50,7 @@
 		$is_feature_video_responses_enabled = env.PUBLIC_FEATURE_VIDEO_RESPONSES === 'true'
 		$is_feature_premium_enabled = env.PUBLIC_FEATURE_PREMIUM === 'true'
 		$is_feature_apps_enabled = env.PUBLIC_FEATURE_APPS === 'true'
+		$is_feature_studio_mode_enabled = env.PUBLIC_FEATURE_STUDIO_MODE === 'true'
 		await handleWebsocket()
 		if (!$category_list.length) {
 			$category_list = imageUrlsJson

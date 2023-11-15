@@ -280,7 +280,7 @@
 								chatMessage = chatMessage.replace(/@/g, '@' + user.username)
 								selectedUser = idx
 							}}>
-							<span class={'text-sm w-full' + (selectedUser == idx ? ' bg-gray-600' : '')}>
+							<span class={'text-sm w-full' + (selectedUser == idx ? ' bg-gray-800' : '')}>
 								@{user.username}
 							</span>
 						</li>
