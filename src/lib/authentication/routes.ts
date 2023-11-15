@@ -28,7 +28,7 @@ const routes: any = {
 	maintenance: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
 	settings: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
 	logout: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }],
-	affiliate: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }]
+	premium: [{ path: '/', access: [USER_COTEXT, ADMIN_COTEXT] }]
 }
 
 export default routes

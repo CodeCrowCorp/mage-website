@@ -3,25 +3,38 @@
 	import IconShareWebcam from '$lib/assets/icons/channel/IconShareWebcam.svelte'
 	import IconShareAudio from '$lib/assets/icons/channel/IconShareAudio.svelte'
 	import IconRestream from '$lib/assets/icons/channel/IconRestream.svelte'
+	import IconStreamKey from '$lib/assets/icons/channel/IconStreamKey.svelte'
+	import IconSources from '$lib/assets/icons/channel/IconSources.svelte'
 	import { del, post, put } from '$lib/api'
 	import { page } from '$app/stores'
-	import { emitAction } from '$lib/websocket'
+	import { emitAction, emitChannelUpdate } from '$lib/websocket'
 	import {
 		is_sharing_audio,
 		is_sharing_screen,
 		is_sharing_webcam,
 		is_sharing_obs,
-		updateVideoItems
+		updateVideoItems,
+		is_channel_live
 	} from '$lib/stores/streamStore'
 	import { channel_connection } from '$lib/stores/websocketStore'
 	import { onDestroy, onMount } from 'svelte'
 	import IconShareObs from '$lib/assets/icons/channel/IconShareObs.svelte'
+	import IconAddGuest from '$lib/assets/icons/channel/IconAddGuest.svelte'
 	import { is_feature_apps_enabled } from '$lib/stores/remoteConfigStore'
 	import { is_restream_drawer_open } from '$lib/stores/channelStore'
 
 	export let isHostOrGuest: boolean = false,
 		channel: any,
-		isScrollable: boolean = false
+		isScrollable: boolean = false,
+		viewers: any[] = []
+
+	let selectedUser = 0
+
+	$: isHost = channel?.user === $page.data.user?.userId
+
+	$: viewersWithOutHost = viewers.filter(
+		(viewer) => viewer.userId !== channel.user && viewer.userId !== 'anon'
+	)
 
 	$: isChannelSocketConnected =
 		$channel_connection === `open-${$page.params.channelId}` && $page.data.user?.userId
@@ -343,74 +356,131 @@
 			subs()
 		})
 	})
+
+	const toggleGuest = (userId: string) => {
+		if (channel.user === userId) return
+		if (!channel.bans.includes(userId)) {
+			let isEnabled = false
+			if (!channel.guests.includes(userId) && channel.guests.length < 9) {
+				channel.guests.push(userId)
+				isEnabled = true
+			} else {
+				channel.guests = channel.guests.filter((guest: string) => guest !== userId)
+			}
+			emitChannelUpdate({
+				channelSocket: channel.socket,
+				channel,
+				roleUpdate: { roleEvent: 'guest', isEnabled, userId: userId }
+			})
+		}
+	}
 </script>
 
 <div class="flex flex-col sm:flex-row gap-4">
-	<div class="flex flex-row gap-4 card p-3 bg-base-300">
+	<div class="dropdown dropdown-top dropdown-end p-3">
+		<!-- <label tabindex="0" class="btn m-1">Click</label> -->
 		<button
-			class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_screen
+			tabindex="0"
+			class="btn text-white border-none tooltip tooltip-left font-normal normal-case {$is_sharing_screen ||
+			$is_sharing_webcam ||
+			$is_sharing_audio ||
+			$is_sharing_obs
 				? 'btn-primary'
 				: 'btn-neutral'}"
-			data-tip="Screen"
-			on:click={() => {
-				$is_sharing_screen = !$is_sharing_screen
-			}}
-			disabled={$is_sharing_obs ||
-				!isHostOrGuest ||
-				!isChannelSocketConnected ||
-				!videoItemIsActive}>
-			<IconShareScreen />
+			data-tip="Sources"
+			disabled={!isHostOrGuest || !isChannelSocketConnected || !videoItemIsActive}>
+			<IconSources />
 		</button>
+		<ul tabindex="0" class="dropdown-content">
+			<div class="flex flex-row gap-4 card p-3 bg-base-300">
+				<button
+					class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_screen
+						? 'btn-primary'
+						: 'btn-neutral'}"
+					data-tip="Screen"
+					on:click={() => {
+						$is_sharing_screen = !$is_sharing_screen
+					}}
+					disabled={$is_sharing_obs ||
+						!isHostOrGuest ||
+						!isChannelSocketConnected ||
+						!videoItemIsActive}>
+					<IconShareScreen />
+				</button>
 
-		<button
-			class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_webcam
-				? 'btn-primary'
-				: 'btn-neutral'}"
-			data-tip="Webcam"
-			on:click={() => {
-				$is_sharing_webcam = !$is_sharing_webcam
-			}}
-			disabled={$is_sharing_obs ||
-				!isHostOrGuest ||
-				!isChannelSocketConnected ||
-				!videoItemIsActive}>
-			<IconShareWebcam />
-		</button>
+				<button
+					class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_webcam
+						? 'btn-primary'
+						: 'btn-neutral'}"
+					data-tip="Webcam"
+					on:click={() => {
+						$is_sharing_webcam = !$is_sharing_webcam
+					}}
+					disabled={$is_sharing_obs ||
+						!isHostOrGuest ||
+						!isChannelSocketConnected ||
+						!videoItemIsActive}>
+					<IconShareWebcam />
+				</button>
 
-		<button
-			class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_audio
-				? 'btn-primary'
-				: 'btn-neutral'}"
-			data-tip="Audio"
-			on:click={() => {
-				$is_sharing_audio = !$is_sharing_audio
-			}}
-			disabled={$is_sharing_obs ||
-				!isHostOrGuest ||
-				!isChannelSocketConnected ||
-				!videoItemIsActive}>
-			<IconShareAudio />
-		</button>
+				<button
+					class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_audio
+						? 'btn-primary'
+						: 'btn-neutral'}"
+					data-tip="Audio"
+					on:click={() => {
+						$is_sharing_audio = !$is_sharing_audio
+					}}
+					disabled={$is_sharing_obs ||
+						!isHostOrGuest ||
+						!isChannelSocketConnected ||
+						!videoItemIsActive}>
+					<IconShareAudio />
+				</button>
+
+				<div class="divider lg:divider-horizontal" />
+
+				<button
+					class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_obs
+						? 'btn-primary'
+						: 'btn-neutral'}"
+					data-tip="Stream Key"
+					on:click={() => {
+						$is_sharing_obs = !$is_sharing_obs
+					}}
+					disabled={$is_sharing_screen ||
+						$is_sharing_webcam ||
+						$is_sharing_audio ||
+						!isHostOrGuest ||
+						!isChannelSocketConnected ||
+						!videoItemIsActive}>
+					<IconStreamKey />
+				</button>
+			</div>
+		</ul>
 	</div>
-	<div class="flex flex-row gap-4 card p-3">
+
+	<div class="flex flex-row gap-4 card">
 		<button
-			class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_obs
+			class="btn text-white border-none tooltip font-normal normal-case mt-3 {$is_channel_live
 				? 'btn-primary'
 				: 'btn-neutral'}"
-			data-tip="OBS"
+			data-tip="Go Live"
 			on:click={() => {
-				$is_sharing_obs = !$is_sharing_obs
+				// $is_sharing_obs = !$is_sharing_obs
 			}}
-			disabled={$is_sharing_screen ||
-				$is_sharing_webcam ||
-				$is_sharing_audio ||
+			disabled={(!$is_sharing_obs &&
+				!$is_sharing_screen &&
+				!$is_sharing_webcam &&
+				!$is_sharing_audio) ||
 				!isHostOrGuest ||
 				!isChannelSocketConnected ||
 				!videoItemIsActive}>
 			<IconShareObs />
 		</button>
+
 		<button
-			class="flex items-center btn text-white border-none tooltip font-normal normal-case {$is_restream_drawer_open
+			class="flex items-center btn text-white border-none tooltip font-normal normal-case mt-3 {$is_restream_drawer_open
 				? 'btn-primary'
 				: 'btn-neutral'}"
 			data-tip="Restream"
@@ -426,6 +496,40 @@
 				!videoItemIsActive}>
 			<IconRestream />
 		</button>
+
+		<div class="dropdown dropdown-top rounded-box pt-3">
+			<button
+				tabindex="0"
+				class="flex items-center btn text-white border-none tooltip tooltip-right font-normal normal-case btn-neutral"
+				data-tip="Add Guest"
+				disabled={!isHost || !isChannelSocketConnected || !videoItemIsActive}>
+				<IconAddGuest />
+			</button>
+
+			<ul
+				tabindex="0"
+				class="dropdown-content menu p-2 shadow bg-base-300 rounded-box w-fit min-w-[200px]">
+				{#if isHost && isChannelSocketConnected && videoItemIsActive}
+					{#if viewersWithOutHost.length > 0}
+						{#each viewersWithOutHost as user, idx}
+							<!-- svelte-ignore a11y-click-events-have-key-events -->
+							<li
+								on:click={() => {
+									toggleGuest(user._id)
+								}}>
+								<span class={'text-sm w-full' + (selectedUser == idx ? ' bg-gray-800' : '')}>
+									@{user.username}
+								</span>
+							</li>
+						{/each}
+					{:else if !viewersWithOutHost.length}
+						<li>
+							<span class={'text-sm w-full'}> No users available </span>
+						</li>
+					{/if}
+				{/if}
+			</ul>
+		</div>
 	</div>
 </div>
 <input

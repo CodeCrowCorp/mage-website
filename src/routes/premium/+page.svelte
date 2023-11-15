@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ItemPlan from '$lib/components/Affiliate/ItemPlan.svelte'
+	import ItemPlan from '$lib/components/Premium/ItemPlan.svelte'
 	import { onMount } from 'svelte'
 	import { page } from '$app/stores'
 	import { env } from '$env/dynamic/public'
@@ -13,14 +13,15 @@
 			features: [
 				'Unlimited channels',
 				'Up to 9 guests in a live-stream',
+				'Restream to 10 other platforms',
 				'AI chat fully enabled',
 				'Up to 100 messages in chat history',
-				'Record and view streaming stats'
+				'View streaming stats'
 			],
 			features2: []
 		},
 		{
-			name: 'Affiliate',
+			name: 'Premium',
 			// description:
 			// 	'Perfect for dedicated streamers looking to grow their brand and expand their reach.',
 			price: 4,
@@ -28,10 +29,14 @@
 				'Everything in Free Tier',
 				'Expanded reach for brand growth',
 				'GPT-4 access (once available)',
-				'Unlimited chat history',
-				'Dedicated support'
+				'Unlimited chat history'
 			],
-			features2: ['An affiliate badge', 'Modified avatar', 'Sponsor contributions (once available)']
+			features2: [
+				'Sponsor contributions',
+				'An affiliate badge',
+				'Modified avatar',
+				'RevShare (TBD)'
+			]
 		}
 	]
 
@@ -76,13 +81,10 @@
 				<span>
 					<a class="mb-5 link link-secondary" href={env.PUBLIC_STRIPE_BILLING_URL}
 						>Manage your subscription</a>
-					🔹
-					<a class="mb-5 link link-secondary" href="https://forms.gle/mBtByR6jdoJeQd367"
-						>Apply for verification</a>
 				</span>
 			</div>
 		</div>
-		<div class="md:flex">
+		<div class="md:flex h-full">
 			{#each plans as plan}
 				<ItemPlan {plan} />
 			{/each}

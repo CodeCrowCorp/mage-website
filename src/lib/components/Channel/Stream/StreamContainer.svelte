@@ -2,6 +2,8 @@
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
 	import IconChatDrawerChevronOpen from '$lib/assets/icons/channel/IconChatDrawerChevronOpen.svelte'
 	import IconChatDrawerChevronClose from '$lib/assets/icons/channel/IconChatDrawerChevronClose.svelte'
+	import IconTwitch from '$lib/assets/icons/channel/IconTwitch.svelte'
+	import IconYouTube from '$lib/assets/icons/channel/IconYouTube.svelte'
 	import IconViews from '$lib/assets/icons/IconViews.svelte'
 	import StreamControls from '$lib/components/Channel/Stream/StreamControls.svelte'
 	import DropdownViewers from '$lib/components/Channel/Stream/DropdownViewers.svelte'
@@ -13,7 +15,8 @@
 		is_sharing_obs,
 		is_sharing_audio,
 		is_sharing_screen,
-		is_sharing_webcam
+		is_sharing_webcam,
+		is_channel_live
 	} from '$lib/stores/streamStore'
 	import { getNumberInThousands } from '$lib/utils'
 	import {
@@ -21,6 +24,7 @@
 		is_chat_drawer_destroy,
 		was_chat_drawer_closed
 	} from '$lib/stores/channelStore'
+	import { is_feature_studio_mode_enabled } from '$lib/stores/remoteConfigStore'
 
 	const dispatch = createEventDispatcher()
 	export let userCount: number = 1,
@@ -88,13 +92,11 @@
 			<div class="carousel-item h-full" id={nextchannel?._id} use:autoActive>
 				<div class="flex flex-col w-full m-3">
 					<div class="flex gap-2 mb-3">
-						<span
-							class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center {channel
-								.videoItems?.length
-								? 'bg-red-700 hover:bg-red-700'
-								: ''}">
+						<button
+							class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center bg-red-700 hover:bg-red-700"
+							disabled={!$is_channel_live}>
 							LIVE
-						</span>
+						</button>
 						<div
 							class="tooltip tooltip-bottom"
 							data-tip="{getNumberInThousands(channel.viewDetails?.count || 0)} views">
@@ -115,6 +117,18 @@
 							</label>
 							<DropdownViewers {channel} bind:viewers />
 						</div>
+						{#if $is_feature_studio_mode_enabled}
+							<span
+								class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center">
+								<IconTwitch />
+								{25}
+							</span>
+							<span
+								class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center">
+								<IconYouTube />
+								{255}
+							</span>
+						{/if}
 						<label class="swap swap-rotate ml-auto">
 							<input type="checkbox" bind:checked={$is_chat_drawer_open} />
 							<IconChatDrawerChevronOpen />
@@ -129,6 +143,6 @@
 		{/each}
 	</div>
 	<div class="absolute lg:bottom-0 bottom-10 m-3 w-full items-center justify-center flex">
-		<StreamControls bind:isHostOrGuest bind:channel bind:isScrollable />
+		<StreamControls bind:isHostOrGuest bind:channel bind:isScrollable bind:viewers />
 	</div>
 </div>
