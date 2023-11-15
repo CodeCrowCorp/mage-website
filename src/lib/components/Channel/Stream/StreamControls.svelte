@@ -381,7 +381,7 @@
 		<!-- <label tabindex="0" class="btn m-1">Click</label> -->
 		<button
 			tabindex="0"
-			class="btn text-white border-none tooltip tooltip-left font-normal normal-case {$is_sharing_screen ||
+			class="btn border-none tooltip tooltip-left font-normal normal-case {$is_sharing_screen ||
 			$is_sharing_webcam ||
 			$is_sharing_audio ||
 			$is_sharing_obs
@@ -394,7 +394,7 @@
 		<ul tabindex="0" class="dropdown-content">
 			<div class="flex flex-row gap-4 card p-3 bg-base-300">
 				<button
-					class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_screen
+					class="btn border-none tooltip font-normal normal-case {$is_sharing_screen
 						? 'btn-primary'
 						: 'btn-neutral'}"
 					data-tip="Screen"
@@ -409,7 +409,7 @@
 				</button>
 
 				<button
-					class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_webcam
+					class="btn border-none tooltip font-normal normal-case {$is_sharing_webcam
 						? 'btn-primary'
 						: 'btn-neutral'}"
 					data-tip="Webcam"
@@ -424,7 +424,7 @@
 				</button>
 
 				<button
-					class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_audio
+					class="btn border-none tooltip font-normal normal-case {$is_sharing_audio
 						? 'btn-primary'
 						: 'btn-neutral'}"
 					data-tip="Audio"
@@ -441,7 +441,7 @@
 				<div class="divider lg:divider-horizontal" />
 
 				<button
-					class="btn text-white border-none tooltip font-normal normal-case {$is_sharing_obs
+					class="btn border-none tooltip font-normal normal-case {$is_sharing_obs
 						? 'btn-primary'
 						: 'btn-neutral'}"
 					data-tip="Stream Key"
@@ -462,7 +462,7 @@
 
 	<div class="flex flex-row gap-4 card">
 		<button
-			class="btn text-white border-none tooltip font-normal normal-case mt-3 {$is_channel_live
+			class="btn border-none tooltip font-normal normal-case mt-3 {$is_channel_live
 				? 'btn-primary'
 				: 'btn-neutral'}"
 			data-tip="Go Live"
@@ -480,7 +480,7 @@
 		</button>
 
 		<button
-			class="flex items-center btn text-white border-none tooltip font-normal normal-case mt-3 {$is_restream_drawer_open
+			class="flex items-center btn border-none tooltip font-normal normal-case mt-3 {$is_restream_drawer_open
 				? 'btn-primary'
 				: 'btn-neutral'}"
 			data-tip="Restream"
@@ -500,7 +500,7 @@
 		<div class="dropdown dropdown-top rounded-box pt-3">
 			<button
 				tabindex="0"
-				class="flex items-center btn text-white border-none tooltip tooltip-right font-normal normal-case btn-neutral"
+				class="flex items-center btn border-none tooltip tooltip-right font-normal normal-case btn-neutral"
 				data-tip="Add Guest"
 				disabled={!isHost || !isChannelSocketConnected || !videoItemIsActive}>
 				<IconAddGuest />

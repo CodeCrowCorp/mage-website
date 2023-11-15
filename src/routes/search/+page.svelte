@@ -102,17 +102,17 @@
 		<div class="flex flex-col md:flex-row gap-4">
 			<form action="/search">
 				<div class="form-control">
-					<div class="input-group relative pb-12">
+					<div class="input-group relative pb-12 join">
 						<input
 							name="query"
 							bind:value={query}
 							type="search"
 							placeholder="Search {placeholderText}"
-							class="input input-bordered input-primary w-96" />
+							class="input input-bordered input-primary w-96 join-item" />
 						{#if sectionId}
 							<input type="hidden" name="section" value={sectionId} />
 						{/if}
-						<button class="btn btn-square btn-neutral text-white">
+						<button class="btn btn-square btn-neutral join-item">
 							<IconSearch />
 						</button>
 					</div>

@@ -13,14 +13,14 @@
 <div class="flex flex-col md:flex-row gap-4 p-5">
 	<form method="GET" action={`/search`}>
 		<div class="form-control">
-			<div class="input-group relative">
+			<div class="input-group relative join">
 				<input
 					name="query"
 					bind:value={query}
 					type="search"
 					placeholder="Search channels"
-					class="input input-bordered input-primary w-96" />
-				<button class="btn btn-square btn-neutral text-white">
+					class="input input-bordered input-primary w-96 join-item" />
+				<button class="btn btn-square btn-neutral join-item">
 					<IconSearch />
 				</button>
 			</div>

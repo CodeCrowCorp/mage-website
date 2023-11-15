@@ -31,7 +31,7 @@
 	bind:this={btn}
 	{id}
 	type="button"
-	class={'btn text-white border-none tooltip font-normal normal-case ' + btnClass}
+	class={'btn border-none tooltip font-normal normal-case ' + btnClass}
 	data-tip={label}
 	on:click={() => {
 		isFocused = true
