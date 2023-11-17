@@ -266,10 +266,8 @@
 						</div>
 
 						<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
-							<button
-								type="button"
-								class="btn btn-neutral text-white grow"
-								on:click={() => toggleDrawer()}>Cancel</button>
+							<button type="button" class="btn btn-neutral grow" on:click={() => toggleDrawer()}
+								>Cancel</button>
 							<button type="submit" class="btn btn-primary grow" bind:this={submitBtn}>Save</button>
 						</div>
 					</div>
