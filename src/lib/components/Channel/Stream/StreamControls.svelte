@@ -13,8 +13,7 @@
 		is_sharing_screen,
 		is_sharing_webcam,
 		is_sharing_obs,
-		updateVideoItems,
-		is_channel_live
+		updateVideoItems
 	} from '$lib/stores/streamStore'
 	import { channel_connection } from '$lib/stores/websocketStore'
 	import { onDestroy, onMount } from 'svelte'
@@ -27,6 +26,11 @@
 		channel: any,
 		isScrollable: boolean = false,
 		viewers: any[] = []
+
+	//only go live when stream is going on (using isChannelLive)
+	//TODO: save stream key
+	//TODO: add stream key refresh
+	//TODO: get stream time limit
 
 	let selectedUser = 0
 
@@ -316,6 +320,7 @@
 	}
 
 	onMount(() => {
+		isScrollable = isHostOrGuest
 		const sub1 = is_sharing_screen.subscribe((value) => {
 			if (value) {
 				startScreenStream()
@@ -377,8 +382,7 @@
 </script>
 
 <div class="flex flex-col sm:flex-row gap-4">
-	<div class="dropdown dropdown-top dropdown-end p-3">
-		<!-- <label tabindex="0" class="btn m-1">Click</label> -->
+	<div class="dropdown dropdown-top dropdown-end py-3">
 		<button
 			tabindex="0"
 			class="btn border-none tooltip tooltip-left font-normal normal-case {$is_sharing_screen ||
@@ -444,7 +448,7 @@
 					class="btn border-none tooltip font-normal normal-case {$is_sharing_obs
 						? 'btn-primary'
 						: 'btn-neutral'}"
-					data-tip="Stream Key"
+					data-tip="Stream key"
 					on:click={() => {
 						$is_sharing_obs = !$is_sharing_obs
 					}}
@@ -461,7 +465,7 @@
 	</div>
 
 	<div class="flex flex-row gap-4 card">
-		<button
+		<!-- <button
 			class="btn border-none tooltip font-normal normal-case mt-3 {$is_channel_live
 				? 'btn-primary'
 				: 'btn-neutral'}"
@@ -477,7 +481,7 @@
 				!isChannelSocketConnected ||
 				!videoItemIsActive}>
 			<IconShareObs />
-		</button>
+		</button> -->
 
 		<button
 			class="flex items-center btn border-none tooltip font-normal normal-case mt-3 {$is_restream_drawer_open
@@ -501,7 +505,7 @@
 			<button
 				tabindex="0"
 				class="flex items-center btn border-none tooltip tooltip-right font-normal normal-case btn-neutral"
-				data-tip="Add Guest"
+				data-tip="Add guest"
 				disabled={!isHost || !isChannelSocketConnected || !videoItemIsActive}>
 				<IconAddGuest />
 			</button>

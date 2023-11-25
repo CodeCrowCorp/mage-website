@@ -371,3 +371,22 @@ export const isValidUrl = (url: string) => {
 	)
 	return pattern.test(url)
 }
+
+export const getHref = async ({
+	provider,
+	apiUrl,
+	xApiKey
+}: {
+	provider: string
+	apiUrl: string
+	xApiKey: string
+}) => {
+	const response = await fetch(`${apiUrl}/auth/${provider}`, {
+		headers: {
+			Accept: '*/*',
+			'x-api-key': xApiKey
+		}
+	})
+	const { loginUrl } = await response.json()
+	window.location.replace(loginUrl)
+}

@@ -15,8 +15,7 @@
 		is_sharing_obs,
 		is_sharing_audio,
 		is_sharing_screen,
-		is_sharing_webcam,
-		is_channel_live
+		is_sharing_webcam
 	} from '$lib/stores/streamStore'
 	import { getNumberInThousands } from '$lib/utils'
 	import {
@@ -94,7 +93,7 @@
 					<div class="flex gap-2 mb-3">
 						<button
 							class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center bg-red-700 hover:bg-red-700"
-							disabled={!$is_channel_live}>
+							disabled={!channel.videoItems?.length}>
 							LIVE
 						</button>
 						<div
