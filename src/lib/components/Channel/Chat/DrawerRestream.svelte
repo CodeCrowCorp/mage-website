@@ -2,10 +2,13 @@
 	import { onMount } from 'svelte'
 	import { get, put, del, patch } from '$lib/api.js'
 	import { page } from '$app/stores'
-	import { isValidRtmp } from '$lib/utils'
+	import { getHref, isValidRtmp } from '$lib/utils'
 	import { is_restream_drawer_open } from '$lib/stores/channelStore'
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
 	import IconChatDelete from '$lib/assets/icons/chat/IconChatDelete.svelte'
+	import IconTwitch from '$lib/assets/icons/channel/IconTwitch.svelte'
+	import IconYouTube from '$lib/assets/icons/channel/IconYouTube.svelte'
+	import { env } from '$env/dynamic/public'
 
 	$: auth = {
 		userId: $page.data.user?.userId,
@@ -172,8 +175,32 @@
 				<dialog bind:this={add_output_modal} class={`modal ${showAddModal && 'modal-open'}`}>
 					<div class="modal-box">
 						<h3 class="font-bold text-lg">Add new stream</h3>
-
 						<div class="form-control w-full pt-4">
+							<div class="flex gap-3">
+								{#if env.PUBLIC_CROSS_ORIGIN === 'false'}
+									<a class="btn btn-sm" href="{env.PUBLIC_API_URL}/auth/twitch"
+										><IconTwitch /> Twitch</a>
+									<a class="btn btn-sm" href="{env.PUBLIC_API_URL}/auth/youtube"
+										><IconYouTube /> YouTube</a>
+								{:else}
+									<button
+										class="btn btn-sm"
+										on:click={async () =>
+											await getHref({
+												provider: 'twitch',
+												apiUrl: env.PUBLIC_API_URL,
+												xApiKey: env.PUBLIC_X_API_KEY
+											})}><IconTwitch /> Twitch</button>
+									<button
+										class="btn btn-sm"
+										on:click={async () =>
+											await getHref({
+												provider: 'youtube',
+												apiUrl: env.PUBLIC_API_URL,
+												xApiKey: env.PUBLIC_X_API_KEY
+											})}><IconYouTube /> YouTube</button>
+								{/if}
+							</div>
 							<label class="label">
 								<span class="label-text">Title</span>
 							</label>

@@ -5,17 +5,7 @@
 	import { env } from '$env/dynamic/public'
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svelte'
-
-	async function getHref(provider: string) {
-		const response = await fetch(`${env.PUBLIC_API_URL}/auth/${provider}`, {
-			headers: {
-				Accept: '*/*',
-				'x-api-key': env.PUBLIC_X_API_KEY
-			}
-		})
-		const { loginUrl } = await response.json()
-		window.location.replace(loginUrl)
-	}
+	import { getHref } from '$lib/utils'
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -50,13 +40,32 @@
 			{:else}
 				<button
 					class="btn w-full btn-primary gap-4"
-					on:click={async () => await getHref('discord')}>
+					on:click={async () =>
+						await getHref({
+							provider: 'discord',
+							apiUrl: env.PUBLIC_API_URL,
+							xApiKey: env.PUBLIC_X_API_KEY
+						})}>
 					<IconSocialDiscordInverse />
 					Log in with Discord</button>
-				<button class="btn w-full btn-outline gap-4" on:click={async () => await getHref('google')}>
+				<button
+					class="btn w-full btn-outline gap-4"
+					on:click={async () =>
+						await getHref({
+							provider: 'google',
+							apiUrl: env.PUBLIC_API_URL,
+							xApiKey: env.PUBLIC_X_API_KEY
+						})}>
 					<IconSocialGoogle />
 					Log in with Google</button>
-				<button class="btn w-full bg-black gap-4" on:click={async () => await getHref('github')}>
+				<button
+					class="btn w-full bg-black gap-4"
+					on:click={async () =>
+						await getHref({
+							provider: 'github',
+							apiUrl: env.PUBLIC_API_URL,
+							xApiKey: env.PUBLIC_X_API_KEY
+						})}>
 					<IconSocialGitHubInverse />
 					Log in with GitHub</button>
 			{/if}

@@ -13,12 +13,20 @@
 		is_sharing_obs
 	} from '$lib/stores/streamStore'
 	import { emitChannelUpdate } from '$lib/websocket'
-	import { captureScreenShot, dataURLtoFile, getColoredRole, setRole } from '$lib/utils'
+	import {
+		captureScreenShot,
+		copyToClipboard,
+		dataURLtoFile,
+		getColoredRole,
+		setRole
+	} from '$lib/utils'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { get, patch, putImage } from '$lib/api'
 	import LibLoader from '$lib/components/Global/LibLoader.svelte'
+	import IconRefresh from '$lib/assets/icons/IconRefresh.svelte'
+	import IconCopy from '$lib/assets/icons/IconCopy.svelte'
 
 	export let video: any, channel: any
 
@@ -95,6 +103,14 @@
 	}
 
 	$: animate = isWebcamFocused ? '' : 'transition-all'
+
+	let copyText = 'Copy'
+	const changeCopyText = () => {
+		copyText = 'Copied!'
+		setTimeout(() => {
+			copyText = 'Copy'
+		}, 1000)
+	}
 
 	const handleObsChanges = () => {
 		prevObs = video.obs
@@ -479,6 +495,10 @@
 			}
 		}
 	}
+
+	const refreshStreamKey = () => {
+		throw new Error('Function not implemented.')
+	}
 </script>
 
 <LibLoader
@@ -581,13 +601,23 @@
 <dialog bind:this={obs_modal} class="modal">
 	<form method="dialog" class="modal-box">
 		<h3 class="font-bold text-lg">Copy to OBS</h3>
-		<h5 class="font-semibold text-warning">This stream key is reset each time you go live</h5>
 		<p class="py-8">
 			Server: <br />
 			{#if !video.obs?.rtmps?.url}
 				<span class="loading loading-dots loading-sm" />
 			{:else}
-				{video.obs?.rtmps?.url}
+				<div class="flex">
+					<span>{video.obs?.rtmps?.url}</span>
+					<div
+						class="btn btn-ghost btn-sm tooltip"
+						data-tip={copyText}
+						on:click={() => {
+							copyToClipboard($page.url.toString())
+							changeCopyText()
+						}}>
+						<IconCopy />
+					</div>
+				</div>
 			{/if}
 		</p>
 		<p class="break-all">
@@ -595,7 +625,26 @@
 			{#if !video.obs?.rtmps?.streamKey}
 				<span class="loading loading-dots loading-sm" />
 			{:else}
-				{video.obs?.rtmps?.streamKey}
+				<div class="flex">
+					<span>{video.obs?.rtmps?.streamKey}</span>
+					<div
+						class="btn btn-ghost btn-sm tooltip"
+						data-tip={copyText}
+						on:click={() => {
+							copyToClipboard($page.url.toString())
+							changeCopyText()
+						}}>
+						<IconCopy />
+					</div>
+					<div
+						class="btn btn-ghost btn-sm tooltip"
+						data-tip="Refresh key"
+						on:click={() => {
+							refreshStreamKey()
+						}}>
+						<IconRefresh />
+					</div>
+				</div>
 			{/if}
 		</p>
 		<div class="modal-action">
