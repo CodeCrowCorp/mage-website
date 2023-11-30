@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { get, put, del, patch } from '$lib/api.js'
+	import { get, put, del, patch, post } from '$lib/api'
 	import { page } from '$app/stores'
 	import { getHref, isValidRtmp } from '$lib/utils'
 	import { is_restream_drawer_open } from '$lib/stores/channelStore'
@@ -82,6 +82,27 @@
 		getAll()
 	})
 
+	const getLiveInput = async () => {
+		return await get(
+			`live-input?channelId=${$page.params.channelId}&userId=${$page.data.user?.userId}`,
+			{
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			}
+		)
+	}
+
+	const sendOutputs = async ({ liveInputUid }: { liveInputUid: string }) => {
+		return await post(
+			`outputs/send`,
+			{ liveInputUid },
+			{
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			}
+		)
+	}
+
 	const toggleOutput = async (streamItem: any) => {
 		streamItem = await patch(
 			`output/toggle?outputId=${streamItem._id}`,
@@ -91,6 +112,8 @@
 		urlList = urlList.map((item: any) =>
 			item._id === streamItem._id ? { ...item, isEnabled: streamItem.isEnabled } : item
 		)
+		const rtmps = await getLiveInput()
+		await sendOutputs({ liveInputUid: rtmps.uid })
 	}
 </script>
 

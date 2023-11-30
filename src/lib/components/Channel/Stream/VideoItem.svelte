@@ -13,20 +13,12 @@
 		is_sharing_obs
 	} from '$lib/stores/streamStore'
 	import { emitChannelUpdate } from '$lib/websocket'
-	import {
-		captureScreenShot,
-		copyToClipboard,
-		dataURLtoFile,
-		getColoredRole,
-		setRole
-	} from '$lib/utils'
+	import { captureScreenShot, dataURLtoFile, getColoredRole, setRole } from '$lib/utils'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { get, patch, putImage } from '$lib/api'
 	import LibLoader from '$lib/components/Global/LibLoader.svelte'
-	import IconRefresh from '$lib/assets/icons/IconRefresh.svelte'
-	import IconCopy from '$lib/assets/icons/IconCopy.svelte'
 
 	export let video: any, channel: any
 
@@ -54,7 +46,6 @@
 		timerInterval: any,
 		formattedTime: string = '00:00:00',
 		isHoverVideo: boolean = false,
-		obs_modal: any = null,
 		iframeUrl: string = '',
 		streamId = '',
 		streamPlayer: any
@@ -104,14 +95,6 @@
 
 	$: animate = isWebcamFocused ? '' : 'transition-all'
 
-	let copyText = 'Copy'
-	const changeCopyText = () => {
-		copyText = 'Copied!'
-		setTimeout(() => {
-			copyText = 'Copy'
-		}, 1000)
-	}
-
 	const handleObsChanges = () => {
 		prevObs = video.obs
 		toggleClient({
@@ -140,15 +123,6 @@
 	const toggleClient = async ({ trackType }: { trackType: string }) => {
 		if ($page.data.user?.userId === video._id) {
 			switch (trackType) {
-				case 'obs':
-					if ($is_sharing_obs) {
-						iframeUrl = video.obs?.playback?.iframe
-						// console.log('got here---- video.obs.playback?.iframeUrl', iframeUrl)
-					} else {
-						$is_sharing_obs = false
-						iframeUrl = ''
-					}
-					break
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
 						const key = video.screen.webRTC.url + '-' + video._id
@@ -217,10 +191,6 @@
 			}
 		} else {
 			switch (trackType) {
-				case 'obs':
-					iframeUrl = video.obs?.playback?.iframe
-					// console.log('got here---- video.obs.playback?.iframeUrl', iframeUrl)
-					break
 				case 'screen':
 					if (video.screen && screen_element) {
 						const key = video.screen.webRTCPlayback.url + '-' + video._id
@@ -321,24 +291,23 @@
 		isMounted = true
 	})
 
-	is_sharing_obs.subscribe(async (value: any) => {
-		if (value === false) {
-			if (timerInterval) toggleTimer(false)
-			if (streamId) {
-				await patch(
-					`analytics/stream/end?streamId=${streamId}`,
-					{},
-					{
-						userId: $page.data.user?.userId,
-						token: $page.data.user?.token
-					}
-				)
-				streamId = ''
-			}
-		} else if (value === true) {
-			obs_modal?.showModal()
-		}
-	})
+	//TODO: do this server-side
+	// is_sharing_obs.subscribe(async (value: any) => {
+	// 	if (value === false) {
+	// 		if (timerInterval) toggleTimer(false)
+	// 		if (streamId) {
+	// 			await patch(
+	// 				`analytics/stream/end?streamId=${streamId}`,
+	// 				{},
+	// 				{
+	// 					userId: $page.data.user?.userId,
+	// 					token: $page.data.user?.token
+	// 				}
+	// 			)
+	// 			streamId = ''
+	// 		}
+	// 	}
+	// })
 
 	is_sharing_screen.subscribe(async (value: any) => {
 		if (value === false) {
@@ -495,10 +464,6 @@
 			}
 		}
 	}
-
-	const refreshStreamKey = () => {
-		throw new Error('Function not implemented.')
-	}
 </script>
 
 <LibLoader
@@ -597,58 +562,3 @@
 		</div>
 	</div>
 </div>
-
-<dialog bind:this={obs_modal} class="modal">
-	<form method="dialog" class="modal-box">
-		<h3 class="font-bold text-lg">Copy to OBS</h3>
-		<p class="py-8">
-			Server: <br />
-			{#if !video.obs?.rtmps?.url}
-				<span class="loading loading-dots loading-sm" />
-			{:else}
-				<div class="flex">
-					<span>{video.obs?.rtmps?.url}</span>
-					<div
-						class="btn btn-ghost btn-sm tooltip"
-						data-tip={copyText}
-						on:click={() => {
-							copyToClipboard($page.url.toString())
-							changeCopyText()
-						}}>
-						<IconCopy />
-					</div>
-				</div>
-			{/if}
-		</p>
-		<p class="break-all">
-			Stream Key: <br />
-			{#if !video.obs?.rtmps?.streamKey}
-				<span class="loading loading-dots loading-sm" />
-			{:else}
-				<div class="flex">
-					<span>{video.obs?.rtmps?.streamKey}</span>
-					<div
-						class="btn btn-ghost btn-sm tooltip"
-						data-tip={copyText}
-						on:click={() => {
-							copyToClipboard($page.url.toString())
-							changeCopyText()
-						}}>
-						<IconCopy />
-					</div>
-					<div
-						class="btn btn-ghost btn-sm tooltip"
-						data-tip="Refresh key"
-						on:click={() => {
-							refreshStreamKey()
-						}}>
-						<IconRefresh />
-					</div>
-				</div>
-			{/if}
-		</p>
-		<div class="modal-action">
-			<button class="btn">Close</button>
-		</div>
-	</form>
-</dialog>

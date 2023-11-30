@@ -5,7 +5,7 @@
 	import IconRestream from '$lib/assets/icons/channel/IconRestream.svelte'
 	import IconStreamKey from '$lib/assets/icons/channel/IconStreamKey.svelte'
 	import IconSources from '$lib/assets/icons/channel/IconSources.svelte'
-	import { del, post, put } from '$lib/api'
+	import { del, get, post, put } from '$lib/api'
 	import { page } from '$app/stores'
 	import { emitAction, emitChannelUpdate } from '$lib/websocket'
 	import {
@@ -21,6 +21,9 @@
 	import IconAddGuest from '$lib/assets/icons/channel/IconAddGuest.svelte'
 	import { is_feature_apps_enabled } from '$lib/stores/remoteConfigStore'
 	import { is_restream_drawer_open } from '$lib/stores/channelStore'
+	import IconRefresh from '$lib/assets/icons/IconRefresh.svelte'
+	import IconCopy from '$lib/assets/icons/IconCopy.svelte'
+	import { copyToClipboard } from '$lib/utils'
 
 	export let isHostOrGuest: boolean = false,
 		channel: any,
@@ -32,7 +35,12 @@
 	//TODO: add stream key refresh
 	//TODO: get stream time limit
 
-	let selectedUser = 0
+	let selectedUser = 0,
+		obs_modal: any = null,
+		rtmps: any = null,
+		copyTextUrl = 'Copy',
+		copyTextKey = 'Copy',
+		urlList: any = []
 
 	$: isHost = channel?.user === $page.data.user?.userId
 
@@ -105,59 +113,6 @@
 				token: $page.data.user?.token
 			}
 		)
-	}
-
-	const startObsStream = async () => {
-		const liveInput = await createLiveInput({
-			channelId: `${$page.params.channelId}`,
-			userId: $page.data.user?.userId,
-			trackType: 'obs',
-			isTrackActive: true,
-			liveInput: {
-				meta: {
-					name: `${$page.params.channelId}-${$page.data.user.userId}-obs`
-				},
-				recording: { mode: 'automatic' }
-			}
-		})
-		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
-		emitAction({
-			channelSocket: channel?.socket,
-			channelId: $page.params.channelId,
-			message: {
-				action: 'toggleTrack',
-				video: liveInput
-			}
-		})
-		await sendOutputs({ liveInputUid: liveInput.uid })
-		await sendFcm({
-			channelId: $page.params.channelId,
-			channelTitle: channel.title,
-			username: $page.data.user?.user?.username
-		})
-	}
-
-	const stopObsStream = async () => {
-		await deleteLiveInput({
-			channelId: $page.params.channelId,
-			userId: $page.data.user.userId,
-			trackType: 'obs'
-		})
-		channel.videoItems = updateVideoItems(channel.videoItems, [
-			{ _id: $page.data.user.userId, trackType: 'obs', isTrackActive: false }
-		])
-		emitAction({
-			channelSocket: channel?.socket,
-			channelId: $page.params.channelId,
-			message: {
-				action: 'toggleTrack',
-				video: {
-					trackType: 'obs',
-					isTrackActive: false,
-					_id: $page.data.user.userId
-				}
-			}
-		})
 	}
 
 	const startScreenStream = async () => {
@@ -345,15 +300,7 @@
 			}
 		})
 
-		const sub4 = is_sharing_obs.subscribe((value) => {
-			if (value) {
-				startObsStream()
-			} else if (value === false) {
-				stopObsStream()
-			}
-		})
-
-		subcriptions.push(sub1, sub2, sub3, sub4)
+		subcriptions.push(sub1, sub2, sub3)
 	})
 
 	onDestroy(() => {
@@ -378,6 +325,60 @@
 				roleUpdate: { roleEvent: 'guest', isEnabled, userId: userId }
 			})
 		}
+	}
+
+	const changeCopyText = (label: string) => {
+		label = 'Copied!'
+		setTimeout(() => {
+			label = 'Copy'
+		}, 1000)
+	}
+
+	const refreshStreamKey = async () => {
+		rtmps = null
+		//TODO: do we delete live input if video is associated with each live input?
+		await deleteLiveInput({
+			channelId: $page.params.channelId,
+			userId: $page.data.user.userId,
+			trackType: 'obs'
+		})
+		rtmps = await createLiveInput({
+			channelId: `${$page.params.channelId}`,
+			userId: $page.data.user?.userId,
+			trackType: 'obs',
+			isTrackActive: true,
+			liveInput: {
+				meta: {
+					name: `${$page.params.channelId}-${$page.data.user.userId}-obs`
+				},
+				recording: { mode: 'automatic' }
+			}
+		})
+		await sendFcm({
+			channelId: $page.params.channelId,
+			channelTitle: channel.title,
+			username: $page.data.user?.user?.username
+		})
+	}
+
+	const showStreamKeyModal = async () => {
+		obs_modal.showModal()
+		rtmps = await get(
+			`live-input?channelId=${$page.params.channelId}&userId=${$page.data.user?.userId}`,
+			{
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			}
+		)
+		if (!rtmps) {
+			await refreshStreamKey()
+		}
+		urlList = await get('outputs', {
+			userId: $page.data.user?.userId,
+			token: $page.data.user?.token
+		})
+		urlList = urlList.filter((url: any) => url.isEnabled)
+		await sendOutputs({ liveInputUid: rtmps.uid })
 	}
 </script>
 
@@ -445,13 +446,9 @@
 				<div class="divider lg:divider-horizontal" />
 
 				<button
-					class="btn border-none tooltip font-normal normal-case {$is_sharing_obs
-						? 'btn-primary'
-						: 'btn-neutral'}"
+					class="btn border-none tooltip font-normal normal-case btn-neutral"
 					data-tip="Stream key"
-					on:click={() => {
-						$is_sharing_obs = !$is_sharing_obs
-					}}
+					on:click={() => showStreamKeyModal()}
 					disabled={$is_sharing_screen ||
 						$is_sharing_webcam ||
 						$is_sharing_audio ||
@@ -465,24 +462,6 @@
 	</div>
 
 	<div class="flex flex-row gap-4 card">
-		<!-- <button
-			class="btn border-none tooltip font-normal normal-case mt-3 {$is_channel_live
-				? 'btn-primary'
-				: 'btn-neutral'}"
-			data-tip="Go Live"
-			on:click={() => {
-				// $is_sharing_obs = !$is_sharing_obs
-			}}
-			disabled={(!$is_sharing_obs &&
-				!$is_sharing_screen &&
-				!$is_sharing_webcam &&
-				!$is_sharing_audio) ||
-				!isHostOrGuest ||
-				!isChannelSocketConnected ||
-				!videoItemIsActive}>
-			<IconShareObs />
-		</button> -->
-
 		<button
 			class="flex items-center btn border-none tooltip font-normal normal-case mt-3 {$is_restream_drawer_open
 				? 'btn-primary'
@@ -544,3 +523,68 @@
 	on:click={() => {
 		isScrollable = !isScrollable
 	}} />
+
+<dialog bind:this={obs_modal} class="modal">
+	<form method="dialog" class="modal-box overflow-x-hidden">
+		<h3 class="font-bold text-lg">Copy to OBS</h3>
+		<p class="py-8">
+			Server: <br />
+			{#if !rtmps?.rtmps?.url}
+				<span class="loading loading-dots loading-sm" />
+			{:else}
+				<div class="flex">
+					<span>{rtmps?.rtmps?.url}</span>
+					<div
+						class="btn btn-ghost btn-sm tooltip"
+						data-tip={copyTextUrl}
+						on:click={() => {
+							copyToClipboard(rtmps?.rtmps?.url)
+							changeCopyText(copyTextUrl)
+						}}>
+						<IconCopy />
+					</div>
+				</div>
+			{/if}
+		</p>
+		<p class="break-all">
+			Stream Key: <br />
+			{#if !rtmps?.rtmps?.streamKey}
+				<span class="loading loading-dots loading-sm" />
+			{:else}
+				<div class="flex">
+					<span>{rtmps?.rtmps?.streamKey}</span>
+					<div
+						class="btn btn-ghost btn-sm tooltip"
+						data-tip={copyTextKey}
+						on:click={() => {
+							copyToClipboard(rtmps?.rtmps?.streamKey)
+							changeCopyText(copyTextKey)
+						}}>
+						<IconCopy />
+					</div>
+					<div
+						class="btn btn-ghost btn-sm tooltip"
+						data-tip="Refresh key"
+						on:click={() => {
+							refreshStreamKey()
+						}}>
+						<IconRefresh />
+					</div>
+				</div>
+			{/if}
+		</p>
+		<div class="pt-8 flex flex-wrap">
+			<h5>Restreaming to:</h5>
+			{#if urlList}
+				{#each urlList as url}
+					<div class="badge badge-success badge-outline mx-1">{url.title}</div>
+				{/each}
+			{:else}
+				<div class="badge badge-ghost badge-outline mx-1">None</div>
+			{/if}
+		</div>
+		<div class="modal-action">
+			<button class="btn">Close</button>
+		</div>
+	</form>
+</dialog>
