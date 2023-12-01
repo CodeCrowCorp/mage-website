@@ -156,24 +156,6 @@ const emitReactToMessage = ({
 	)
 }
 
-const emitAction = ({
-	channelSocket,
-	channelId,
-	message
-}: {
-	channelSocket: WebSocket
-	channelId: string
-	message: any
-}) => {
-	channelSocket?.send(
-		JSON.stringify({
-			eventName: `channel-streaming-action`,
-			channel: channelId,
-			message
-		})
-	)
-}
-
 const emitGetConnectedUsers = ({
 	channelSocket,
 	cursor
@@ -201,6 +183,5 @@ export {
 	emitDeleteMessageToChannel,
 	emitDeleteAllMessagesToChannel,
 	emitChatHistoryToChannel,
-	emitAction,
 	emitGetConnectedUsers
 }

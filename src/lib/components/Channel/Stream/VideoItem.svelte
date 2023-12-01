@@ -123,6 +123,15 @@
 	const toggleClient = async ({ trackType }: { trackType: string }) => {
 		if ($page.data.user?.userId === video._id) {
 			switch (trackType) {
+				case 'obs':
+					if (video.obs) {
+						iframeUrl = video.obs.playback.iframe
+						streamId = video.obs.streamId
+					} else {
+						iframeUrl = ''
+						streamId = ''
+					}
+					break
 				case 'screen':
 					if (video.screen && $is_sharing_screen) {
 						const key = video.screen.webRTC.url + '-' + video._id
@@ -191,6 +200,15 @@
 			}
 		} else {
 			switch (trackType) {
+				case 'obs':
+					if (video.obs) {
+						iframeUrl = video.obs.playback.iframe
+						streamId = video.obs.streamId
+					} else {
+						iframeUrl = ''
+						streamId = ''
+					}
+					break
 				case 'screen':
 					if (video.screen && screen_element) {
 						const key = video.screen.webRTCPlayback.url + '-' + video._id

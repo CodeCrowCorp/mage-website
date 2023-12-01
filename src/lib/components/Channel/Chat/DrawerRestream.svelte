@@ -93,14 +93,16 @@
 	}
 
 	const sendOutputs = async ({ liveInputUid }: { liveInputUid: string }) => {
-		return await post(
-			`outputs/send`,
-			{ liveInputUid },
-			{
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			}
-		)
+		if ($page.data.user?.userId) {
+			return await post(
+				`outputs/send`,
+				{ liveInputUid },
+				{
+					userId: $page.data.user?.userId,
+					token: $page.data.user?.token
+				}
+			)
+		}
 	}
 
 	const toggleOutput = async (streamItem: any) => {

@@ -39,7 +39,7 @@
 					Log in with GitHub</a>
 			{:else}
 				<button
-					class="btn w-full btn-primary gap-4"
+					class="btn w-full bg-indigo-700 hover:bg-indigo-900 text-white gap-4 border-none"
 					on:click={async () =>
 						await getHref({
 							provider: 'discord',
@@ -59,7 +59,7 @@
 					<IconSocialGoogle />
 					Log in with Google</button>
 				<button
-					class="btn w-full bg-black gap-4"
+					class="btn w-full bg-black hover:bg-gray-800 text-white gap-4 border-none"
 					on:click={async () =>
 						await getHref({
 							provider: 'github',
