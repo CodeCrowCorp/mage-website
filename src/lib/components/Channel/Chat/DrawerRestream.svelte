@@ -116,7 +116,7 @@
 			item._id === streamItem._id ? { ...item, isEnabled: streamItem.isEnabled } : item
 		)
 		const rtmps = await getLiveInput()
-		await sendOutputs({ liveInputUid: rtmps.uid })
+		await sendOutputs({ liveInputUid: rtmps.rtmps.uid })
 	}
 </script>
 
