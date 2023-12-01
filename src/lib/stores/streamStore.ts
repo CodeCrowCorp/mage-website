@@ -12,15 +12,18 @@ const updateVideoItems = (videoItems: any, liveInputs: any[]) => {
 			liveInputs.forEach((liveInput: any) => {
 				if (video._id === liveInput._id) {
 					switch (liveInput.trackType) {
+						case 'obs':
+							video.obs = liveInput.isConnected ? liveInput : null
+							break
 						case 'screen':
-							// isTrackActive required for real-time dismissal
-							video.screen = liveInput.isTrackActive ? liveInput : null
+							// isConnected required for real-time dismissal
+							video.screen = liveInput.isConnected ? liveInput : null
 							break
 						case 'webcam':
-							video.webcam = liveInput.isTrackActive ? liveInput : null
+							video.webcam = liveInput.isConnected ? liveInput : null
 							break
 						case 'audio':
-							video.audio = liveInput.isTrackActive ? liveInput : null
+							video.audio = liveInput.isConnected ? liveInput : null
 							break
 					}
 				}

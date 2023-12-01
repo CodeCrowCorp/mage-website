@@ -7,7 +7,7 @@
 	import IconSources from '$lib/assets/icons/channel/IconSources.svelte'
 	import { del, get, post, put } from '$lib/api'
 	import { page } from '$app/stores'
-	import { emitAction, emitChannelUpdate } from '$lib/websocket'
+	import { emitChannelUpdate } from '$lib/websocket'
 	import {
 		is_sharing_audio,
 		is_sharing_screen,
@@ -29,11 +29,6 @@
 		channel: any,
 		isScrollable: boolean = false,
 		viewers: any[] = []
-
-	//only go live when stream is going on (using isChannelLive)
-	//TODO: save stream key
-	//TODO: add stream key refresh
-	//TODO: get stream time limit
 
 	let selectedUser = 0,
 		obs_modal: any = null,
@@ -120,7 +115,6 @@
 			channelId: `${$page.params.channelId}`,
 			userId: $page.data.user?.userId,
 			trackType: 'screen',
-			isTrackActive: true,
 			liveInput: {
 				meta: {
 					name: `${$page.params.channelId}-${$page.data.user.userId}-screen`
@@ -129,15 +123,6 @@
 			}
 		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
-		emitAction({
-			channelSocket: channel?.socket,
-			channelId: $page.params.channelId,
-			message: {
-				action: 'toggleTrack',
-				video: liveInput
-			}
-		})
-		await sendOutputs({ liveInputUid: liveInput.uid })
 		await sendFcm({
 			channelId: $page.params.channelId,
 			channelTitle: channel.title,
@@ -152,20 +137,8 @@
 			trackType: 'screen'
 		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [
-			{ _id: $page.data.user.userId, trackType: 'screen', isTrackActive: false }
+			{ _id: $page.data.user.userId, trackType: 'screen' }
 		])
-		emitAction({
-			channelSocket: channel?.socket,
-			channelId: $page.params.channelId,
-			message: {
-				action: 'toggleTrack',
-				video: {
-					trackType: 'screen',
-					isTrackActive: false,
-					_id: $page.data.user.userId
-				}
-			}
-		})
 	}
 
 	const startWebcamStream = async () => {
@@ -173,7 +146,6 @@
 			channelId: `${$page.params.channelId}`,
 			userId: $page.data.user?.userId,
 			trackType: 'webcam',
-			isTrackActive: true,
 			liveInput: {
 				meta: {
 					name: `${$page.params.channelId}-${$page.data.user.userId}-webcam`
@@ -182,15 +154,6 @@
 			}
 		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
-		emitAction({
-			channelSocket: channel?.socket,
-			channelId: $page.params.channelId,
-			message: {
-				action: 'toggleTrack',
-				video: liveInput
-			}
-		})
-		await sendOutputs({ liveInputUid: liveInput.uid })
 		await sendFcm({
 			channelId: $page.params.channelId,
 			channelTitle: channel.title,
@@ -205,20 +168,8 @@
 			trackType: 'webcam'
 		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [
-			{ _id: $page.data.user.userId, trackType: 'webcam', isTrackActive: false }
+			{ _id: $page.data.user.userId, trackType: 'webcam' }
 		])
-		emitAction({
-			channelSocket: channel?.socket,
-			channelId: $page.params.channelId,
-			message: {
-				action: 'toggleTrack',
-				video: {
-					trackType: 'webcam',
-					isTrackActive: false,
-					_id: $page.data.user.userId
-				}
-			}
-		})
 	}
 
 	const startAudioStream = async () => {
@@ -226,7 +177,6 @@
 			channelId: `${$page.params.channelId}`,
 			userId: $page.data.user?.userId,
 			trackType: 'audio',
-			isTrackActive: true,
 			liveInput: {
 				meta: {
 					name: `${$page.params.channelId}-${$page.data.user.userId}-audio`
@@ -235,15 +185,6 @@
 			}
 		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
-		emitAction({
-			channelSocket: channel?.socket,
-			channelId: $page.params.channelId,
-			message: {
-				action: 'toggleTrack',
-				video: liveInput
-			}
-		})
-		await sendOutputs({ liveInputUid: liveInput.uid })
 		await sendFcm({
 			channelId: $page.params.channelId,
 			channelTitle: channel.title,
@@ -258,20 +199,8 @@
 			trackType: 'audio'
 		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [
-			{ _id: $page.data.user.userId, trackType: 'audio', isTrackActive: false }
+			{ _id: $page.data.user.userId, trackType: 'audio' }
 		])
-		emitAction({
-			channelSocket: channel?.socket,
-			channelId: $page.params.channelId,
-			message: {
-				action: 'toggleTrack',
-				video: {
-					trackType: 'audio',
-					isTrackActive: false,
-					_id: $page.data.user.userId
-				}
-			}
-		})
 	}
 
 	onMount(() => {
@@ -346,7 +275,6 @@
 			channelId: `${$page.params.channelId}`,
 			userId: $page.data.user?.userId,
 			trackType: 'obs',
-			isTrackActive: true,
 			liveInput: {
 				meta: {
 					name: `${$page.params.channelId}-${$page.data.user.userId}-obs`

@@ -34,6 +34,8 @@
 
 	let isScrollable = false
 
+	$: isLive = channel.videoItems?.some((input: any) => input.status === 'connected') ?? false
+
 	function autoActive(node: Element) {
 		const observer = new IntersectionObserver(callback, { threshold: 0.5 })
 		observer.observe(node)
@@ -93,7 +95,7 @@
 					<div class="flex gap-2 mb-3">
 						<button
 							class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center bg-red-700 hover:bg-red-700"
-							disabled={!channel.videoItems?.length}>
+							disabled={!isLive}>
 							LIVE
 						</button>
 						<div
