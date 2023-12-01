@@ -306,7 +306,7 @@
 			token: $page.data.user?.token
 		})
 		urlList = urlList.filter((url: any) => url.isEnabled)
-		await sendOutputs({ liveInputUid: rtmps.uid })
+		await sendOutputs({ liveInputUid: rtmps.rtmps.uid })
 	}
 </script>
 
@@ -503,7 +503,7 @@
 		</p>
 		<div class="pt-8 flex flex-wrap">
 			<h5>Restreaming to:</h5>
-			{#if urlList}
+			{#if urlList.length}
 				{#each urlList as url}
 					<div class="badge badge-success badge-outline mx-1">{url.title}</div>
 				{/each}
