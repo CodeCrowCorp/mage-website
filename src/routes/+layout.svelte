@@ -59,7 +59,7 @@
 	})
 
 	const getUserRole = async () => {
-		//TODO: get role from Auth0
+		//TODO: get role from backend
 		$user_role = 'user'
 	}
 

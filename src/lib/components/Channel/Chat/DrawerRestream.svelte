@@ -106,9 +106,10 @@
 	}
 
 	const toggleOutput = async (streamItem: any) => {
+		streamItem.isEnabled = !streamItem.isEnabled
 		streamItem = await patch(
 			`output/toggle?outputId=${streamItem._id}`,
-			{ isEnabled: !streamItem.isEnabled },
+			{ isEnabled: streamItem.isEnabled },
 			auth
 		)
 		urlList = urlList.map((item: any) =>
