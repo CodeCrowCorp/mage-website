@@ -284,13 +284,13 @@
 				switch (parsedMsg.data.action) {
 					case 'toggleTrack':
 						if (channel) {
-							if ($page.data.user?.userId) {
-								if ($page.data.user.userId !== parsedMsg.data.video._id) {
-									channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
-								}
-							} else {
-								channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
-							}
+							// if ($page.data.user?.userId) {
+							// 	if ($page.data.user.userId !== parsedMsg.data.video._id) {
+							// 		channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
+							// 	}
+							// } else {
+							channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
+							// }
 						}
 						break
 				}

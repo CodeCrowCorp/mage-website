@@ -33,8 +33,14 @@
 		viewers: any[] = []
 
 	let isScrollable = false
-
-	$: isLive = channel.videoItems?.some((input: any) => input.status === 'connected') ?? false
+	$: isLive =
+		channel.videoItems?.some(
+			(input: any) =>
+				input?.obs?.isConnected ||
+				input?.screen?.isConnected ||
+				input?.webcam?.isConnected ||
+				input?.audio?.isConnected
+		) ?? false
 
 	function autoActive(node: Element) {
 		const observer = new IntersectionObserver(callback, { threshold: 0.5 })

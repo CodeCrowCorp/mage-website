@@ -17,7 +17,7 @@
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
-	import { get, patch, putImage } from '$lib/api'
+	import { putImage } from '$lib/api'
 	import LibLoader from '$lib/components/Global/LibLoader.svelte'
 
 	export let video: any, channel: any
@@ -47,7 +47,6 @@
 		formattedTime: string = '00:00:00',
 		isHoverVideo: boolean = false,
 		iframeUrl: string = '',
-		streamId = '',
 		streamPlayer: any
 
 	// WHIP/WHEP variables that determine if stream is coming in
@@ -87,11 +86,11 @@
 		handleAudioChanges()
 	}
 
-	$: if (isScreenLive || iframeUrl) {
-		toggleTimer(true)
-	} else {
-		toggleTimer(false)
-	}
+	// $: if (isScreenLive || iframeUrl) {
+	// 	toggleTimer(true)
+	// } else {
+	// 	toggleTimer(false)
+	// }
 
 	$: animate = isWebcamFocused ? '' : 'transition-all'
 
@@ -126,10 +125,8 @@
 				case 'obs':
 					if (video.obs) {
 						iframeUrl = video.obs.playback.iframe
-						streamId = video.obs.streamId
 					} else {
 						iframeUrl = ''
-						streamId = ''
 					}
 					break
 				case 'screen':
@@ -203,10 +200,8 @@
 				case 'obs':
 					if (video.obs) {
 						iframeUrl = video.obs.playback.iframe
-						streamId = video.obs.streamId
 					} else {
 						iframeUrl = ''
-						streamId = ''
 					}
 					break
 				case 'screen':
@@ -277,7 +272,6 @@
 	}
 
 	onMount(() => {
-		toggleTimer(false)
 		isGuest = channel?.guests?.includes(video._id)
 		handleObsChanges()
 
@@ -330,18 +324,6 @@
 	is_sharing_screen.subscribe(async (value: any) => {
 		if (value === false) {
 			screenWhip?.disconnectStream()
-			if (timerInterval) toggleTimer(false)
-			if (streamId) {
-				await patch(
-					`analytics/stream/end?streamId=${streamId}`,
-					{},
-					{
-						userId: $page.data.user?.userId,
-						token: $page.data.user?.token
-					}
-				)
-				streamId = ''
-			}
 		}
 	})
 
@@ -411,17 +393,10 @@
 			timerInterval = null
 			streamTime = 0
 			formattedTime = '00:00:00'
-			streamId = ''
 		} else {
 			if (timerInterval) return
 			timerInterval = setInterval(async () => {
 				try {
-					streamId = video.screen?.streamId || video.obs?.streamId
-					if (!streamId) return
-					if (streamId && streamTime === 0) {
-						const streamRecord = await get(`analytics/stream?streamId=${streamId}`)
-						streamTime = streamRecord ? (Date.now() - streamRecord.start) / 1000 : 0
-					}
 					streamTime = Math.floor(streamTime) + 1
 					const hours = Math.floor(streamTime / 3600)
 					const minutes = Math.floor((streamTime % 3600) / 60)
@@ -429,18 +404,6 @@
 					formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
 						.toString()
 						.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-					//NOTE: check if mine and has been 5 seconds
-					if (video._id === $page.data.user?.userId && streamTime % 5 == 0) {
-						await patch(
-							`analytics/stream?streamId=${streamId}`,
-							{},
-							{
-								userId: $page.data.user?.userId,
-								token: $page.data.user?.token
-							}
-						)
-					}
-
 					if (
 						!channel.thumbnail &&
 						video._id === channel.user &&
@@ -473,8 +436,11 @@
 			try {
 				// The Cloudflare Stream SDK is ready to use
 				streamPlayer = event.detail.library(obs_element)
-				streamPlayer.muted = video._id === $page.data.user?.userId
-				streamPlayer.autoplay = true
+				streamPlayer.addEventListener('durationchange', (event: any) => {
+					console.log('Duration change', event)
+				})
+				// streamPlayer.muted = video._id === $page.data.user?.userId
+				// streamPlayer.autoplay = true
 				// streamPlayer.controls = false
 				// streamPlayer.play()
 			} catch (err) {
