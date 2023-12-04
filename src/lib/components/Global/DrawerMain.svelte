@@ -289,9 +289,15 @@
 			<a href="https://discord.gg/CodeCrow" target="_blank" rel="noreferrer">
 				<img src={IconSocialDiscord} alt="" />
 			</a>
-			<a href="https://twitter.com/CodeCrowCorp" target="_blank" rel="noreferrer">
+			<a href="https://twitter.com/gagansuie" target="_blank" rel="noreferrer">
 				<IconSocialTwitter2 />
 			</a>
+			<!-- <a href="https://youtube.com/@gagansuie" target="_blank" rel="noreferrer">
+				<IconSocialYouTube />
+			</a>
+			<a href="https://tiktok.com/@gagansuie" target="_blank" rel="noreferrer">
+				<IconSocialTikTok />
+			</a> -->
 		</div>
 		<p>
 			<a href="https://codecrow.io" target="_blank" class="link link-hover">Code Crow © 2023</a>
