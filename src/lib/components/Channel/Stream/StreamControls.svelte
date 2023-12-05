@@ -265,12 +265,6 @@
 
 	const refreshStreamKey = async () => {
 		rtmps = null
-		//TODO: do we delete live input if video is associated with each live input?
-		// await deleteLiveInput({
-		// 	channelId: $page.params.channelId,
-		// 	userId: $page.data.user.userId,
-		// 	trackType: 'obs'
-		// })
 		rtmps = await createLiveInput({
 			channelId: `${$page.params.channelId}`,
 			userId: $page.data.user?.userId,
