@@ -2,8 +2,8 @@
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
 	import IconChatDrawerChevronOpen from '$lib/assets/icons/channel/IconChatDrawerChevronOpen.svelte'
 	import IconChatDrawerChevronClose from '$lib/assets/icons/channel/IconChatDrawerChevronClose.svelte'
-	import IconTwitch from '$lib/assets/icons/channel/IconTwitch.svelte'
-	import IconYouTube from '$lib/assets/icons/channel/IconYouTube.svelte'
+	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
+	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
 	import IconViews from '$lib/assets/icons/IconViews.svelte'
 	import StreamControls from '$lib/components/Channel/Stream/StreamControls.svelte'
 	import DropdownViewers from '$lib/components/Channel/Stream/DropdownViewers.svelte'
@@ -127,12 +127,12 @@
 						{#if $is_feature_studio_mode_enabled}
 							<span
 								class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center">
-								<IconTwitch />
+								<IconSocialTwitch />
 								{25}
 							</span>
 							<span
 								class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center">
-								<IconYouTube />
+								<IconSocialYouTube />
 								{255}
 							</span>
 						{/if}
