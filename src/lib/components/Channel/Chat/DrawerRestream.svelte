@@ -6,8 +6,8 @@
 	import { is_restream_drawer_open } from '$lib/stores/channelStore'
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
 	import IconChatDelete from '$lib/assets/icons/chat/IconChatDelete.svelte'
-	import IconTwitch from '$lib/assets/icons/channel/IconTwitch.svelte'
-	import IconYouTube from '$lib/assets/icons/channel/IconYouTube.svelte'
+	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
+	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
 	import { env } from '$env/dynamic/public'
 
 	$: auth = {
@@ -205,9 +205,9 @@
 							<div class="flex gap-3">
 								{#if env.PUBLIC_CROSS_ORIGIN === 'false'}
 									<a class="btn btn-sm" href="{env.PUBLIC_API_URL}/auth/twitch"
-										><IconTwitch /> Twitch</a>
+										><IconSocialTwitch /> Twitch</a>
 									<a class="btn btn-sm" href="{env.PUBLIC_API_URL}/auth/youtube"
-										><IconYouTube /> YouTube</a>
+										><IconSocialYouTube /> YouTube</a>
 								{:else}
 									<button
 										class="btn btn-sm"
@@ -216,7 +216,7 @@
 												provider: 'twitch',
 												apiUrl: env.PUBLIC_API_URL,
 												xApiKey: env.PUBLIC_X_API_KEY
-											})}><IconTwitch /> Twitch</button>
+											})}><IconSocialTwitch /> Twitch</button>
 									<button
 										class="btn btn-sm"
 										on:click={async () =>
@@ -224,7 +224,7 @@
 												provider: 'youtube',
 												apiUrl: env.PUBLIC_API_URL,
 												xApiKey: env.PUBLIC_X_API_KEY
-											})}><IconYouTube /> YouTube</button>
+											})}><IconSocialYouTube /> YouTube</button>
 								{/if}
 							</div>
 							<label class="label">

@@ -13,6 +13,8 @@
 	import IconSocialDiscord from '$lib/assets/icons/social/IconSocialDiscord.svg'
 	import IconSocialGitHub from '$lib/assets/icons/social/IconSocialGitHub.svelte'
 	import IconDrawerAdmin from '$lib/assets/icons/drawer/IconDrawerAdmin.svelte'
+	import IconDrawerMore from '$lib/assets/icons/drawer/IconDrawerMore.svelte'
+	import IconDrawerBlog from '$lib/assets/icons/drawer/IconDrawerBlog.svelte'
 	import { env } from '$env/dynamic/public'
 	import { page } from '$app/stores'
 	import { user_role } from '$lib/stores/userStore'
@@ -31,6 +33,9 @@
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import IconDrawerGetApps from '$lib/assets/icons/drawer/IconDrawerGetApps.svelte'
 	import IconFollowers from '$lib/assets/icons/IconFollowers.svelte'
+	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
+	import IconSocialTikTok from '$lib/assets/icons/social/IconSocialTikTok.svelte'
+	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
 
 	export var nav_drawer: HTMLInputElement
 
@@ -227,27 +232,13 @@
 			</li>
 		{/if}
 		<li>
-			<a class="custom-menu-item" href="https://codecrow.io/careers" target="_blank">
-				<IconDrawerCareers />
-				<span class={isChannelPage ? 'md:hidden' : ''}>Careers</span>
+			<a class="custom-menu-item" href="https://blog.mage.stream">
+				<IconDrawerBlog />
+				<span class={isChannelPage ? 'md:hidden' : ''}>Blog </span>
+				{#if !isChannelPage}
+					<span class="badge badge-secondary">New</span>
+				{/if}
 			</a>
-		</li>
-		<li>
-			<a class="custom-menu-item" href="https://brand.mage.stream/IconMageLogo.zip" target="_blank">
-				<IconDrawerBrand />
-				<span class={isChannelPage ? 'md:hidden' : ''}>Brand</span>
-			</a>
-		</li>
-		<li>
-			<details>
-				<summary class="custom-menu-item"
-					><IconDrawerHelpAndLegal />
-					<span class={isChannelPage ? 'md:hidden' : ''}>Help & Legal</span></summary>
-				<ul class="p-2 {isChannelPage ? 'lg:menu-sm' : 'ml-5'}">
-					<li><a href="https://codecrow.io/contact" target="_blank">Contact</a></li>
-					<li><a href="https://codecrow.io/legal" target="_blank">Legal</a></li>
-				</ul>
-			</details>
 		</li>
 		<li>
 			<a class="custom-menu-item" href="/settings">
@@ -255,6 +246,24 @@
 				<span class={isChannelPage ? 'md:hidden' : ''}>Settings </span>
 			</a>
 		</li>
+		<li>
+			<details>
+				<summary class="custom-menu-item"
+					><IconDrawerMore />
+					<span class={isChannelPage ? 'md:hidden' : ''}>More</span></summary>
+				<ul class="p-2 {isChannelPage ? 'lg:menu-sm' : 'ml-5'}">
+					<li>
+						<a href="https://codecrow.io/careers" target="_blank"> Careers </a>
+					</li>
+					<li>
+						<a href="https://brand.mage.stream/IconMageLogo.zip" target="_blank"> Brand </a>
+					</li>
+					<li><a href="https://codecrow.io/contact" target="_blank">Contact</a></li>
+					<li><a href="https://codecrow.io/legal" target="_blank">Legal</a></li>
+				</ul>
+			</details>
+		</li>
+
 		{#if currentUser}
 			<form action="/logout" method="POST">
 				<li>
@@ -292,12 +301,15 @@
 			<a href="https://twitter.com/gagansuie" target="_blank" rel="noreferrer">
 				<IconSocialTwitter2 />
 			</a>
-			<!-- <a href="https://youtube.com/@gagansuie" target="_blank" rel="noreferrer">
+			<a href="https://twitch.tv/gagansuie" target="_blank" rel="noreferrer">
+				<IconSocialTwitch />
+			</a>
+			<a href="https://youtube.com/@gagansuie" target="_blank" rel="noreferrer">
 				<IconSocialYouTube />
 			</a>
 			<a href="https://tiktok.com/@gagansuie" target="_blank" rel="noreferrer">
 				<IconSocialTikTok />
-			</a> -->
+			</a>
 		</div>
 		<p>
 			<a href="https://codecrow.io" target="_blank" class="link link-hover">Code Crow © 2023</a>
