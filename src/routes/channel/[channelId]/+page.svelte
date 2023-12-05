@@ -20,7 +20,8 @@
 		is_sharing_screen,
 		is_sharing_webcam,
 		is_sharing_audio,
-		updateVideoItems
+		updateVideoItems,
+		is_sharing_obs
 	} from '$lib/stores/streamStore'
 	import DrawerRestream from '$lib/components/Channel/Chat/DrawerRestream.svelte'
 
@@ -280,7 +281,6 @@
 				}
 				break
 			case `channel-streaming-action-${$page.params.channelId}`:
-				console.log('got here----woo rtmps!!~~~', parsedMsg.data)
 				switch (parsedMsg.data.action) {
 					case 'toggleTrack':
 						if (channel) {

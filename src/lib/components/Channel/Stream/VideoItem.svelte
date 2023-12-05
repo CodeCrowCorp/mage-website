@@ -13,11 +13,11 @@
 		is_sharing_obs
 	} from '$lib/stores/streamStore'
 	import { emitChannelUpdate } from '$lib/websocket'
-	import { captureScreenShot, dataURLtoFile, getColoredRole, setRole } from '$lib/utils'
+	import { captureScreenShot, dataURLtoFile, formatTime, getColoredRole, setRole } from '$lib/utils'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
-	import { putImage } from '$lib/api'
+	import { get, putImage } from '$lib/api'
 	import LibLoader from '$lib/components/Global/LibLoader.svelte'
 
 	export let video: any, channel: any
@@ -86,11 +86,11 @@
 		handleAudioChanges()
 	}
 
-	// $: if (isScreenLive || iframeUrl) {
-	// 	toggleTimer(true)
-	// } else {
-	// 	toggleTimer(false)
-	// }
+	$: if (isScreenLive || iframeUrl) {
+		toggleTimer(true)
+	} else {
+		toggleTimer(false)
+	}
 
 	$: animate = isWebcamFocused ? '' : 'transition-all'
 
@@ -125,8 +125,10 @@
 				case 'obs':
 					if (video.obs) {
 						iframeUrl = video.obs.playback.iframe
+						$is_sharing_obs = true
 					} else {
 						iframeUrl = ''
+						$is_sharing_obs = false
 					}
 					break
 				case 'screen':
@@ -303,24 +305,6 @@
 		isMounted = true
 	})
 
-	//TODO: do this server-side
-	// is_sharing_obs.subscribe(async (value: any) => {
-	// 	if (value === false) {
-	// 		if (timerInterval) toggleTimer(false)
-	// 		if (streamId) {
-	// 			await patch(
-	// 				`analytics/stream/end?streamId=${streamId}`,
-	// 				{},
-	// 				{
-	// 					userId: $page.data.user?.userId,
-	// 					token: $page.data.user?.token
-	// 				}
-	// 			)
-	// 			streamId = ''
-	// 		}
-	// 	}
-	// })
-
 	is_sharing_screen.subscribe(async (value: any) => {
 		if (value === false) {
 			screenWhip?.disconnectStream()
@@ -397,13 +381,13 @@
 			if (timerInterval) return
 			timerInterval = setInterval(async () => {
 				try {
-					streamTime = Math.floor(streamTime) + 1
-					const hours = Math.floor(streamTime / 3600)
-					const minutes = Math.floor((streamTime % 3600) / 60)
-					const seconds = streamTime % 60
-					formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
-						.toString()
-						.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+					if (streamTime < 1) {
+						const inputId = video.obs?.uid || video.screen?.uid
+						const streamRecord = await get(`analytics/stream?inputId=${inputId}`)
+						streamTime = Math.floor((Date.now() - streamRecord?.start) / 1000)
+					}
+					streamTime += 1
+					formattedTime = formatTime(streamTime)
 					if (
 						!channel.thumbnail &&
 						video._id === channel.user &&
@@ -431,29 +415,19 @@
 		}
 	}
 
-	const onLibLoaded = (event: any) => {
-		if (obs_element && iframeUrl) {
-			try {
-				// The Cloudflare Stream SDK is ready to use
-				streamPlayer = event.detail.library(obs_element)
-				streamPlayer.addEventListener('durationchange', (event: any) => {
-					console.log('Duration change', event)
-				})
-				// streamPlayer.muted = video._id === $page.data.user?.userId
-				// streamPlayer.autoplay = true
-				// streamPlayer.controls = false
-				// streamPlayer.play()
-			} catch (err) {
-				console.log('err', err)
-			}
-		}
-	}
+	// const onLibLoaded = (event: any) => {
+	// 	try {
+	// 		// The Cloudflare Stream SDK is ready to use
+	// 		streamPlayer = event.detail.library(obs_element)
+	// 		streamPlayer.addEventListener('durationchange', (evt: any) => {
+	// 			console.log('Duration change', evt)
+	// 			streamTime = streamPlayer?.duration
+	// 		})
+	// 	} catch (err) {
+	// 		console.log('err', err)
+	// 	}
+	// }
 </script>
-
-<LibLoader
-	src="https://embed.cloudflarestream.com/embed/sdk.latest.js"
-	libraryDetectionObject="Stream"
-	on:loaded={onLibLoaded} />
 
 <div
 	class={iframeUrl || isScreenLive || isWebcamLive ? 'w-full h-full' : 'w-[500px] max-h-80'}
@@ -482,6 +456,10 @@
 						src={iframeUrl}
 						class="rounded-md w-full h-full"
 						allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;" />
+					<!-- <LibLoader
+						src="https://embed.cloudflarestream.com/embed/sdk.latest.js"
+						libraryDetectionObject="Stream"
+						on:loaded={onLibLoaded} /> -->
 				</div>
 			{/if}
 			{#if !iframeUrl}
