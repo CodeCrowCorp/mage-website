@@ -33,7 +33,7 @@
 		"eslint-config-prettier": "^9.0.0",
 		"eslint-plugin-svelte3": "^4.0.0",
 		"postcss": "^8.4.21",
-		"postcss-cli": "^10.1.0",
+		"postcss-cli": "^11.0.0",
 		"prettier": "^2.8.4 <3.2.0",
 		"prettier-plugin-svelte": "^2.10.1",
 		"svelte": "^3.55.1",
