@@ -13,7 +13,8 @@
 		is_sharing_screen,
 		is_sharing_webcam,
 		is_sharing_obs,
-		updateVideoItems
+		updateVideoItems,
+		is_wip_webrtc
 	} from '$lib/stores/streamStore'
 	import { channel_connection } from '$lib/stores/websocketStore'
 	import { onDestroy, onMount } from 'svelte'
@@ -273,7 +274,8 @@
 					on:click={() => {
 						$is_sharing_screen = !$is_sharing_screen
 					}}
-					disabled={$is_sharing_obs ||
+					disabled={$is_wip_webrtc ||
+						$is_sharing_obs ||
 						!isHostOrGuest ||
 						!isChannelSocketConnected ||
 						!videoItemIsActive}>
@@ -288,7 +290,8 @@
 					on:click={() => {
 						$is_sharing_webcam = !$is_sharing_webcam
 					}}
-					disabled={$is_sharing_obs ||
+					disabled={$is_wip_webrtc ||
+						$is_sharing_obs ||
 						!isHostOrGuest ||
 						!isChannelSocketConnected ||
 						!videoItemIsActive}>
@@ -303,7 +306,8 @@
 					on:click={() => {
 						$is_sharing_audio = !$is_sharing_audio
 					}}
-					disabled={$is_sharing_obs ||
+					disabled={$is_wip_webrtc ||
+						$is_sharing_obs ||
 						!isHostOrGuest ||
 						!isChannelSocketConnected ||
 						!videoItemIsActive}>
