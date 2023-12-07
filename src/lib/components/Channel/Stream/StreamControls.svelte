@@ -17,9 +17,7 @@
 	} from '$lib/stores/streamStore'
 	import { channel_connection } from '$lib/stores/websocketStore'
 	import { onDestroy, onMount } from 'svelte'
-	import IconShareObs from '$lib/assets/icons/channel/IconShareObs.svelte'
 	import IconAddGuest from '$lib/assets/icons/channel/IconAddGuest.svelte'
-	import { is_feature_apps_enabled } from '$lib/stores/remoteConfigStore'
 	import { is_restream_drawer_open } from '$lib/stores/channelStore'
 	import IconRefresh from '$lib/assets/icons/IconRefresh.svelte'
 	import IconCopy from '$lib/assets/icons/IconCopy.svelte'
@@ -58,27 +56,6 @@
 		})
 	}
 
-	const sendFcm = async ({
-		channelId,
-		channelTitle,
-		username
-	}: {
-		channelId: string
-		channelTitle: string
-		username: string
-	}) => {
-		if ($is_feature_apps_enabled) {
-			return await post(
-				`firebase/send-fcm`,
-				{ channelId, channelTitle, username },
-				{
-					userId: $page.data.user?.userId,
-					token: $page.data.user?.token
-				}
-			)
-		}
-	}
-
 	const deleteLiveInput = async ({
 		channelId,
 		userId,
@@ -99,17 +76,6 @@
 		}
 	}
 
-	const sendOutputs = async ({ liveInputUid }: { liveInputUid: string }) => {
-		return await post(
-			`outputs/send`,
-			{ liveInputUid },
-			{
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			}
-		)
-	}
-
 	const startScreenStream = async () => {
 		const liveInput = await createLiveInput({
 			channelId: `${$page.params.channelId}`,
@@ -123,11 +89,6 @@
 			}
 		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
-		await sendFcm({
-			channelId: $page.params.channelId,
-			channelTitle: channel.title,
-			username: $page.data.user?.user?.username
-		})
 	}
 
 	const stopScreenStream = async () => {
@@ -154,11 +115,6 @@
 			}
 		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
-		await sendFcm({
-			channelId: $page.params.channelId,
-			channelTitle: channel.title,
-			username: $page.data.user?.user?.username
-		})
 	}
 
 	const stopWebcamStream = async () => {
@@ -185,11 +141,6 @@
 			}
 		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
-		await sendFcm({
-			channelId: $page.params.channelId,
-			channelTitle: channel.title,
-			username: $page.data.user?.user?.username
-		})
 	}
 
 	const stopAudioStream = async () => {
@@ -276,11 +227,6 @@
 				recording: { mode: 'automatic' }
 			}
 		})
-		await sendFcm({
-			channelId: $page.params.channelId,
-			channelTitle: channel.title,
-			username: $page.data.user?.user?.username
-		})
 	}
 
 	const showStreamKeyModal = async () => {
@@ -300,7 +246,6 @@
 			token: $page.data.user?.token
 		})
 		urlList = urlList.filter((url: any) => url.isEnabled)
-		await sendOutputs({ liveInputUid: rtmps.rtmps.uid })
 	}
 </script>
 
