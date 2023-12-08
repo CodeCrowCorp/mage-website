@@ -51,6 +51,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 				userId,
 				token,
 				user
+			},
+			platform: {
+				twitch: { isConnected: false },
+				youtube: { isConnected: false }
 			}
 		}
 	}
