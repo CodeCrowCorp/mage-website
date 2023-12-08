@@ -23,7 +23,7 @@
 		is_chat_drawer_destroy,
 		was_chat_drawer_closed
 	} from '$lib/stores/channelStore'
-	import { is_feature_studio_mode_enabled } from '$lib/stores/remoteConfigStore'
+	import { is_feature_merge_platforms_enabled } from '$lib/stores/remoteConfigStore'
 
 	const dispatch = createEventDispatcher()
 	export let userCount: number = 1,
@@ -33,6 +33,7 @@
 		viewers: any[] = []
 
 	let isScrollable = false
+
 	$: isLive =
 		channel.videoItems?.some(
 			(input: any) =>
@@ -124,17 +125,21 @@
 							</label>
 							<DropdownViewers {channel} bind:viewers />
 						</div>
-						{#if $is_feature_studio_mode_enabled}
-							<span
-								class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center">
-								<IconSocialTwitch />
-								{25}
-							</span>
-							<span
-								class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center">
-								<IconSocialYouTube />
-								{255}
-							</span>
+						{#if $is_feature_merge_platforms_enabled}
+							{#if $page.data.platform?.twitch?.isConnected}
+								<span
+									class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center">
+									<IconSocialTwitch />
+									{getNumberInThousands(25 || 0)}
+								</span>
+							{/if}
+							{#if $page.data.platform?.youtube?.isConnected}
+								<span
+									class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center">
+									<IconSocialYouTube />
+									{getNumberInThousands(255 || 0)}
+								</span>
+							{/if}
 						{/if}
 						<label class="swap swap-rotate ml-auto">
 							<input type="checkbox" bind:checked={$is_chat_drawer_open} />
