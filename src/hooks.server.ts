@@ -69,7 +69,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		} else {
 			if (
 				pathname === '/maintenance' ||
-				(pathname === '/premium' && (env.PUBLIC_FEATURE_PREMIUM === 'false' || !user))
+				(pathname === '/premium' && env.PUBLIC_FEATURE_PREMIUM === 'false')
 			) {
 				throw redirect(302, '/browse')
 			} else {
