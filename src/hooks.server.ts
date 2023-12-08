@@ -10,6 +10,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
 	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
 
+	//TODO: get and save params from twitchAuthCallback
+	//TODO: get and save params from youTubeAuthCallback
+
 	let user: any = event.locals.user?.user || ''
 	const role = getWritableVal(user_role)
 	const maintenanceMode: boolean = env.PUBLIC_MAINTENANCE_MODE === 'true'
@@ -45,7 +48,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 				maxAge: 60 * 60 * 24 * 30
 			})
 		}
-
+		//TODO: if need to update platform object, visit app.d.ts file
 		event.locals = {
 			user: {
 				userId,
