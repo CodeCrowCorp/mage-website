@@ -4,8 +4,6 @@
 	import { page } from '$app/stores'
 	import { getHref, isValidRtmp } from '$lib/utils'
 	import { is_restream_drawer_open } from '$lib/stores/channelStore'
-	import IconMore from '$lib/assets/icons/IconMore.svelte'
-	import IconChatDelete from '$lib/assets/icons/chat/IconChatDelete.svelte'
 	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
 	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
 	import { env } from '$env/dynamic/public'
@@ -36,7 +34,7 @@
 
 	const addNew = async () => {
 		loading = true
-		await await put('output', payload, auth)
+		await put('output', payload, auth)
 		loading = false
 		await getAll()
 		showAddModal = false
