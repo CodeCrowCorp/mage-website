@@ -126,7 +126,7 @@
 		bind:checked={$is_restream_drawer_open} />
 
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<div class="drawer-side z-50" on:click={overlayClick}>
+	<div class="drawer-side z-50 overflow-x-hidden" on:click={overlayClick}>
 		<label id="overlay" for="restream-drawer" aria-label="close sidebar" class="drawer-overlay" />
 		<div class="flex lg:h-full p-5">
 			<div class="bg-base-200 w-80 md:w-[24rem] h-full flex flex-col rounded-lg lg:mb-0 mb-20">
