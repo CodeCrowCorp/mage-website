@@ -247,6 +247,7 @@
 			token: $page.data.user?.token
 		})
 		urlList = urlList.filter((url: any) => url.isEnabled)
+		//TODO: call the APIs to update twitch/youtube channel information.
 	}
 </script>
 
