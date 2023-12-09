@@ -125,17 +125,19 @@
 							<DropdownViewers {channel} bind:viewers />
 						</div>
 						{#if $is_feature_merge_platforms_enabled}
-							{#each channel.platforms as platform}
-								<span
-									class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center">
-									{#if platform.name === 'twitch'}
-										<IconSocialTwitch />
-									{:else if platform.name === 'youtube'}
-										<IconSocialYouTube />
-									{/if}
-									{getNumberInThousands(platform.count || 0)}
-								</span>
-							{/each}
+							{#if channel.platforms}
+								{#each channel.platforms as platform}
+									<span
+										class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center">
+										{#if platform.name === 'twitch'}
+											<IconSocialTwitch />
+										{:else if platform.name === 'youtube'}
+											<IconSocialYouTube />
+										{/if}
+										{getNumberInThousands(platform.count || 0)}
+									</span>
+								{/each}
+							{/if}
 						{/if}
 						<label class="swap swap-rotate ml-auto">
 							<input type="checkbox" bind:checked={$is_chat_drawer_open} />
