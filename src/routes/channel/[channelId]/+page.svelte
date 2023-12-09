@@ -276,6 +276,14 @@
 							// for new users joining the channel
 							const liveInputs = await get(`live-inputs?channelId=${$page.params.channelId}`)
 							channel.videoItems = updateVideoItems([...activeGuests], liveInputs)
+
+							// check if host's video and is connected
+							const isConnectedUser = channel.videoItems.some(
+								(videoItem: any) => videoItem.isConnected && videoItem._id === channel.user
+							)
+							if (isConnectedUser) {
+								channel.platforms = await get(`outputs/platforms?userId=${channel.user}`)
+							}
 						}
 					}
 				}
@@ -290,9 +298,17 @@
 							// 	}
 							// } else {
 							channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
+							if (channel.user === parsedMsg.data.video._id && parsedMsg.data.video.isConnected) {
+								channel.platforms = parsedMsg.data.video.platforms
+							}
 							// }
 						}
 						break
+				}
+				break
+			case `channel-platform-count-${$page.params.channelId}`:
+				if (channel) {
+					channel.platforms = parsedMsg.platforms
 				}
 				break
 		}
