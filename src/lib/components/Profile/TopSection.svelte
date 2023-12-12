@@ -5,7 +5,7 @@
 	import { put, del } from '$lib/api'
 	import { get } from '$lib/api'
 	import { createEffect, getNumberInThousands } from '$lib/utils'
-	import { is_feature_affiliate_enabled } from '$lib/stores/remoteConfigStore'
+	import { is_feature_premium_enabled } from '$lib/stores/remoteConfigStore'
 
 	export let profile: any,
 		showDrawer = false,
@@ -97,7 +97,7 @@
 					<li>
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<label for="edit-profile-drawer" on:click={() => (showDrawer = true)}>Edit</label>
-						{#if $is_feature_affiliate_enabled}
+						{#if $is_feature_premium_enabled}
 							<a href="/browse">Setup Payouts</a>
 							<a href="/browse">See Payouts</a>
 						{/if}

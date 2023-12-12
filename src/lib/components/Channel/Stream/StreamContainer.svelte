@@ -2,6 +2,8 @@
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
 	import IconChatDrawerChevronOpen from '$lib/assets/icons/channel/IconChatDrawerChevronOpen.svelte'
 	import IconChatDrawerChevronClose from '$lib/assets/icons/channel/IconChatDrawerChevronClose.svelte'
+	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
+	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
 	import IconViews from '$lib/assets/icons/IconViews.svelte'
 	import StreamControls from '$lib/components/Channel/Stream/StreamControls.svelte'
 	import DropdownViewers from '$lib/components/Channel/Stream/DropdownViewers.svelte'
@@ -21,6 +23,7 @@
 		is_chat_drawer_destroy,
 		was_chat_drawer_closed
 	} from '$lib/stores/channelStore'
+	import { is_feature_merge_platforms_enabled } from '$lib/stores/remoteConfigStore'
 
 	const dispatch = createEventDispatcher()
 	export let userCount: number = 1,
@@ -30,6 +33,14 @@
 		viewers: any[] = []
 
 	let isScrollable = false
+	$: isLive =
+		channel.videoItems?.some(
+			(input: any) =>
+				input?.obs?.isConnected ||
+				input?.screen?.isConnected ||
+				input?.webcam?.isConnected ||
+				input?.audio?.isConnected
+		) ?? false
 
 	function autoActive(node: Element) {
 		const observer = new IntersectionObserver(callback, { threshold: 0.5 })
@@ -88,13 +99,11 @@
 			<div class="carousel-item h-full" id={nextchannel?._id} use:autoActive>
 				<div class="flex flex-col w-full m-3">
 					<div class="flex gap-2 mb-3">
-						<span
-							class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center {channel
-								.videoItems?.length
-								? 'bg-red-700 hover:bg-red-700'
-								: ''}">
+						<button
+							class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center bg-red-700 hover:bg-red-700"
+							disabled={!isLive}>
 							LIVE
-						</span>
+						</button>
 						<div
 							class="tooltip tooltip-bottom"
 							data-tip="{getNumberInThousands(channel.viewDetails?.count || 0)} views">
@@ -115,6 +124,21 @@
 							</label>
 							<DropdownViewers {channel} bind:viewers />
 						</div>
+						{#if $is_feature_merge_platforms_enabled}
+							{#if channel.platforms}
+								{#each channel.platforms as platform}
+									<span
+										class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center">
+										{#if platform.name === 'twitch'}
+											<IconSocialTwitch />
+										{:else if platform.name === 'youtube'}
+											<IconSocialYouTube />
+										{/if}
+										{getNumberInThousands(platform.count || 0)}
+									</span>
+								{/each}
+							{/if}
+						{/if}
 						<label class="swap swap-rotate ml-auto">
 							<input type="checkbox" bind:checked={$is_chat_drawer_open} />
 							<IconChatDrawerChevronOpen />
@@ -129,6 +153,6 @@
 		{/each}
 	</div>
 	<div class="absolute lg:bottom-0 bottom-10 m-3 w-full items-center justify-center flex">
-		<StreamControls bind:isHostOrGuest bind:channel bind:isScrollable />
+		<StreamControls bind:isHostOrGuest bind:channel bind:isScrollable bind:viewers />
 	</div>
 </div>

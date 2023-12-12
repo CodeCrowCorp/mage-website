@@ -20,7 +20,8 @@
 		is_sharing_screen,
 		is_sharing_webcam,
 		is_sharing_audio,
-		updateVideoItems
+		updateVideoItems,
+		is_sharing_obs
 	} from '$lib/stores/streamStore'
 	import DrawerRestream from '$lib/components/Channel/Chat/DrawerRestream.svelte'
 
@@ -275,6 +276,14 @@
 							// for new users joining the channel
 							const liveInputs = await get(`live-inputs?channelId=${$page.params.channelId}`)
 							channel.videoItems = updateVideoItems([...activeGuests], liveInputs)
+
+							// check if host's video and is connected
+							const isConnectedUser = channel.videoItems.some(
+								(videoItem: any) => videoItem.isConnected && videoItem._id === channel.user
+							)
+							if (isConnectedUser) {
+								channel.platforms = await get(`outputs/platforms?userId=${channel.user}`)
+							}
 						}
 					}
 				}
@@ -283,15 +292,23 @@
 				switch (parsedMsg.data.action) {
 					case 'toggleTrack':
 						if (channel) {
-							if ($page.data.user?.userId) {
-								if ($page.data.user.userId !== parsedMsg.data.video._id) {
-									channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
-								}
-							} else {
-								channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
+							// if ($page.data.user?.userId) {
+							// 	if ($page.data.user.userId !== parsedMsg.data.video._id) {
+							// 		channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
+							// 	}
+							// } else {
+							channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
+							if (channel.user === parsedMsg.data.video._id && parsedMsg.data.video.isConnected) {
+								channel.platforms = parsedMsg.data.video.platforms
 							}
+							// }
 						}
 						break
+				}
+				break
+			case `channel-platform-count-${$page.params.channelId}`:
+				if (channel) {
+					channel.platforms = parsedMsg.platforms
 				}
 				break
 		}

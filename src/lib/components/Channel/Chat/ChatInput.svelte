@@ -218,7 +218,7 @@
 
 <form class="rounded-lg bg-base-200 p-2 w-full relative">
 	<button
-		class="btn text-white border-none tooltip font-normal normal-case mr-1 {!isHost
+		class="btn border-none tooltip font-normal normal-case mr-1 {!isHost
 			? 'no-animation'
 			: ''} {channel.isAiChatEnabled ? 'btn-primary' : 'btn-neutral'}"
 		data-tip="AI"
@@ -233,7 +233,7 @@
 	<GifPicker onSelect={onGifSelect} {isChannelSocketConnected} />
 	<button
 		type="button"
-		class="btn btn-neutral text-white border-none tooltip font-normal normal-case"
+		class="btn btn-neutral border-none tooltip font-normal normal-case"
 		data-tip="Code snippet"
 		on:click={makeCodeSnippet}
 		disabled={!isChannelSocketConnected || !$page.data.user?.userId}>
@@ -280,7 +280,7 @@
 								chatMessage = chatMessage.replace(/@/g, '@' + user.username)
 								selectedUser = idx
 							}}>
-							<span class={'text-sm w-full' + (selectedUser == idx ? ' bg-gray-600' : '')}>
+							<span class={'text-sm w-full' + (selectedUser == idx ? ' bg-gray-800' : '')}>
 								@{user.username}
 							</span>
 						</li>

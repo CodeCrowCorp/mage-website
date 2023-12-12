@@ -13,11 +13,11 @@
 		is_sharing_obs
 	} from '$lib/stores/streamStore'
 	import { emitChannelUpdate } from '$lib/websocket'
-	import { captureScreenShot, dataURLtoFile, getColoredRole, setRole } from '$lib/utils'
+	import { captureScreenShot, dataURLtoFile, formatTime, getColoredRole, setRole } from '$lib/utils'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
-	import { get, patch, putImage } from '$lib/api'
+	import { get, putImage } from '$lib/api'
 	import LibLoader from '$lib/components/Global/LibLoader.svelte'
 
 	export let video: any, channel: any
@@ -46,9 +46,7 @@
 		timerInterval: any,
 		formattedTime: string = '00:00:00',
 		isHoverVideo: boolean = false,
-		obs_modal: any = null,
 		iframeUrl: string = '',
-		streamId = '',
 		streamPlayer: any
 
 	// WHIP/WHEP variables that determine if stream is coming in
@@ -125,12 +123,12 @@
 		if ($page.data.user?.userId === video._id) {
 			switch (trackType) {
 				case 'obs':
-					if ($is_sharing_obs) {
-						iframeUrl = video.obs?.playback?.iframe
-						// console.log('got here---- video.obs.playback?.iframeUrl', iframeUrl)
+					if (video.obs) {
+						iframeUrl = video.obs.playback.iframe
+						$is_sharing_obs = true
 					} else {
-						$is_sharing_obs = false
 						iframeUrl = ''
+						$is_sharing_obs = false
 					}
 					break
 				case 'screen':
@@ -202,8 +200,11 @@
 		} else {
 			switch (trackType) {
 				case 'obs':
-					iframeUrl = video.obs?.playback?.iframe
-					// console.log('got here---- video.obs.playback?.iframeUrl', iframeUrl)
+					if (video.obs) {
+						iframeUrl = video.obs.playback.iframe
+					} else {
+						iframeUrl = ''
+					}
 					break
 				case 'screen':
 					if (video.screen && screen_element) {
@@ -273,7 +274,6 @@
 	}
 
 	onMount(() => {
-		toggleTimer(false)
 		isGuest = channel?.guests?.includes(video._id)
 		handleObsChanges()
 
@@ -305,40 +305,9 @@
 		isMounted = true
 	})
 
-	is_sharing_obs.subscribe(async (value: any) => {
-		if (value === false) {
-			if (timerInterval) toggleTimer(false)
-			if (streamId) {
-				await patch(
-					`analytics/stream/end?streamId=${streamId}`,
-					{},
-					{
-						userId: $page.data.user?.userId,
-						token: $page.data.user?.token
-					}
-				)
-				streamId = ''
-			}
-		} else if (value === true) {
-			obs_modal?.showModal()
-		}
-	})
-
 	is_sharing_screen.subscribe(async (value: any) => {
 		if (value === false) {
 			screenWhip?.disconnectStream()
-			if (timerInterval) toggleTimer(false)
-			if (streamId) {
-				await patch(
-					`analytics/stream/end?streamId=${streamId}`,
-					{},
-					{
-						userId: $page.data.user?.userId,
-						token: $page.data.user?.token
-					}
-				)
-				streamId = ''
-			}
 		}
 	})
 
@@ -408,36 +377,17 @@
 			timerInterval = null
 			streamTime = 0
 			formattedTime = '00:00:00'
-			streamId = ''
 		} else {
 			if (timerInterval) return
 			timerInterval = setInterval(async () => {
 				try {
-					streamId = video.screen?.streamId || video.obs?.streamId
-					if (!streamId) return
-					if (streamId && streamTime === 0) {
-						const streamRecord = await get(`analytics/stream?streamId=${streamId}`)
-						streamTime = streamRecord ? (Date.now() - streamRecord.start) / 1000 : 0
+					if (streamTime < 1) {
+						const inputId = video.obs?.uid || video.screen?.uid
+						const streamRecord = await get(`analytics/stream?inputId=${inputId}`)
+						streamTime = Math.floor((Date.now() - streamRecord?.start) / 1000)
 					}
-					streamTime = Math.floor(streamTime) + 1
-					const hours = Math.floor(streamTime / 3600)
-					const minutes = Math.floor((streamTime % 3600) / 60)
-					const seconds = streamTime % 60
-					formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
-						.toString()
-						.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-					//NOTE: check if mine and has been 5 seconds
-					if (video._id === $page.data.user?.userId && streamTime % 5 == 0) {
-						await patch(
-							`analytics/stream?streamId=${streamId}`,
-							{},
-							{
-								userId: $page.data.user?.userId,
-								token: $page.data.user?.token
-							}
-						)
-					}
-
+					streamTime += 1
+					formattedTime = formatTime(streamTime)
 					if (
 						!channel.thumbnail &&
 						video._id === channel.user &&
@@ -465,26 +415,19 @@
 		}
 	}
 
-	const onLibLoaded = (event: any) => {
-		if (obs_element && iframeUrl) {
-			try {
-				// The Cloudflare Stream SDK is ready to use
-				streamPlayer = event.detail.library(obs_element)
-				streamPlayer.muted = video._id === $page.data.user?.userId
-				streamPlayer.autoplay = true
-				// streamPlayer.controls = false
-				// streamPlayer.play()
-			} catch (err) {
-				console.log('err', err)
-			}
-		}
-	}
+	// const onLibLoaded = (event: any) => {
+	// 	try {
+	// 		// The Cloudflare Stream SDK is ready to use
+	// 		streamPlayer = event.detail.library(obs_element)
+	// 		streamPlayer.addEventListener('durationchange', (evt: any) => {
+	// 			console.log('Duration change', evt)
+	// 			streamTime = streamPlayer?.duration
+	// 		})
+	// 	} catch (err) {
+	// 		console.log('err', err)
+	// 	}
+	// }
 </script>
-
-<LibLoader
-	src="https://embed.cloudflarestream.com/embed/sdk.latest.js"
-	libraryDetectionObject="Stream"
-	on:loaded={onLibLoaded} />
 
 <div
 	class={iframeUrl || isScreenLive || isWebcamLive ? 'w-full h-full' : 'w-[500px] max-h-80'}
@@ -513,6 +456,10 @@
 						src={iframeUrl}
 						class="rounded-md w-full h-full"
 						allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;" />
+					<!-- <LibLoader
+						src="https://embed.cloudflarestream.com/embed/sdk.latest.js"
+						libraryDetectionObject="Stream"
+						on:loaded={onLibLoaded} /> -->
 				</div>
 			{/if}
 			{#if !iframeUrl}
@@ -577,29 +524,3 @@
 		</div>
 	</div>
 </div>
-
-<dialog bind:this={obs_modal} class="modal">
-	<form method="dialog" class="modal-box">
-		<h3 class="font-bold text-lg">Copy to OBS</h3>
-		<h5 class="font-semibold text-warning">This stream key is reset each time you go live</h5>
-		<p class="py-8">
-			Server: <br />
-			{#if !video.obs?.rtmps?.url}
-				<span class="loading loading-dots loading-sm" />
-			{:else}
-				{video.obs?.rtmps?.url}
-			{/if}
-		</p>
-		<p class="break-all">
-			Stream Key: <br />
-			{#if !video.obs?.rtmps?.streamKey}
-				<span class="loading loading-dots loading-sm" />
-			{:else}
-				{video.obs?.rtmps?.streamKey}
-			{/if}
-		</p>
-		<div class="modal-action">
-			<button class="btn">Close</button>
-		</div>
-	</form>
-</dialog>

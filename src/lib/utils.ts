@@ -371,3 +371,34 @@ export const isValidUrl = (url: string) => {
 	)
 	return pattern.test(url)
 }
+
+export const getHref = async ({
+	provider,
+	apiUrl,
+	xApiKey
+}: {
+	provider: string
+	apiUrl: string
+	xApiKey: string
+}) => {
+	const response = await fetch(`${apiUrl}/auth/${provider}`, {
+		headers: {
+			Accept: '*/*',
+			'x-api-key': xApiKey
+		}
+	})
+	const { loginUrl } = await response.json()
+	window.location.replace(loginUrl)
+}
+
+export const formatTime = (streamTime: number) => {
+	const hours = Math.floor(streamTime / 3600)
+	const minutes = Math.floor((streamTime % 3600) / 60)
+	const seconds = streamTime % 60
+
+	const paddedHours = hours.toString().padStart(2, '0')
+	const paddedMinutes = minutes.toString().padStart(2, '0')
+	const paddedSeconds = seconds.toString().padStart(2, '0')
+
+	return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`
+}

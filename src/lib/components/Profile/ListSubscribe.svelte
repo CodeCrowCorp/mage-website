@@ -1,7 +1,7 @@
 <script lang="ts">
 	import FollowItem from '$lib/components/Profile/Elements/FollowItem.svelte'
 	import { follower_count, following_count } from '$lib/stores/profileStore'
-	import { get } from '$lib/api.js'
+	import { get } from '$lib/api'
 	import LoadMoreContaier from './LoadMore.svelte'
 	import { page } from '$app/stores'
 	import { getNumberInThousands } from '$lib/utils'

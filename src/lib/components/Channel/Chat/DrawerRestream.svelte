@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { get, put, del, patch } from '$lib/api.js'
+	import { get, put, del, patch, post } from '$lib/api'
 	import { page } from '$app/stores'
-	import { isValidRtmp } from '$lib/utils'
+	import { getHref, isValidRtmp } from '$lib/utils'
 	import { is_restream_drawer_open } from '$lib/stores/channelStore'
-	import IconMore from '$lib/assets/icons/IconMore.svelte'
-	import IconChatDelete from '$lib/assets/icons/chat/IconChatDelete.svelte'
+	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
+	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
+	import { env } from '$env/dynamic/public'
 
 	$: auth = {
 		userId: $page.data.user?.userId,
@@ -33,7 +34,7 @@
 
 	const addNew = async () => {
 		loading = true
-		await await put('output', payload, auth)
+		await put('output', payload, auth)
 		loading = false
 		await getAll()
 		showAddModal = false
@@ -79,16 +80,41 @@
 		getAll()
 	})
 
+	const getLiveInput = async () => {
+		return await get(
+			`live-input?channelId=${$page.params.channelId}&userId=${$page.data.user?.userId}`,
+			{
+				userId: $page.data.user?.userId,
+				token: $page.data.user?.token
+			}
+		)
+	}
+
+	const sendOutputs = async ({ liveInputUid }: { liveInputUid: string }) => {
+		if ($page.data.user?.userId) {
+			return await post(
+				`outputs/send`,
+				{ liveInputUid },
+				{
+					userId: $page.data.user?.userId,
+					token: $page.data.user?.token
+				}
+			)
+		}
+	}
+
 	const toggleOutput = async (streamItem: any) => {
-		console.log('got here----streamItem', JSON.stringify(streamItem))
+		streamItem.isEnabled = !streamItem.isEnabled
 		streamItem = await patch(
 			`output/toggle?outputId=${streamItem._id}`,
-			{ isEnabled: !streamItem.isEnabled },
+			{ isEnabled: streamItem.isEnabled },
 			auth
 		)
 		urlList = urlList.map((item: any) =>
 			item._id === streamItem._id ? { ...item, isEnabled: streamItem.isEnabled } : item
 		)
+		const rtmps = await getLiveInput()
+		await sendOutputs({ liveInputUid: rtmps.rtmps.uid })
 	}
 </script>
 
@@ -100,7 +126,7 @@
 		bind:checked={$is_restream_drawer_open} />
 
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<div class="drawer-side z-50" on:click={overlayClick}>
+	<div class="drawer-side z-50 overflow-x-hidden" on:click={overlayClick}>
 		<label id="overlay" for="restream-drawer" aria-label="close sidebar" class="drawer-overlay" />
 		<div class="flex lg:h-full p-5">
 			<div class="bg-base-200 w-80 md:w-[24rem] h-full flex flex-col rounded-lg lg:mb-0 mb-20">
@@ -118,6 +144,7 @@
 					</button>
 				</p>
 				<div class="flex flex-col p-3">
+					<span class="text-warning">Restreaming is currently only available for RTMP streams</span>
 					{#each urlList as item}
 						<div
 							class="bg-base-100 p-4 my-1 flex justify-between items-center h-fit font-normal normal-case rounded gap-3 border {item.isEnabled
@@ -172,8 +199,32 @@
 				<dialog bind:this={add_output_modal} class={`modal ${showAddModal && 'modal-open'}`}>
 					<div class="modal-box">
 						<h3 class="font-bold text-lg">Add new stream</h3>
-
 						<div class="form-control w-full pt-4">
+							<div class="flex gap-3">
+								{#if env.PUBLIC_CROSS_ORIGIN === 'false'}
+									<a class="btn btn-sm" href="{env.PUBLIC_API_URL}/auth/twitch"
+										><IconSocialTwitch /> Twitch</a>
+									<a class="btn btn-sm" href="{env.PUBLIC_API_URL}/auth/youtube"
+										><IconSocialYouTube /> YouTube</a>
+								{:else}
+									<button
+										class="btn btn-sm"
+										on:click={async () =>
+											await getHref({
+												provider: 'twitch',
+												apiUrl: env.PUBLIC_API_URL,
+												xApiKey: env.PUBLIC_X_API_KEY
+											})}><IconSocialTwitch /> Twitch</button>
+									<button
+										class="btn btn-sm"
+										on:click={async () =>
+											await getHref({
+												provider: 'youtube',
+												apiUrl: env.PUBLIC_API_URL,
+												xApiKey: env.PUBLIC_X_API_KEY
+											})}><IconSocialYouTube /> YouTube</button>
+								{/if}
+							</div>
 							<label class="label">
 								<span class="label-text">Title</span>
 							</label>

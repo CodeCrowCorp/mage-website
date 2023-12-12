@@ -214,11 +214,9 @@
 						</div>
 					</div>
 
-					<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
-						<button
-							type="button"
-							class="btn btn-neutral text-white grow"
-							on:click={() => toggleDrawer()}>Cancel</button>
+					<div class="flex flex-row gap-2 mt-auto p-3">
+						<button type="button" class="btn btn-neutral grow" on:click={() => toggleDrawer()}
+							>Cancel</button>
 						<button type="submit" class="btn btn-primary grow">Edit</button>
 					</div>
 				</div>
@@ -254,7 +252,7 @@
 	}
 
 	:global(.svelte-tags-input-tag) {
-		background-color: hsl(var(--p) / var(--tw-bg-opacity)) !important;
+		/* background-color: hsl(var(--p) / var(--tw-bg-opacity)) !important; */
 		padding-left: 0.5rem !important;
 		padding-right: 0.5rem !important;
 		border-radius: var(--rounded-badge, 1.5rem) !important;
