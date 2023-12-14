@@ -17,7 +17,7 @@
 	import { platform_connection, platform_message } from '$lib/stores/websocketStore'
 	import { isJsonString } from '$lib/utils'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
-	import { isOnline } from '$lib/stores/userStore'
+	import { is_online } from '$lib/stores/userStore'
 	import { current_theme } from '$lib/stores/helperStore'
 	import {
 		is_feature_video_responses_enabled,
@@ -103,9 +103,9 @@
 
 	platform_connection.subscribe(async (value: any) => {
 		if (!value) return
-		$isOnline = value === 'open'
+		$is_online = value === 'open'
 		if ($page.data.user?.userId && value === 'open') {
-			emitUserConnection({ userId: $page.data.user?.userId, isOnline: $isOnline })
+			emitUserConnection({ userId: $page.data.user?.userId, isOnline: $is_online })
 		}
 	})
 </script>

@@ -7,10 +7,10 @@
 	import IconChatGuest from '$lib/assets/icons/chat/IconChatGuest.svelte'
 	import { draggable } from '@neodrag/svelte'
 	import {
-		is_sharing_audio,
-		is_sharing_screen,
+		is_sharing_webrtc,
+		is_sharing_rtmp,
 		is_sharing_webcam,
-		is_sharing_obs
+		is_sharing_audio
 	} from '$lib/stores/streamStore'
 	import { emitChannelUpdate } from '$lib/websocket'
 	import { captureScreenShot, dataURLtoFile, formatTime, getColoredRole, setRole } from '$lib/utils'
@@ -18,14 +18,13 @@
 	import { addScreen, getScreen, removeScreen } from '$lib/stream-utils'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { get, putImage } from '$lib/api'
-	import LibLoader from '$lib/components/Global/LibLoader.svelte'
+	// import LibLoader from '$lib/components/Global/LibLoader.svelte'
 
 	export let video: any, channel: any
 
 	let role = '',
 		coloredRole: any = {},
 		isGuest = false,
-		obs_element: HTMLIFrameElement,
 		screen_element: HTMLVideoElement,
 		webcam_element: HTMLVideoElement,
 		audio_element: HTMLAudioElement,
@@ -46,8 +45,7 @@
 		timerInterval: any,
 		formattedTime: string = '00:00:00',
 		isHoverVideo: boolean = false,
-		iframeUrl: string = '',
-		streamPlayer: any
+		iframeUrl: string = ''
 
 	// WHIP/WHEP variables that determine if stream is coming in
 	$: isScreenLive = false
@@ -70,7 +68,7 @@
 		video._id !== $page.data.user?.userId &&
 		role !== '🤖 AI'
 
-	$: if (isMounted && video.obs !== prevObs) {
+	$: if (isMounted && video.rtmps !== prevObs) {
 		handleObsChanges()
 	}
 
@@ -95,9 +93,9 @@
 	$: animate = isWebcamFocused ? '' : 'transition-all'
 
 	const handleObsChanges = () => {
-		prevObs = video.obs
+		prevObs = video.rtmps
 		toggleClient({
-			trackType: 'obs'
+			trackType: 'rtmp'
 		})
 	}
 	const handleScreenChanges = () => {
@@ -122,17 +120,17 @@
 	const toggleClient = async ({ trackType }: { trackType: string }) => {
 		if ($page.data.user?.userId === video._id) {
 			switch (trackType) {
-				case 'obs':
-					if (video.obs) {
-						iframeUrl = video.obs.playback.iframe
-						$is_sharing_obs = true
+				case 'rtmp':
+					if (video.rtmps) {
+						iframeUrl = video.rtmps.playback.iframe
+						$is_sharing_rtmp = true
 					} else {
 						iframeUrl = ''
-						$is_sharing_obs = false
+						$is_sharing_rtmp = false
 					}
 					break
 				case 'screen':
-					if (video.screen && $is_sharing_screen) {
+					if (video.screen && $is_sharing_webrtc) {
 						const key = video.screen.webRTC.url + '-' + video._id
 						const existed = getScreen(key)
 						screenWhip =
@@ -141,12 +139,12 @@
 						if (existed) {
 							existed.videoElement = screen_element
 							screen_element.srcObject = existed.localStream
-							$is_sharing_screen = true
+							$is_sharing_webrtc = true
 							isScreenLive = true
 						}
 						addScreen(key, screenWhip)
 						screenWhip.addEventListener(`localStreamStopped-${trackType}`, async () => {
-							$is_sharing_screen = false
+							$is_sharing_webrtc = false
 							isScreenLive = false
 							removeScreen(key)
 						})
@@ -155,7 +153,7 @@
 						if (screen_element) {
 							screen_element.srcObject = null
 						}
-						$is_sharing_screen = false
+						$is_sharing_webrtc = false
 						isScreenLive = false
 					}
 					break
@@ -199,9 +197,9 @@
 			}
 		} else {
 			switch (trackType) {
-				case 'obs':
-					if (video.obs) {
-						iframeUrl = video.obs.playback.iframe
+				case 'rtmp':
+					if (video.rtmps) {
+						iframeUrl = video.rtmps.playback.iframe
 					} else {
 						iframeUrl = ''
 					}
@@ -305,7 +303,7 @@
 		isMounted = true
 	})
 
-	is_sharing_screen.subscribe(async (value: any) => {
+	is_sharing_webrtc.subscribe(async (value: any) => {
 		if (value === false) {
 			screenWhip?.disconnectStream()
 		}
@@ -382,7 +380,7 @@
 			timerInterval = setInterval(async () => {
 				try {
 					if (streamTime < 1) {
-						const inputId = video.obs?.uid || video.screen?.uid
+						const inputId = video.rtmps?.uid || video.screen?.uid
 						const streamRecord = await get(`analytics/stream?inputId=${inputId}`)
 						streamTime = Math.floor((Date.now() - streamRecord?.start) / 1000)
 					}
@@ -427,6 +425,11 @@
 	// 		console.log('err', err)
 	// 	}
 	// }
+	// <LibLoader
+	// 	src="https://embed.cloudflarestream.com/embed/sdk.latest.js"
+	// 	libraryDetectionObject="Stream"
+	// 	on:loaded={onLibLoaded}
+	// />
 </script>
 
 <div
@@ -452,14 +455,9 @@
 			{#if iframeUrl}
 				<div class="absolute rounded-md w-full h-full">
 					<iframe
-						bind:this={obs_element}
 						src={iframeUrl}
 						class="rounded-md w-full h-full"
 						allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;" />
-					<!-- <LibLoader
-						src="https://embed.cloudflarestream.com/embed/sdk.latest.js"
-						libraryDetectionObject="Stream"
-						on:loaded={onLibLoaded} /> -->
 				</div>
 			{/if}
 			{#if !iframeUrl}
