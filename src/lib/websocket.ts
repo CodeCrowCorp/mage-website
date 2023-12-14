@@ -31,6 +31,7 @@ const emitChannelUpdate = ({
 	delete noSocketChannel.userDetails
 	delete noSocketChannel.planDetails
 	delete noSocketChannel.viewDetails
+	delete noSocketChannel.platforms
 	channelSocket.send(
 		JSON.stringify({ eventName: `channel-update`, channel: noSocketChannel, roleUpdate })
 	)

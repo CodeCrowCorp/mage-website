@@ -16,13 +16,7 @@
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import DrawerEditChannel from '$lib/components/Channel/Chat/DrawerEditChannel.svelte'
-	import {
-		is_sharing_screen,
-		is_sharing_webcam,
-		is_sharing_audio,
-		updateVideoItems,
-		is_sharing_obs
-	} from '$lib/stores/streamStore'
+	import { is_sharing_webrtc, updateVideoItems } from '$lib/stores/streamStore'
 	import DrawerRestream from '$lib/components/Channel/Chat/DrawerRestream.svelte'
 
 	let channel: any,
@@ -41,13 +35,9 @@
 	$: if (channel) {
 		if (channel._id !== $page.params.channelId) {
 			if (isHostOrGuest) {
-				if ($is_sharing_screen) $is_sharing_screen = false
-				if ($is_sharing_webcam) $is_sharing_webcam = false
-				if ($is_sharing_audio) $is_sharing_audio = false
+				if ($is_sharing_webrtc) $is_sharing_webrtc = false
 			} else {
-				$is_sharing_screen = undefined
-				$is_sharing_webcam = undefined
-				$is_sharing_audio = undefined
+				$is_sharing_webrtc = undefined
 			}
 			handleWebsocket()
 			timeoutConnection()
@@ -82,13 +72,9 @@
 
 	onDestroy(async () => {
 		if (isHostOrGuest) {
-			if ($is_sharing_screen) $is_sharing_screen = false
-			if ($is_sharing_webcam) $is_sharing_webcam = false
-			if ($is_sharing_audio) $is_sharing_audio = false
+			if ($is_sharing_webrtc) $is_sharing_webrtc = false
 		} else {
-			$is_sharing_screen = undefined
-			$is_sharing_webcam = undefined
-			$is_sharing_audio = undefined
+			$is_sharing_webrtc = undefined
 		}
 		channels.forEach((ch: any) => {
 			if (ch.socket && ch.socket.constructor === WebSocket) ch.socket.close()
@@ -169,9 +155,11 @@
 	const attemptReconnect = () => {
 		setTimeout(async () => {
 			console.log('Reconnecting to WebSocket...')
-			const chan = channels.find((ch: any) => ch._id === $page.params.channelId)
-			delete chan.socket
-			await handleWebsocket()
+			channel = channels.find((ch: any) => ch._id === $page.params.channelId)
+			if (channel) {
+				delete channel.socket
+				await handleWebsocket()
+			}
 		}, 4000)
 	}
 
@@ -228,7 +216,9 @@
 					socket: channel.socket,
 					videoItems: channel.videoItems,
 					userDetails: channel.userDetails,
-					planDetails: channel.planDetails
+					planDetails: channel.planDetails,
+					viewDetails: channel.viewDetails,
+					platforms: channel.platforms
 				}
 
 				if (parsedMsg.roleUpdate) {
@@ -315,7 +305,7 @@
 	})
 </script>
 
-{#if !$is_sharing_screen && !$is_sharing_webcam && !$is_sharing_audio && isHostOrGuest}
+{#if !$is_sharing_webrtc && isHostOrGuest}
 	<DrawerRestream />
 {/if}
 

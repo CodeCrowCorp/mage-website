@@ -5,19 +5,17 @@
 	import IconRestream from '$lib/assets/icons/channel/IconRestream.svelte'
 	import IconStreamKey from '$lib/assets/icons/channel/IconStreamKey.svelte'
 	import IconSources from '$lib/assets/icons/channel/IconSources.svelte'
-	import { del, get, post, put } from '$lib/api'
+	import { get, put } from '$lib/api'
 	import { page } from '$app/stores'
 	import { emitChannelUpdate } from '$lib/websocket'
 	import {
-		is_sharing_audio,
-		is_sharing_screen,
-		is_sharing_webcam,
-		is_sharing_obs,
+		is_sharing_webrtc,
+		is_sharing_rtmp,
 		updateVideoItems,
 		is_wip_webrtc
 	} from '$lib/stores/streamStore'
 	import { channel_connection } from '$lib/stores/websocketStore'
-	import { onDestroy, onMount } from 'svelte'
+	import { onMount } from 'svelte'
 	import IconAddGuest from '$lib/assets/icons/channel/IconAddGuest.svelte'
 	import { is_restream_drawer_open } from '$lib/stores/channelStore'
 	import IconRefresh from '$lib/assets/icons/IconRefresh.svelte'
@@ -34,7 +32,12 @@
 		rtmps: any = null,
 		copyTextUrl = 'Copy',
 		copyTextKey = 'Copy',
-		urlList: any = []
+		urlList: any = [],
+		isSharingScreen = false,
+		isSharingWebcam = false,
+		isSharingAudio = false
+
+	$: $is_sharing_webrtc = isSharingScreen || isSharingWebcam || isSharingAudio
 
 	$: isHost = channel?.user === $page.data.user?.userId
 
@@ -48,8 +51,6 @@
 		(video: any) => video._id === $page.data.user?.userId
 	)
 
-	let subcriptions: any[] = []
-
 	const createLiveInput = async (trackData: any) => {
 		return await put(`live-input`, trackData, {
 			userId: $page.data.user?.userId,
@@ -57,7 +58,7 @@
 		})
 	}
 
-	const deleteLiveInput = async ({
+	const getLiveInput = async ({
 		channelId,
 		userId,
 		trackType
@@ -66,90 +67,91 @@
 		userId: string
 		trackType: string
 	}) => {
-		if (channelId && userId && trackType) {
-			return await del(
-				`live-input?channelId=${channelId}&userId=${userId}&trackType=${trackType}`,
-				{
-					userId: $page.data.user?.userId,
-					token: $page.data.user?.token
-				}
-			)
-		}
+		return await get(`live-input?channelId=${channelId}&userId=${userId}&trackType=${trackType}`, {
+			userId: $page.data.user?.userId,
+			token: $page.data.user?.token
+		})
 	}
 
 	const startScreenStream = async () => {
-		const liveInput = await createLiveInput({
+		let liveInput = await getLiveInput({
 			channelId: `${$page.params.channelId}`,
 			userId: $page.data.user?.userId,
-			trackType: 'screen',
-			liveInput: {
-				meta: {
-					name: `${$page.params.channelId}-${$page.data.user.userId}-screen`
-				},
-				recording: { mode: 'off' }
-			}
+			trackType: 'webrtc'
 		})
+		if (!liveInput) {
+			liveInput = await createLiveInput({
+				channelId: `${$page.params.channelId}`,
+				userId: $page.data.user?.userId,
+				trackType: 'screen',
+				liveInput: {
+					meta: {
+						name: `${$page.params.channelId}-${$page.data.user.userId}-webrtc`
+					},
+					recording: { mode: 'off' }
+				}
+			})
+		}
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
 	}
 
 	const stopScreenStream = async () => {
-		await deleteLiveInput({
-			channelId: $page.params.channelId,
-			userId: $page.data.user.userId,
-			trackType: 'screen'
-		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [
 			{ _id: $page.data.user.userId, trackType: 'screen' }
 		])
 	}
 
 	const startWebcamStream = async () => {
-		const liveInput = await createLiveInput({
+		let liveInput = await getLiveInput({
 			channelId: `${$page.params.channelId}`,
 			userId: $page.data.user?.userId,
-			trackType: 'webcam',
-			liveInput: {
-				meta: {
-					name: `${$page.params.channelId}-${$page.data.user.userId}-webcam`
-				},
-				recording: { mode: 'off' }
-			}
+			trackType: 'webrtc'
 		})
+		if (!liveInput) {
+			liveInput = await createLiveInput({
+				channelId: `${$page.params.channelId}`,
+				userId: $page.data.user?.userId,
+				trackType: 'webrtc',
+				liveInput: {
+					meta: {
+						name: `${$page.params.channelId}-${$page.data.user.userId}-webrtc`
+					},
+					recording: { mode: 'off' }
+				}
+			})
+		}
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
 	}
 
 	const stopWebcamStream = async () => {
-		await deleteLiveInput({
-			channelId: $page.params.channelId,
-			userId: $page.data.user.userId,
-			trackType: 'webcam'
-		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [
 			{ _id: $page.data.user.userId, trackType: 'webcam' }
 		])
 	}
 
 	const startAudioStream = async () => {
-		const liveInput = await createLiveInput({
+		let liveInput = await getLiveInput({
 			channelId: `${$page.params.channelId}`,
 			userId: $page.data.user?.userId,
-			trackType: 'audio',
-			liveInput: {
-				meta: {
-					name: `${$page.params.channelId}-${$page.data.user.userId}-audio`
-				},
-				recording: { mode: 'off' }
-			}
+			trackType: 'webrtc'
 		})
+		if (!liveInput) {
+			liveInput = await createLiveInput({
+				channelId: `${$page.params.channelId}`,
+				userId: $page.data.user?.userId,
+				trackType: 'webrtc',
+				liveInput: {
+					meta: {
+						name: `${$page.params.channelId}-${$page.data.user.userId}-webrtc`
+					},
+					recording: { mode: 'off' }
+				}
+			})
+		}
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
 	}
 
 	const stopAudioStream = async () => {
-		await deleteLiveInput({
-			channelId: $page.params.channelId,
-			userId: $page.data.user.userId,
-			trackType: 'audio'
-		})
 		channel.videoItems = updateVideoItems(channel.videoItems, [
 			{ _id: $page.data.user.userId, trackType: 'audio' }
 		])
@@ -157,37 +159,6 @@
 
 	onMount(() => {
 		isScrollable = isHostOrGuest
-		const sub1 = is_sharing_screen.subscribe((value) => {
-			if (value) {
-				startScreenStream()
-			} else if (value === false) {
-				stopScreenStream()
-			}
-		})
-
-		const sub2 = is_sharing_webcam.subscribe((value) => {
-			if (value) {
-				startWebcamStream()
-			} else if (value === false) {
-				stopWebcamStream()
-			}
-		})
-
-		const sub3 = is_sharing_audio.subscribe((value) => {
-			if (value) {
-				startAudioStream()
-			} else if (value === false) {
-				stopAudioStream()
-			}
-		})
-
-		subcriptions.push(sub1, sub2, sub3)
-	})
-
-	onDestroy(() => {
-		subcriptions.forEach((subs) => {
-			subs()
-		})
 	})
 
 	const toggleGuest = (userId: string) => {
@@ -220,10 +191,10 @@
 		rtmps = await createLiveInput({
 			channelId: `${$page.params.channelId}`,
 			userId: $page.data.user?.userId,
-			trackType: 'obs',
+			trackType: 'rtmp',
 			liveInput: {
 				meta: {
-					name: `${$page.params.channelId}-${$page.data.user.userId}-obs`
+					name: `${$page.params.channelId}-${$page.data.user.userId}-rtmp`
 				},
 				recording: { mode: 'automatic' }
 			}
@@ -232,13 +203,11 @@
 
 	const showStreamKeyModal = async () => {
 		obs_modal.showModal()
-		rtmps = await get(
-			`live-input?channelId=${$page.params.channelId}&userId=${$page.data.user?.userId}`,
-			{
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			}
-		)
+		rtmps = await getLiveInput({
+			channelId: $page.params.channelId,
+			userId: $page.data.user?.userId,
+			trackType: 'rtmp'
+		})
 		if (!rtmps) {
 			await refreshStreamKey()
 		}
@@ -255,10 +224,8 @@
 	<div class="dropdown dropdown-top dropdown-end py-3">
 		<button
 			tabindex="0"
-			class="btn border-none tooltip tooltip-left font-normal normal-case {$is_sharing_screen ||
-			$is_sharing_webcam ||
-			$is_sharing_audio ||
-			$is_sharing_obs
+			class="btn border-none tooltip tooltip-left font-normal normal-case {$is_sharing_webrtc ||
+			$is_sharing_rtmp
 				? 'btn-primary'
 				: 'btn-neutral'}"
 			data-tip="Sources"
@@ -268,15 +235,15 @@
 		<ul tabindex="0" class="dropdown-content">
 			<div class="flex flex-row gap-4 card p-3 bg-base-300">
 				<button
-					class="btn border-none tooltip font-normal normal-case {$is_sharing_screen
+					class="btn border-none tooltip font-normal normal-case {isSharingScreen
 						? 'btn-primary'
 						: 'btn-neutral'}"
 					data-tip="Screen"
 					on:click={() => {
-						$is_sharing_screen = !$is_sharing_screen
+						isSharingScreen = !isSharingScreen
 					}}
 					disabled={$is_wip_webrtc ||
-						$is_sharing_obs ||
+						$is_sharing_rtmp ||
 						!isHostOrGuest ||
 						!isChannelSocketConnected ||
 						!videoItemIsActive}>
@@ -284,15 +251,15 @@
 				</button>
 
 				<button
-					class="btn border-none tooltip font-normal normal-case {$is_sharing_webcam
+					class="btn border-none tooltip font-normal normal-case {isSharingWebcam
 						? 'btn-primary'
 						: 'btn-neutral'}"
 					data-tip="Webcam"
 					on:click={() => {
-						$is_sharing_webcam = !$is_sharing_webcam
+						isSharingWebcam = !isSharingWebcam
 					}}
 					disabled={$is_wip_webrtc ||
-						$is_sharing_obs ||
+						$is_sharing_rtmp ||
 						!isHostOrGuest ||
 						!isChannelSocketConnected ||
 						!videoItemIsActive}>
@@ -300,15 +267,15 @@
 				</button>
 
 				<button
-					class="btn border-none tooltip font-normal normal-case {$is_sharing_audio
+					class="btn border-none tooltip font-normal normal-case {isSharingAudio
 						? 'btn-primary'
 						: 'btn-neutral'}"
 					data-tip="Audio"
 					on:click={() => {
-						$is_sharing_audio = !$is_sharing_audio
+						isSharingAudio = !isSharingAudio
 					}}
 					disabled={$is_wip_webrtc ||
-						$is_sharing_obs ||
+						$is_sharing_rtmp ||
 						!isHostOrGuest ||
 						!isChannelSocketConnected ||
 						!videoItemIsActive}>
@@ -321,9 +288,9 @@
 					class="btn border-none tooltip font-normal normal-case btn-neutral"
 					data-tip="Stream key"
 					on:click={() => showStreamKeyModal()}
-					disabled={$is_sharing_screen ||
-						$is_sharing_webcam ||
-						$is_sharing_audio ||
+					disabled={isSharingScreen ||
+						isSharingWebcam ||
+						isSharingAudio ||
 						!isHostOrGuest ||
 						!isChannelSocketConnected ||
 						!videoItemIsActive}>
@@ -342,10 +309,10 @@
 			on:click={() => {
 				$is_restream_drawer_open = !$is_restream_drawer_open
 			}}
-			disabled={$is_sharing_obs ||
-				$is_sharing_screen ||
-				$is_sharing_webcam ||
-				$is_sharing_audio ||
+			disabled={$is_sharing_rtmp ||
+				isSharingScreen ||
+				isSharingWebcam ||
+				isSharingAudio ||
 				!isHostOrGuest ||
 				!isChannelSocketConnected ||
 				!videoItemIsActive}>
