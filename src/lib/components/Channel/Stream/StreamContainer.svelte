@@ -12,9 +12,9 @@
 	import { page } from '$app/stores'
 	import { createEventDispatcher } from 'svelte'
 	import {
-		is_sharing_obs,
+		is_sharing_rtmp,
 		is_sharing_audio,
-		is_sharing_screen,
+		is_sharing_webrtc,
 		is_sharing_webcam
 	} from '$lib/stores/streamStore'
 	import { getNumberInThousands } from '$lib/utils'
@@ -89,8 +89,8 @@
 <div class="flex justify-center h-full">
 	<div
 		class="carousel carousel-vertical rounded-lg bg-base-100 w-full m-5 mb-24 {isScrollable ||
-		$is_sharing_obs ||
-		$is_sharing_screen ||
+		$is_sharing_rtmp ||
+		$is_sharing_webrtc ||
 		$is_sharing_webcam ||
 		$is_sharing_audio
 			? 'overflow-y-hidden'
