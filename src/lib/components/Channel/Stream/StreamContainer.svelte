@@ -12,10 +12,10 @@
 	import { page } from '$app/stores'
 	import { createEventDispatcher } from 'svelte'
 	import {
-		is_sharing_rtmp,
+		is_sharing_rtmps,
 		is_sharing_audio,
-		is_sharing_webrtc,
-		is_sharing_webcam
+		is_sharing_webcam,
+		is_sharing_screen
 	} from '$lib/stores/streamStore'
 	import { getNumberInThousands } from '$lib/utils'
 	import {
@@ -33,14 +33,7 @@
 		viewers: any[] = []
 
 	let isScrollable = false
-	$: isLive =
-		channel.videoItems?.some(
-			(input: any) =>
-				input?.obs?.isConnected ||
-				input?.screen?.isConnected ||
-				input?.webcam?.isConnected ||
-				input?.audio?.isConnected
-		) ?? false
+	$: isLive = channel.videoItems?.some((input: any) => input?.isConnected) ?? false
 
 	function autoActive(node: Element) {
 		const observer = new IntersectionObserver(callback, { threshold: 0.5 })
@@ -89,8 +82,8 @@
 <div class="flex justify-center h-full">
 	<div
 		class="carousel carousel-vertical rounded-lg bg-base-100 w-full m-5 mb-24 {isScrollable ||
-		$is_sharing_rtmp ||
-		$is_sharing_webrtc ||
+		$is_sharing_rtmps ||
+		$is_sharing_screen ||
 		$is_sharing_webcam ||
 		$is_sharing_audio
 			? 'overflow-y-hidden'

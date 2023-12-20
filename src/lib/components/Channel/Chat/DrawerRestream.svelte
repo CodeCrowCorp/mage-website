@@ -81,13 +81,10 @@
 	})
 
 	const getLiveInput = async () => {
-		return await get(
-			`live-input?channelId=${$page.params.channelId}&userId=${$page.data.user?.userId}`,
-			{
-				userId: $page.data.user?.userId,
-				token: $page.data.user?.token
-			}
-		)
+		return await get(`live-input?channelId=${$page.params.channelId}&trackType=rtmps`, {
+			userId: $page.data.user?.userId,
+			token: $page.data.user?.token
+		})
 	}
 
 	const sendOutputs = async ({ liveInputUid }: { liveInputUid: string }) => {

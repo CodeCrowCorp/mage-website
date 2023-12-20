@@ -9,10 +9,12 @@
 	import { page } from '$app/stores'
 	import { emitChannelUpdate } from '$lib/websocket'
 	import {
-		is_sharing_webrtc,
-		is_sharing_rtmp,
+		is_sharing_rtmps,
 		updateVideoItems,
-		is_wip_webrtc
+		is_wip_webrtc,
+		is_sharing_screen,
+		is_sharing_webcam,
+		is_sharing_audio
 	} from '$lib/stores/streamStore'
 	import { channel_connection } from '$lib/stores/websocketStore'
 	import { onMount } from 'svelte'
@@ -28,16 +30,11 @@
 		viewers: any[] = []
 
 	let selectedUser = 0,
-		obs_modal: any = null,
+		rtmps_modal: any = null,
 		rtmps: any = null,
 		copyTextUrl = 'Copy',
 		copyTextKey = 'Copy',
-		urlList: any = [],
-		isSharingScreen = false,
-		isSharingWebcam = false,
-		isSharingAudio = false
-
-	$: $is_sharing_webrtc = isSharingScreen || isSharingWebcam || isSharingAudio
+		urlList: any = []
 
 	$: isHost = channel?.user === $page.data.user?.userId
 
@@ -51,6 +48,10 @@
 		(video: any) => video._id === $page.data.user?.userId
 	)
 
+	onMount(() => {
+		isScrollable = isHostOrGuest
+	})
+
 	const createLiveInput = async (trackData: any) => {
 		return await put(`live-input`, trackData, {
 			userId: $page.data.user?.userId,
@@ -60,51 +61,20 @@
 
 	const getLiveInput = async ({
 		channelId,
-		userId,
 		trackType
 	}: {
 		channelId: string
-		userId: string
 		trackType: string
 	}) => {
-		return await get(`live-input?channelId=${channelId}&userId=${userId}&trackType=${trackType}`, {
+		return await get(`live-input?channelId=${channelId}&trackType=${trackType}`, {
 			userId: $page.data.user?.userId,
 			token: $page.data.user?.token
 		})
 	}
 
-	const startScreenStream = async () => {
+	const startWebrtcStream = async () => {
 		let liveInput = await getLiveInput({
 			channelId: `${$page.params.channelId}`,
-			userId: $page.data.user?.userId,
-			trackType: 'webrtc'
-		})
-		if (!liveInput) {
-			liveInput = await createLiveInput({
-				channelId: `${$page.params.channelId}`,
-				userId: $page.data.user?.userId,
-				trackType: 'screen',
-				liveInput: {
-					meta: {
-						name: `${$page.params.channelId}-${$page.data.user.userId}-webrtc`
-					},
-					recording: { mode: 'off' }
-				}
-			})
-		}
-		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
-	}
-
-	const stopScreenStream = async () => {
-		channel.videoItems = updateVideoItems(channel.videoItems, [
-			{ _id: $page.data.user.userId, trackType: 'screen' }
-		])
-	}
-
-	const startWebcamStream = async () => {
-		let liveInput = await getLiveInput({
-			channelId: `${$page.params.channelId}`,
-			userId: $page.data.user?.userId,
 			trackType: 'webrtc'
 		})
 		if (!liveInput) {
@@ -122,44 +92,6 @@
 		}
 		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
 	}
-
-	const stopWebcamStream = async () => {
-		channel.videoItems = updateVideoItems(channel.videoItems, [
-			{ _id: $page.data.user.userId, trackType: 'webcam' }
-		])
-	}
-
-	const startAudioStream = async () => {
-		let liveInput = await getLiveInput({
-			channelId: `${$page.params.channelId}`,
-			userId: $page.data.user?.userId,
-			trackType: 'webrtc'
-		})
-		if (!liveInput) {
-			liveInput = await createLiveInput({
-				channelId: `${$page.params.channelId}`,
-				userId: $page.data.user?.userId,
-				trackType: 'webrtc',
-				liveInput: {
-					meta: {
-						name: `${$page.params.channelId}-${$page.data.user.userId}-webrtc`
-					},
-					recording: { mode: 'off' }
-				}
-			})
-		}
-		channel.videoItems = updateVideoItems(channel.videoItems, [liveInput])
-	}
-
-	const stopAudioStream = async () => {
-		channel.videoItems = updateVideoItems(channel.videoItems, [
-			{ _id: $page.data.user.userId, trackType: 'audio' }
-		])
-	}
-
-	onMount(() => {
-		isScrollable = isHostOrGuest
-	})
 
 	const toggleGuest = (userId: string) => {
 		if (channel.user === userId) return
@@ -191,10 +123,10 @@
 		rtmps = await createLiveInput({
 			channelId: `${$page.params.channelId}`,
 			userId: $page.data.user?.userId,
-			trackType: 'rtmp',
+			trackType: 'rtmps',
 			liveInput: {
 				meta: {
-					name: `${$page.params.channelId}-${$page.data.user.userId}-rtmp`
+					name: `${$page.params.channelId}-${$page.data.user.userId}-rtmps`
 				},
 				recording: { mode: 'automatic' }
 			}
@@ -202,11 +134,10 @@
 	}
 
 	const showStreamKeyModal = async () => {
-		obs_modal.showModal()
+		rtmps_modal.showModal()
 		rtmps = await getLiveInput({
 			channelId: $page.params.channelId,
-			userId: $page.data.user?.userId,
-			trackType: 'rtmp'
+			trackType: 'rtmps'
 		})
 		if (!rtmps) {
 			await refreshStreamKey()
@@ -224,8 +155,10 @@
 	<div class="dropdown dropdown-top dropdown-end py-3">
 		<button
 			tabindex="0"
-			class="btn border-none tooltip tooltip-left font-normal normal-case {$is_sharing_webrtc ||
-			$is_sharing_rtmp
+			class="btn border-none tooltip tooltip-left font-normal normal-case {$is_sharing_screen ||
+			$is_sharing_webcam ||
+			$is_sharing_audio ||
+			$is_sharing_rtmps
 				? 'btn-primary'
 				: 'btn-neutral'}"
 			data-tip="Sources"
@@ -235,15 +168,18 @@
 		<ul tabindex="0" class="dropdown-content">
 			<div class="flex flex-row gap-4 card p-3 bg-base-300">
 				<button
-					class="btn border-none tooltip font-normal normal-case {isSharingScreen
+					class="btn border-none tooltip font-normal normal-case {$is_sharing_screen
 						? 'btn-primary'
 						: 'btn-neutral'}"
 					data-tip="Screen"
-					on:click={() => {
-						isSharingScreen = !isSharingScreen
+					on:click={async () => {
+						if ($is_sharing_screen === false || $is_sharing_screen === undefined) {
+							await startWebrtcStream()
+						}
+						$is_sharing_screen = !$is_sharing_screen
 					}}
 					disabled={$is_wip_webrtc ||
-						$is_sharing_rtmp ||
+						$is_sharing_rtmps ||
 						!isHostOrGuest ||
 						!isChannelSocketConnected ||
 						!videoItemIsActive}>
@@ -251,15 +187,18 @@
 				</button>
 
 				<button
-					class="btn border-none tooltip font-normal normal-case {isSharingWebcam
+					class="btn border-none tooltip font-normal normal-case {$is_sharing_webcam
 						? 'btn-primary'
 						: 'btn-neutral'}"
 					data-tip="Webcam"
-					on:click={() => {
-						isSharingWebcam = !isSharingWebcam
+					on:click={async () => {
+						if ($is_sharing_webcam === false || $is_sharing_webcam === undefined) {
+							await startWebrtcStream()
+						}
+						$is_sharing_webcam = !$is_sharing_webcam
 					}}
 					disabled={$is_wip_webrtc ||
-						$is_sharing_rtmp ||
+						$is_sharing_rtmps ||
 						!isHostOrGuest ||
 						!isChannelSocketConnected ||
 						!videoItemIsActive}>
@@ -267,15 +206,18 @@
 				</button>
 
 				<button
-					class="btn border-none tooltip font-normal normal-case {isSharingAudio
+					class="btn border-none tooltip font-normal normal-case {$is_sharing_audio
 						? 'btn-primary'
 						: 'btn-neutral'}"
 					data-tip="Audio"
-					on:click={() => {
-						isSharingAudio = !isSharingAudio
+					on:click={async () => {
+						if ($is_sharing_audio === false || $is_sharing_audio === undefined) {
+							await startWebrtcStream()
+						}
+						$is_sharing_audio = !$is_sharing_audio
 					}}
 					disabled={$is_wip_webrtc ||
-						$is_sharing_rtmp ||
+						$is_sharing_rtmps ||
 						!isHostOrGuest ||
 						!isChannelSocketConnected ||
 						!videoItemIsActive}>
@@ -288,9 +230,9 @@
 					class="btn border-none tooltip font-normal normal-case btn-neutral"
 					data-tip="Stream key"
 					on:click={() => showStreamKeyModal()}
-					disabled={isSharingScreen ||
-						isSharingWebcam ||
-						isSharingAudio ||
+					disabled={$is_sharing_screen ||
+						$is_sharing_webcam ||
+						$is_sharing_audio ||
 						!isHostOrGuest ||
 						!isChannelSocketConnected ||
 						!videoItemIsActive}>
@@ -309,10 +251,10 @@
 			on:click={() => {
 				$is_restream_drawer_open = !$is_restream_drawer_open
 			}}
-			disabled={$is_sharing_rtmp ||
-				isSharingScreen ||
-				isSharingWebcam ||
-				isSharingAudio ||
+			disabled={$is_sharing_rtmps ||
+				$is_sharing_screen ||
+				$is_sharing_webcam ||
+				$is_sharing_audio ||
 				!isHostOrGuest ||
 				!isChannelSocketConnected ||
 				!videoItemIsActive}>
@@ -363,9 +305,9 @@
 		isScrollable = !isScrollable
 	}} />
 
-<dialog bind:this={obs_modal} class="modal">
+<dialog bind:this={rtmps_modal} class="modal">
 	<form method="dialog" class="modal-box overflow-x-hidden">
-		<h3 class="font-bold text-lg">Copy to OBS</h3>
+		<h3 class="font-bold text-lg">Copy to broadcasting software</h3>
 		<p class="py-8">
 			Server: <br />
 			{#if !rtmps?.rtmps?.url}
@@ -374,7 +316,7 @@
 				<div class="flex">
 					<span>{rtmps?.rtmps?.url}</span>
 					<div
-						class="btn btn-ghost btn-sm tooltip"
+						class="flex btn btn-ghost btn-sm tooltip"
 						data-tip={copyTextUrl}
 						on:click={() => {
 							copyToClipboard(rtmps?.rtmps?.url)
@@ -393,7 +335,7 @@
 				<div class="flex">
 					<span>{rtmps?.rtmps?.streamKey}</span>
 					<div
-						class="btn btn-ghost btn-sm tooltip"
+						class="flex btn btn-ghost btn-sm tooltip"
 						data-tip={copyTextKey}
 						on:click={() => {
 							copyToClipboard(rtmps?.rtmps?.streamKey)
@@ -402,7 +344,7 @@
 						<IconCopy />
 					</div>
 					<div
-						class="btn btn-ghost btn-sm tooltip"
+						class="flex btn btn-ghost btn-sm tooltip"
 						data-tip="Refresh key"
 						on:click={() => {
 							refreshStreamKey()

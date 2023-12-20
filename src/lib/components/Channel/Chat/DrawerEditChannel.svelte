@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { tags } from '$lib/stores/channelStore'
-	import { is_sharing_webrtc, is_sharing_webcam } from '$lib/stores/streamStore'
 	import { onDestroy, onMount } from 'svelte'
 	import Tags from 'svelte-tags-input'
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
