@@ -17,3 +17,4 @@ src/lib/stores/chatStore.ts
 src/lib/stores/sfxStore.ts
 src/lib/stores/funFactStore.ts
 /static/sfx/
+.vscode/launch.json
