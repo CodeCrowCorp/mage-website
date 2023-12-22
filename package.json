@@ -1,6 +1,6 @@
 {
 	"name": "mage-website",
-	"version": "0.1.13",
+	"version": "0.1.14",
 	"license": "GPL-3.0",
 	"private": true,
 	"type": "module",
@@ -22,7 +22,6 @@
 		"@playwright/test": "1.40.1",
 		"@sveltejs/adapter-cloudflare": "^2.2.0",
 		"@sveltejs/kit": "^1.10.0",
-		"@sveltejs/svelte-virtual-list": "^3.0.1",
 		"@svitejs/svelte-preprocess-svg": "^2.0.0",
 		"@typescript-eslint/eslint-plugin": "^6.1.0",
 		"@typescript-eslint/parser": "^6.1.0",
@@ -54,7 +53,6 @@
 		"@neodrag/svelte": "^2.0.3",
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/typography": "^0.5.9",
-		"animate.css": "^4.1.1",
 		"daisyui": "^4.3.1",
 		"emoji-picker-element": "^1.18.1",
 		"moment": "^2.29.4",
