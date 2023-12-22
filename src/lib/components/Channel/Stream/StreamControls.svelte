@@ -11,7 +11,6 @@
 	import {
 		is_sharing_rtmps,
 		updateVideoItems,
-		is_wip_webrtc,
 		is_sharing_screen,
 		is_sharing_webcam,
 		is_sharing_audio
@@ -178,8 +177,7 @@
 						}
 						$is_sharing_screen = !$is_sharing_screen
 					}}
-					disabled={$is_wip_webrtc ||
-						$is_sharing_rtmps ||
+					disabled={$is_sharing_rtmps ||
 						!isHostOrGuest ||
 						!isChannelSocketConnected ||
 						!videoItemIsActive}>
@@ -197,8 +195,7 @@
 						}
 						$is_sharing_webcam = !$is_sharing_webcam
 					}}
-					disabled={$is_wip_webrtc ||
-						$is_sharing_rtmps ||
+					disabled={$is_sharing_rtmps ||
 						!isHostOrGuest ||
 						!isChannelSocketConnected ||
 						!videoItemIsActive}>
@@ -216,8 +213,7 @@
 						}
 						$is_sharing_audio = !$is_sharing_audio
 					}}
-					disabled={$is_wip_webrtc ||
-						$is_sharing_rtmps ||
+					disabled={$is_sharing_rtmps ||
 						!isHostOrGuest ||
 						!isChannelSocketConnected ||
 						!videoItemIsActive}>

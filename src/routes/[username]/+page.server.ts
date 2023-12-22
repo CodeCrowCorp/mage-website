@@ -5,7 +5,7 @@ import { redirect, fail, error } from '@sveltejs/kit'
 export const load = (async ({ params }: { params: any }) => {
 	const profile = await get(`users/search/username?username=${params.username.toLowerCase()}`)
 	if (profile.error) {
-		throw error(404)
+		error(404);
 	}
 	return {
 		profile: profile,
@@ -80,9 +80,9 @@ export const actions = {
 		} else {
 			if (updatedUser._id) {
 				locals.user.user = updatedUser
-				throw redirect(303, `/${updatedUser.username}`)
+				redirect(303, `/${updatedUser.username}`);
 			} else {
-				throw redirect(303, 'browse')
+				redirect(303, 'browse');
 			}
 		}
 	},

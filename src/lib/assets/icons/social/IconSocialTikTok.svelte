@@ -19,9 +19,12 @@
 	})
 </script>
 
-<svg class="w-6 h-6" id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 407.41"
-	><defs
+<svg class="w-6 h-6" id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 407.41">
+	<defs
 		><style>
+            :root {
+            --color: {color};
+            }
 			.tiktok-cls-1 {
 				fill: #25f4ee;
 			}
@@ -31,13 +34,13 @@
 				stroke-width: 0px;
 			}
 			.tiktok-cls-2 {
-				fill: ${color};
+                fill: var(--color);
 			}
 			.tiktok-cls-3 {
 				fill: #fe2c55;
 			}
-		</style></defs
-	><g id="ICONS"
+		</style></defs>
+	<g id="ICONS"
 		><path
 			class="tiktok-cls-1"
 			d="m140.18,160.81v-16.29c-5.45-.74-10.99-1.21-16.65-1.21C55.42,143.32,0,198.74,0,266.85c0,41.79,20.88,78.78,52.74,101.14-20.56-22.07-32.76-51.64-32.76-84.11,0-67.14,53.43-121.51,120.2-123.07Z" /><path
