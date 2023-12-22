@@ -43,6 +43,6 @@ export const actions = {
 			userId,
 			token
 		})
-		throw redirect(303, `/channel/${channel._id}`)
+		redirect(303, `/channel/${channel._id}`);
 	}
 } satisfies Actions
