@@ -27,6 +27,7 @@
 		webrtc_video_element: HTMLVideoElement,
 		screen_element: HTMLVideoElement,
 		webcam_element: HTMLVideoElement,
+		webcam_container_element: HTMLDivElement,
 		audio_element: HTMLAudioElement,
 		webrtcWhip: WHIPClient,
 		webrtcWhep: WHEPClient,
@@ -75,7 +76,12 @@
 			is_sharing_screen.subscribe(async (value: any) => {
 				if (value === true) {
 					getWebrtcWhip()
-					await webrtcWhip?.accessLocalScreenMediaSources(webrtc_canvas_element, screen_element)
+					await webrtcWhip?.accessLocalScreenMediaSources(
+						webrtc_canvas_element,
+						screen_element,
+						webcam_element,
+						webcam_container_element
+					)
 					webrtcWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 					screen_element.addEventListener('dblclick', (event: any) => {
 						if (document.fullscreenElement) {
@@ -97,7 +103,12 @@
 			is_sharing_webcam.subscribe(async (value: any) => {
 				if (value === true) {
 					getWebrtcWhip()
-					await webrtcWhip?.accessLocalWebcamMediaSources(webrtc_canvas_element, webcam_element)
+					await webrtcWhip?.accessLocalWebcamMediaSources(
+						webrtc_canvas_element,
+						screen_element,
+						webcam_element,
+						webcam_container_element
+					)
 					webrtcWhip.addEventListener(`isWebcamLive`, (ev: any) => (isWebcamLive = ev.detail))
 					webcam_element.addEventListener('dblclick', (event: any) => {
 						if (document.fullscreenElement) {
@@ -119,7 +130,7 @@
 			is_sharing_audio.subscribe(async (value: any) => {
 				if (value === true) {
 					getWebrtcWhip()
-					await webrtcWhip?.accessLocalAudioMediaSources(webrtc_canvas_element)
+					await webrtcWhip?.accessLocalAudioMediaSources(audio_element)
 					webrtcWhip.addEventListener(`localStreamStopped-audio`, () => {
 						webrtcWhip.removeEventListener(`localAudioSpeakingValue`, () => {})
 						$is_sharing_audio = undefined
@@ -346,6 +357,7 @@
 					muted
 					class="rounded-md w-full h-full" />
 				<div
+					bind:this={webcam_container_element}
 					use:draggable={{ bounds: 'parent' }}
 					on:mousedown={onMouseDown}
 					on:mouseup={onMouseUp}

@@ -47,7 +47,12 @@ export default class WHIPClient extends EventTarget {
 	 *
 	 * https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
 	 */
-	public async accessLocalScreenMediaSources(canvasElement: HTMLCanvasElement, videoElement: any) {
+	public async accessLocalScreenMediaSources(
+		canvasElement: HTMLCanvasElement,
+		screenElement: HTMLVideoElement,
+		webcamElement: HTMLVideoElement,
+		webcamContainerElement: HTMLDivElement
+	) {
 		try {
 			/**
 			 * While the connection is being initialized,
@@ -76,7 +81,9 @@ export default class WHIPClient extends EventTarget {
 					const canvasStream = await this.addStreamToCanvas(
 						stream,
 						canvasElement,
-						videoElement,
+						screenElement,
+						webcamElement,
+						webcamContainerElement,
 						true
 					)
 					// Add the canvas stream's tracks to the peer connection
@@ -101,17 +108,37 @@ export default class WHIPClient extends EventTarget {
 
 	public async accessLocalWebcamMediaSources(
 		canvasElement: HTMLCanvasElement,
-		videoElement: HTMLVideoElement
+		screenElement: HTMLVideoElement,
+		webcamElement: HTMLVideoElement,
+		webcamContainerElement: HTMLDivElement
 	) {
 		try {
 			navigator.mediaDevices
 				.getUserMedia({ video: true, audio: false })
 				.then(async (stream) => {
+					let audioTrack = stream.getAudioTracks()[0]
+					if (!audioTrack) {
+						const audioContext = new AudioContext()
+						const oscillator = audioContext.createOscillator()
+						const destination = audioContext.createMediaStreamDestination()
+						oscillator.connect(destination)
+						oscillator.frequency.setValueAtTime(0, audioContext.currentTime)
+						oscillator.start()
+						audioTrack = destination.stream.getAudioTracks()[0]
+						audioTrack.enabled = true
+						// audioTrack.id = 'silent-audio-track'
+						// audioTrack.label = 'Silent Audio Track'
+					}
+					this.peerConnection.addTransceiver(audioTrack, {
+						direction: 'sendonly'
+					})
 					// Add the stream to the canvas and get the canvas stream
 					const canvasStream = await this.addStreamToCanvas(
 						stream,
 						canvasElement,
-						videoElement,
+						screenElement,
+						webcamElement,
+						webcamContainerElement,
 						false
 					)
 					// Add the canvas stream's tracks to the peer connection
@@ -139,11 +166,7 @@ export default class WHIPClient extends EventTarget {
 			navigator.mediaDevices
 				.getUserMedia({
 					video: false,
-					audio: {
-						echoCancellation: true,
-						noiseSuppression: true,
-						deviceId: 'default'
-					}
+					audio: true
 				})
 				.then((stream) => {
 					stream.getAudioTracks().forEach((track) => {
@@ -170,38 +193,81 @@ export default class WHIPClient extends EventTarget {
 	private async addStreamToCanvas(
 		stream: MediaStream,
 		canvasElement: HTMLCanvasElement,
-		videoElement: HTMLVideoElement,
+		screenVideoElement: HTMLVideoElement,
+		webcamVideoElement: HTMLVideoElement,
+		webcamContainerElement: HTMLDivElement,
 		isScreen: boolean
 	): Promise<MediaStream> {
-		// Play the stream in the video element
+		// Determine which stream is being added
+		const videoElement = isScreen ? screenVideoElement : webcamVideoElement
 		videoElement.srcObject = stream
 		videoElement.play()
+
 		// Draw the video frame to the canvas
 		canvasElement.width = 1920
 		canvasElement.height = 1080
 		const context = canvasElement.getContext('2d')
 		const drawVideoFrame = () => {
-			if (videoElement.readyState === videoElement.HAVE_ENOUGH_DATA) {
-				if (isScreen) {
-					context?.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height)
-					if (this.localWebcamStream) {
-						context?.drawImage(
-							videoElement,
-							canvasElement.width * 0.75,
-							canvasElement.height * 0.75,
-							canvasElement.width * 0.25,
-							canvasElement.height * 0.25
-						)
-					}
-				} else {
-					context?.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height)
-				}
+			if (
+				screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
+				screenVideoElement.srcObject !== null
+			) {
+				context?.drawImage(screenVideoElement, 0, 0, canvasElement.width, canvasElement.height)
+			} else {
+				context?.clearRect(0, 0, canvasElement.width, canvasElement.height)
 			}
+
+			if (webcamVideoElement.readyState === webcamVideoElement.HAVE_ENOUGH_DATA) {
+				// Get the position of the webcamContainerElement relative to the viewport
+				const rect = webcamContainerElement.getBoundingClientRect()
+
+				// Get the position of the canvas relative to the viewport
+				const canvasRect = canvasElement.getBoundingClientRect()
+
+				// Calculate the position of the webcamContainerElement relative to the canvas
+				let x = rect.left - canvasRect.left
+				let y = rect.top - canvasRect.top
+
+				// Get the natural size of the webcam video
+				let width = webcamVideoElement.videoWidth
+				let height = webcamVideoElement.videoHeight
+
+				// If screen is not being shared, make the webcam the size of the canvas
+				if (screenVideoElement.srcObject === null) {
+					// Calculate the aspect ratio of the webcam video
+					const aspectRatio = webcamVideoElement.videoWidth / webcamVideoElement.videoHeight
+
+					// Calculate the new width and height based on the aspect ratio
+					if (canvasElement.width / aspectRatio <= canvasElement.height) {
+						width = canvasElement.width
+						height = canvasElement.width / aspectRatio
+					} else {
+						width = canvasElement.height * aspectRatio
+						height = canvasElement.height
+					}
+
+					// Center the webcam video on the canvas
+					x = (canvasElement.width - width) / 2
+					y = (canvasElement.height - height) / 2
+				}
+
+				// Check if the webcam video is outside the canvas boundaries and adjust the position if necessary
+				if (x < 0) x = 0
+				if (y < 0) y = 0
+				if (x + width > canvasElement.width) x = canvasElement.width - width
+				if (y + height > canvasElement.height) y = canvasElement.height - height
+
+				// Draw the webcam video at the updated position and with its natural size
+				context?.drawImage(webcamVideoElement, x, y, width, height)
+			}
+
 			requestAnimationFrame(drawVideoFrame)
 		}
 		drawVideoFrame()
+
 		// Capture the stream from the canvas
 		const canvasStream = canvasElement.captureStream(30)
+
 		// Apply constraints to the video track
 		const constraints = isScreen
 			? {
@@ -209,8 +275,8 @@ export default class WHIPClient extends EventTarget {
 					height: 1080
 			  }
 			: {
-					width: 1280,
-					height: 720
+					width: webcamVideoElement.videoWidth,
+					height: webcamVideoElement.videoHeight
 			  }
 		canvasStream.getVideoTracks()[0].applyConstraints(constraints)
 
