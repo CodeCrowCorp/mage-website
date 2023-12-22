@@ -67,14 +67,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 			if (pathname === '/maintenance') {
 				return await resolve(event)
 			} else {
-				throw redirect(302, '/maintenance')
+				redirect(302, '/maintenance');
 			}
 		} else {
 			if (
 				pathname === '/maintenance' ||
 				(pathname === '/premium' && env.PUBLIC_FEATURE_PREMIUM === 'false')
 			) {
-				throw redirect(302, '/browse')
+				redirect(302, '/browse');
 			} else {
 				return await resolve(event)
 			}

@@ -16,7 +16,12 @@
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import DrawerEditChannel from '$lib/components/Channel/Chat/DrawerEditChannel.svelte'
-	import { is_sharing_webrtc, updateVideoItems } from '$lib/stores/streamStore'
+	import {
+		is_sharing_screen,
+		is_sharing_webcam,
+		is_sharing_audio,
+		updateVideoItems
+	} from '$lib/stores/streamStore'
 	import DrawerRestream from '$lib/components/Channel/Chat/DrawerRestream.svelte'
 
 	let channel: any,
@@ -34,11 +39,7 @@
 
 	$: if (channel) {
 		if (channel._id !== $page.params.channelId) {
-			if (isHostOrGuest) {
-				if ($is_sharing_webrtc) $is_sharing_webrtc = false
-			} else {
-				$is_sharing_webrtc = undefined
-			}
+			disableSharing()
 			handleWebsocket()
 			timeoutConnection()
 		}
@@ -71,15 +72,19 @@
 	})
 
 	onDestroy(async () => {
-		if (isHostOrGuest) {
-			if ($is_sharing_webrtc) $is_sharing_webrtc = false
-		} else {
-			$is_sharing_webrtc = undefined
-		}
+		disableSharing()
 		channels.forEach((ch: any) => {
 			if (ch.socket && ch.socket.constructor === WebSocket) ch.socket.close()
 		})
 	})
+
+	const disableSharing = () => {
+		if (isHostOrGuest) {
+			if ($is_sharing_screen) $is_sharing_screen = false
+			if ($is_sharing_webcam) $is_sharing_webcam = false
+			if ($is_sharing_audio) $is_sharing_audio = false
+		}
+	}
 
 	const loadChannel = async () => {
 		const chan = await get(`channel?channelId=${$page.params.channelId}`)
@@ -305,7 +310,7 @@
 	})
 </script>
 
-{#if !$is_sharing_webrtc && isHostOrGuest}
+{#if !$is_sharing_screen && !$is_sharing_webcam && !$is_sharing_audio && isHostOrGuest}
 	<DrawerRestream />
 {/if}
 

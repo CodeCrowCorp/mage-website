@@ -10,7 +10,7 @@ export default class WHEPClient extends EventTarget {
 	private peerConnection: RTCPeerConnection
 	private stream: MediaStream
 
-	constructor(private endpoint: string, private videoElement: any, private trackType: string) {
+	constructor(private endpoint: string, private videoElement: any) {
 		super()
 		this.stream = new MediaStream()
 
@@ -28,19 +28,14 @@ export default class WHEPClient extends EventTarget {
 			bundlePolicy: 'max-bundle'
 		})
 
-		const trackOrKind = trackType === 'screen' || trackType === 'webcam' ? 'video' : 'audio'
-
 		/** https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/addTransceiver */
-		this.peerConnection.addTransceiver(trackOrKind, {
+		this.peerConnection.addTransceiver('video', {
 			direction: 'recvonly'
 		})
 
-		//NOTE: used for system audio
-		if (this.trackType === 'screen') {
-			this.peerConnection.addTransceiver('audio', {
-				direction: 'recvonly'
-			})
-		}
+		this.peerConnection.addTransceiver('audio', {
+			direction: 'recvonly'
+		})
 
 		/**
 		 * When new tracks are received in the connection, store local references,
@@ -68,18 +63,11 @@ export default class WHEPClient extends EventTarget {
 				console.log('got unknown track ' + track)
 			}
 
-			if (trackType === 'screen' && track.kind === 'video') {
+			if (track.kind === 'video') {
 				if (track.readyState === 'live') {
 					this.dispatchEvent(new CustomEvent(`isScreenLive`, { detail: true }))
 				} else {
 					this.dispatchEvent(new CustomEvent(`isScreenLive`, { detail: false }))
-				}
-			}
-			if (trackType === 'webcam' && track.kind === 'video') {
-				if (track.readyState === 'live') {
-					this.dispatchEvent(new CustomEvent(`isWebcamLive`, { detail: true }))
-				} else {
-					this.dispatchEvent(new CustomEvent(`isWebcamLive`, { detail: false }))
 				}
 			}
 		}

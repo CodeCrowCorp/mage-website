@@ -3,7 +3,7 @@ import type { Actions, PageServerLoad } from './$types'
 
 export const load = (() => {
 	// redirect the user
-	throw redirect(302, '/browse')
+	redirect(302, '/browse');
 }) satisfies PageServerLoad
 
 export const actions: Actions = {
@@ -18,6 +18,6 @@ export const actions: Actions = {
 		})
 
 		// redirect the user
-		throw redirect(302, '/browse')
+		redirect(302, '/browse');
 	}
 }

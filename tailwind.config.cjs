@@ -4,13 +4,7 @@ module.exports = {
 	daisyui: {
 		themes: ['dark', 'light', 'cyberpunk', 'synthwave']
 	},
-	plugins: [
-		require('@tailwindcss/aspect-ratio'),
-		require('@tailwindcss/typography'),
-		require('daisyui'),
-		require('tailwind-scrollbar')({ nocompatible: true }),
-		require('tailwind-clip-path')
-	],
+	plugins: [require('daisyui'), require('tailwind-scrollbar')({ nocompatible: true })],
 	variants: {
 		display: ['group-hover']
 	}

@@ -161,6 +161,7 @@
 						</div>
 						<div class="relative">
 							<Tags
+								class="input input-primary input-bordered"
 								bind:tags={newChannel.tags}
 								maxTags={maxTag}
 								id="tags"
@@ -222,17 +223,14 @@
 <style>
 	:global(.svelte-tags-input-layout) {
 		--tw-border-opacity: 1 !important;
-		border-color: hsl(var(--p) / var(--tw-border-opacity)) !important;
-		border-radius: var(--rounded-btn, 0.5rem) !important;
 		height: 3rem;
 		padding-left: 1rem !important;
 		padding-right: 1rem !important;
 		--tw-bg-opacity: 1 !important;
-		background-color: hsl(var(--b1) / var(--tw-bg-opacity)) !important;
 		flex-wrap: nowrap !important;
 	}
 	:global(.svelte-tags-input-layout) {
-		@apply mt-5 w-full;
+		@apply mt-5 w-full !input !input-primary !input-bordered;
 	}
 	:global(.svelte-tags-input-layout:focus-within) {
 		outline: 2px solid hsl(var(--p)) !important;

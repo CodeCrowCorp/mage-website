@@ -21,7 +21,8 @@
 	import {
 		is_feature_video_responses_enabled,
 		is_feature_premium_enabled,
-		is_feature_apps_enabled
+		is_feature_apps_enabled,
+		is_feature_merch_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
 	import { is_apps_modal_open, is_login_modal_open } from '$lib/stores/helperStore'
@@ -31,11 +32,11 @@
 	import { get } from '$lib/api'
 	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
-	import IconDrawerGetApps from '$lib/assets/icons/drawer/IconDrawerGetApps.svelte'
 	import IconFollowers from '$lib/assets/icons/IconFollowers.svelte'
 	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
 	import IconSocialTikTok from '$lib/assets/icons/social/IconSocialTikTok.svelte'
 	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
+	import IconDrawerMerch from '$lib/assets/icons/drawer/IconDrawerMerch.svelte'
 
 	export var nav_drawer: HTMLInputElement
 
@@ -213,26 +214,8 @@
 				{/if}
 			</li>
 		{/if}
-		{#if $is_feature_apps_enabled}
-			<li>
-				<button
-					class="custom-menu-item"
-					on:click={() => {
-						$is_apps_modal_open = true
-						if (nav_drawer.checked) {
-							nav_drawer.checked = false
-						}
-					}}>
-					<IconDrawerGetApps />
-					<span class={isChannelPage ? 'md:hidden' : ''}>Get Apps</span>
-					{#if !isChannelPage}
-						<span class="badge badge-secondary">New</span>
-					{/if}
-				</button>
-			</li>
-		{/if}
 		<li>
-			<a class="custom-menu-item" href="https://blog.mage.stream">
+			<a class="custom-menu-item" href="https://blog.mage.stream" target="_blank">
 				<IconDrawerBlog />
 				<span class={isChannelPage ? 'md:hidden' : ''}>Blog </span>
 				{#if !isChannelPage}
@@ -240,6 +223,17 @@
 				{/if}
 			</a>
 		</li>
+		{#if $is_feature_merch_enabled}
+			<li>
+				<a class="custom-menu-item" href="https://blog.mage.stream" target="_blank">
+					<IconDrawerMerch />
+					<span class={isChannelPage ? 'md:hidden' : ''}>Merch </span>
+					{#if !isChannelPage}
+						<span class="badge badge-secondary">New</span>
+					{/if}
+				</a>
+			</li>
+		{/if}
 		<li>
 			<a class="custom-menu-item" href="/settings">
 				<IconDrawerSettings />
@@ -252,11 +246,28 @@
 					><IconDrawerMore />
 					<span class={isChannelPage ? 'md:hidden' : ''}>More</span></summary>
 				<ul class="p-2 {isChannelPage ? 'lg:menu-sm' : 'ml-5'}">
+					{#if $is_feature_apps_enabled}
+						<li>
+							<a
+								class="whitespace-nowrap"
+								on:click={() => {
+									$is_apps_modal_open = true
+									if (nav_drawer.checked) {
+										nav_drawer.checked = false
+									}
+								}}>
+								Get apps
+								{#if !isChannelPage}
+									<span class="badge badge-secondary">New</span>
+								{/if}
+							</a>
+						</li>
+					{/if}
 					<li>
-						<a href="https://codecrow.io/careers" target="_blank"> Careers </a>
+						<a href="https://codecrow.io/careers" target="_blank">Careers</a>
 					</li>
 					<li>
-						<a href="https://brand.mage.stream/IconMageLogo.zip" target="_blank"> Brand </a>
+						<a href="https://brand.mage.stream/IconMageLogo.zip" target="_blank">Brand</a>
 					</li>
 					<li><a href="https://codecrow.io/contact" target="_blank">Contact</a></li>
 					<li><a href="https://codecrow.io/legal" target="_blank">Legal</a></li>
