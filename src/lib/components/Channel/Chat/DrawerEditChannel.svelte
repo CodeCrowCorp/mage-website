@@ -105,7 +105,7 @@
 				class="flex h-full p-5"
 				action="?/edit-channel"
 				method="post"
-				use:enhance={({ data }) => {
+				use:enhance={({ formData }) => {
 					return ({ result }) => {
 						if (result.type === 'success') {
 							console.log('channel', channel)
