@@ -5,6 +5,7 @@ import { get } from '$lib/api'
 import { user_role } from '$lib/stores/userStore'
 import { env } from '$env/dynamic/public'
 
+/** @type {import('@sveltejs/kit').Handle} */
 export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname
 	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
@@ -67,14 +68,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 			if (pathname === '/maintenance') {
 				return await resolve(event)
 			} else {
-				redirect(302, '/maintenance');
+				redirect(302, '/maintenance')
 			}
 		} else {
 			if (
 				pathname === '/maintenance' ||
 				(pathname === '/premium' && env.PUBLIC_FEATURE_PREMIUM === 'false')
 			) {
-				redirect(302, '/browse');
+				redirect(302, '/browse')
 			} else {
 				return await resolve(event)
 			}
@@ -82,6 +83,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	} else {
 		return await resolve(event)
 	}
+	return await resolve(event)
 }
 
 export const handleError = ({ error }: { error: any }) => {
