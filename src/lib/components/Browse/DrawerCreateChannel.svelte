@@ -96,9 +96,9 @@
 				class="flex lg:h-full p-5"
 				action="?/create-channel"
 				method="post"
-				use:enhance={({ data }) => {
+				use:enhance={({ formData }) => {
 					isLoadingChannel = true
-					data.append('newChannel', JSON.stringify(newChannel))
+					formData.append('newChannel', JSON.stringify(newChannel))
 				}}>
 				<div class="bg-base-200 w-80 md:w-[30rem] h-full flex flex-col rounded-lg lg:mb-0 mb-20">
 					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">

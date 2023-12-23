@@ -110,9 +110,9 @@
 				class="flex h-full p-5"
 				action="?/update-profile"
 				method="post"
-				use:enhance={({ data }) => {
+				use:enhance={({ formData }) => {
 					if (profile?.category?.length) {
-						data.append('category', JSON.stringify(profile?.category))
+						formData.append('category', JSON.stringify(profile?.category))
 					}
 				}}
 				on:submit={() => {
