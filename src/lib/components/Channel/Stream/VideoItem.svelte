@@ -17,7 +17,6 @@
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { get, putImage } from '$lib/api'
-	// import LibLoader from '$lib/components/Global/LibLoader.svelte'
 
 	export let video: any, channel: any
 
@@ -302,24 +301,6 @@
 			}, 1000)
 		}
 	}
-
-	// const onLibLoaded = (event: any) => {
-	// 	try {
-	// 		// The Cloudflare Stream SDK is ready to use
-	// 		streamPlayer = event.detail.library(obs_element)
-	// 		streamPlayer.addEventListener('durationchange', (evt: any) => {
-	// 			console.log('Duration change', evt)
-	// 			streamTime = streamPlayer?.duration
-	// 		})
-	// 	} catch (err) {
-	// 		console.log('err', err)
-	// 	}
-	// }
-	// <LibLoader
-	// 	src="https://embed.cloudflarestream.com/embed/sdk.latest.js"
-	// 	libraryDetectionObject="Stream"
-	// 	on:loaded={onLibLoaded}
-	// />
 </script>
 
 <div
