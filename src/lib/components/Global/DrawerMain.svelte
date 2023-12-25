@@ -5,8 +5,6 @@
 	import IconDrawerHome from '$lib/assets/icons/drawer/IconDrawerHome.svelte'
 	import IconDrawerVideos from '$lib/assets/icons/drawer/IconDrawerVideos.svelte'
 	import IconDrawerCreatorSpace from '$lib/assets/icons/drawer/IconDrawerCreatorSpace.svelte'
-	import IconDrawerCareers from '$lib/assets/icons/drawer/IconDrawerCareers.svelte'
-	import IconDrawerHelpAndLegal from '$lib/assets/icons/drawer/IconDrawerHelpAndLegal.svelte'
 	import IconDrawerSettings from '$lib/assets/icons/drawer/IconDrawerSettings.svelte'
 	import IconDrawerLogOut from '$lib/assets/icons/drawer/IconDrawerLogOut.svelte'
 	import IconSocialTwitter2 from '$lib/assets/icons/social/IconSocialTwitter2.svelte'
@@ -28,7 +26,6 @@
 	import { is_apps_modal_open, is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, getNumberInThousands, levelAndBarValueFromExp } from '$lib/utils'
 	import { onMount } from 'svelte'
-	import { is_online } from '$lib/stores/userStore'
 	import { get } from '$lib/api'
 	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
@@ -96,7 +93,7 @@
 					<div class={isChannelPage ? 'md:text-center' : ''}>
 						<div class={isChannelPage ? '' : 'my-1'}>
 							<div class="flex gap-3 {isChannelPage ? 'max-w-md' : 'max-w-full'}">
-								<div class="avatar {$is_online ? 'online' : 'offline'}">
+								<div class="avatar">
 									<div
 										class="w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser?.planDetails
 											?.planTier > 1
