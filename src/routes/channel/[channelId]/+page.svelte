@@ -219,11 +219,7 @@
 				channel = {
 					...parsedMsg.channel,
 					socket: channel.socket,
-					videoItems: channel.videoItems,
-					userDetails: channel.userDetails,
-					planDetails: channel.planDetails,
-					viewDetails: channel.viewDetails,
-					platforms: channel.platforms
+					videoItems: channel.videoItems
 				}
 
 				if (parsedMsg.roleUpdate) {
