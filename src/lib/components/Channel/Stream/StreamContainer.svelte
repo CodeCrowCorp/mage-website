@@ -138,7 +138,7 @@
 							<IconChatDrawerChevronClose />
 						</label>
 					</div>
-					{#if channel && nextchannel?._id === $page.params.channelId}
+					{#if channel && nextchannel?._id === parseInt($page.params.channelId)}
 						<VideoGrid bind:channel />
 					{/if}
 				</div>
