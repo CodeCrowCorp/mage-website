@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ListSubscribe from '$lib/components/Profile/ListSubscribe.svelte'
+	import ListSubscribe from '$lib/components/Profile/ListFollow.svelte'
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
 	import Stats from '$lib/components/Profile/Elements/Stats.svelte'
 	import Events from '$lib/components/Profile/Events.svelte'
@@ -9,13 +9,14 @@
 	export let profile: any,
 		channels: any,
 		totalChannelViews: any,
-		totalChannelViews4Weeks: any,
-		viewsMonthlyIncr: any,
-		highestAndCurrentStreak: any,
+		totalChannelViewsWeek: any,
+		viewsMonthlyChange: any,
+		currentStreak: any,
+		highestStreak: any,
 		totalMins: any,
-		streakMonthlyIncr: any,
-		totalMinsMonthlyIncr: any,
-		avgMins: any
+		lastStreamAndDuration: any,
+		totalMinsMonthlyChange: any,
+		dailyAvgMins: any
 
 	let tabs: string[] = []
 	let activeTab = 0
@@ -48,13 +49,14 @@
 			<div class="grid h-full" class:hidden={activeTab != tabs.indexOf('Stats')}>
 				<Stats
 					{profile}
-					{avgMins}
-					{viewsMonthlyIncr}
-					{streakMonthlyIncr}
-					{totalMinsMonthlyIncr}
+					{dailyAvgMins}
+					{viewsMonthlyChange}
+					{lastStreamAndDuration}
+					{totalMinsMonthlyChange}
 					{totalChannelViews}
-					{totalChannelViews4Weeks}
-					{highestAndCurrentStreak}
+					{totalChannelViewsWeek}
+					{highestStreak}
+					{currentStreak}
 					{totalMins} />
 			</div>
 		</div>

@@ -64,31 +64,31 @@ export const isJsonString = (str: string): boolean => {
 export const getSectionUrl = ({
 	sectionId,
 	query,
-	skip,
+	lastId,
 	limit
 }: {
 	sectionId: string
 	query: string
-	skip: number
+	lastId: number
 	limit: number
 }): string => {
 	switch (sectionId) {
 		case 'most-active':
-			return `channels/most-active?skip=${skip}&limit=${limit}`
+			return `channels/most-active?lastId=${lastId}&limit=${limit}`
 		case 'weekly':
-			return `channels/weekly?searchQuery=${query}&skip=${skip}&limit=${limit}`
+			return `channels/weekly?searchQuery=${query}&lastId=${lastId}&limit=${limit}`
 		case 'highest-ranked':
-			return `users/highest-ranked?searchQuery=${query}&skip=${skip}&limit=${limit}`
+			return `users/highest-ranked?searchQuery=${query}&lastId=${lastId}&limit=${limit}`
 		case 'rising-stars':
-			//analytics/stream/getRisingStars?skip=${0}&limit=${10}
-			//users/rising-stars?searchQuery=${query}&skip=${skip}&limit=${limit}
-			return `analytics/stream/rising-stars?skip=${skip}&limit=${limit}`
+			//analytics/stream/getRisingStars?lastId=${0}&limit=${10}
+			//users/rising-stars?searchQuery=${query}&lastId=${lastId}&limit=${limit}
+			return `analytics/stream/rising-stars?lastId=${lastId}&limit=${limit}`
 		case 'my':
-			return `channels/user?searchQuery=${query}&skip=${skip}&limit=${limit}`
+			return `channels/user?searchQuery=${query}&lastId=${lastId}&limit=${limit}`
 		case 'fav':
-			return `channels/me/fav?searchQuery=${query}&skip=${skip}&limit=${limit}`
+			return `channels/me/fav?searchQuery=${query}&lastId=${lastId}&limit=${limit}`
 		default:
-			return `channels?searchQuery=${query}&skip=${skip}&limit=${limit}`
+			return `channels?searchQuery=${query}&lastId=${lastId}&limit=${limit}`
 	}
 }
 
@@ -111,7 +111,7 @@ export const setRole = ({
 	currentUserId: string
 }): any => {
 	if (userId === 'AI') return '🤖 AI'
-	else if (userId === channel?.user) return 'Host'
+	else if (userId === channel?.userId) return 'Host'
 	else if (channel?.mods?.includes(userId)) return 'Mod'
 	else if (userId === currentUserId) return 'You'
 	else return 'Rando'

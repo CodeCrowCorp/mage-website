@@ -27,7 +27,7 @@
 	let queryInUrl = $page.url.searchParams.get('query') || ''
 	let query: string = queryInUrl
 	let title = '',
-		skip = 0,
+		lastId = 0,
 		limit = 10,
 		isLoading = false,
 		searchList: any[] = [],
@@ -39,19 +39,19 @@
 	const loadMore = async () => {
 		if (isLoading) return
 		isLoading = true
-		const url = getSectionUrl({ sectionId, query, skip, limit })
+		const url = getSectionUrl({ sectionId, query, lastId, limit })
 		const moreChannels = await get(`${url}&userId=${$page.data.user?.userId}`, {
 			userId: $page.data.user?.userId,
 			token: $page.data.user?.token
 		})
 		allLoaded = moreChannels.length === 0
 		searchList = searchList.concat(moreChannels)
-		skip += limit
+		lastId = moreChannels[moreChannels.length - 1]?._id
 		isLoading = false
 	}
 
-	const resetSkipLimit = () => {
-		skip = 0
+	const resetPagination = () => {
+		lastId = 0
 		limit = 10
 		allLoaded = false
 		searchList = []
@@ -91,7 +91,7 @@
 
 	$: useOueryEffect(async () => {
 		initialLoad = true
-		resetSkipLimit()
+		resetPagination()
 		await loadMore()
 		initialLoad = false
 	}, [$page.url])

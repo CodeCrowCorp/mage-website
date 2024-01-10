@@ -50,14 +50,14 @@
 	}
 
 	$: showBanItem =
-		(channel.user === $page.data.user?.userId ||
+		(channel.userId === $page.data.user?.userId ||
 			channel?.mods?.includes($page.data.user?.userId)) &&
-		channel.user !== video._id &&
+		channel.userId !== video._id &&
 		video._id !== $page.data.user?.userId &&
 		role !== '🤖 AI'
 
 	$: showRoleItem =
-		channel.user === $page.data.user?.userId &&
+		channel.userId === $page.data.user?.userId &&
 		video._id !== $page.data.user?.userId &&
 		role !== '🤖 AI'
 
@@ -277,7 +277,7 @@
 					formattedTime = formatTime(streamTime)
 					if (
 						!channel.thumbnail &&
-						video._id === channel.user &&
+						video._id === channel.userId &&
 						video._id === $page.data.user.userId &&
 						streamTime === 60
 					) {
@@ -311,7 +311,7 @@
 		<img
 			src={video.avatar}
 			alt=""
-			class="absolute inset-0 w-24 md:w-24 mask {video.planDetails?.planTier > 1
+			class="absolute inset-0 w-24 md:w-24 mask {video.planTier > 1
 				? 'mask-hexagon'
 				: 'mask-squircle'} object-cover m-auto" />
 		<div class="absolute inset-0">
@@ -365,7 +365,7 @@
 						? 'btn-outline'
 						: 'border-transparent'}"
 					>@{video.username}
-					{#if video.planDetails?.planTier > 1}
+					{#if video.planTier > 1}
 						<div class="text-accent font-bold">
 							<IconDrawerVerification />
 						</div>

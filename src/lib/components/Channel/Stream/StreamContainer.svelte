@@ -42,7 +42,7 @@
 		function callback(entries: IntersectionObserverEntry[]) {
 			const entry = entries.find((entry) => entry.isIntersecting)
 			if (entry) {
-				const id = entry.target.id
+				const id = parseInt(entry.target.id)
 				channel = channels?.filter((channel: any) => channel?._id === id)[0]
 				if (channels?.length && channels[channels.length - 2]?._id == id) {
 					dispatch('loadMore')
@@ -99,10 +99,10 @@
 						</button>
 						<div
 							class="tooltip tooltip-bottom"
-							data-tip="{getNumberInThousands(channel.viewDetails?.count || 0)} views">
+							data-tip="{getNumberInThousands(channel.viewCount || 0)} views">
 							<span class="btn btn-sm btn-neutral font-medium gap-2 text-white border-none">
 								<IconViews />
-								{getNumberInThousands(channel.viewDetails?.count || 0)}
+								{getNumberInThousands(channel.viewCount || 0)}
 							</span>
 						</div>
 						<div

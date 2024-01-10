@@ -20,12 +20,10 @@
 						LIVE
 					</span>
 				{/if}
-				<div
-					class="tooltip"
-					data-tip="{getNumberInThousands(channel.viewDetails?.count || 0)} views">
+				<div class="tooltip" data-tip="{getNumberInThousands(channel.viewCount || 0)} views">
 					<span class="btn btn-sm rounded-md font-medium gap-2 btn-neutral text-white border-none">
 						<IconViews />
-						{getNumberInThousands(channel.viewDetails?.count || 0)}
+						{getNumberInThousands(channel.viewCount || 0)}
 					</span>
 				</div>
 				<div class="tooltip" data-tip="{getNumberInThousands(channel.memberCount || 0)} watching">
@@ -54,14 +52,13 @@
 	<p class="text-lg font-semibold truncate">{channel.title}</p>
 	<div class="flex flex-row gap-2 max-w-[25rem]">
 		<div class="avatar">
-			<div
-				class="w-12 mask {channel?.planDetails?.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
-				<img src={channel.userDetails.avatar} alt="" />
+			<div class="w-12 mask {channel?.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
+				<img src={channel.avatar} alt="" />
 			</div>
 		</div>
 		<div class="flex items-center gap-1">
-			<p>@{channel.userDetails.username}</p>
-			{#if channel.planDetails?.planTier > 1}
+			<p>@{channel.username}</p>
+			{#if channel.planTier > 1}
 				<div class="text-accent font-bold">
 					<IconDrawerVerification />
 				</div>

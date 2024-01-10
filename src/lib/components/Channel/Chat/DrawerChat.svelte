@@ -57,7 +57,11 @@
 			$channel_connection === `open-${channel._id}` &&
 			channel.socket?.readyState === WebSocket.OPEN
 		) {
-			emitChatHistoryToChannel({ channelSocket: channel.socket, channelId: channel._id, skip: 100 })
+			emitChatHistoryToChannel({
+				channelSocket: channel.socket,
+				channelId: channel._id,
+				limit: 100
+			})
 		}
 	})
 
@@ -73,7 +77,7 @@
 			emitChatHistoryToChannel({
 				channelSocket: channel.socket,
 				channelId: channel._id,
-				skip: 100,
+				limit: 100,
 				cursor: cursor || 'none'
 			})
 		}
@@ -104,7 +108,7 @@
 			bind:userId={selectedUser}
 			onOutsideClick={closeProfile} />
 		{#each chatHistory as sender}
-			<Message bind:sender bind:hostId={channel.user} bind:channel {onUsernameClick} />
+			<Message bind:sender bind:hostId={channel.userId} bind:channel {onUsernameClick} />
 		{/each}
 		<span use:LastItemInViewport on:loadMore={loadMore} />
 	</div>

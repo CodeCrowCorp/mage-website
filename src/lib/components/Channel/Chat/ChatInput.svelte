@@ -18,10 +18,10 @@
 
 	$: chatMessage = ''
 	$: isChannelSocketConnected = $channel_connection === `open-${channel._id}`
-	$: isHost = channel.user === $page.data.user?.userId
+	$: isHost = channel.userId === $page.data.user?.userId
 
 	$: viewersWithOutHost = viewers.filter(
-		(viewer) => viewer.userId !== channel.user && viewer.userId !== 'anon'
+		(viewer) => viewer.userId !== channel.userId && viewer.userId !== 'anon'
 	)
 
 	function insert(str: string, index: number, value: string) {
@@ -123,7 +123,7 @@
 	// toggle commands handlers
 
 	const toggleBan = (userId: string) => {
-		if (channel.user === userId) return
+		if (channel.userId === userId) return
 		let isEnabled = false
 		if (!channel.bans.includes(userId)) {
 			channel.bans.push(userId)
@@ -141,7 +141,7 @@
 	}
 
 	const toggleMod = (userId: string) => {
-		if (channel.user === userId) return
+		if (channel.userId === userId) return
 		if (!channel.bans.includes(userId)) {
 			let isEnabled = false
 			if (!channel.mods?.includes(userId)) {
@@ -159,7 +159,7 @@
 	}
 
 	const toggleGuest = (userId: string) => {
-		if (channel.user === userId) return
+		if (channel.userId === userId) return
 		if (!channel.bans.includes(userId)) {
 			let isEnabled = false
 			if (!channel.guests.includes(userId) && channel.guests.length < 9) {
@@ -212,7 +212,8 @@
 		chatMessage.startsWith('/') &&
 		!chatMessage.startsWith('/ai ') &&
 		!chatMessage.includes('@') &&
-		(channel.user === $page.data.user?.userId || channel.mods?.includes($page.data.user?.userId)) &&
+		(channel.userId === $page.data.user?.userId ||
+			channel.mods?.includes($page.data.user?.userId)) &&
 		!showUsers
 </script>
 
