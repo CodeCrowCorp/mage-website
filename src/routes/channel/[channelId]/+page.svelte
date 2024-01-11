@@ -54,6 +54,104 @@
 		setTimeout(() => {
 			$is_chat_drawer_open = true
 		}, 600)
+
+		channel_message.subscribe(async (value: any) => {
+			if (!value || (channel && parseInt($page.params.channelId) !== channel._id)) return
+			var parsedMsg = JSON.parse(value)
+			switch (parsedMsg.eventName) {
+				case `channel-update-${$page.params.channelId}`:
+					console.log('channel-update', parsedMsg)
+					channel = {
+						...parsedMsg.channel,
+						socket: channel.socket,
+						videoItems: channel.videoItems
+					}
+
+					if (parsedMsg.roleUpdate) {
+						switch (parsedMsg.roleUpdate.roleEvent) {
+							case 'ban':
+								if (parsedMsg.roleUpdate.isEnabled) {
+									channel.videoItems = channel.videoItems.filter(
+										(video: any) => video._id !== parsedMsg.roleUpdate.userId
+									)
+								}
+								break
+							case 'guest':
+								if (parsedMsg.roleUpdate.isEnabled) {
+									channel.videoItems.push(parsedMsg.roleUpdate.user)
+									channel.videoItems = channel.videoItems
+								} else {
+									channel.videoItems = channel.videoItems.filter(
+										(video: any) => video._id !== parsedMsg.roleUpdate.userId
+									)
+								}
+								break
+						}
+					}
+					break
+				case `channel-subscribe-${$page.params.channelId}`:
+					userCount = parsedMsg.userCount
+					if (parsedMsg.quitUserId) {
+						channel.videoItems = channel.videoItems.filter(
+							(video: any) => video._id !== parsedMsg.quitUserId
+						)
+						console.log('channel.videoItems on quit : ', channel.videoItems)
+					} else {
+						const activeGuests = parsedMsg.activeGuests
+						if (activeGuests?.length) {
+							if (channel.videoItems?.length) {
+								// for users that are in the channel and new users join
+								// add new users but dont overwrite the existing ones streaming
+								channel.videoItems = activeGuests.map((guest: any) => {
+									const foundVideoItem = channel.videoItems.find(
+										(video: any) => guest._id === video._id
+									)
+									return foundVideoItem || guest
+								})
+							} else {
+								// for new users joining the channel
+								const liveInputs = await get(`live-inputs?channelId=${$page.params.channelId}`)
+								channel.videoItems = updateVideoItems([...activeGuests], liveInputs)
+
+								// check if host's video and is connected
+								const isConnectedUser = channel.videoItems.some(
+									(videoItem: any) => videoItem.isConnected && videoItem._id === channel.userId
+								)
+								if (isConnectedUser) {
+									channel.platforms = await get(`outputs/platforms?userId=${channel.userId}`)
+								}
+							}
+						}
+					}
+					break
+				case `channel-streaming-action-${$page.params.channelId}`:
+					switch (parsedMsg.data.action) {
+						case 'toggleTrack':
+							if (channel) {
+								// if ($page.data.user?.userId) {
+								// 	if ($page.data.user.userId !== parsedMsg.data.video._id) {
+								// 		channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
+								// 	}
+								// } else {
+								channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
+								if (
+									channel.userId === parsedMsg.data.video._id &&
+									parsedMsg.data.video.isConnected
+								) {
+									channel.platforms = parsedMsg.data.video.platforms
+								}
+								// }
+							}
+							break
+					}
+					break
+				case `channel-platform-count-${$page.params.channelId}`:
+					if (channel) {
+						channel.platforms = parsedMsg.platforms
+					}
+					break
+			}
+		})
 	})
 
 	onDestroy(async () => {
@@ -212,101 +310,6 @@
 		channels = [...channels, ...newchannels]
 		lastId = newchannels[newchannels.length - 1]?._id
 	}
-
-	channel_message.subscribe(async (value: any) => {
-		if (!value || (channel && parseInt($page.params.channelId) !== channel._id)) return
-		var parsedMsg = JSON.parse(value)
-		switch (parsedMsg.eventName) {
-			case `channel-update-${$page.params.channelId}`:
-				console.log('channel-update', parsedMsg)
-				channel = {
-					...parsedMsg.channel,
-					socket: channel.socket,
-					videoItems: channel.videoItems
-				}
-
-				if (parsedMsg.roleUpdate) {
-					switch (parsedMsg.roleUpdate.roleEvent) {
-						case 'ban':
-							if (parsedMsg.roleUpdate.isEnabled) {
-								channel.videoItems = channel.videoItems.filter(
-									(video: any) => video._id !== parsedMsg.roleUpdate.userId
-								)
-							}
-							break
-						case 'guest':
-							if (parsedMsg.roleUpdate.isEnabled) {
-								channel.videoItems.push(parsedMsg.roleUpdate.user)
-								channel.videoItems = channel.videoItems
-							} else {
-								channel.videoItems = channel.videoItems.filter(
-									(video: any) => video._id !== parsedMsg.roleUpdate.userId
-								)
-							}
-							break
-					}
-				}
-				break
-			case `channel-subscribe-${$page.params.channelId}`:
-				userCount = parsedMsg.userCount
-				if (parsedMsg.quitUserId) {
-					channel.videoItems = channel.videoItems.filter(
-						(video: any) => video._id !== parsedMsg.quitUserId
-					)
-					console.log('channel.videoItems on quit : ', channel.videoItems)
-				} else {
-					const activeGuests = parsedMsg.activeGuests
-					if (activeGuests?.length) {
-						if (channel.videoItems?.length) {
-							// for users that are in the channel and new users join
-							// add new users but dont overwrite the existing ones streaming
-							channel.videoItems = activeGuests.map((guest: any) => {
-								const foundVideoItem = channel.videoItems.find(
-									(video: any) => guest._id === video._id
-								)
-								return foundVideoItem || guest
-							})
-						} else {
-							// for new users joining the channel
-							const liveInputs = await get(`live-inputs?channelId=${$page.params.channelId}`)
-							channel.videoItems = updateVideoItems([...activeGuests], liveInputs)
-
-							// check if host's video and is connected
-							const isConnectedUser = channel.videoItems.some(
-								(videoItem: any) => videoItem.isConnected && videoItem._id === channel.userId
-							)
-							if (isConnectedUser) {
-								channel.platforms = await get(`outputs/platforms?userId=${channel.userId}`)
-							}
-						}
-					}
-				}
-				break
-			case `channel-streaming-action-${$page.params.channelId}`:
-				switch (parsedMsg.data.action) {
-					case 'toggleTrack':
-						if (channel) {
-							// if ($page.data.user?.userId) {
-							// 	if ($page.data.user.userId !== parsedMsg.data.video._id) {
-							// 		channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
-							// 	}
-							// } else {
-							channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
-							if (channel.userId === parsedMsg.data.video._id && parsedMsg.data.video.isConnected) {
-								channel.platforms = parsedMsg.data.video.platforms
-							}
-							// }
-						}
-						break
-				}
-				break
-			case `channel-platform-count-${$page.params.channelId}`:
-				if (channel) {
-					channel.platforms = parsedMsg.platforms
-				}
-				break
-		}
-	})
 </script>
 
 {#if !$is_sharing_screen && !$is_sharing_webcam && !$is_sharing_audio && isHostOrGuest}
