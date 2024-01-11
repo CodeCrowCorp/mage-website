@@ -257,7 +257,7 @@
 				} else {
 					const activeGuests = parsedMsg.activeGuests
 					if (activeGuests?.length) {
-						if (channel.videoItems.length) {
+						if (channel.videoItems?.length) {
 							// for users that are in the channel and new users join
 							// add new users but dont overwrite the existing ones streaming
 							channel.videoItems = activeGuests.map((guest: any) => {
