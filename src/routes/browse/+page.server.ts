@@ -7,29 +7,29 @@ export const load = (async ({ locals }) => {
 	return {
 		lazy: {
 			mostActiveChannels: get(
-				getSectionUrl({ sectionId: 'most-active', query: '', skip: 0, limit: 5 })
+				getSectionUrl({ sectionId: 'most-active', query: '', lastId: 0, limit: 5 })
 			),
-			weeklyChannels: get(getSectionUrl({ sectionId: 'weekly', query: '', skip: 0, limit: 10 })),
+			weeklyChannels: get(getSectionUrl({ sectionId: 'weekly', query: '', lastId: 0, limit: 10 })),
 			highestRankedUsers: get(
-				getSectionUrl({ sectionId: 'highest-ranked', query: '', skip: 0, limit: 10 })
+				getSectionUrl({ sectionId: 'highest-ranked', query: '', lastId: 0, limit: 10 })
 			),
 			risingStarUsers: get(
-				getSectionUrl({ sectionId: 'rising-stars', query: '', skip: 0, limit: 150 })
+				getSectionUrl({ sectionId: 'rising-stars', query: '', lastId: 0, limit: 150 })
 			),
 			myChannels: locals.user
 				? get(
-						`${getSectionUrl({ sectionId: 'my', query: '', skip: 0, limit: 10 })}&userId=${
+						`${getSectionUrl({ sectionId: 'my', query: '', lastId: 0, limit: 10 })}&userId=${
 							locals.user?.userId
 						}`
 				  )
 				: [],
 			favChannels: locals.user
-				? get(getSectionUrl({ sectionId: 'fav', query: '', skip: 0, limit: 10 }), {
+				? get(getSectionUrl({ sectionId: 'fav', query: '', lastId: 0, limit: 10 }), {
 						userId: locals.user.userId,
 						token: locals.user.token
 				  })
 				: [],
-			tableChannels: get(getSectionUrl({ sectionId: '', query: '', skip: 0, limit: 100 }))
+			tableChannels: get(getSectionUrl({ sectionId: '', query: '', lastId: 0, limit: 100 }))
 		}
 	}
 }) satisfies PageServerLoad
@@ -43,6 +43,6 @@ export const actions = {
 			userId,
 			token
 		})
-		redirect(303, `/channel/${channel._id}`);
+		redirect(303, `/channel/${channel._id}`)
 	}
 } satisfies Actions

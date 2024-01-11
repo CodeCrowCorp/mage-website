@@ -52,14 +52,13 @@
 
 			<div class="flex items-center">
 				<div class="avatar">
-					<div
-						class="w-12 mask {item?.planDetails?.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
-						<img src={item.userDetails.avatar} alt="" />
+					<div class="w-12 mask {item?.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
+						<img src={item.avatar} alt="" />
 					</div>
 				</div>
-				<a class="ml-2 link link-hover flex gap-1" href="/{item.userDetails.username}"
-					>@{item.userDetails.username || ''}
-					{#if item.planDetails?.planTier > 1}
+				<a class="ml-2 link link-hover flex gap-1" href="/{item.username}"
+					>@{item.username || ''}
+					{#if item.planTier > 1}
 						<div class="text-accent font-bold">
 							<IconDrawerVerification />
 						</div>

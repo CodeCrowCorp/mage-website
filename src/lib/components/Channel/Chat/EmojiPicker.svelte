@@ -16,7 +16,7 @@
 			locale: 'en'
 		})
 
-		container.appendChild(picker)
+		container?.appendChild(picker)
 		if (onSelect)
 			picker.addEventListener('emoji-click', (event) => {
 				onSelect(event.detail.unicode)

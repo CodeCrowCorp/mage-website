@@ -47,7 +47,7 @@ const emitChannelSubscribeByUser = ({
 	channelSocket.send(
 		JSON.stringify({
 			eventName: `channel-subscribe`,
-			channel: channelId,
+			channelId,
 			hostId,
 			user: { userId, username }
 		})
@@ -63,7 +63,7 @@ const emitMessageToChannel = ({
 	channelId: string
 	message: any
 }) => {
-	channelSocket.send(JSON.stringify({ eventName: `channel-message`, channel: channelId, message }))
+	channelSocket.send(JSON.stringify({ eventName: `channel-message`, channelId, message }))
 }
 
 const emitDeleteMessageToChannel = ({
@@ -78,7 +78,7 @@ const emitDeleteMessageToChannel = ({
 	channelSocket.send(
 		JSON.stringify({
 			eventName: `delete-channel-message`,
-			channel: channelId,
+			channelId,
 			message
 		})
 	)
@@ -91,36 +91,34 @@ const emitDeleteAllMessagesToChannel = ({
 	channelSocket: WebSocket
 	channelId: string
 }) => {
-	channelSocket.send(
-		JSON.stringify({ eventName: `delete-all-channel-messages`, channel: channelId })
-	)
+	channelSocket.send(JSON.stringify({ eventName: `delete-all-channel-messages`, channelId }))
 }
 
 const emitChatHistoryToChannel = ({
 	channelSocket,
 	channelId,
-	skip,
+	limit,
 	cursor
 }: {
 	channelSocket: WebSocket
 	channelId: string
-	skip: number
+	limit: number
 	cursor?: string
 }) => {
 	if (!cursor) {
 		channelSocket.send(
 			JSON.stringify({
 				eventName: `channel-message-history`,
-				channel: channelId,
-				skip
+				channelId,
+				limit
 			})
 		)
 	} else {
 		channelSocket.send(
 			JSON.stringify({
 				eventName: `channel-message-history`,
-				channel: channelId,
-				skip,
+				channelId,
+				limit,
 				cursor
 			})
 		)
@@ -143,7 +141,7 @@ const emitReactToMessage = ({
 	channelSocket.send(
 		JSON.stringify({
 			eventName: `react-to-message`,
-			channel: channelId,
+			channelId,
 			message,
 			user,
 			reaction

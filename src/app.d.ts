@@ -6,7 +6,7 @@ declare namespace App {
 	interface Locals {
 		user: {
 			token?: string
-			userId?: string
+			userId?: number
 			user?: any
 		}
 		platform: {

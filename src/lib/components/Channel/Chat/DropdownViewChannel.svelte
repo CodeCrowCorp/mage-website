@@ -42,9 +42,9 @@
 	})
 
 	const getHostRelationship = async () => {
-		isHost = channel.user === $page?.data?.user?.userId
+		isHost = channel.userId === $page?.data?.user?.userId
 		if ($page.data.user?.userId) {
-			const relationship = await get(`follows/relationship?source=${channel.user}`, {
+			const relationship = await get(`follows/relationship?source=${channel.userId}`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
@@ -57,11 +57,11 @@
 		if (isFollowing) {
 			await put(
 				`follows`,
-				{ source1: channel.user, source2: $page.data.user?.userId },
+				{ source1: channel.userId, source2: $page.data.user?.userId },
 				{ userId: $page.data.user?.userId, token: $page.data.user?.token }
 			)
 		} else {
-			await del(`follows?source1=${channel.user}&source2=${$page.data.user?.userId}`, {
+			await del(`follows?source1=${channel.userId}&source2=${$page.data.user?.userId}`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
@@ -139,23 +139,20 @@
 			</a>
 		</li>
 		<li>
-			<a href="/{channel.userDetails?.username}">
+			<a href="/{channel.username}">
 				<div class="flex flex-wrap gap-2">
 					<div class="avatar online">
-						<div
-							class="w-12 mask {channel.planDetails?.planTier > 1
-								? 'mask-hexagon'
-								: 'mask-squircle'}">
-							<img src={channel.userDetails?.avatar} alt="" />
+						<div class="w-12 mask {channel.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
+							<img src={channel?.avatar} alt="" />
 						</div>
 					</div>
 					<div>
 						<div class="col-span-3 flex">
-							<p class="truncate">{channel.userDetails?.displayName}</p>
+							<p class="truncate">{channel?.displayName}</p>
 						</div>
 						<div class="col-span-3 flex gap-1">
-							<p class="truncate">@{channel.userDetails?.username}</p>
-							{#if channel.planDetails?.planTier > 1}
+							<p class="truncate">@{channel.username}</p>
+							{#if channel.planTier > 1}
 								<div class="text-accent font-bold">
 									<IconDrawerVerification />
 								</div>
