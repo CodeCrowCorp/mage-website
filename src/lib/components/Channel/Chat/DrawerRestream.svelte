@@ -113,6 +113,22 @@
 		const rtmps = await getLiveInput()
 		await sendOutputs({ liveInputUid: rtmps.rtmps.uid })
 	}
+
+	const getTwitchStreamLink = async () => {
+		const linkRes = await get(`twitch/stream/link?channelId=${$page.params.channelId}`, auth)
+
+		payload.streamKey = linkRes.streamKey
+		selected = 'twitch'
+	}
+
+	const getYoutubeStreamLink = async () => {
+		const linkRes = await get(`youtube/stream/link?channelId=${$page.params.channelId}`, auth)
+
+		;(payload.url = linkRes.streamaddress),
+			(payload.streamKey = linkRes.streamKey),
+			(selected = 'youtube')
+			console.log(selected)
+	}
 </script>
 
 <div class="drawer drawer-end">
@@ -121,8 +137,7 @@
 		type="checkbox"
 		class="drawer-toggle"
 		bind:checked={$is_restream_drawer_open} />
-
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 	<div class="drawer-side z-50 overflow-x-hidden" on:click={overlayClick}>
 		<label id="overlay" for="restream-drawer" aria-label="close sidebar" class="drawer-overlay" />
 		<div class="flex lg:h-full p-5">
@@ -174,6 +189,7 @@
 				</div>
 
 				<dialog class={`modal ${confirm_modal && 'modal-open'}`}>
+					<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 					<form on:keydown={(event) => event.key != 'Enter'} method="dialog" class="modal-box">
 						<h3 class="font-bold text-lg">Delete restream url</h3>
 						<p class="py-4">
@@ -199,10 +215,30 @@
 						<div class="form-control w-full pt-4">
 							<div class="flex gap-3">
 								{#if env.PUBLIC_CROSS_ORIGIN === 'false'}
-									<a class="btn btn-sm" href="{env.PUBLIC_API_URL}/auth/twitch"
-										><IconSocialTwitch /> Twitch</a>
-									<a class="btn btn-sm" href="{env.PUBLIC_API_URL}/auth/youtube"
-										><IconSocialYouTube /> YouTube</a>
+									<button
+										on:click={async () => {
+											const linkRes = await get(
+												`youtube/link?channelId=${$page.params.channelId}`,
+												auth
+											)
+											if (linkRes.redirect) {
+												window.location.replace(linkRes.redirectUrl)
+											}
+										}}>Link Youtube</button>
+									<button
+										on:click={async () => {
+											const linkRes = await get(
+												`twitch/link?channelId=${$page.params.channelId}`,
+												auth
+											)
+											if (linkRes.redirect) {
+												window.location.replace(linkRes.redirectUrl)
+											}
+										}}>Link twitch</button>
+									<button class="btn btn-sm" on:click={getTwitchStreamLink}
+										><IconSocialTwitch /> Twitch</button>
+									<button class="btn btn-sm" on:click={getYoutubeStreamLink}
+										><IconSocialYouTube /> YouTube</button>
 								{:else}
 									<button
 										class="btn btn-sm"
@@ -222,6 +258,7 @@
 											})}><IconSocialYouTube /> YouTube</button>
 								{/if}
 							</div>
+							<!-- svelte-ignore a11y-label-has-associated-control-->
 							<label class="label">
 								<span class="label-text">Title</span>
 							</label>
@@ -232,20 +269,22 @@
 								class="input input-bordered w-full max-w-xs input-primary"
 								maxlength="20" />
 							<!-- svelte-ignore a11y-label-has-associated-control -->
-							<label class="label mt-5">
-								<span class="label-text">Server</span>
-							</label>
-							<input
-								bind:value={payload.url}
-								type="text"
-								placeholder="Enter server url"
-								class="input input-bordered w-full max-w-xs input-primary"
-								on:blur={onBlur} />
-							{#if touched && invalidUrl}
-								<div class="text-error text-sm mt-2">Please enter a valid URL</div>
-							{/if}
-							{#if touched && !invalidUrl && cloudflareUrl}
-								<div class="text-error text-sm mt-2">Cloudfare urls not allowed</div>
+							{#if selected == 'youtube'}
+								<label class="label mt-5">
+									<span class="label-text">Server</span>
+								</label>
+								<input
+									bind:value={payload.url}
+									type="text"
+									placeholder="Enter server url"
+									class="input input-bordered w-full max-w-xs input-primary"
+									on:blur={onBlur} />
+								{#if touched && invalidUrl}
+									<div class="text-error text-sm mt-2">Please enter a valid URL</div>
+								{/if}
+								{#if touched && !invalidUrl && cloudflareUrl}
+									<div class="text-error text-sm mt-2">Cloudfare urls not allowed</div>
+								{/if}
 							{/if}
 							<!-- svelte-ignore a11y-label-has-associated-control -->
 							<label class="label mt-5">
