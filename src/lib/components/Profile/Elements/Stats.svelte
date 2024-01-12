@@ -58,7 +58,9 @@
 		<div class="stat-desc">
 			Last streamed
 			{#if lastStreamAndDuration.duration > 0}
-				{lastStreamAndDuration.duration} mins on {timeSince(lastStreamAndDuration.end)}
+				{getNumberInThousands(lastStreamAndDuration.duration)} mins {timeSince(
+					lastStreamAndDuration.start
+				)}
 			{:else}
 				never
 			{/if}
@@ -69,8 +71,10 @@
 		<div class="stat-figure text-secondary">
 			<IconProfileStreamDuration />
 		</div>
-		<div class="stat-title">Total / Daily Avg Mins Streamed</div>
-		<div class="stat-value text-secondary">{totalMins} / {dailyAvgMins}</div>
+		<div class="stat-title">Total / Daily Avg Mins</div>
+		<div class="stat-value text-secondary">
+			{getNumberInThousands(totalMins)} / {getNumberInThousands(dailyAvgMins)}
+		</div>
 		<div class="stat-desc">
 			{totalMinsMonthlyChange >= 0
 				? `${totalMinsMonthlyChange}% more`
