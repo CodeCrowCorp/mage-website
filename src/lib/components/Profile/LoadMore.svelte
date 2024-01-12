@@ -86,20 +86,23 @@
 </script>
 
 <div>
-	<div class="input-group relative mb-2">
+	<div class="input-group relative mb-2 join w-full">
 		<input
 			name="query"
 			bind:value={query}
 			type="search"
 			placeholder={inputPlaceholder}
-			class="input input-bordered input-primary w-full"
+			class="input input-bordered input-primary w-full join-item"
 			on:keydown={(e) => {
 				if (e.key === 'Enter') {
 					search()
 				}
 			}}
 			disabled={loading} />
-		<button disabled={loading} on:click={search} class="btn btn-square btn-neutral text-white">
+		<button
+			disabled={loading}
+			on:click={search}
+			class="btn btn-square btn-neutral text-white join-item">
 			<IconSearch />
 		</button>
 	</div>
