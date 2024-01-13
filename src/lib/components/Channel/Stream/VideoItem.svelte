@@ -271,7 +271,7 @@
 					if (streamTime < 1) {
 						const inputId = video.uid
 						const streamRecord = await get(`analytics/stream?inputId=${inputId}`)
-						streamTime = Math.floor((Date.now() - streamRecord?.start) / 1000)
+						streamTime = Math.floor((Date.now() - new Date(streamRecord.start).getTime()) / 1000)
 					}
 					streamTime += 1
 					formattedTime = formatTime(streamTime)

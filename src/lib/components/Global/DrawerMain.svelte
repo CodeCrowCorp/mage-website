@@ -303,7 +303,7 @@
 			<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 				<IconSocialGitHub />
 			</a>
-			<a href="https://discord.gg/CodeCrow" target="_blank" rel="noreferrer">
+			<a href="https://discord.gg/cFkWepZfwc" target="_blank" rel="noreferrer">
 				<img src={IconSocialDiscord} alt="" />
 			</a>
 			<a href="https://twitter.com/gagansuie" target="_blank" rel="noreferrer">
