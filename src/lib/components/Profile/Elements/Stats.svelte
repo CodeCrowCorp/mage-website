@@ -2,28 +2,30 @@
 	import IconProfileViews from '$lib/assets/icons/profile/IconProfileViews.svelte'
 	import IconProfileStreak from '$lib/assets/icons/profile/IconProfileStreak.svelte'
 	import IconProfileStreamDuration from '$lib/assets/icons/profile/IconProfileStreamDuration.svelte'
-	import { getNumberInThousands } from '$lib/utils'
+	import { getNumberInThousands, timeSince } from '$lib/utils'
 	import { onMount } from 'svelte'
 	// import IconProfileSponsor from '$lib/assets/icons/profile/IconProfileSponsor.svelte'
 
 	export let profile: any,
 		totalChannelViews: any,
-		totalChannelViews4Weeks: any,
-		viewsMonthlyIncr: any,
-		highestAndCurrentStreak: any,
-		streakMonthlyIncr: any,
+		totalChannelViewsWeek: any,
+		viewsMonthlyChange: any,
+		highestStreak: any,
+		currentStreak: any,
+		lastStreamAndDuration: any,
 		totalMins: any,
-		totalMinsMonthlyIncr: any,
-		avgMins: any
+		totalMinsMonthlyChange: any,
+		dailyAvgMins: any
 
 	onMount(async () => {
 		if (profile) {
-			viewsMonthlyIncr = (await viewsMonthlyIncr) || 0
-			highestAndCurrentStreak = (await highestAndCurrentStreak) || 0
-			streakMonthlyIncr = (await streakMonthlyIncr) || 0
+			viewsMonthlyChange = (await viewsMonthlyChange) || 0
+			highestStreak = (await highestStreak) || 0
+			currentStreak = (await currentStreak) || 0
+			lastStreamAndDuration = (await lastStreamAndDuration) || 0
 			totalMins = (await totalMins) || 0
-			totalMinsMonthlyIncr = (await totalMinsMonthlyIncr) || 0
-			avgMins = (await avgMins) || 0
+			totalMinsMonthlyChange = (await totalMinsMonthlyChange) || 0
+			dailyAvgMins = (await dailyAvgMins) || 0
 		}
 	})
 </script>
@@ -33,13 +35,16 @@
 		<div class="stat-figure text-primary">
 			<IconProfileViews />
 		</div>
-		<div class="stat-title">Total / 4-Wk Channel Views</div>
+		<div class="stat-title">Total / Wk Channel Views</div>
 		<div class="stat-value text-primary">
 			{getNumberInThousands(totalChannelViews || 0)} / {getNumberInThousands(
-				totalChannelViews4Weeks || 0
+				totalChannelViewsWeek || 0
 			)}
 		</div>
-		<div class="stat-desc">{viewsMonthlyIncr.monthlyChange>=0 ? `${viewsMonthlyIncr.monthlyChange}% more` : `0%`} more than last month</div>
+		<div class="stat-desc">
+			{viewsMonthlyChange >= 0 ? `${viewsMonthlyChange}% more` : `${viewsMonthlyChange}% less`}
+			than last month
+		</div>
 	</div>
 
 	<div class="stat">
@@ -48,18 +53,33 @@
 		</div>
 		<div class="stat-title">Highest / Current Streak</div>
 		<div class="stat-value text-secondary">
-			{highestAndCurrentStreak.highest} / {highestAndCurrentStreak.current}
+			{highestStreak} / {currentStreak}
 		</div>
-		<div class="stat-desc">{streakMonthlyIncr.monthlyChange>=0 ? `${streakMonthlyIncr.monthlyChange}%` : `0%` } more than last month</div>
+		<div class="stat-desc">
+			Last streamed
+			{#if lastStreamAndDuration.duration > 0}
+				{getNumberInThousands(lastStreamAndDuration.duration)} mins {timeSince(
+					lastStreamAndDuration.start
+				)}
+			{:else}
+				never
+			{/if}
+		</div>
 	</div>
 
 	<div class="stat">
 		<div class="stat-figure text-secondary">
 			<IconProfileStreamDuration />
 		</div>
-		<div class="stat-title">Total / Avg Mins Streamed</div>
-		<div class="stat-value text-secondary">{totalMins} / {avgMins}</div>
-		<div class="stat-desc">{totalMinsMonthlyIncr.monthlyChange>=0 ? `${totalMinsMonthlyIncr.monthlyChange}%` : `0%` } more than last month</div>
+		<div class="stat-title">Total / Daily Avg Mins</div>
+		<div class="stat-value text-secondary">
+			{getNumberInThousands(totalMins)} / {getNumberInThousands(dailyAvgMins)}
+		</div>
+		<div class="stat-desc">
+			{totalMinsMonthlyChange >= 0
+				? `${totalMinsMonthlyChange}% more`
+				: `${totalMinsMonthlyChange}% less`} than last month
+		</div>
 	</div>
 
 	<!-- <div class="stat">

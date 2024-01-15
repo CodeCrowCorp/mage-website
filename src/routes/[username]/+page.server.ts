@@ -5,27 +5,28 @@ import { redirect, fail, error } from '@sveltejs/kit'
 export const load = (async ({ params }: { params: any }) => {
 	const profile = await get(`users/search/username?username=${params.username.toLowerCase()}`)
 	if (profile.error) {
-		error(404);
+		error(404)
 	}
 	return {
 		profile: profile,
 		lazy: {
-			channels: get(`channels/user?userId=${profile._id}&skip=${0}&limit=${10}`),
+			channels: get(`channels/user?userId=${profile._id}&limitId=${0}&limit=${10}`),
 			totalPageViews: get(`analytics/views/total-views?viewType=user&viewId=${profile._id}`),
-			totalChannelViews: get(`analytics/views/total-views?viewType=channel&host=${profile._id}`),
-			totalChannelViews4Weeks: get(
-				`analytics/views/total-views/4-weeks?viewType=channel&host=${profile._id}`
+			totalChannelViews: get(`analytics/views/total-views?viewType=channel&viewId=${profile._id}`),
+			totalChannelViewsWeek: get(
+				`analytics/views/total-views/7-days?viewType=channel&viewId=${profile._id}`
 			),
-			viewsMonthlyIncr: get(
-				`analytics/views/monthly-increase?viewType=channel&host=${profile._id}`
+			viewsMonthlyChange: get(
+				`analytics/views/monthly-change?viewType=channel&viewId=${profile._id}`
 			),
-			highestAndCurrentStreak: get(`analytics/stream/streak?userId=${profile._id}`),
-			streakMonthlyIncr: get(`analytics/stream/streak/monthly-increase?userId=${profile._id}`),
+			highestStreak: get(`analytics/stream/streak/highest?userId=${profile._id}`),
+			currentStreak: get(`analytics/stream/streak/current?userId=${profile._id}`),
+			lastStreamAndDuration: get(`analytics/stream/last?userId=${profile._id}`),
 			totalMins: get(`analytics/stream/total-mins?userId=${profile._id}`),
-			totalMinsMonthlyIncr: get(
-				`analytics/stream/total-mins/monthly-increase?userId=${profile._id}`
+			totalMinsMonthlyChange: get(
+				`analytics/stream/total-mins/monthly-change?userId=${profile._id}`
 			),
-			avgMins: get(`analytics/stream/avg-mins?userId=${profile._id}`)
+			dailyAvgMins: get(`analytics/stream/avg-mins/daily?userId=${profile._id}`)
 		}
 	}
 }) satisfies PageServerLoad
@@ -33,14 +34,14 @@ export const load = (async ({ params }: { params: any }) => {
 export const actions = {
 	'update-profile': async ({ request, locals }: { request: any; locals: any }) => {
 		const data: FormData = await request.formData()
-		let newUser: any = {}
+		const newUser: any = {}
 		addPropertyIfDefined(data, 'displayName', newUser)
 		addPropertyIfDefined(data, 'username', newUser)
 		addPropertyIfDefined(data, 'category', newUser)
 		addPropertyIfDefined(data, 'bio', newUser)
 		addPropertyIfDefined(data, 'urls', newUser, true)
 
-		newUser.urls = newUser.urls.filter((i:string) => i)
+		newUser.urls = newUser.urls.filter((i: string) => i)
 
 		const avatar = data.get('avatar') as File
 
@@ -80,9 +81,9 @@ export const actions = {
 		} else {
 			if (updatedUser._id) {
 				locals.user.user = updatedUser
-				redirect(303, `/${updatedUser.username}`);
+				redirect(303, `/${updatedUser.username}`)
 			} else {
-				redirect(303, 'browse');
+				redirect(303, 'browse')
 			}
 		}
 	},

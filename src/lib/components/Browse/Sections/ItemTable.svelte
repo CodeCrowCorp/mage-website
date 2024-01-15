@@ -14,16 +14,15 @@
 	<td>
 		<div class="flex items-center space-x-2 pl-3">
 			<div class="avatar">
-				<div
-					class="w-12 mask {channel.planDetails?.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
-					<img src={channel.userDetails.avatar} alt="" />
+				<div class="w-12 mask {channel.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
+					<img src={channel.avatar} alt="" />
 				</div>
 			</div>
 			<div>
-				<div class="font-bold">{channel.userDetails.displayName || ''}</div>
+				<div class="font-bold">{channel.displayName || ''}</div>
 				<div class="text-sm flex gap-1">
-					@{channel.userDetails.username || ''}
-					{#if channel.planDetails?.planTier > 1}
+					@{channel.username || ''}
+					{#if channel.planTier > 1}
 						<div class="text-accent font-bold">
 							<IconDrawerVerification />
 						</div>
@@ -42,9 +41,9 @@
 		<div class="flex gap-4">
 			<div
 				class="flex gap-2 tooltip"
-				data-tip="{getNumberInThousands(channel.viewDetails?.count || 0)} views">
+				data-tip="{getNumberInThousands(channel.viewCount || 0)} views">
 				<IconViews />
-				<span>{getNumberInThousands(channel.viewDetails?.count || 0)}</span>
+				<span>{getNumberInThousands(channel.viewCount || 0)}</span>
 			</div>
 			<div
 				class="flex gap-2 tooltip"

@@ -35,10 +35,10 @@
 		copyTextKey = 'Copy',
 		urlList: any = []
 
-	$: isHost = channel?.user === $page.data.user?.userId
+	$: isHost = channel?.userId === $page.data.user?.userId
 
 	$: viewersWithOutHost = viewers.filter(
-		(viewer) => viewer.userId !== channel.user && viewer.userId !== 'anon'
+		(viewer) => viewer.userId !== channel.userId && viewer.userId !== 'anon'
 	)
 
 	$: isChannelSocketConnected =
@@ -93,7 +93,7 @@
 	}
 
 	const toggleGuest = (userId: string) => {
-		if (channel.user === userId) return
+		if (channel.userId === userId) return
 		if (!channel.bans.includes(userId)) {
 			let isEnabled = false
 			if (!channel.guests.includes(userId) && channel.guests.length < 9) {

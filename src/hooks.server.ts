@@ -52,7 +52,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		//TODO: if need to update platform object, visit app.d.ts file
 		event.locals = {
 			user: {
-				userId,
+				userId: parseInt(userId),
 				token,
 				user
 			},
@@ -83,7 +83,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 	} else {
 		return await resolve(event)
 	}
-	return await resolve(event)
 }
 
 export const handleError = ({ error }: { error: any }) => {

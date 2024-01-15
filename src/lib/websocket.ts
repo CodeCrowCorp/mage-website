@@ -1,16 +1,14 @@
 import { env } from '$env/dynamic/public'
 
-let platformSocket: WebSocket
-
-const initPlatformSocket = ({ websocketId }: { websocketId: string }) => {
-	platformSocket = new WebSocket(`${env.PUBLIC_WEBSOCKET_URL}/wsinit/wsid/${websocketId}/connect`)
-}
-
-const emitUserConnection = ({ userId, isOnline }: { userId: string; isOnline: boolean }) => {
-	platformSocket.send(
-		JSON.stringify({ eventName: isOnline ? 'user-connect' : 'user-disconnect', userId: userId })
-	)
-}
+// let platformSocket: WebSocket
+// const initPlatformSocket = ({ websocketId }: { websocketId: string }) => {
+// 	platformSocket = new WebSocket(`${env.PUBLIC_WEBSOCKET_URL}/wsinit/wsid/${websocketId}/connect`)
+// }
+// const emitUserConnection = ({ userId, isOnline }: { userId: string; isOnline: boolean }) => {
+// 	platformSocket.send(
+// 		JSON.stringify({ eventName: isOnline ? 'user-connect' : 'user-disconnect', userId: userId })
+// 	)
+// }
 
 const initChannelSocket = ({ websocketId }: { websocketId: string }) => {
 	return new WebSocket(`${env.PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${websocketId}/connect`)
@@ -28,10 +26,6 @@ const emitChannelUpdate = ({
 	const noSocketChannel = { ...channel }
 	delete noSocketChannel.socket
 	delete noSocketChannel.videoItems
-	delete noSocketChannel.userDetails
-	delete noSocketChannel.planDetails
-	delete noSocketChannel.viewDetails
-	delete noSocketChannel.platforms
 	channelSocket.send(
 		JSON.stringify({ eventName: `channel-update`, channel: noSocketChannel, roleUpdate })
 	)
@@ -53,7 +47,7 @@ const emitChannelSubscribeByUser = ({
 	channelSocket.send(
 		JSON.stringify({
 			eventName: `channel-subscribe`,
-			channel: channelId,
+			channelId,
 			hostId,
 			user: { userId, username }
 		})
@@ -69,7 +63,7 @@ const emitMessageToChannel = ({
 	channelId: string
 	message: any
 }) => {
-	channelSocket.send(JSON.stringify({ eventName: `channel-message`, channel: channelId, message }))
+	channelSocket.send(JSON.stringify({ eventName: `channel-message`, channelId, message }))
 }
 
 const emitDeleteMessageToChannel = ({
@@ -84,7 +78,7 @@ const emitDeleteMessageToChannel = ({
 	channelSocket.send(
 		JSON.stringify({
 			eventName: `delete-channel-message`,
-			channel: channelId,
+			channelId,
 			message
 		})
 	)
@@ -97,36 +91,34 @@ const emitDeleteAllMessagesToChannel = ({
 	channelSocket: WebSocket
 	channelId: string
 }) => {
-	channelSocket.send(
-		JSON.stringify({ eventName: `delete-all-channel-messages`, channel: channelId })
-	)
+	channelSocket.send(JSON.stringify({ eventName: `delete-all-channel-messages`, channelId }))
 }
 
 const emitChatHistoryToChannel = ({
 	channelSocket,
 	channelId,
-	skip,
+	limit,
 	cursor
 }: {
 	channelSocket: WebSocket
 	channelId: string
-	skip: number
+	limit: number
 	cursor?: string
 }) => {
 	if (!cursor) {
 		channelSocket.send(
 			JSON.stringify({
 				eventName: `channel-message-history`,
-				channel: channelId,
-				skip
+				channelId,
+				limit
 			})
 		)
 	} else {
 		channelSocket.send(
 			JSON.stringify({
 				eventName: `channel-message-history`,
-				channel: channelId,
-				skip,
+				channelId,
+				limit,
 				cursor
 			})
 		)
@@ -149,7 +141,7 @@ const emitReactToMessage = ({
 	channelSocket.send(
 		JSON.stringify({
 			eventName: `react-to-message`,
-			channel: channelId,
+			channelId,
 			message,
 			user,
 			reaction
@@ -173,10 +165,10 @@ const emitGetConnectedUsers = ({
 }
 
 export {
-	platformSocket,
-	initPlatformSocket,
+	// platformSocket,
+	// initPlatformSocket,
+	// emitUserConnection,
 	initChannelSocket,
-	emitUserConnection,
 	emitChannelUpdate,
 	emitChannelSubscribeByUser,
 	emitMessageToChannel,

@@ -32,7 +32,7 @@
 	{#if profile.username}
 		<div class="text-lg leading-normal mt-0 mb-2 font-bold flex gap-1">
 			@{profile.username || ''}
-			{#if profile?.planDetails?.planTier > 1}
+			{#if profile?.planTier > 1}
 				<div class="text-accent font-bold">
 					<IconDrawerVerification />
 				</div>

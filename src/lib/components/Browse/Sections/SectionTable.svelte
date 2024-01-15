@@ -8,15 +8,15 @@
 	export let channels: any = [],
 		profileId: string = ''
 
-	let skip = 100
+	let lastId = 100
 	let limit = 100
 	let moreChannels: any[] = []
 	const loadMore = async () => {
 		let endpoint = profileId ? `channels/user?userId=${profileId}&` : 'channels?'
-		const infiniteChannels = await get(`${endpoint}skip=${skip}&limit=${limit}`)
+		const infiniteChannels = await get(`${endpoint}lastId=${lastId}&limit=${limit}`)
 		if (infiniteChannels?.length) {
 			moreChannels = [...moreChannels, ...infiniteChannels]
-			skip += limit
+			lastId = infiniteChannels[infiniteChannels.length - 1]._id
 		}
 	}
 </script>

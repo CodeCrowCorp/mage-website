@@ -10,7 +10,7 @@
 	<div class="flex-col md:flex-row gap-4 w-full contents">
 		<div class="max-w-md">
 			<div class="avatar">
-				<div class="w-32 mask {item?.planDetails?.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
+				<div class="w-32 mask {item?.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
 					<img loading="lazy" src={item.avatar} alt="" />
 				</div>
 			</div>
@@ -32,7 +32,7 @@
 			<div class="flex items-center">
 				<a class="link link-hover flex gap-1" href="/{item.username}"
 					>@{item.username || ''}
-					{#if item.planDetails?.planTier > 1}
+					{#if item.planTier > 1}
 						<div class="text-accent font-bold">
 							<IconDrawerVerification />
 						</div>

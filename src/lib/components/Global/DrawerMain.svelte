@@ -1,12 +1,9 @@
 <script lang="ts">
-	import IconDrawerBrand from '$lib/assets/icons/drawer/IconDrawerBrand.svelte'
 	import IconDrawerStreak from '$lib/assets/icons/drawer/IconDrawerStreak.svelte'
 	import IconDrawerStreamDuration from '$lib/assets/icons/drawer/IconDrawerStreamDuration.svelte'
 	import IconDrawerHome from '$lib/assets/icons/drawer/IconDrawerHome.svelte'
 	import IconDrawerVideos from '$lib/assets/icons/drawer/IconDrawerVideos.svelte'
 	import IconDrawerCreatorSpace from '$lib/assets/icons/drawer/IconDrawerCreatorSpace.svelte'
-	import IconDrawerCareers from '$lib/assets/icons/drawer/IconDrawerCareers.svelte'
-	import IconDrawerHelpAndLegal from '$lib/assets/icons/drawer/IconDrawerHelpAndLegal.svelte'
 	import IconDrawerSettings from '$lib/assets/icons/drawer/IconDrawerSettings.svelte'
 	import IconDrawerLogOut from '$lib/assets/icons/drawer/IconDrawerLogOut.svelte'
 	import IconSocialTwitter2 from '$lib/assets/icons/social/IconSocialTwitter2.svelte'
@@ -28,7 +25,6 @@
 	import { is_apps_modal_open, is_login_modal_open } from '$lib/stores/helperStore'
 	import { colorFromLevel, getNumberInThousands, levelAndBarValueFromExp } from '$lib/utils'
 	import { onMount } from 'svelte'
-	import { is_online } from '$lib/stores/userStore'
 	import { get } from '$lib/api'
 	import IconMageLogo from '$lib/assets/icons/IconMageLogo.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
@@ -45,7 +41,7 @@
 	let progressBarLevel = 1
 	let progressBarValue = 0
 	let progressBarColor = colorFromLevel(1)
-	let streakCount: any = { current: 0, highest: 0 }
+	let currentStreakCount: any = 0
 	let minsStreamed: number = 0
 	let followers: number = 0
 	onMount(async () => {
@@ -55,7 +51,9 @@
 			progressBarLevel = levelAndBarValue.level
 			progressBarValue = levelAndBarValue.barValue
 			progressBarColor = colorFromLevel(progressBarLevel)
-			streakCount = await get(`analytics/stream/streak?userId=${$page.data.user?.userId}`)
+			currentStreakCount = await get(
+				`analytics/stream/streak/current?userId=${$page.data.user?.userId}`
+			)
 			minsStreamed = await get(
 				`analytics/stream/total-mins/24-hours?userId=${$page.data.user?.userId}`
 			)
@@ -96,10 +94,9 @@
 					<div class={isChannelPage ? 'md:text-center' : ''}>
 						<div class={isChannelPage ? '' : 'my-1'}>
 							<div class="flex gap-3 {isChannelPage ? 'max-w-md' : 'max-w-full'}">
-								<div class="avatar {$is_online ? 'online' : 'offline'}">
+								<div class="avatar">
 									<div
-										class="w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser?.planDetails
-											?.planTier > 1
+										class="w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser?.planTier > 1
 											? 'mask-hexagon'
 											: 'mask-squircle'}">
 										<img src={currentUser.avatar} alt="" />
@@ -113,7 +110,7 @@
 							</div>
 							<div class="tooltip flex gap-1 w-fit" data-tip="@{currentUser.username}">
 								<p class="truncate">@{currentUser.username}</p>
-								{#if currentUser?.planDetails?.planTier > 1}
+								{#if currentUser?.planTier > 1}
 									<div class="text-accent font-bold">
 										<IconDrawerVerification />
 									</div>
@@ -122,10 +119,10 @@
 							<div class="flex gap-4 {isChannelPage ? 'md:hidden' : ''}">
 								<div
 									class="flex gap-1 tooltip tooltip-primary"
-									data-tip="{streakCount.current} day streak">
+									data-tip="{currentStreakCount} day streak">
 									<IconDrawerStreak />
 									<p class="text-start">
-										{streakCount.current} d
+										{currentStreakCount} d
 									</p>
 								</div>
 								<div
@@ -306,7 +303,7 @@
 			<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 				<IconSocialGitHub />
 			</a>
-			<a href="https://discord.gg/CodeCrow" target="_blank" rel="noreferrer">
+			<a href="https://discord.gg/cFkWepZfwc" target="_blank" rel="noreferrer">
 				<img src={IconSocialDiscord} alt="" />
 			</a>
 			<a href="https://twitter.com/gagansuie" target="_blank" rel="noreferrer">

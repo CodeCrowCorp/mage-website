@@ -57,7 +57,7 @@
 	const getAll = async () => {
 		if ($page.data.user?.userId) {
 			loading = true
-			urlList = await get('outputs', auth)
+			urlList = await get(`outputs`, auth)
 			loading = false
 		}
 	}
