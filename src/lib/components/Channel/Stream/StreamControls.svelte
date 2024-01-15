@@ -62,7 +62,7 @@
 		channelId,
 		trackType
 	}: {
-		channelId: string
+		channelId: number
 		trackType: string
 	}) => {
 		return await get(`live-input?channelId=${channelId}&trackType=${trackType}`, {
@@ -73,7 +73,7 @@
 
 	const startWebrtcStream = async () => {
 		let liveInput = await getLiveInput({
-			channelId: `${$page.params.channelId}`,
+			channelId: parseInt($page.params.channelId),
 			trackType: 'webrtc'
 		})
 		if (!liveInput) {
@@ -135,7 +135,7 @@
 	const showStreamKeyModal = async () => {
 		rtmps_modal.showModal()
 		rtmps = await getLiveInput({
-			channelId: $page.params.channelId,
+			channelId: parseInt($page.params.channelId),
 			trackType: 'rtmps'
 		})
 		if (!rtmps) {
