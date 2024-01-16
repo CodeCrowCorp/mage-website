@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ListSubscribe from '$lib/components/Profile/ListFollow.svelte'
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
-	import Stats from '$lib/components/Profile/Elements/Stats.svelte'
+	import Analytics from '$lib/components/Profile/Elements/Analytics.svelte'
 	import Events from '$lib/components/Profile/Events.svelte'
 	import { onMount } from 'svelte'
 	import { env } from '$env/dynamic/public'
@@ -22,7 +22,7 @@
 	let activeTab = 0
 
 	onMount(() => {
-		tabs = ['Channels', 'Followers', 'Events', 'Stats']
+		tabs = ['Channels', 'Followers', 'Analytics'] // 'Events',
 	})
 </script>
 
@@ -43,11 +43,11 @@
 			<div class="flex-auto h-full" class:hidden={activeTab != tabs.indexOf('Followers')}>
 				<ListSubscribe profileId={profile._id} />
 			</div>
-			<div class="flex-auto h-full" class:hidden={activeTab != tabs.indexOf('Events')}>
+			<!-- <div class="flex-auto h-full" class:hidden={activeTab != tabs.indexOf('Events')}>
 				<Events profileId={profile._id} />
-			</div>
-			<div class="grid h-full" class:hidden={activeTab != tabs.indexOf('Stats')}>
-				<Stats
+			</div> -->
+			<div class="grid h-full" class:hidden={activeTab != tabs.indexOf('Analytics')}>
+				<Analytics
 					{profile}
 					{dailyAvgMins}
 					{viewsMonthlyChange}
