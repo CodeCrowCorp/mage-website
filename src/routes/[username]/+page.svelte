@@ -12,7 +12,7 @@
 	export let data: PageData
 	let totalPageViews: any,
 		totalChannelViews: any,
-		totalChannelViews4Weeks: any,
+		totalChannelViewsWeek: any,
 		showDrawer = false,
 		banner =
 			data.profile?.banner ||
@@ -36,7 +36,7 @@
 		}
 		totalPageViews = (await data.lazy.totalPageViews) || 0
 		totalChannelViews = (await data.lazy.totalChannelViews) || 0
-		totalChannelViews4Weeks = (await data.lazy.totalChannelViews4Weeks) || 0
+		totalChannelViewsWeek = (await data.lazy.totalChannelViewsWeek) || 0
 	})
 </script>
 
@@ -61,13 +61,14 @@
 						profile={data.profile}
 						channels={data.lazy.channels}
 						{totalChannelViews}
-						{totalChannelViews4Weeks}
-						viewsMonthlyIncr={data.lazy.viewsMonthlyIncr}
-						highestAndCurrentStreak={data.lazy.highestAndCurrentStreak}
-						streakMonthlyIncr={data.lazy.streakMonthlyIncr}
+						{totalChannelViewsWeek}
+						viewsMonthlyChange={data.lazy.viewsMonthlyChange}
+						highestStreak={data.lazy.highestStreak}
+						currentStreak={data.lazy.currentStreak}
+						lastStreamAndDuration={data.lazy.lastStreamAndDuration}
 						totalMins={data.lazy.totalMins}
-						totalMinsMonthlyIncr={data.lazy.totalMinsMonthlyIncr}
-						avgMins={data.lazy.avgMins} />
+						totalMinsMonthlyChange={data.lazy.totalMinsMonthlyChange}
+						dailyAvgMins={data.lazy.dailyAvgMins} />
 				</div>
 			</div>
 		</div>

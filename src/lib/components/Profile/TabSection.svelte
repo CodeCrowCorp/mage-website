@@ -1,7 +1,7 @@
 <script lang="ts">
-	import ListSubscribe from '$lib/components/Profile/ListSubscribe.svelte'
+	import ListSubscribe from '$lib/components/Profile/ListFollow.svelte'
 	import SectionTable from '$lib/components/Browse/Sections/SectionTable.svelte'
-	import Stats from '$lib/components/Profile/Elements/Stats.svelte'
+	import Analytics from '$lib/components/Profile/Elements/Analytics.svelte'
 	import Events from '$lib/components/Profile/Events.svelte'
 	import { onMount } from 'svelte'
 	import { env } from '$env/dynamic/public'
@@ -9,19 +9,20 @@
 	export let profile: any,
 		channels: any,
 		totalChannelViews: any,
-		totalChannelViews4Weeks: any,
-		viewsMonthlyIncr: any,
-		highestAndCurrentStreak: any,
+		totalChannelViewsWeek: any,
+		viewsMonthlyChange: any,
+		currentStreak: any,
+		highestStreak: any,
 		totalMins: any,
-		streakMonthlyIncr: any,
-		totalMinsMonthlyIncr: any,
-		avgMins: any
+		lastStreamAndDuration: any,
+		totalMinsMonthlyChange: any,
+		dailyAvgMins: any
 
 	let tabs: string[] = []
 	let activeTab = 0
 
 	onMount(() => {
-		tabs = ['Channels', 'Followers', 'Events', 'Stats']
+		tabs = ['Channels', 'Followers', 'Analytics'] // 'Events',
 	})
 </script>
 
@@ -42,19 +43,20 @@
 			<div class="flex-auto h-full" class:hidden={activeTab != tabs.indexOf('Followers')}>
 				<ListSubscribe profileId={profile._id} />
 			</div>
-			<div class="flex-auto h-full" class:hidden={activeTab != tabs.indexOf('Events')}>
+			<!-- <div class="flex-auto h-full" class:hidden={activeTab != tabs.indexOf('Events')}>
 				<Events profileId={profile._id} />
-			</div>
-			<div class="grid h-full" class:hidden={activeTab != tabs.indexOf('Stats')}>
-				<Stats
+			</div> -->
+			<div class="grid h-full" class:hidden={activeTab != tabs.indexOf('Analytics')}>
+				<Analytics
 					{profile}
-					{avgMins}
-					{viewsMonthlyIncr}
-					{streakMonthlyIncr}
-					{totalMinsMonthlyIncr}
+					{dailyAvgMins}
+					{viewsMonthlyChange}
+					{lastStreamAndDuration}
+					{totalMinsMonthlyChange}
 					{totalChannelViews}
-					{totalChannelViews4Weeks}
-					{highestAndCurrentStreak}
+					{totalChannelViewsWeek}
+					{highestStreak}
+					{currentStreak}
 					{totalMins} />
 			</div>
 		</div>

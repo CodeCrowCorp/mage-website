@@ -13,30 +13,30 @@
 		token: $page?.data?.user?.token
 	}
 
-	const searchFollowers = async (query: string, skip: number, limit: number) => {
+	const searchFollowers = async (query: string, lastId: number, limit: number) => {
 		return await get(
-			`follows?source=${profileId}&sourceType=source1&searchQuery=${query}&skip=${skip}&limit=${limit}`,
+			`follows?source=${profileId}&sourceType=source1&searchQuery=${query}&lastId=${lastId}&limit=${limit}`,
 			auth
 		)
 	}
 
-	const searchFollowing = async (query: string, skip: number, limit: number) => {
+	const searchFollowing = async (query: string, lastId: number, limit: number) => {
 		return await get(
-			`follows?source=${profileId}&sourceType=source2&searchQuery=${query}&skip=${skip}&limit=${limit}`,
+			`follows?source=${profileId}&sourceType=source2&searchQuery=${query}&lastId=${lastId}&limit=${limit}`,
 			auth
 		)
 	}
 
-	const getFollowers = async (skip: number, limit: number) => {
+	const getFollowers = async (lastId: number, limit: number) => {
 		return await get(
-			`follows?source=${profileId}&sourceType=source1&skip=${skip}&limit=${limit}`,
+			`follows?source=${profileId}&sourceType=source1&lastId=${lastId}&limit=${limit}`,
 			auth
 		)
 	}
 
-	const getFollowing = async (skip: number, limit: number) => {
+	const getFollowing = async (lastId: number, limit: number) => {
 		return await get(
-			`follows?source=${profileId}&sourceType=source2&skip=${skip}&limit=${limit}`,
+			`follows?source=${profileId}&sourceType=source2&lastId=${lastId}&limit=${limit}`,
 			auth
 		)
 	}

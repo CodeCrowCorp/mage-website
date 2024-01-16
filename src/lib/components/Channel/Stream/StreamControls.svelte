@@ -35,10 +35,10 @@
 		copyTextKey = 'Copy',
 		urlList: any = []
 
-	$: isHost = channel?.user === $page.data.user?.userId
+	$: isHost = channel?.userId === $page.data.user?.userId
 
 	$: viewersWithOutHost = viewers.filter(
-		(viewer) => viewer.userId !== channel.user && viewer.userId !== 'anon'
+		(viewer) => viewer.userId !== channel.userId && viewer.userId !== 'anon'
 	)
 
 	$: isChannelSocketConnected =
@@ -62,7 +62,7 @@
 		channelId,
 		trackType
 	}: {
-		channelId: string
+		channelId: number
 		trackType: string
 	}) => {
 		return await get(`live-input?channelId=${channelId}&trackType=${trackType}`, {
@@ -73,7 +73,7 @@
 
 	const startWebrtcStream = async () => {
 		let liveInput = await getLiveInput({
-			channelId: `${$page.params.channelId}`,
+			channelId: parseInt($page.params.channelId),
 			trackType: 'webrtc'
 		})
 		if (!liveInput) {
@@ -93,7 +93,7 @@
 	}
 
 	const toggleGuest = (userId: string) => {
-		if (channel.user === userId) return
+		if (channel.userId === userId) return
 		if (!channel.bans.includes(userId)) {
 			let isEnabled = false
 			if (!channel.guests.includes(userId) && channel.guests.length < 9) {
@@ -135,7 +135,7 @@
 	const showStreamKeyModal = async () => {
 		rtmps_modal.showModal()
 		rtmps = await getLiveInput({
-			channelId: $page.params.channelId,
+			channelId: parseInt($page.params.channelId),
 			trackType: 'rtmps'
 		})
 		if (!rtmps) {
