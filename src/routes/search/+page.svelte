@@ -40,10 +40,11 @@
 		if (isLoading) return
 		isLoading = true
 		const url = getSectionUrl({ sectionId, query, lastId, limit })
-		const moreChannels = await get(`${url}&userId=${$page.data.user?.userId}`, {
+		const results = await get(`${url}&userId=${$page.data.user?.userId}`, {
 			userId: $page.data.user?.userId,
 			token: $page.data.user?.token
 		})
+		const moreChannels = sectionId === 'weekly' ? results?.channels : results
 		allLoaded = moreChannels.length === 0
 		searchList = searchList.concat(moreChannels)
 		lastId = moreChannels[moreChannels.length - 1]?._id
@@ -83,7 +84,7 @@
 					!allLoaded &&
 					listElement.scrollTop + listElement.clientHeight >= listElement.scrollHeight
 				) {
-					loadMore()
+					await loadMore()
 				}
 			})
 		}
