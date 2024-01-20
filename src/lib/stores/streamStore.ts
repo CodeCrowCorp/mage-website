@@ -12,7 +12,6 @@ const updateVideoItems = (videoItems: any, liveInputs: any[]) => {
 			liveInputs.forEach((liveInput: any) => {
 				if (video._id === liveInput._id) {
 					video = Object.assign(video, liveInput)
-					console.log('got here----video', JSON.stringify(video.webRTC))
 				}
 			})
 		})
