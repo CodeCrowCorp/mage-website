@@ -302,7 +302,8 @@
 		let newchannels = await get(`channels?lastId=${lastId}&limit=${limit}`)
 		//Remove duplicate channels
 		newchannels = newchannels.filter(
-			(newChannel: any) => !channels.some((channel: any) => channel?._id === newChannel?._id)
+			(newChannel: any) =>
+				newChannel.isLive && !channels.some((channel: any) => channel?._id === newChannel?._id)
 		)
 		newchannels.forEach((channel: any) => {
 			channel.videoItems = []
