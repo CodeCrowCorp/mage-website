@@ -228,13 +228,13 @@
 			}
 			if (channel.socket && channel.socket.constructor === WebSocket) {
 				channel.socket.addEventListener('open', async (data: any) => {
-					console.log('channel socket connection open', channelSocketId)
+					// console.log('channel socket connection open', channelSocketId)
 					initChannel(channel)
 				})
 				channel.socket.addEventListener('message', (data: any) => {
 					console.log('channel listening to messages')
 					if (isJsonString(data.data)) {
-						console.log('data.data', data.data)
+						// console.log('data.data', data.data)
 						$channel_message = data.data
 					}
 				})
