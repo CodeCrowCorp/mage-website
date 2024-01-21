@@ -177,7 +177,10 @@
 				case 'webrtc':
 					if (video.isConnected) {
 						webrtcWhep = new WHEPClient(video.webRTCPlayback.url, webrtc_video_element)
-						webrtcWhep.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
+						webrtcWhep.addEventListener(`isScreenLive`, (ev: any) => {
+							isScreenLive = ev.detail
+							webrtc_video_element.play()
+						})
 						webrtcWhep.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
 							speakingValue = ev.detail
 						})
