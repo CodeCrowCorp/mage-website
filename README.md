@@ -24,7 +24,7 @@
     &nbsp;
 	<a href="https://discord.gg/cFkWepZfwc"><img src="https://img.shields.io/discord/766681806463303680?label=discord&color=5a66f6"></a>
 	&nbsp;
-    <a href="https://twitter.com/CodeCrowCorp"><img src="https://img.shields.io/badge/twitter-follow_us-1d9bf0.svg"></a>
+    <a href="https://twitter.com/i/communities/1747324016921026613"><img src="https://img.shields.io/badge/twitter-follow_us-1d9bf0.svg"></a>
     &nbsp;
 </p>
 
