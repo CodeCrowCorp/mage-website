@@ -289,7 +289,10 @@
 			<a href="https://discord.gg/cFkWepZfwc" target="_blank" rel="noreferrer">
 				<img src={IconSocialDiscord} alt="" />
 			</a>
-			<a href="https://twitter.com/gagansuie" target="_blank" rel="noreferrer">
+			<a
+				href="https://twitter.com/i/communities/1747324016921026613"
+				target="_blank"
+				rel="noreferrer">
 				<IconSocialTwitter2 />
 			</a>
 			<a href="https://twitch.tv/gagansuie" target="_blank" rel="noreferrer">
