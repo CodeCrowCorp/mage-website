@@ -185,30 +185,13 @@
 		{/if}
 		{#if $is_feature_premium_enabled}
 			<li>
-				{#if currentUser}
-					<a href="/premium" class="custom-menu-item text-accent hover:text-accent font-medium">
-						<IconDrawerVerification />
-						<span class={isChannelPage ? 'md:hidden' : ''}>Premium</span>
-						{#if !isChannelPage}
-							<span class="badge badge-accent text-black">New</span>
-						{/if}
-					</a>
-				{:else}
-					<button
-						class="custom-menu-item text-accent hover:text-accent font-medium"
-						on:click={() => {
-							$is_apps_modal_open = true
-							if (nav_drawer.checked) {
-								nav_drawer.checked = false
-							}
-						}}>
-						<IconDrawerVerification />
-						<span class={isChannelPage ? 'md:hidden' : ''}>Premium</span>
-						{#if !isChannelPage}
-							<span class="badge badge-accent text-black">New</span>
-						{/if}
-					</button>
-				{/if}
+				<a href="/premium" class="custom-menu-item text-accent hover:text-accent font-medium">
+					<IconDrawerVerification />
+					<span class={isChannelPage ? 'md:hidden' : ''}>Premium</span>
+					{#if !isChannelPage}
+						<span class="badge badge-accent text-black">New</span>
+					{/if}
+				</a>
 			</li>
 		{/if}
 		<li>
