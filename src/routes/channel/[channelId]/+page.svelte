@@ -228,13 +228,13 @@
 			}
 			if (channel.socket && channel.socket.constructor === WebSocket) {
 				channel.socket.addEventListener('open', async (data: any) => {
-					console.log('channel socket connection open', channelSocketId)
+					// console.log('channel socket connection open', channelSocketId)
 					initChannel(channel)
 				})
 				channel.socket.addEventListener('message', (data: any) => {
 					console.log('channel listening to messages')
 					if (isJsonString(data.data)) {
-						console.log('data.data', data.data)
+						// console.log('data.data', data.data)
 						$channel_message = data.data
 					}
 				})
@@ -302,7 +302,8 @@
 		let newchannels = await get(`channels?lastId=${lastId}&limit=${limit}`)
 		//Remove duplicate channels
 		newchannels = newchannels.filter(
-			(newChannel: any) => !channels.some((channel: any) => channel?._id === newChannel?._id)
+			(newChannel: any) =>
+				newChannel.isLive && !channels.some((channel: any) => channel?._id === newChannel?._id)
 		)
 		newchannels.forEach((channel: any) => {
 			channel.videoItems = []
