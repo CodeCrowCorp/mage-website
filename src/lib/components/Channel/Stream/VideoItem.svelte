@@ -358,10 +358,11 @@
 				</div>
 				<audio bind:this={audio_element} autoplay class="rounded-md w-0 h-0" />
 				<canvas bind:this={webrtc_canvas_element} class="rounded-md w-full h-full hidden" />
-			{:else if video.isConnected && video.trackType === 'webrtc'}
+			{:else}
 				<video
 					bind:this={webrtc_video_element}
 					class="rounded-md w-full h-full"
+					hidden={video.isConnected && video.trackType === 'webrtc'}
 					autoplay
 					muted
 					controls />
