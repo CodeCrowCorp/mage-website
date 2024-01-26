@@ -1,4 +1,4 @@
-import type { Handle } from '@sveltejs/kit'
+// import type { Handle } from '@sveltejs/kit'
 // import { get } from '$lib/api'
 // import { platformConnection, platformMessage } from '$lib/stores/websocketStore'
 // import { platformSocket, initPlatformSocket } from '$lib/websocket'
