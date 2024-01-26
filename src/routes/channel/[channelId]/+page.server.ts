@@ -2,6 +2,8 @@ import { putImage } from '$lib/api'
 import { dataURLtoFile } from '$lib/utils'
 import type { Actions } from './$types'
 
+//TODO: get channel in server side and set SEO data
+
 export const actions = {
 	'edit-channel': async ({ request, locals }) => {
 		const data: FormData = await request.formData()

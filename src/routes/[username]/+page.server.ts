@@ -2,12 +2,19 @@ import type { Actions, PageServerLoad } from './$types'
 import { get, patch, putImage } from '$lib/api'
 import { redirect, fail, error } from '@sveltejs/kit'
 
-export const load = (async ({ params }: { params: any }) => {
+export const load = (async ({ params, url }) => {
 	const profile = await get(`users/search/username?username=${params.username.toLowerCase()}`)
 	if (profile.error) {
 		error(404)
 	}
 	return {
+		seo: {
+			title: profile.username.toLowerCase(),
+			description: profile.bio,
+			image: profile.avatar,
+			imageAlt: `${profile.username.toLowerCase()} avatar`,
+			url: url.href
+		},
 		profile: profile,
 		lazy: {
 			channels: get(`channels/user?userId=${profile._id}&limitId=${0}&limit=${10}`),
