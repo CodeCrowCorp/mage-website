@@ -179,7 +179,6 @@
 						webrtcWhep = new WHEPClient(video.webRTCPlayback.url, webrtc_video_element)
 						webrtcWhep.addEventListener(`isScreenLive`, (ev: any) => {
 							isScreenLive = ev.detail
-							webrtc_video_element.play()
 						})
 						webrtcWhep.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
 							speakingValue = ev.detail
@@ -359,8 +358,13 @@
 				</div>
 				<audio bind:this={audio_element} autoplay class="rounded-md w-0 h-0" />
 				<canvas bind:this={webrtc_canvas_element} class="rounded-md w-full h-full hidden" />
-			{:else}
-				<video bind:this={webrtc_video_element} class="rounded-md w-full h-full" autoplay />
+			{:else if video.isConnected && video.trackType === 'webrtc'}
+				<video
+					bind:this={webrtc_video_element}
+					class="rounded-md w-full h-full"
+					autoplay
+					muted
+					controls />
 			{/if}
 			<div class="absolute left-2 bottom-2 rounded-md dropdown {iframeUrl ? 'mb-16' : ''}">
 				<label
