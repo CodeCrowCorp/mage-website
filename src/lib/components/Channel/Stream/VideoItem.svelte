@@ -359,15 +359,18 @@
 				<audio bind:this={audio_element} autoplay class="rounded-md w-0 h-0" />
 				<canvas bind:this={webrtc_canvas_element} class="rounded-md w-full h-full hidden" />
 			{:else}
+				<iframe
+					src="https://olafwempe.com/mp3/silence/silence.mp3"
+					allow="autoplay"
+					id="audio"
+					style="display:none" />
 				<video
 					bind:this={webrtc_video_element}
 					class="rounded-md w-full h-full"
-					hidden={video.isConnected && video.trackType === 'webrtc'}
 					autoplay
-					muted
 					controls />
 			{/if}
-			<div class="absolute left-2 bottom-2 rounded-md dropdown {iframeUrl ? 'mb-16' : ''}">
+			<div class="absolute left-2 bottom-2 rounded-md dropdown {video.isConnected ? 'mb-16' : ''}">
 				<label
 					tabindex="0"
 					class="{coloredRole.textColor} bg-base-100 btn btn-sm normal-case flex gap-1 {speakingValue >
