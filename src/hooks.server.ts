@@ -5,15 +5,10 @@ import { get } from '$lib/api'
 import { user_role } from '$lib/stores/userStore'
 import { env } from '$env/dynamic/public'
 
-/** @type {import('@sveltejs/kit').Handle} */
 export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname
 	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
 	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
-
-	//TODO: get and save params from twitchAuthCallback
-	//TODO: get and save params from youTubeAuthCallback
-
 	let user: any = event.locals.user?.user || ''
 	const role = getWritableVal(user_role)
 	const maintenanceMode: boolean = env.PUBLIC_MAINTENANCE_MODE === 'true'
@@ -55,10 +50,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 				userId: parseInt(userId),
 				token,
 				user
-			},
-			platform: {
-				twitch: { isConnected: false },
-				youtube: { isConnected: false }
 			}
 		}
 	}

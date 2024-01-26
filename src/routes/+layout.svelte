@@ -12,10 +12,10 @@
 	import LoginPrompt from '$lib/components/Global/LoginPrompt.svelte'
 	import DrawerMain from '$lib/components/Global/DrawerMain.svelte'
 	import { onMount } from 'svelte'
-	import { get, put } from '$lib/api'
+	// import { get, put } from '$lib/api'
 	// import { emitUserConnection, initPlatformSocket, platformSocket } from '$lib/websocket'
 	// import { platform_connection, platform_message } from '$lib/stores/websocketStore'
-	import { isJsonString } from '$lib/utils'
+	// import { isJsonString } from '$lib/utils'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
 	import { current_theme } from '$lib/stores/helperStore'
 	import {
@@ -115,6 +115,33 @@
           const theme = localStorage.getItem('theme') || 'dark';
           document.querySelector('html').dataset.theme = theme;
         </script>`}
+
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:site" content="@GaganSuie" />
+	<meta
+		name="twitter:title"
+		content={$page.data.seo?.title || 'Mage - A collaborative streaming platform'} />
+	<meta
+		name="twitter:description"
+		content={$page.data.seo?.description ||
+			'Mage is a collaborative streaming platform for gamers and developers'} />
+	<meta name="twitter:image" content={$page.data.seo?.image || '%sveltekit.assets%/banner.png'} />
+	<meta name="twitter:image:alt" content={$page.data.seo?.imageAlt || 'Mage Banner'} />
+
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={$page.data.seo?.url || 'https://mage.stream'} />
+	<meta
+		property="og:title"
+		content={$page.data.seo?.title || 'Mage - A collaborative streaming platform'} />
+	<meta
+		property="og:description"
+		content={$page.data.seo?.description ||
+			'Mage is a collaborative streaming platform for gamers and developers'} />
+	<meta property="og:image" content={$page.data.seo?.image || '%sveltekit.assets%/banner.png'} />
+	<meta property="og:image:alt" content={$page.data.seo?.imageAlt || 'Mage Banner'} />
+
+	<meta charset="utf-8" />
+	<!-- <link rel="canonical" href="https://mage.stream" /> -->
 </svelte:head>
 
 <div class="drawer lg:drawer-open">

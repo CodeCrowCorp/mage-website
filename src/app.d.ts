@@ -9,10 +9,6 @@ declare namespace App {
 			userId?: number
 			user?: any
 		}
-		platform: {
-			twitch?: { isConnected: boolean }
-			youtube?: { isConnected: boolean }
-		}
 	}
 	// interface PageData {}
 	// interface Error {}
