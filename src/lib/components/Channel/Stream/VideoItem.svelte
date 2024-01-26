@@ -366,7 +366,9 @@
 					style="display:none" />
 				<video
 					bind:this={webrtc_video_element}
-					class="rounded-md w-full h-full"
+					class="rounded-md w-full h-full {video.isConnected && video.trackType === 'webrtc'
+						? ''
+						: 'hidden'}"
 					autoplay
 					controls />
 			{/if}
