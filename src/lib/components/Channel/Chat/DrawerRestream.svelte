@@ -25,6 +25,13 @@
 	let selected = ''
 	let touched = false
 	let restream_drawer = false
+	let redirectedOptionsFromLS = localStorage.getItem('redirectedOptions')
+	let parsedRedirectedOptions = redirectedOptionsFromLS ? JSON.parse(redirectedOptionsFromLS) : null
+
+	let redirectedOptions = {
+		redirected: parsedRedirectedOptions ? parsedRedirectedOptions.redirected : false,
+		selected: parsedRedirectedOptions ? parsedRedirectedOptions.selected : 'youtube'
+	}
 
 	$: cloudflareUrl = payload.url.includes('cloudflare')
 	$: invalidUrl = !isValidRtmp(payload.url)
@@ -78,6 +85,11 @@
 
 	onMount(() => {
 		getAll()
+		if (redirectedOptions.redirected) {
+			selected = redirectedOptions.selected
+			if (redirectedOptions.selected === 'youtube') getYoutubeStreamLink()
+			else getTwitchStreamLink()
+		}
 	})
 
 	const getLiveInput = async () => {
@@ -112,6 +124,69 @@
 		)
 		const rtmps = await getLiveInput()
 		await sendOutputs({ liveInputUid: rtmps.rtmps.uid })
+	}
+	const linkTwitch = async () => {
+		try {
+			localStorage.setItem(
+				'redirectedOptions',
+				JSON.stringify({
+					redirected: true,
+					selected: 'twitch'
+				})
+			)
+			const linkRes = await get(`twitch/link?channelId=${$page.params.channelId}`, auth)
+
+			if (linkRes.redirect) window.location.replace(linkRes.redirectUrl)
+		} catch (err) {
+			getTwitchStreamLink()
+		}
+	}
+
+	const getTwitchStreamLink = async () => {
+		const streamRes = await get(`twitch/stream/link?channelId=${$page.params.channelId}`, auth)
+
+		if (streamRes.error === 404) return
+		payload.streamKey = streamRes.streamKey
+		selected = 'twitch'
+		is_restream_drawer_open.set(true)
+		showAddModal = true
+		touched = false
+		localStorage.removeItem('redirectedOptions')
+	}
+
+	const linkYoutube = async () => {
+		try {
+			localStorage.setItem(
+				'redirectedOptions',
+				JSON.stringify({
+					redirected: true,
+					selected: 'youtube'
+				})
+			)
+			const linkRes = await get(`youtube/link?channelId=${$page.params.channelId}`, auth)
+
+			if (linkRes.redirect) window.location.replace(linkRes.redirectUrl)
+		} catch (error) {
+			getYoutubeStreamLink()
+		}
+	}
+
+	const getYoutubeStreamLink = async () => {
+		const streamRes = await get(`youtube/stream/link?channelId=${$page.params.channelId}`, auth)
+		payload = {
+			title: '',
+			url: '',
+			streamKey: ''
+		}
+
+		if (streamRes.error === 404) return
+		;(payload.url = streamRes.streamaddress),
+			(payload.streamKey = streamRes.streamKey),
+			(selected = 'youtube')
+		is_restream_drawer_open.set(true)
+		showAddModal = true
+		touched = false
+		localStorage.removeItem('redirectedOptions')
 	}
 </script>
 
@@ -199,10 +274,10 @@
 						<div class="form-control w-full pt-4">
 							<div class="flex gap-3">
 								{#if env.PUBLIC_CROSS_ORIGIN === 'false'}
-									<a class="btn btn-sm" href="{env.PUBLIC_API_URL}/auth/twitch"
-										><IconSocialTwitch /> Twitch</a>
-									<a class="btn btn-sm" href="{env.PUBLIC_API_URL}/auth/youtube"
-										><IconSocialYouTube /> YouTube</a>
+									<button class="btn btn-sm" on:click={linkTwitch}
+										><IconSocialTwitch /> Twitch</button>
+									<button class="btn btn-sm" on:click={linkYoutube}
+										><IconSocialYouTube /> YouTube</button>
 								{:else}
 									<button
 										class="btn btn-sm"
@@ -232,15 +307,18 @@
 								class="input input-bordered w-full max-w-xs input-primary"
 								maxlength="20" />
 							<!-- svelte-ignore a11y-label-has-associated-control -->
-							<label class="label mt-5">
-								<span class="label-text">Server</span>
-							</label>
-							<input
-								bind:value={payload.url}
-								type="text"
-								placeholder="Enter server url"
-								class="input input-bordered w-full max-w-xs input-primary"
-								on:blur={onBlur} />
+
+							{#if selected === 'youtube' && payload.url}
+								<label class="label mt-5">
+									<span class="label-text">Server</span>
+								</label>
+								<input
+									bind:value={payload.url}
+									type="text"
+									placeholder="Enter server url"
+									class="input input-bordered w-full max-w-xs input-primary"
+									on:blur={onBlur} />
+							{/if}
 							{#if touched && invalidUrl}
 								<div class="text-error text-sm mt-2">Please enter a valid URL</div>
 							{/if}
