@@ -54,7 +54,7 @@
 		"moment": "^2.29.4",
 		"nprogress": "^0.2.0",
 		"playwright-e2e-coverage-report": "^1.0.28",
-		"svelte-tags-input": "^5.0.0",
+		"svelte-tags-input": "^6.0.0",
 		"theme-change": "^2.5.0"
 	}
 }
