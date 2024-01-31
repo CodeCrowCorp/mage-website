@@ -1,7 +1,6 @@
 <script lang="ts">
 	import '$lib/assets/styles/tailwind-output.css'
-	import { category_list } from '$lib/stores/channelStore'
-	import imageUrlsJson from '$lib/assets/svg-json/image_urls.json'
+	import { category_assets, category_list } from '$lib/stores/channelStore'
 
 	// @ts-ignore
 	import NProgress from 'nprogress'
@@ -52,12 +51,25 @@
 		$is_feature_apps_enabled = env.PUBLIC_FEATURE_APPS === 'true'
 		$is_feature_merge_platforms_enabled = env.PUBLIC_FEATURE_MERGE_PLATFORMS === 'true'
 		$is_feature_merch_enabled = env.PUBLIC_FEATURE_MERCH === 'true'
-		if (!$category_list.length) {
-			$category_list = imageUrlsJson
-		}
+		const devSvgs = import.meta.glob('$lib/assets/icons/category-icons/dev/*.svg')
+		const gameSvgs = import.meta.glob('$lib/assets/icons/category-icons/game/*.svg')
+		processSvgs(devSvgs, 'dev')
+		processSvgs(gameSvgs, 'game')
 		getUserRole()
 		// await handleWebsocket()
 	})
+
+	const processSvgs = (svgs: any, category: any) => {
+		for (const path in svgs) {
+			let filename = path.split('/').pop() || ''
+			filename = filename
+				.replace('.svg', '')
+				.replace(/-/g, ' ')
+				.replace(/\w\S*/g, (w) => w.replace(/^\w/, (c) => c.toUpperCase()))
+			$category_list[filename] = path
+			$category_assets[category][filename] = path
+		}
+	}
 
 	const getUserRole = async () => {
 		//TODO: get role from backend
@@ -173,3 +185,31 @@
 		<DrawerMain bind:nav_drawer />
 	</div>
 </div>
+
+<style>
+	:global(.svelte-tags-input-layout) {
+		--tw-border-opacity: 1 !important;
+		height: 3rem;
+		padding-left: 1rem !important;
+		padding-right: 1rem !important;
+		--tw-bg-opacity: 1 !important;
+		flex-wrap: nowrap !important;
+	}
+	:global(.svelte-tags-input-layout) {
+		@apply mt-5 w-full !input !input-primary !input-bordered;
+	}
+	:global(.svelte-tags-input-layout:focus-within) {
+		outline-offset: 2px !important;
+	}
+	:global(.svelte-tags-input) {
+		width: 100%;
+		font-size: 1rem !important;
+		font-family: inherit !important;
+	}
+
+	:global(.svelte-tags-input-tag) {
+		padding-left: 0.5rem !important;
+		padding-right: 0.5rem !important;
+		border-radius: var(--rounded-badge, 1.5rem) !important;
+	}
+</style>
