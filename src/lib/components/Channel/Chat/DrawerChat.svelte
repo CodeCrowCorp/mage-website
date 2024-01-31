@@ -21,35 +21,6 @@
 	let selectedUser: string = ''
 	let ignoreOutsideClick = false
 
-	channel_message.subscribe((value) => {
-		if (!value) return
-		var parsedMsg = JSON.parse(value)
-		if (parsedMsg.eventName === `channel-message-${channel?._id}`) {
-			if (parsedMsg.isMessageHistory) {
-				cursor = parsedMsg.cursor
-				let messages = parsedMsg.data.map((message: any) => {
-					message.role = setRole({
-						userId: message.user.userId,
-						channel,
-						currentUserId: $page.data.user?.userId
-					})
-					return message
-				})
-				chatHistory = [...chatHistory, ...messages]
-			} else if (parsedMsg.isMessageDeleted) {
-				chatHistory = chatHistory.filter((item) => item.timestamp !== parsedMsg.data.timestamp)
-			} else {
-				parsedMsg.role = setRole({
-					userId: parsedMsg.user.userId,
-					channel,
-					currentUserId: $page.data.user?.userId
-				})
-				chatHistory.unshift(parsedMsg)
-			}
-			chatHistory = chatHistory
-		}
-	})
-
 	onMount(() => {
 		if (
 			$was_chat_drawer_closed &&
@@ -57,6 +28,34 @@
 			$channel_connection === `open-${channel._id}` &&
 			channel.socket?.readyState === WebSocket.OPEN
 		) {
+			channel_message.subscribe((value) => {
+				if (!value) return
+				var parsedMsg = JSON.parse(value)
+				if (parsedMsg.eventName === `channel-message-${channel?._id}`) {
+					if (parsedMsg.isMessageHistory) {
+						cursor = parsedMsg.cursor
+						let messages = parsedMsg.data.map((message: any) => {
+							message.role = setRole({
+								userId: message.user.userId,
+								channel,
+								currentUserId: $page.data.user?.userId
+							})
+							return message
+						})
+						chatHistory = [...chatHistory, ...messages]
+					} else if (parsedMsg.isMessageDeleted) {
+						chatHistory = chatHistory.filter((item) => item.timestamp !== parsedMsg.data.timestamp)
+					} else {
+						parsedMsg.role = setRole({
+							userId: parsedMsg.user.userId,
+							channel,
+							currentUserId: $page.data.user?.userId
+						})
+						chatHistory.unshift(parsedMsg)
+					}
+					chatHistory = chatHistory
+				}
+			})
 			emitChatHistoryToChannel({
 				channelSocket: channel.socket,
 				channelId: channel._id,
