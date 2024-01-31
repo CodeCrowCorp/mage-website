@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) by Sir Teatei Moonlight for www.xenoserieswiki.org -->
+<svg id="svg2" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xlink="http://www.w3.org/1999/xlink"
+		width="256" height="256"
+		viewBox="0 0 256 256">
+	<defs id="defs4">
+		<path id="xShape"
+			d="m 29.149628,75.4528 31.207031,53.73486 -51.75586,60.45117 h 42.604981 l 25.045894,-33.90087 16.082516,33.90087 h 43.71533 l -33.22119,-58.91894 46.53956,-55.26709 h -42.31495 l -21.559566,31.277343 -12.95068,-31.277343 z"
+		/>
+		<path id="cShape"
+			d="m 162.07957,203.00851 c -1.82688,8.22096 -6.91605,14.35404 -15.91995,14.35404 -13.17962,0 -15.0065,-12.00519 -15.0065,-19.70418 0,-13.17963 5.74162,-31.44841 21.66156,-31.44841 8.87341,0 13.04913,4.95867 12.78815,13.70158 h 27.1422 c -0.52197,-27.92514 -19.05174,-36.92904 -39.79986,-36.92904 -31.70939,0 -50.50014,25.05433 -50.50014,55.19783 0,24.92385 13.04913,42.40969 40.06083,42.40969 38.75593,0 46.06344,-28.05564 47.75983,-37.58151 z"
+		/>
+		<path id="3Shape"
+			d="m 108.43627,71.19 h 42.26872 c 3.5359,-13.557236 12.13851,-18.791974 21.50273,-18.791974 12.02316,0 15.9551,8.457105 15.9551,15.621636 0,15.418545 -12.16547,26.701338 -27.49344,26.701338 h -15.30865 l -7.64418,34.31072 h 16.9985 c 10.51371,0 22.95171,3.11624 22.95171,17.01925 0,18.72839 -14.46332,29.84479 -29.80164,29.84479 -13.8668,0 -19.85444,-7.53662 -18.75689,-22.05976 H 88.58524 c -7.438235,27.95035 9.475646,56.36967 56.32909,56.36967 40.104,0 74.85902,-25.63488 74.85902,-65.66486 0,-16.6772 -9.46295,-27.34896 -29.13942,-33.19872 15.82605,-5.58869 40.09419,-16.125533 40.09419,-50.754713 0,-24.273866 -20.40916,-40.323512 -51.23437,-40.323512 -46.5744,0 -64.26556,28.404182 -71.05748,50.926135 z"
+		/>
+		<path id="3SymbolShape"
+			d="m 147.65887,88.26138 v 16.9898 l -15.21785,15.21784 18.85665,18.85667 37.71332,-37.71332 -4.22649,-4.226503 -33.48683,33.486833 -10.40367,-10.40368 10.40367,-10.40367 9.10322,9.10322 4.22649,-4.2265 -10.99135,-10.99136 v -15.68933 z m 23.79593,-6.806138 37.71331,37.713328 4.2265,-4.2265 -33.48683,-33.486828 10.40367,-10.403673 10.40368,10.403673 -9.10322,9.103214 4.22649,4.226491 13.32971,-13.329705 -18.85666,-18.856656 z m -23.73338,36.087758 c -1.61602,1.61599 -1.61602,4.23606 0,5.85205 1.61599,1.61602 4.23606,1.61602 5.85205,0 1.61601,-1.61599 1.61601,-4.23606 0,-5.85205 -1.61599,-1.61601 -4.23606,-1.61601 -5.85205,0 z m 39.664,-39.66402 c -1.61601,1.616003 -1.61601,4.236061 0,5.852065 1.61599,1.616004 4.23606,1.616004 5.85206,0 1.61601,-1.616004 1.61601,-4.236062 0,-5.852065 -1.616,-1.616005 -4.23607,-1.616005 -5.85206,0 z m -20.15712,48.11699 33.48683,33.48683 -10.40368,10.40367 -10.40367,-10.40367 9.10321,-9.10322 -4.22649,-4.22649 -13.3297,13.32971 18.85665,18.85665 18.85666,-18.85665 -37.71331,-37.71332 z m 5.52696,-5.52695 17.55619,17.55619 17.55619,-17.55619 -17.55619,-17.55619 z m 8.45299,0 9.1032,-9.1032 9.1032,9.1032 -4.5516,4.55161 -4.5516,4.5516 z m 6.17717,-2.92602 c -1.61601,1.61599 -1.61601,4.23606 0,5.85205 1.61599,1.61602 4.23606,1.61602 5.85206,0 1.61601,-1.61599 1.61601,-4.23606 0,-5.85205 -1.616,-1.61601 -4.23607,-1.61601 -5.85206,0 z m 4.22649,21.78269 4.22649,4.22649 33.48683,-33.48683 10.40367,10.40367 -10.40367,10.40368 -9.10323,-9.10322 -4.22648,4.22649 13.32971,13.32972 18.85666,-18.85667 -18.85666,-18.85665 z m -4.22649,17.88131 c -1.61601,1.616 -1.61601,4.23606 0,5.85206 1.61599,1.61601 4.23606,1.61601 5.85206,0 1.61601,-1.616 1.61601,-4.23606 0,-5.85206 -1.616,-1.61601 -4.23607,-1.61601 -5.85206,0 z m 39.664,-39.664 c -1.616,1.61599 -1.616,4.23606 0,5.85205 1.61601,1.61602 4.23606,1.61602 5.85206,0 1.61601,-1.61599 1.61601,-4.23606 0,-5.85205 -1.616,-1.61601 -4.23605,-1.61601 -5.85206,0 z"
+		/>
+		<!--Inkscape doesn't respect href, so have to include xlink:href as well-->
+		<clipPath id="xClip">
+			<use href="#xShape" xlink:href="#xShape" />
+		</clipPath>
+		<clipPath id="cClip">
+			<use href="#cShape" xlink:href="#cShape" />
+		</clipPath>
+		<clipPath id="3Clip">
+			<use href="#3Shape" xlink:href="#3Shape" />
+		</clipPath>
+		<clipPath id="bubbleClip">
+			<circle cx="0" cy="0" r="12" />
+		</clipPath>
+		<!--Inkscape doesn't respect stop-color, so have to include style="" as well-->
+		<linearGradient id="xcGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+			<stop offset="0%" stop-color="rgba(255,255,255,1)" style="stop-color:rgb(255,255,255);stop-opacity:1;"/>
+			<stop offset="50%" stop-color="rgba(255,255,255,1)" style="stop-color:rgb(255,255,255);stop-opacity:1;"/>
+			<stop offset="75%" stop-color="rgba(255,255,255,0.25)" style="stop-color:rgb(255,255,255);stop-opacity:0.25;"/>
+			<stop offset="100%" stop-color="rgba(255,255,255,0)" style="stop-color:rgb(255,255,255);stop-opacity:0;"/>
+		</linearGradient>
+		<linearGradient id="3Gradient" x1="0%" x2="0%" y1="0%" y2="100%">
+			<stop offset="0%" stop-color="rgba(255,0,0,1)" style="stop-color:rgb(255,0,0);stop-opacity:1;"/>
+			<stop offset="50%" stop-color="rgba(255,0,0,1)" style="stop-color:rgb(255,0,0);stop-opacity:1;"/>
+			<stop offset="82.5%" stop-color="rgba(191,0,0,1)" style="stop-color:rgb(191,0,0);stop-opacity:1;"/>
+			<stop offset="100%" stop-color="rgba(191,0,0,1)" style="stop-color:rgb(191,0,0);stop-opacity:1;"/>
+		</linearGradient>
+		<radialGradient id="bubbleGradient">
+			<stop offset="0%" stop-color="rgba(255,255,255,0.25)" style="stop-color:rgb(255,255,255);stop-opacity:0.25;"/>
+			<stop offset="75%" stop-color="rgba(255,255,255,0.25)" style="stop-color:rgb(255,255,255);stop-opacity:0.25;"/>
+			<stop offset="100%" stop-color="rgba(255,255,255,0)" style="stop-color:rgb(255,255,255);stop-opacity:0;"/>
+		</radialGradient>
+		<filter id="maskBlur" filterUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+			<feGaussianBlur id="blur" stdDeviation="0.75" />
+		</filter>
+		<filter id="bubbleBlur" filterUnits="userSpaceOnUse" x="-10%" y="-10%" width="120%" height="120%">
+			<feGaussianBlur id="blur" stdDeviation="2" />
+		</filter>
+		<filter id="fillTurbulence" filterUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+			<feTurbulence type="fractalNoise" baseFrequency="0.25 0.25" numOctaves="3" result="alp" />
+			<feColorMatrix in="alp" type="saturate" values="0" />
+		</filter>
+		<filter id="fillDots" filterUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+			<feTurbulence type="fractalNoise" baseFrequency="0.5 0.5" numOctaves="1" result="alp" />
+			<feColorMatrix in="alp" type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0" result="mapped" />
+			<!--Inkscape gets this blatantly wrong for some reason (renders pure transparent are opaque white) but no idea how to fix it-->
+			<feComponentTransfer in="mapped" result="sloped">
+				<feFuncA type="linear" slope="2.5" intercept="-1.5"/>
+			</feComponentTransfer>
+		</filter>
+		<mask id="xMask" maskUnits="userSpaceOnUse">
+			<path id="xMaskPath" style="fill:white;fill-rule:evenodd;stroke:black;stroke-width:2px;filter:url(#maskBlur)"
+				d="m 120.93401,87.450853 c -0.788,-0.822377 -3.98898,1.131928 -5.48476,2.625681 -1.49578,1.493753 -4.12255,4.447739 -2.85908,5.951546 1.26347,1.503807 4.00445,-1.895626 5.42641,-3.384212 1.42196,-1.488586 3.70543,-4.370638 2.91743,-5.193015 z m 1.28366,21.063804 c 0,0 3.50091,-9.27741 4.60954,-11.20291 1.10862,-1.9255 4.43448,-2.975773 5.6598,-4.901273 1.22532,-1.9255 4.84292,-9.452455 6.12659,-8.460531 1.28367,0.991925 -2.50898,4.784576 -5.25136,11.611349 l 13.65354,2.33394 20.01353,-27.715532 -20.30527,-1.050273 c -2.10055,5.659803 -20.35017,20.542121 -20.77206,14.762168 -0.16164,-2.21442 12.66162,-8.402183 15.1706,-13.070062 l -9.97759,0.466789 c -4.02605,4.726227 -21.00546,23.806183 -20.30527,13.945288 0.23589,-3.322103 14.41207,-9.335759 17.67959,-15.112259 l -99.313518,-22.081765 -73.696964,139.701654 164.515442,33.49862 90.81848,-77.41903 z"
+			/>
+		</mask>
+		<g id="bubble" style="filter:url(#bubbleBlur);">
+			<circle cx="0" cy="0" r="24" style="fill:url(#bubbleGradient);" />
+			<circle cx="0" cy="0" r="12" style="fill:rgb(255,255,255);fill-opacity:0.5;stroke:rgb(255,255,255);stroke-width:1px;" />
+			<circle cx="9" cy="5" r="12" style="fill:rgb(255,255,255);fill-opacity:0.5;" clip-path="url(#bubbleClip)" />
+			<circle cx="-6" cy="4" r="10" style="fill:rgb(255,255,255);fill-opacity:1;" clip-path="url(#bubbleClip)" />
+		</g>
+	</defs>
+	<metadata id="metadata7">
+		<rdf:RDF>
+			<cc:Work rdf:about="">
+				<dc:format>image/svg+xml</dc:format>
+				<dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+				<dc:title></dc:title>
+			</cc:Work>
+		</rdf:RDF>
+	</metadata>
+	<g id="symbolGroup">
+		<use href="#3Shape" xlink:href="#3Shape" style="opacity:1;fill:url(#3Gradient);stroke:none;" />
+		<use href="#3SymbolShape" xlink:href="#3SymbolShape" clip-path="url(#3Clip)" style="opacity:1;fill:rgb(191,0,0);stroke:none;" />
+		<!--order of operations is to transform *after* clip, so need to mess with groups-->
+		<use href="#cShape" xlink:href="#cShape" style="opacity:1;fill:rgb(175,175,175);stroke:none;" />-->
+		<g id="c" clip-path="url(#cClip)">
+			<path d="m 90,130 120,0 0,120 -120,0 0,-120 z" style="opacity:1;fill:black;stroke:none;filter:url(#fillTurbulence);" />
+			<path d="m 90,130 120,0 0,120 -120,0 0,-120 z" style="opacity:1;fill:black;stroke:none;filter:url(#fillDots);" />
+		</g>
+		<use href="#cShape" xlink:href="#cShape" style="opacity:1;fill:url(#xcGradient);stroke:none;" />
+		<g id="xGroup" mask="url(#xMask)">
+			<use href="#xShape" xlink:href="#xShape" style="opacity:1;fill:rgb(175,175,175);stroke:none;" />-->
+			<g id="x" clip-path="url(#xClip)">
+				<path d="m 0,60 170,0 0,150 -170,0 0,-150 z" style="opacity:1;fill:black;stroke:none;filter:url(#fillTurbulence);" />
+				<path d="m 0,60 170,0 0,150 -170,0 0,-150 z" style="opacity:1;fill:black;stroke:none;filter:url(#fillDots);" />
+			</g>
+			<use href="#xShape" xlink:href="#xShape" style="opacity:1;fill:url(#xcGradient);stroke:none;" />
+		</g>
+		<!--
+		<g transform="translate(0 0)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(1)" />
+		</g>
+		-->
+		<g transform="translate(196.46 55.17)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.125)" />
+		</g>
+		<g transform="translate(179.51 65.63)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.1)" />
+		</g>
+		<g transform="translate(172.87 75.77)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.19)" />
+		</g>
+		<g transform="translate(169.09 58.99)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.23)" />
+		</g>
+		<g transform="translate(164.10 72.20)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.16)" />
+		</g>
+		<g transform="translate(159.87 68.10)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.05)" />
+		</g>
+		<g transform="translate(159.74 85.19)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.13)" />
+		</g>
+		<g transform="translate(158.77 61.53)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.07)" />
+		</g>
+		<g transform="translate(156.20 64.34)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.08)" />
+		</g>
+		<g transform="translate(155.69 70.22)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.11)" />
+		</g>
+		<g transform="translate(150.90 69.24)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.05)" />
+		</g>
+		<g transform="translate(150.68 72.21)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.02)" />
+		</g>
+		<g transform="translate(149.76 84.29)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.21)" />
+		</g>
+		<g transform="translate(148.09 70.77)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.02)" />
+		</g>
+		<g transform="translate(147.63 73.06)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.03)" />
+		</g>
+		<g transform="translate(144.02 90.61)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.07)" />
+		</g>
+		<g transform="translate(142.61 74.34)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.03)" />
+		</g>
+		<g transform="translate(142.35 66.96)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.05)" />
+		</g>
+		<g transform="translate(142.23 70.25)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.18)" />
+		</g>
+		<g transform="translate(141.46 97.22)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.08)" />
+		</g>
+		<g transform="translate(137.81 99.24)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.20)" />
+		</g>
+		<g transform="translate(136.82 93.84)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.10)" />
+		</g>
+		<g transform="translate(132.63 68.65)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.11)" />
+		</g>
+		<g transform="translate(129.82 76.45)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.08)" />
+		</g>
+		<g transform="translate(128.65 100.34)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.10)" />
+		</g>
+		<g transform="translate(127.21 106.76)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.09)" />
+		</g>
+		<g transform="translate(123.02 74.77)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.11)" />
+		</g>
+		<g transform="translate(117.99 75.78)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.04)" />
+		</g>
+		<g transform="translate(115.01 92.22)">
+			<use href="#bubble" xlink:href="#bubble" transform="scale(0.05)" />
+		</g>
+	</g>
+</svg>

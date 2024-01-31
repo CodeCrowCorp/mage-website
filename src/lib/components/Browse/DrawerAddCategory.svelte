@@ -2,8 +2,6 @@
 	import IconInfo from '$lib/assets/icons/IconInfo.svelte'
 	import { onMount } from 'svelte'
 	import { category_assets, category_list } from '$lib/stores/channelStore'
-	import devUrlsJson from '$lib/assets/svg-json/dev.json'
-	import gameUrlsJson from '$lib/assets/svg-json/game.json'
 
 	export let showAddCategory: boolean = true,
 		categories: any = [],
@@ -22,21 +20,8 @@
 		assetIcons = activeTab == 'Game' ? $category_assets.game : $category_assets.dev
 	}
 
-	const loadDev = () => {
-		if (!Object.keys($category_assets.dev).length) {
-			$category_assets.dev = devUrlsJson
-		}
-	}
-	const loadGame = () => {
-		if (!Object.keys($category_assets.game).length) {
-			$category_assets.game = gameUrlsJson
-		}
-	}
-
 	const setActiveTab = async (tab: string) => {
 		activeTab = tab
-		loadDev()
-		loadGame()
 		setActiveIcons()
 	}
 
@@ -44,7 +29,7 @@
 	$: maxCategoryLabel = categories.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 	$: renderingAssets = searchQuery != '' ? Object.entries(searchResult) : Object.entries(assetIcons)
 
-	const toggleCategory = (name: string, image_url: string) => {
+	const toggleCategory = (name: string) => {
 		if (categories.includes(name)) {
 			categories.splice(categories.indexOf(name), 1)
 		} else if (categories.length < maxCategory) {
@@ -55,7 +40,7 @@
 
 	const removeCategory = (image_url: string) => {
 		let key = Object.keys(allIcons).find((key) => allIcons[key] === image_url)
-		toggleCategory(key ?? '', image_url)
+		toggleCategory(key ?? '')
 	}
 
 	const searchCategory = () => {
@@ -118,9 +103,9 @@
 				{#if renderingAssets.length}
 					{#each renderingAssets as [name, image_url]}
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
-						<label
+						<div
 							class="cursor-pointer flex items-center gap-2 pb-2"
-							on:click={() => toggleCategory(name, image_url)}>
+							on:click={() => toggleCategory(name)}>
 							<input
 								type="checkbox"
 								checked={categories.includes(name)}
@@ -128,7 +113,7 @@
 								disabled={categories.length === maxCategory && !categories.includes(name)} />
 							<img src={image_url} alt="" class="h-7 w-7 m-1" />
 							<span class="label-text">{name}</span>
-						</label>
+						</div>
 					{/each}
 				{:else if searchQuery != ''}
 					<div class="alert flex justify-center">
