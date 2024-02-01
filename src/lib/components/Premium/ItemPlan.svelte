@@ -6,15 +6,11 @@
 	export let plan: any = {},
 		index: number = 0,
 		recurringInterval: string = 'month'
+	let price: any
 
 	$: if (recurringInterval) {
 		price = plan.prices.find((price: any) => price.recurring.interval === recurringInterval)
 	}
-
-	let price: any
-	onMount(() => {
-		console.log('recurringInterval', recurringInterval)
-	})
 </script>
 
 <div
@@ -48,7 +44,7 @@
 		{/each}
 	</ul>
 	{#if $page.data.user?.userId}
-		<form style="margin-top: auto;">
+		<form class="mt-auto">
 			<div class="flex flex-col space-y-3">
 				<button
 					class="btn btn-accent px-5 py-2.5 text-black"
