@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
+	import { onDestroy, onMount } from 'svelte'
 	import { get, put, del, patch, post } from '$lib/api'
 	import { page } from '$app/stores'
 	import { getHref, isValidRtmp } from '$lib/utils'
@@ -25,6 +25,25 @@
 	let selected = ''
 	let touched = false
 	let restream_drawer = false
+	let redirectedOptionsFromLS = localStorage?.getItem('redirectedOptions')
+	let parsedRedirectedOptions = redirectedOptionsFromLS ? JSON.parse(redirectedOptionsFromLS) : null
+	let wsYoutube
+	let wsTwitch
+	let streamViewerCount = {
+		youtube: {
+			viewers: 0,
+			isLive: false
+		},
+		twitch: {
+			viewers: 0,
+			isLive: false
+		}
+	}
+
+	let redirectedOptions = {
+		redirected: parsedRedirectedOptions ? parsedRedirectedOptions.redirected : false,
+		selected: parsedRedirectedOptions ? parsedRedirectedOptions.selected : 'youtube'
+	}
 
 	$: cloudflareUrl = payload.url.includes('cloudflare')
 	$: invalidUrl = !isValidRtmp(payload.url)
@@ -78,7 +97,41 @@
 
 	onMount(() => {
 		getAll()
+
+		if (redirectedOptions.redirected) {
+			selected = redirectedOptions.selected
+			if (redirectedOptions.selected === 'youtube') getYoutubeStreamLink()
+			else getTwitchStreamLink()
+		}
+
+		wsYoutube = new WebSocket(
+			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/youtube-stream?videoId=${payload.streamKey}`
+		)
+
+		wsYoutube.onopen = (event) => console.log('WebSocket connection opened:', event)
+
+		wsYoutube.onmessage = (event) => {
+			const data = JSON.parse(event.data)
+			streamViewerCount.youtube = data
+		}
+
+		wsYoutube.onclose = (event) => console.log('WebSocket connection closed:', event)
+
+		wsTwitch = new WebSocket(
+			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/twitch-stream?videoId=${payload.streamKey}&channelId=${$page.params.channelId}`
+		)
+
+		wsTwitch.onopen = (event) => console.log('WebSocket connection opened:', event)
+
+		wsTwitch.onmessage = (event) => {
+			const data = JSON.parse(event.data)
+			streamViewerCount.youtube = data
+		}
+
+		wsTwitch.onclose = (event) => console.log('WebSocket connection closed:', event)
 	})
+	// // Clean up the WebSocket connection when the component is destroyed
+	// $: if ($ws && $ws.readyState === WebSocket.OPEN) $ws.close()
 
 	const getLiveInput = async () => {
 		return await get(`live-input?channelId=${$page.params.channelId}&trackType=rtmps`, {
@@ -113,21 +166,68 @@
 		const rtmps = await getLiveInput()
 		await sendOutputs({ liveInputUid: rtmps.rtmps.uid })
 	}
+	const linkTwitch = async () => {
+		try {
+			localStorage.setItem(
+				'redirectedOptions',
+				JSON.stringify({
+					redirected: true,
+					selected: 'twitch'
+				})
+			)
+			const linkRes = await get(`twitch/link?channelId=${$page.params.channelId}`, auth)
+
+			if (linkRes.redirect) window.location.replace(linkRes.redirectUrl)
+		} catch (err) {
+			getTwitchStreamLink()
+		}
+	}
 
 	const getTwitchStreamLink = async () => {
-		const linkRes = await get(`twitch/stream/link?channelId=${$page.params.channelId}`, auth)
+		const streamRes = await get(`twitch/stream/link?channelId=${$page.params.channelId}`, auth)
 
-		payload.streamKey = linkRes.streamKey
+		if (streamRes.error === 404) return
+		payload.streamKey = streamRes.streamKey
 		selected = 'twitch'
+		is_restream_drawer_open.set(true)
+		showAddModal = true
+		touched = false
+		localStorage.removeItem('redirectedOptions')
+	}
+
+	const linkYoutube = async () => {
+		try {
+			localStorage.setItem(
+				'redirectedOptions',
+				JSON.stringify({
+					redirected: true,
+					selected: 'youtube'
+				})
+			)
+			const linkRes = await get(`youtube/link?channelId=${$page.params.channelId}`, auth)
+
+			if (linkRes.redirect) window.location.replace(linkRes.redirectUrl)
+		} catch (error) {
+			getYoutubeStreamLink()
+		}
 	}
 
 	const getYoutubeStreamLink = async () => {
-		const linkRes = await get(`youtube/stream/link?channelId=${$page.params.channelId}`, auth)
+		const streamRes = await get(`youtube/stream/link?channelId=${$page.params.channelId}`, auth)
+		payload = {
+			title: '',
+			url: '',
+			streamKey: ''
+		}
 
-		;(payload.url = linkRes.streamaddress),
-			(payload.streamKey = linkRes.streamKey),
+		if (streamRes.error === 404) return
+		;(payload.url = streamRes.streamaddress),
+			(payload.streamKey = streamRes.streamKey),
 			(selected = 'youtube')
-			console.log(selected)
+		is_restream_drawer_open.set(true)
+		showAddModal = true
+		touched = false
+		localStorage.removeItem('redirectedOptions')
 	}
 </script>
 
@@ -137,6 +237,7 @@
 		type="checkbox"
 		class="drawer-toggle"
 		bind:checked={$is_restream_drawer_open} />
+
 	<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 	<div class="drawer-side z-50 overflow-x-hidden" on:click={overlayClick}>
 		<label id="overlay" for="restream-drawer" aria-label="close sidebar" class="drawer-overlay" />
@@ -189,7 +290,6 @@
 				</div>
 
 				<dialog class={`modal ${confirm_modal && 'modal-open'}`}>
-					<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 					<form on:keydown={(event) => event.key != 'Enter'} method="dialog" class="modal-box">
 						<h3 class="font-bold text-lg">Delete restream url</h3>
 						<p class="py-4">
@@ -215,30 +315,14 @@
 						<div class="form-control w-full pt-4">
 							<div class="flex gap-3">
 								{#if env.PUBLIC_CROSS_ORIGIN === 'false'}
-									<button
-										on:click={async () => {
-											const linkRes = await get(
-												`youtube/link?channelId=${$page.params.channelId}`,
-												auth
-											)
-											if (linkRes.redirect) {
-												window.location.replace(linkRes.redirectUrl)
-											}
-										}}>Link Youtube</button>
-									<button
-										on:click={async () => {
-											const linkRes = await get(
-												`twitch/link?channelId=${$page.params.channelId}`,
-												auth
-											)
-											if (linkRes.redirect) {
-												window.location.replace(linkRes.redirectUrl)
-											}
-										}}>Link twitch</button>
-									<button class="btn btn-sm" on:click={getTwitchStreamLink}
-										><IconSocialTwitch /> Twitch</button>
-									<button class="btn btn-sm" on:click={getYoutubeStreamLink}
-										><IconSocialYouTube /> YouTube</button>
+									<button class="btn btn-sm" on:click={linkTwitch}
+										><IconSocialTwitch /> Twitch {streamViewerCount.twitch.isLive
+											? streamViewerCount.twitch.viewers
+											: ''}</button>
+									<button class="btn btn-sm" on:click={linkYoutube}
+										><IconSocialYouTube /> YouTube {streamViewerCount.youtube.isLive
+											? streamViewerCount.youtube.viewers
+											: ''}</button>
 								{:else}
 									<button
 										class="btn btn-sm"
@@ -255,10 +339,11 @@
 												provider: 'youtube',
 												apiUrl: env.PUBLIC_API_URL,
 												xApiKey: env.PUBLIC_X_API_KEY
-											})}><IconSocialYouTube /> YouTube</button>
+											})}
+										><IconSocialYouTube /> YouTube
+									</button>
 								{/if}
 							</div>
-							<!-- svelte-ignore a11y-label-has-associated-control-->
 							<label class="label">
 								<span class="label-text">Title</span>
 							</label>
@@ -269,7 +354,8 @@
 								class="input input-bordered w-full max-w-xs input-primary"
 								maxlength="20" />
 							<!-- svelte-ignore a11y-label-has-associated-control -->
-							{#if selected == 'youtube'}
+
+							{#if selected === 'youtube' && payload.url}
 								<label class="label mt-5">
 									<span class="label-text">Server</span>
 								</label>
@@ -279,12 +365,12 @@
 									placeholder="Enter server url"
 									class="input input-bordered w-full max-w-xs input-primary"
 									on:blur={onBlur} />
-								{#if touched && invalidUrl}
-									<div class="text-error text-sm mt-2">Please enter a valid URL</div>
-								{/if}
-								{#if touched && !invalidUrl && cloudflareUrl}
-									<div class="text-error text-sm mt-2">Cloudfare urls not allowed</div>
-								{/if}
+							{/if}
+							{#if touched && invalidUrl}
+								<div class="text-error text-sm mt-2">Please enter a valid URL</div>
+							{/if}
+							{#if touched && !invalidUrl && cloudflareUrl}
+								<div class="text-error text-sm mt-2">Cloudfare urls not allowed</div>
 							{/if}
 							<!-- svelte-ignore a11y-label-has-associated-control -->
 							<label class="label mt-5">
