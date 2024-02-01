@@ -1,46 +1,16 @@
 <script lang="ts">
 	import ItemPlan from '$lib/components/Premium/ItemPlan.svelte'
 	import { onMount } from 'svelte'
-	import { page } from '$app/stores'
-	import { env } from '$env/dynamic/public'
+	import { get } from '$lib/api'
 
-	let plans: any = [
-		{
-			name: 'Free',
-			// description:
-			// 	'Great for individuals just getting started with streaming and learning the platform.',
-			price: 0,
-			features: [
-				'Unlimited channels',
-				'Up to 9 guests in a live-stream',
-				'Restream to 10 other platforms',
-				'AI chat fully enabled',
-				'Up to 100 messages in chat history',
-				'View streaming stats'
-			],
-			features2: []
-		},
-		{
-			name: 'Premium',
-			// description:
-			// 	'Perfect for dedicated streamers looking to grow their brand and expand their reach.',
-			price: 4,
-			features: [
-				'Everything in Free Tier',
-				'Expanded reach for brand growth',
-				'GPT-4 access (once available)',
-				'Unlimited chat history'
-			],
-			features2: [
-				'Sponsor contributions',
-				'An affiliate badge',
-				'Modified avatar',
-				'RevShare (TBD)'
-			]
-		}
-	]
-
-	onMount(() => {})
+	let plans: any = []
+	let recurringInterval: string = 'month'
+	let isChecked = false
+	$: recurringInterval = isChecked ? 'year' : 'month'
+	onMount(async () => {
+		plans = await get(`plans`)
+		console.log('got here---plans', plans)
+	})
 </script>
 
 <!-- <section>
@@ -74,19 +44,17 @@
 		<div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
 			<h2 class="mb-4 text-4xl tracking-tight font-extrabold">Designed for dedicated streamers</h2>
 			<p class="mb-5 font-light text-gray-500 sm:text-xl">
-				Collaborative streaming powered by AI. Our platform is designed to expand your reach and
-				grow your brand.
+				Our platform is designed to expand your reach and grow your brand.
 			</p>
 			<div class="flex gap-2 justify-center">
-				<span>
-					<a class="mb-5 link link-secondary" href={env.PUBLIC_STRIPE_BILLING_URL}
-						>Manage your subscription</a>
-				</span>
+				<span>Monthly</span>
+				<input type="checkbox" class="toggle toggle-accent" bind:checked={isChecked} />
+				<span>Yearly (2 months free)</span>
 			</div>
 		</div>
 		<div class="md:flex h-full">
-			{#each plans as plan}
-				<ItemPlan {plan} />
+			{#each plans as plan, index}
+				<ItemPlan {plan} {index} {recurringInterval} />
 			{/each}
 		</div>
 	</div>
