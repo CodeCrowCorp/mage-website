@@ -1,13 +1,12 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte'
+	import { onMount } from 'svelte'
 	import { get, put, del, patch, post } from '$lib/api'
 	import { page } from '$app/stores'
 	import { getHref, isValidRtmp } from '$lib/utils'
 	import {
 		is_restream_drawer_open,
-		streamViewerCountStore,
-		twitchStreamViewerCountStore,
-		youtubeStreamViewerCountStore
+		streamStore,
+		streamViewerCountStore
 	} from '$lib/stores/channelStore'
 	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
 	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
@@ -30,32 +29,35 @@
 	let selected = ''
 	let touched = false
 	let restream_drawer = false
-	let redirectedOptionsFromLS = localStorage?.getItem('redirectedOptions')
-	let parsedRedirectedOptions = redirectedOptionsFromLS ? JSON.parse(redirectedOptionsFromLS) : null
 	let ws: WebSocket
-	let youtubeStreamViewerCount: any
-	let twitchStreamViewerCount: any
 	let streamViewerCount: any
+	let streamData: any
 
 	// Subscribe to the streamViewerCount store
-	$: youtubeStreamViewerCount = $youtubeStreamViewerCountStore
-	$: twitchStreamViewerCount = $twitchStreamViewerCountStore
 	$: streamViewerCount = $streamViewerCountStore
-
-	let redirectedOptions = {
-		redirected: parsedRedirectedOptions ? parsedRedirectedOptions.redirected : false,
-		selected: parsedRedirectedOptions ? parsedRedirectedOptions.selected : 'youtube'
-	}
+	$: streamData = $streamStore
 
 	$: cloudflareUrl = payload.url.includes('cloudflare')
 	$: invalidUrl = !isValidRtmp(payload.url)
 
-	$: disbaled =
-		loading || !payload.title || !payload.url || !payload.streamKey || invalidUrl || cloudflareUrl
+	$: disabledYoutube =
+		loading || !payload.title || !payload.url || invalidUrl || cloudflareUrl || !payload.streamKey
+
+	$: disabledTwitch = loading || !payload.title || !payload.streamKey
+
+	// invalidUrl ||
+	// cloudflareUrl
 
 	const addNew = async () => {
 		loading = true
-		await put('output', payload, auth)
+		await put(
+			'output',
+			{
+				...payload,
+				platform: selected
+			},
+			auth
+		)
 		loading = false
 		await getAll()
 		showAddModal = false
@@ -80,6 +82,12 @@
 			loading = true
 			urlList = await get(`outputs`, auth)
 			loading = false
+			streamStore.set({
+				title: urlList[0].title,
+				url: urlList[0].url,
+				streamKey: urlList[0].streamKey
+			})
+			console.log({ urlList })
 		}
 	}
 
@@ -100,82 +108,141 @@
 	onMount(() => {
 		getAll()
 
-		if (redirectedOptions.redirected) {
-			selected = redirectedOptions.selected
-			if (redirectedOptions.selected === 'youtube') getYoutubeStreamLink()
+		if (streamData && streamData.redirected) {
+			selected = streamData.type
+			if (streamData.type === 'youtube') getYoutubeStreamLink()
 			else getTwitchStreamLink()
 		}
 	})
 
-	$: if (selected === 'youtube' && payload.streamKey) {
+	$: if (urlList.length > 0) {
 		if (ws) {
 			ws.close()
 		}
-		streamViewerCountStore.set({
-			viewerCount: 0
-		})
-		ws = new WebSocket(
-			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/youtube-stream?videoId=${payload.streamKey}`
-		)
 
-		ws.onopen = (event) => console.log('WebSocket connection opened:', event)
+		// urlList.forEach((item: any) => {
+		// 	if (item.platform === 'youtube') {
+		// 		ws = new WebSocket(
+		// 			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/youtube-stream?videoId=${item.streamKey}`
+		// 		)
 
-		ws.onmessage = (event) => {
-			try {
-				console.log({ event })
-				const data = JSON.parse(event.data)
-				youtubeStreamViewerCount.viewerCount = data.viewers
-				streamViewerCount.viewerCount = data.viewers
-				streamViewerCountStore.set({
-					viewerCount: data.viewers
-				})
-				youtubeStreamViewerCountStore.set({
-					viewerCount: data.viewers
-				})
-			} catch (error) {
-				console.error('Error parsing JSON:', error)
+		// 		ws.onopen = (event) => console.log('WebSocket connection opened:', event)
+
+		// 		ws.onmessage = (event) => {
+		// 			try {
+		// 				const data = JSON.parse(event.data)
+
+		// 				streamViewerCountStore.set({
+		// 					viewerCount: data.viewers,
+		// 					youtube: data.viewer,
+		// 					twitch: streamViewerCount.twitch
+		// 				})
+		// 			} catch (error) {
+		// 				console.error('Error parsing JSON:', error)
+		// 			}
+		// 		}
+
+		// 		ws.onclose = (event) => console.log('WebSocket connection closed:', event)
+		// 	}
+		// 	//  else if (item.platform === 'twitch') {
+		// 	// 	const ws = new WebSocket(
+		// 	// 		`${env.PUBLIC_WEBSOCKET_URL}/wsinit/twitch-stream?videoId=${urlList[1].streamKey}&channelId=${$page.params.channelId}`
+		// 	// 	)
+		// 	// 	ws.onopen = (event) => console.log('WebSocket connection opened:', event)
+		// 	// 	ws.onmessage = (event) => {
+		// 	// 		try {
+		// 	// 			const data = JSON.parse(event.data)
+		// 	// 			streamViewerCountStore.set({
+		// 	// 				viewerCount: data.viewers,
+		// 	// 				youtube: streamViewerCount.youtube,
+		// 	// 				twitch: data.viewers
+		// 	// 			})
+		// 	// 		} catch (error) {
+		// 	// 			console.error('Error parsing JSON:', error)
+		// 	// 		}
+		// 	// 	}
+		// 	// 	ws.onclose = (event) => console.log('WebSocket connection closed:', event)
+		// 	// }
+		// })
+
+		if (urlList[0].platform === 'youtube') {
+			ws = new WebSocket(
+				`${env.PUBLIC_WEBSOCKET_URL}/wsinit/youtube-stream?videoId=${urlList[0].streamKey}`
+			)
+
+			ws.onopen = (event) => console.log('WebSocket connection opened:', event)
+
+			ws.onmessage = (event) => {
+				try {
+					const data = JSON.parse(event.data)
+
+					streamViewerCountStore.set({
+						viewerCount: data.viewers,
+						youtube: data.viewer,
+						twitch: streamViewerCount.twitch
+					})
+				} catch (error) {
+					console.error('Error parsing JSON:', error)
+				}
 			}
+
+			ws.onclose = (event) => console.log('WebSocket connection closed:', event)
 		}
+		// else if (urlList[1].platform === 'twitch') {
+		// 	const ws = new WebSocket(
+		// 		`${env.PUBLIC_WEBSOCKET_URL}/wsinit/twitch-stream?videoId=${urlList[1].streamKey}&channelId=${$page.params.channelId}`
+		// 	)
 
-		ws.onclose = (event) => console.log('WebSocket connection closed:', event)
+		// 	ws.onopen = (event) => console.log('WebSocket connection opened:', event)
+
+		// 	ws.onmessage = (event) => {
+		// 		try {
+		// 			const data = JSON.parse(event.data)
+
+		// 			streamViewerCountStore.set({
+		// 				viewerCount: data.viewers,
+		// 				youtube: streamViewerCount.youtube,
+		// 				twitch: data.viewers
+		// 			})
+		// 		} catch (error) {
+		// 			console.error('Error parsing JSON:', error)
+		// 		}
+		// 	}
+
+		// 	ws.onclose = (event) => console.log('WebSocket connection closed:', event)
+		// }
 	}
-	$: {
-		youtubeStreamViewerCountStore.set(youtubeStreamViewerCount)
-	}
+	// streamViewerCountStore.set({
+	// 	viewerCount: ytViewerCount + twViewerCount
+	// })
+	// $: if (selected === 'twitch' && payload.streamKey) {
+	// 	if (ws) {
+	// 		ws.close()
+	// 	}
 
-	$: if (selected === 'twitch' && payload.streamKey) {
-		if (ws) {
-			ws.close()
-		}
+	// 	streamViewerCountStore.set({
+	// 		viewerCount: 0
+	// 	})
 
-		streamViewerCountStore.set({
-			viewerCount: 0
-		})
+	// 	ws = new WebSocket(
+	// 		`${env.PUBLIC_WEBSOCKET_URL}/wsinit/twitch-stream?videoId=${payload.streamKey}&channelId=${$page.params.channelId}`
+	// 	)
+	// 	ws.onopen = (event) => console.log('WebSocket connection opened:', event)
+	// 	ws.onmessage = (event) => {
+	// 		const data = JSON.parse(event.data)
+	// 		streamViewerCount.viewerCount = data.viewers
+	// 		streamViewerCountStore.set({
+	// 			viewerCount: data.viewers
+	// 		})
+	// 	}
+	// 	ws.onclose = (event) => console.log('WebSocket connection closed:', event)
+	// }
 
-		ws = new WebSocket(
-			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/twitch-stream?videoId=${payload.streamKey}&channelId=${$page.params.channelId}`
-		)
-		ws.onopen = (event) => console.log('WebSocket connection opened:', event)
-		ws.onmessage = (event) => {
-			const data = JSON.parse(event.data)
-			twitchStreamViewerCount.viewerCount = data.viewers
-			streamViewerCount.viewerCount = data.viewers
-			streamViewerCountStore.set({
-				viewerCount: data.viewers
-			})
-
-			twitchStreamViewerCountStore.set({
-				viewerCount: data.viewers
-			})
-		}
-		ws.onclose = (event) => console.log('WebSocket connection closed:', event)
-	}
-
-	$: {
-		twitchStreamViewerCountStore.set(twitchStreamViewerCount)
-	}
 	$: {
 		streamViewerCountStore.set(streamViewerCount)
+	}
+	$: {
+		streamStore.set(streamData)
 	}
 	const getLiveInput = async () => {
 		return await get(`live-input?channelId=${$page.params.channelId}&trackType=rtmps`, {
@@ -212,13 +279,13 @@
 	}
 	const linkTwitch = async () => {
 		try {
-			localStorage.setItem(
-				'redirectedOptions',
-				JSON.stringify({
-					redirected: true,
-					selected: 'twitch'
-				})
-			)
+			streamStore.set({
+				streamKey: '',
+				url: '',
+				type: 'twitch',
+				redirected: true
+			})
+
 			const linkRes = await get(`twitch/link?channelId=${$page.params.channelId}`, auth)
 
 			if (linkRes.redirect) window.location.replace(linkRes.redirectUrl)
@@ -236,18 +303,23 @@
 		is_restream_drawer_open.set(true)
 		showAddModal = true
 		touched = false
-		localStorage.removeItem('redirectedOptions')
+		streamStore.set({
+			streamKey: streamRes.streamKey,
+			url: '',
+			type: 'twitch',
+			redirected: false
+		})
 	}
 
 	const linkYoutube = async () => {
 		try {
-			localStorage.setItem(
-				'redirectedOptions',
-				JSON.stringify({
-					redirected: true,
-					selected: 'youtube'
-				})
-			)
+			streamStore.set({
+				streamKey: '',
+				url: '',
+				type: 'youtube',
+				redirected: true
+			})
+
 			const linkRes = await get(`youtube/link?channelId=${$page.params.channelId}`, auth)
 
 			if (linkRes.redirect) window.location.replace(linkRes.redirectUrl)
@@ -271,7 +343,13 @@
 		is_restream_drawer_open.set(true)
 		showAddModal = true
 		touched = false
-		localStorage.removeItem('redirectedOptions')
+
+		streamStore.set({
+			streamKey: streamRes.streamKey,
+			url: streamRes.streamaddress,
+			type: 'youtube',
+			redirected: false
+		})
 	}
 </script>
 
@@ -435,7 +513,12 @@
 										streamKey: ''
 									}
 								}}>Cancel</button>
-							<button disabled={disbaled} class="btn btn-primary" on:click={addNew}> Save </button>
+							<button
+								disabled={selected === 'youtube' ? disabledYoutube : disabledTwitch}
+								class="btn btn-primary"
+								on:click={addNew}>
+								Save
+							</button>
 						</div>
 					</div>
 				</dialog>

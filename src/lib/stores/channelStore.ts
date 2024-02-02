@@ -9,12 +9,29 @@ export const was_chat_drawer_closed: Writable<boolean> = writable(false)
 
 export const is_restream_drawer_open: Writable<boolean> = writable(false)
 
-export const youtubeStreamViewerCountStore = writable({
-	viewerCount: 0
-})
-export const twitchStreamViewerCountStore = writable({
-	viewerCount: 0
-})
 export const streamViewerCountStore = writable({
-	viewerCount: 0
+	viewerCount: 0,
+	youtube: 0,
+	twitch: 0
+})
+
+const hasLocalStorage = typeof localStorage !== 'undefined'
+
+const storedStream = hasLocalStorage
+	? JSON.parse(localStorage?.getItem('streamData') || 'null')
+	: {
+			url: '',
+			streamKey: '',
+			type: 'youtube',
+			redirected: false
+	  }
+
+export const streamStore = writable(storedStream)
+
+// Subscribe to changes in streamStore
+streamStore.subscribe((streamData) => {
+	// Update localStorage when streamData changes
+	if (hasLocalStorage) {
+		localStorage.setItem('streamData', JSON.stringify(streamData))
+	}
 })
