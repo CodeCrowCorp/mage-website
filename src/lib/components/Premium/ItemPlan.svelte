@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores'
 	import IconAffiliateCheck from '$lib/assets/icons/premium/IconAffiliateCheck.svelte'
-	import { onMount } from 'svelte'
 
 	export let plan: any = {},
 		index: number = 0,

@@ -5,8 +5,8 @@ export const load = (async ({ locals }) => {
 	return {
 		lazy: {
 			plans: get('plans', {
-				userId: locals.user.userId,
-				token: locals.user.token
+				userId: locals.user?.userId,
+				token: locals.user?.token
 			})
 		}
 	}
