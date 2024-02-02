@@ -21,7 +21,10 @@
 	import {
 		is_chat_drawer_open,
 		is_chat_drawer_destroy,
-		was_chat_drawer_closed
+		was_chat_drawer_closed,
+		youtubeStreamViewerCountStore,
+		twitchStreamViewerCountStore,
+		streamViewerCountStore
 	} from '$lib/stores/channelStore'
 	import { is_feature_merge_platforms_enabled } from '$lib/stores/remoteConfigStore'
 
@@ -34,6 +37,9 @@
 
 	let isScrollable = false
 	$: isLive = channel.videoItems?.some((input: any) => input?.isConnected) ?? false
+	$: youtubeStreamViewerCount = $youtubeStreamViewerCountStore
+	$: twitchStreamViewerCount = $twitchStreamViewerCountStore
+	$: streamViewerCount = $streamViewerCountStore
 
 	function autoActive(node: Element) {
 		const observer = new IntersectionObserver(callback, { threshold: 0.5 })
@@ -99,11 +105,15 @@
 						</button>
 						<div
 							class="tooltip tooltip-bottom"
-							data-tip="{getNumberInThousands(channel.viewCount || 0)} views">
+							data-tip="{getNumberInThousands(youtubeStreamViewerCount.viewerCount || 0)} views">
 							<span class="btn btn-sm btn-neutral font-medium gap-2 text-white border-none">
 								<IconViews />
-								{getNumberInThousands(channel.viewCount || 0)}
+								{getNumberInThousands(streamViewerCount.viewerCount || 0)}
 							</span>
+							<!-- <span class="btn btn-sm btn-neutral font-medium gap-2 text-white border-none">
+								<IconViews />
+								{getNumberInThousands(twitchStreamViewerCount.viewerCount || 0)}
+							</span> -->
 						</div>
 						<div
 							class="dropdown dropdown-bottom tooltip tooltip-bottom"

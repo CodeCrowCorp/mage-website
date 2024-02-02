@@ -3,7 +3,12 @@
 	import { get, put, del, patch, post } from '$lib/api'
 	import { page } from '$app/stores'
 	import { getHref, isValidRtmp } from '$lib/utils'
-	import { is_restream_drawer_open } from '$lib/stores/channelStore'
+	import {
+		is_restream_drawer_open,
+		streamViewerCountStore,
+		twitchStreamViewerCountStore,
+		youtubeStreamViewerCountStore
+	} from '$lib/stores/channelStore'
 	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
 	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
 	import { env } from '$env/dynamic/public'
@@ -27,18 +32,15 @@
 	let restream_drawer = false
 	let redirectedOptionsFromLS = localStorage?.getItem('redirectedOptions')
 	let parsedRedirectedOptions = redirectedOptionsFromLS ? JSON.parse(redirectedOptionsFromLS) : null
-	let wsYoutube
-	let wsTwitch
-	let streamViewerCount = {
-		youtube: {
-			viewers: 0,
-			isLive: false
-		},
-		twitch: {
-			viewers: 0,
-			isLive: false
-		}
-	}
+	let ws: WebSocket
+	let youtubeStreamViewerCount: any
+	let twitchStreamViewerCount: any
+	let streamViewerCount: any
+
+	// Subscribe to the streamViewerCount store
+	$: youtubeStreamViewerCount = $youtubeStreamViewerCountStore
+	$: twitchStreamViewerCount = $twitchStreamViewerCountStore
+	$: streamViewerCount = $streamViewerCountStore
 
 	let redirectedOptions = {
 		redirected: parsedRedirectedOptions ? parsedRedirectedOptions.redirected : false,
@@ -103,36 +105,78 @@
 			if (redirectedOptions.selected === 'youtube') getYoutubeStreamLink()
 			else getTwitchStreamLink()
 		}
+	})
 
-		wsYoutube = new WebSocket(
+	$: if (selected === 'youtube' && payload.streamKey) {
+		if (ws) {
+			ws.close()
+		}
+		streamViewerCountStore.set({
+			viewerCount: 0
+		})
+		ws = new WebSocket(
 			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/youtube-stream?videoId=${payload.streamKey}`
 		)
 
-		wsYoutube.onopen = (event) => console.log('WebSocket connection opened:', event)
+		ws.onopen = (event) => console.log('WebSocket connection opened:', event)
 
-		wsYoutube.onmessage = (event) => {
-			const data = JSON.parse(event.data)
-			streamViewerCount.youtube = data
+		ws.onmessage = (event) => {
+			try {
+				console.log({ event })
+				const data = JSON.parse(event.data)
+				youtubeStreamViewerCount.viewerCount = data.viewers
+				streamViewerCount.viewerCount = data.viewers
+				streamViewerCountStore.set({
+					viewerCount: data.viewers
+				})
+				youtubeStreamViewerCountStore.set({
+					viewerCount: data.viewers
+				})
+			} catch (error) {
+				console.error('Error parsing JSON:', error)
+			}
 		}
 
-		wsYoutube.onclose = (event) => console.log('WebSocket connection closed:', event)
+		ws.onclose = (event) => console.log('WebSocket connection closed:', event)
+	}
+	$: {
+		youtubeStreamViewerCountStore.set(youtubeStreamViewerCount)
+	}
 
-		wsTwitch = new WebSocket(
+	$: if (selected === 'twitch' && payload.streamKey) {
+		if (ws) {
+			ws.close()
+		}
+
+		streamViewerCountStore.set({
+			viewerCount: 0
+		})
+
+		ws = new WebSocket(
 			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/twitch-stream?videoId=${payload.streamKey}&channelId=${$page.params.channelId}`
 		)
-
-		wsTwitch.onopen = (event) => console.log('WebSocket connection opened:', event)
-
-		wsTwitch.onmessage = (event) => {
+		ws.onopen = (event) => console.log('WebSocket connection opened:', event)
+		ws.onmessage = (event) => {
 			const data = JSON.parse(event.data)
-			streamViewerCount.youtube = data
+			twitchStreamViewerCount.viewerCount = data.viewers
+			streamViewerCount.viewerCount = data.viewers
+			streamViewerCountStore.set({
+				viewerCount: data.viewers
+			})
+
+			twitchStreamViewerCountStore.set({
+				viewerCount: data.viewers
+			})
 		}
+		ws.onclose = (event) => console.log('WebSocket connection closed:', event)
+	}
 
-		wsTwitch.onclose = (event) => console.log('WebSocket connection closed:', event)
-	})
-	// // Clean up the WebSocket connection when the component is destroyed
-	// $: if ($ws && $ws.readyState === WebSocket.OPEN) $ws.close()
-
+	$: {
+		twitchStreamViewerCountStore.set(twitchStreamViewerCount)
+	}
+	$: {
+		streamViewerCountStore.set(streamViewerCount)
+	}
 	const getLiveInput = async () => {
 		return await get(`live-input?channelId=${$page.params.channelId}&trackType=rtmps`, {
 			userId: $page.data.user?.userId,
@@ -316,13 +360,10 @@
 							<div class="flex gap-3">
 								{#if env.PUBLIC_CROSS_ORIGIN === 'false'}
 									<button class="btn btn-sm" on:click={linkTwitch}
-										><IconSocialTwitch /> Twitch {streamViewerCount.twitch.isLive
-											? streamViewerCount.twitch.viewers
-											: ''}</button>
+										><IconSocialTwitch /> Twitch
+									</button>
 									<button class="btn btn-sm" on:click={linkYoutube}
-										><IconSocialYouTube /> YouTube {streamViewerCount.youtube.isLive
-											? streamViewerCount.youtube.viewers
-											: ''}</button>
+										><IconSocialYouTube /> YouTube</button>
 								{:else}
 									<button
 										class="btn btn-sm"
