@@ -13,7 +13,7 @@
 </script>
 
 <div
-	class="card max-w-sm flex flex-col p-6 mx-auto text-center xl:p-8 border border-gray-100 shadow dark:border-gray-600">
+	class="flex-1 mb-3 card max-w-sm flex flex-col p-6 mx-auto text-center xl:p-8 border border-gray-100 shadow dark:border-gray-600">
 	{#if index > 1}
 		<div class="bg-accent rounded-lg">
 			<h3 class="text-2xl text-accent-content font-bold">

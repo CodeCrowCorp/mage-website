@@ -22,13 +22,11 @@
 				<span>Yearly (2 months free)</span>
 			</div>
 		</div>
-		<div class="md:flex h-full">
+		<div class="md:flex h-full gap-3">
 			{#await data.lazy.plans}
-				<div class="w-full flex">
-					{#each Array(3) as _, index (index)}
-						<LoadingItemPlan />
-					{/each}
-				</div>
+				{#each Array(3) as _, index (index)}
+					<LoadingItemPlan />
+				{/each}
 			{:then value}
 				{#each value as plan, index}
 					<ItemPlan {plan} {index} {recurringInterval} />
