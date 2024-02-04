@@ -1,6 +1,6 @@
 <div
 	role="status"
-	class="flex-grow card max-w-sm flex flex-col p-6 mx-auto text-center xl:p-8 border border-gray-100 shadow dark:border-gray-600">
+	class="w-full flex-1 card max-w-sm flex flex-col p-6 mx-auto text-center xl:p-8 border border-gray-100 shadow dark:border-gray-600">
 	<div class="justify-center flex">
 		<div class="w-28 h-8 bg-gray-200 rounded-md dark:bg-gray-700 mb-4" />
 	</div>
