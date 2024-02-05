@@ -15,7 +15,7 @@
 <div
 	class="flex-1 mb-3 card max-w-sm flex flex-col p-6 mx-auto text-center xl:p-8 {index < 2
 		? 'border border-gray-100 shadow dark:border-gray-600'
-		: 'shadow-[0px_5px_50px_0px_rgba(100,10,100,1.3)]'}">
+		: 'border border-gray-100 dark:border-gray-600 shadow-[0px_5px_50px_0px_rgba(100,10,100,1.3)]'}">
 	{#if index > 1}
 		<div class="bg-accent rounded-lg">
 			<h3 class="text-2xl text-accent-content font-bold">
