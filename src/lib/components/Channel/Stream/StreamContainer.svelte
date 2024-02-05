@@ -101,10 +101,10 @@
 						</button>
 						<div
 							class="tooltip tooltip-bottom"
-							data-tip="{getNumberInThousands(streamViewerCount.viewerCount || 0)} views">
+							data-tip="{getNumberInThousands(channel.viewCount || 0)} views">
 							<span class="btn btn-sm btn-neutral font-medium gap-2 text-white border-none">
 								<IconViews />
-								{getNumberInThousands(streamViewerCount.viewerCount || 0)}
+								{getNumberInThousands(channel.viewCount || 0)}
 							</span>
 						</div>
 						<div

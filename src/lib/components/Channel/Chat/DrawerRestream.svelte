@@ -87,7 +87,6 @@
 				url: urlList[0].url,
 				streamKey: urlList[0].streamKey
 			})
-			console.log({ urlList })
 		}
 	}
 
@@ -114,129 +113,6 @@
 			else getTwitchStreamLink()
 		}
 	})
-
-	$: if (urlList.length > 0) {
-		if (ws) {
-			ws.close()
-		}
-
-		// urlList.forEach((item: any) => {
-		// 	if (item.platform === 'youtube') {
-		// 		ws = new WebSocket(
-		// 			`${env.PUBLIC_WEBSOCKET_URL}/wsinit/youtube-stream?videoId=${item.streamKey}`
-		// 		)
-
-		// 		ws.onopen = (event) => console.log('WebSocket connection opened:', event)
-
-		// 		ws.onmessage = (event) => {
-		// 			try {
-		// 				const data = JSON.parse(event.data)
-
-		// 				streamViewerCountStore.set({
-		// 					viewerCount: data.viewers,
-		// 					youtube: data.viewer,
-		// 					twitch: streamViewerCount.twitch
-		// 				})
-		// 			} catch (error) {
-		// 				console.error('Error parsing JSON:', error)
-		// 			}
-		// 		}
-
-		// 		ws.onclose = (event) => console.log('WebSocket connection closed:', event)
-		// 	}
-		// 	//  else if (item.platform === 'twitch') {
-		// 	// 	const ws = new WebSocket(
-		// 	// 		`${env.PUBLIC_WEBSOCKET_URL}/wsinit/twitch-stream?videoId=${urlList[1].streamKey}&channelId=${$page.params.channelId}`
-		// 	// 	)
-		// 	// 	ws.onopen = (event) => console.log('WebSocket connection opened:', event)
-		// 	// 	ws.onmessage = (event) => {
-		// 	// 		try {
-		// 	// 			const data = JSON.parse(event.data)
-		// 	// 			streamViewerCountStore.set({
-		// 	// 				viewerCount: data.viewers,
-		// 	// 				youtube: streamViewerCount.youtube,
-		// 	// 				twitch: data.viewers
-		// 	// 			})
-		// 	// 		} catch (error) {
-		// 	// 			console.error('Error parsing JSON:', error)
-		// 	// 		}
-		// 	// 	}
-		// 	// 	ws.onclose = (event) => console.log('WebSocket connection closed:', event)
-		// 	// }
-		// })
-
-		if (urlList[0].platform === 'youtube') {
-			ws = new WebSocket(
-				`${env.PUBLIC_WEBSOCKET_URL}/wsinit/youtube-stream?videoId=${urlList[0].streamKey}`
-			)
-
-			ws.onopen = (event) => console.log('WebSocket connection opened:', event)
-
-			ws.onmessage = (event) => {
-				try {
-					const data = JSON.parse(event.data)
-
-					streamViewerCountStore.set({
-						viewerCount: data.viewers,
-						youtube: data.viewer,
-						twitch: streamViewerCount.twitch
-					})
-				} catch (error) {
-					console.error('Error parsing JSON:', error)
-				}
-			}
-
-			ws.onclose = (event) => console.log('WebSocket connection closed:', event)
-		}
-		// else if (urlList[1].platform === 'twitch') {
-		// 	const ws = new WebSocket(
-		// 		`${env.PUBLIC_WEBSOCKET_URL}/wsinit/twitch-stream?videoId=${urlList[1].streamKey}&channelId=${$page.params.channelId}`
-		// 	)
-
-		// 	ws.onopen = (event) => console.log('WebSocket connection opened:', event)
-
-		// 	ws.onmessage = (event) => {
-		// 		try {
-		// 			const data = JSON.parse(event.data)
-
-		// 			streamViewerCountStore.set({
-		// 				viewerCount: data.viewers,
-		// 				youtube: streamViewerCount.youtube,
-		// 				twitch: data.viewers
-		// 			})
-		// 		} catch (error) {
-		// 			console.error('Error parsing JSON:', error)
-		// 		}
-		// 	}
-
-		// 	ws.onclose = (event) => console.log('WebSocket connection closed:', event)
-		// }
-	}
-	// streamViewerCountStore.set({
-	// 	viewerCount: ytViewerCount + twViewerCount
-	// })
-	// $: if (selected === 'twitch' && payload.streamKey) {
-	// 	if (ws) {
-	// 		ws.close()
-	// 	}
-
-	// 	streamViewerCountStore.set({
-	// 		viewerCount: 0
-	// 	})
-
-	// 	ws = new WebSocket(
-	// 		`${env.PUBLIC_WEBSOCKET_URL}/wsinit/twitch-stream?videoId=${payload.streamKey}&channelId=${$page.params.channelId}`
-	// 	)
-	// 	ws.onopen = (event) => console.log('WebSocket connection opened:', event)
-	// 	ws.onmessage = (event) => {
-	// 		const data = JSON.parse(event.data)
-	// 		streamViewerCount.viewerCount = data.viewers
-	// 		streamViewerCountStore.set({
-	// 			viewerCount: data.viewers
-	// 		})
-	// 	}
-	// 	ws.onclose = (event) => console.log('WebSocket connection closed:', event)
-	// }
 
 	$: {
 		streamViewerCountStore.set(streamViewerCount)

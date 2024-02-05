@@ -9,11 +9,12 @@ export const was_chat_drawer_closed: Writable<boolean> = writable(false)
 
 export const is_restream_drawer_open: Writable<boolean> = writable(false)
 
-export const streamViewerCountStore = writable({
-	viewerCount: 0,
-	youtube: 0,
-	twitch: 0
-})
+interface StreamViewerCount {
+	count: number
+	platform: 'youtube' | 'twitch'
+}
+
+export const streamViewerCountStore = writable<StreamViewerCount[]>([])
 
 const hasLocalStorage = typeof localStorage !== 'undefined'
 
