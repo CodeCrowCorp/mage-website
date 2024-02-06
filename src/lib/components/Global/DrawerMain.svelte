@@ -189,7 +189,7 @@
 					<IconDrawerVerification />
 					<span class={isChannelPage ? 'md:hidden' : ''}>Premium</span>
 					{#if !isChannelPage}
-						<span class="badge badge-accent text-black">New</span>
+						<span class="badge badge-accent text-accent-content">New</span>
 					{/if}
 				</a>
 			</li>
@@ -199,7 +199,7 @@
 				<IconDrawerBlog />
 				<span class={isChannelPage ? 'md:hidden' : ''}>Blog </span>
 				{#if !isChannelPage}
-					<span class="badge badge-secondary">New</span>
+					<span class="badge badge-secondary text-secondary-content">New</span>
 				{/if}
 			</a>
 		</li>
@@ -209,7 +209,7 @@
 					<IconDrawerMerch />
 					<span class={isChannelPage ? 'md:hidden' : ''}>Merch </span>
 					{#if !isChannelPage}
-						<span class="badge badge-secondary">New</span>
+						<span class="badge badge-secondary text-secondary-content">New</span>
 					{/if}
 				</a>
 			</li>
