@@ -91,9 +91,8 @@
 				<span class="absolute right-0 top-1/4 text-gray-400 pr-3">({maxCategoryLabel})</span>
 			</div>
 
-			<div class="tabs tabs-boxed mt-5">
+			<div class="tabs tabs-boxed mt-5 bg-base-300">
 				{#each tabs as tab}
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<span class="tab" class:tab-active={activeTab == tab} on:click={() => setActiveTab(tab)}
 						>{tab}</span>
 				{/each}
@@ -102,7 +101,6 @@
 			<div class="flex flex-col grow h-80 overflow-y-scroll mt-5">
 				{#if renderingAssets.length}
 					{#each renderingAssets as [name, image_url]}
-						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<div
 							class="cursor-pointer flex items-center gap-2 pb-2"
 							on:click={() => toggleCategory(name)}>

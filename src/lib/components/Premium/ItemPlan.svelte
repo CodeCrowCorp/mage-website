@@ -54,10 +54,6 @@
 			}}>
 			<div class="flex flex-col space-y-3">
 				{#if index > 0}
-					<!-- !isOnboarded &&  <button
-						class="btn btn-secondary btn-outline px-5 py-2.5 text-black"
-						formaction="?/onboard">Onboard</button> -->
-					<!-- {:else} -->
 					{#if !plan.isSubscribed}
 						<button
 							class="btn btn-secondary px-5 py-2.5 text-secondary-content"

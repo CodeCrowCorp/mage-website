@@ -55,7 +55,11 @@
 			<div
 				class="relative flex flex-col min-w-0 break-words bg-base-100 w-full mb-6 shadow-xl rounded-lg -mt-64">
 				<div class="px-6">
-					<TopSection profile={data.profile} bind:showDrawer {totalPageViews} />
+					<TopSection
+						profile={data.profile}
+						bind:showDrawer
+						{totalPageViews}
+						isOnboarded={data.lazy.isOnboarded} />
 					<UserDetails profile={data.profile} />
 					<TabSection
 						profile={data.profile}
