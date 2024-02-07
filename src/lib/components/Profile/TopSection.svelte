@@ -105,10 +105,13 @@
 					<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 						<li>
 							<label for="edit-profile-drawer" on:click={() => (showDrawer = true)}>Edit</label>
-							{#if $is_feature_premium_enabled && $page.data.user.user.planTier >= 0}
+							{#if $is_feature_premium_enabled && $page.data.user?.user?.planTier > 0}
 								<form class="mt-auto" method="post">
-									<button formaction="?/access-dashboard"
-										>{value ? 'Payout dashboard' : 'Complete Onboarding'}</button>
+									{#if !value}
+										<button formaction="?/onboard">Complete Onboarding</button>
+									{:else}
+										<button formaction="?/dashboard">Payout dashboard</button>
+									{/if}
 								</form>
 							{/if}
 						</li>

@@ -98,9 +98,17 @@ export const actions = {
 			}
 		}
 	},
-	'access-dashboard': async ({ locals }: { locals: any }) => {
+	onboard: async ({ locals }: { locals: any }) => {
 		const { userId, token } = locals.user
-		const response = await get('plan/account-link', {
+		const response = await get('plan/onboard-link', {
+			userId,
+			token
+		})
+		redirect(303, `${response || '/'}`)
+	},
+	dashboard: async ({ locals }: { locals: any }) => {
+		const { userId, token } = locals.user
+		const response = await get('plan/dashboard-link', {
 			userId,
 			token
 		})
