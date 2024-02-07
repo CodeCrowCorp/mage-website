@@ -98,13 +98,13 @@ export const actions = {
 			}
 		}
 	},
-	onboard: async ({ locals }: { request: any; locals: any }) => {
+	onboard: async ({ locals }: { locals: any }) => {
 		const { userId, token } = locals.user
 		const response = await get('plan/account-link', {
 			userId,
 			token
 		})
-		redirect(303, `${response.url}`)
+		redirect(303, `${response}`)
 	},
 	sponsor: async () => {
 		await new Promise<any>((resolve) => setTimeout(resolve, 1000))
