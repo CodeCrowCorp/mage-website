@@ -2,6 +2,7 @@
 	import { page } from '$app/stores'
 	import IconAffiliateCheck from '$lib/assets/icons/premium/IconAffiliateCheck.svelte'
 	import { env } from '$env/dynamic/public'
+	import { enhance } from '$app/forms'
 
 	export let plan: any = {},
 		index: number = 0,
@@ -45,24 +46,29 @@
 		{/each}
 	</ul>
 	{#if $page.data.user?.userId}
-		<div class="flex flex-col space-y-3">
-			{#if index > 0}
-				<!-- !isOnboarded &&  <button
+		<form
+			class="mt-auto"
+			method="post"
+			use:enhance={({ formData }) => {
+				formData.append('priceId', price.id)
+			}}>
+			<div class="flex flex-col space-y-3">
+				{#if index > 0}
+					<!-- !isOnboarded &&  <button
 						class="btn btn-secondary btn-outline px-5 py-2.5 text-black"
 						formaction="?/onboard">Onboard</button> -->
-				<!-- {:else} -->
-				{#if !plan.isSubscribed}
-					<a
-						class="btn btn-secondary px-5 py-2.5 text-secondary-content"
-						href={recurringInterval === 'monthly'
-							? env.PUBLIC_STRIPE_PREMIUM_MONTHLY_URL
-							: env.PUBLIC_STRIPE_PREMIUM_YEARLY_URL}>Subscribe</a>
-				{:else}
-					<a
-						class="btn btn-secondary px-5 py-2.5 text-secondary-content"
-						href={env.PUBLIC_STRIPE_BILLING_URL}>Dashboard</a>
+					<!-- {:else} -->
+					{#if !plan.isSubscribed}
+						<button
+							class="btn btn-secondary px-5 py-2.5 text-secondary-content"
+							formaction="?/subscribe">Subscribe</button>
+					{:else}
+						<a
+							class="btn btn-accent px-5 py-2.5 text-accent-content"
+							href={env.PUBLIC_STRIPE_BILLING_URL}>Dashboard</a>
+					{/if}
 				{/if}
-			{/if}
-		</div>
+			</div>
+		</form>
 	{/if}
 </div>
