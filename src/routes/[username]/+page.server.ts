@@ -98,13 +98,13 @@ export const actions = {
 			}
 		}
 	},
-	onboard: async ({ locals }: { locals: any }) => {
+	'access-dashboard': async ({ locals }: { locals: any }) => {
 		const { userId, token } = locals.user
 		const response = await get('plan/account-link', {
 			userId,
 			token
 		})
-		redirect(303, `${response}`)
+		redirect(303, `${response || '/'}`)
 	},
 	sponsor: async () => {
 		await new Promise<any>((resolve) => setTimeout(resolve, 1000))
