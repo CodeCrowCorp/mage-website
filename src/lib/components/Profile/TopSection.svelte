@@ -93,7 +93,7 @@
 				</button>
 			{:then value}
 				<div class="dropdown dropdown-end">
-					{#if !value}
+					{#if $page.data.user?.user?.planTier > 0 && !value}
 						<div class="z-30 absolute top-0 right-0 badge badge-secondary badge-xs animate-ping" />
 					{/if}
 					<button
