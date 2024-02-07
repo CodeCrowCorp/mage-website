@@ -2,7 +2,6 @@
 	import { enhance } from '$app/forms'
 	import { page } from '$app/stores'
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
-	import IconLink from '$lib/assets/icons/IconLink.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 	import { createEffect, objectMonitor, isValidUrl } from '$lib/utils'
 
@@ -11,7 +10,7 @@
 
 	let isProfileUpdated = objectMonitor($page.data.profile)
 
-	let inputFields = [...profile.urls]
+	let inputFields = profile.urls ? [...profile.urls] : ['']
 
 	$: if (!inputFields.length) {
 		inputFields = ['']
@@ -122,8 +121,8 @@
 					<p class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2">
 						Update Profile
 					</p>
-					<div class="flex flex-col p-3">
-						<div class="form-control w-full">
+					<div class="flex flex-col">
+						<div class="form-control px-3 w-full">
 							<label class="label">
 								<span class="label-text">Display Name</span>
 							</label>
@@ -137,7 +136,7 @@
 								placeholder="Display name"
 								maxlength="30" />
 						</div>
-						<div class="form-control mt-5 w-full">
+						<div class="form-control mt-5 px-3 w-full">
 							<label class="label">
 								<span class="label-text">Username</span>
 							</label>
@@ -157,7 +156,7 @@
 								}} />
 						</div>
 
-						<div class="form-control mt-5 w-full">
+						<div class="form-control mt-5 px-3 w-full">
 							<!-- svelte-ignore a11y-label-has-associated-control -->
 							<label class="label">
 								<span class="label-text">Social Links</span>
@@ -173,7 +172,7 @@
 											name={`urls`}
 											id={`urls`}
 											class="input input-primary input-bordered w-full"
-											placeholder="Social URL"
+											placeholder="URL"
 											on:input={() => {
 												if (index === inputFields.length - 1) {
 													const isValid = isValidUrl(inputFields[index])
@@ -182,9 +181,6 @@
 													)
 												}
 											}} />
-										<div class="bg-primary w-max absolute right-0 top-0 p-2 h-[48px] rounded-r-lg">
-											<IconLink />
-										</div>
 									</div>
 									{#if index === inputFields.length - 1 && inputFields.length < 10}
 										<button
@@ -265,7 +261,7 @@
 							</div>
 						</div>
 
-						<div class="flex flex-row gap-2 mt-auto md:mb-4 p-3">
+						<div class="flex flex-row gap-2 mt-auto p-3">
 							<button type="button" class="btn btn-neutral grow" on:click={() => toggleDrawer()}
 								>Cancel</button>
 							<button type="submit" class="btn btn-primary grow" bind:this={submitBtn}>Save</button>

@@ -2,7 +2,7 @@ import type { Actions, PageServerLoad } from './$types'
 import { get, patch, putImage } from '$lib/api'
 import { redirect, fail, error } from '@sveltejs/kit'
 
-export const load = (async ({ params, url }) => {
+export const load = (async ({ params, url, locals }) => {
 	const profile = await get(`users/search/username?username=${params.username.toLowerCase()}`)
 	if (profile.error) {
 		error(404)
@@ -33,7 +33,11 @@ export const load = (async ({ params, url }) => {
 			totalMinsMonthlyChange: get(
 				`analytics/stream/total-mins/monthly-change?userId=${profile._id}`
 			),
-			dailyAvgMins: get(`analytics/stream/avg-mins/daily?userId=${profile._id}`)
+			dailyAvgMins: get(`analytics/stream/avg-mins/daily?userId=${profile._id}`),
+			isOnboarded: get('plan/onboarded', {
+				userId: locals.user?.userId,
+				token: locals.user?.token
+			})
 		}
 	}
 }) satisfies PageServerLoad
@@ -93,6 +97,22 @@ export const actions = {
 				redirect(303, 'browse')
 			}
 		}
+	},
+	onboard: async ({ locals }: { locals: any }) => {
+		const { userId, token } = locals.user
+		const response = await get('plan/onboard-link', {
+			userId,
+			token
+		})
+		redirect(303, `${response || '/'}`)
+	},
+	dashboard: async ({ locals }: { locals: any }) => {
+		const { userId, token } = locals.user
+		const response = await get('plan/dashboard-link', {
+			userId,
+			token
+		})
+		redirect(303, `${response || '/'}`)
 	},
 	sponsor: async () => {
 		await new Promise<any>((resolve) => setTimeout(resolve, 1000))

@@ -9,7 +9,8 @@
 
 	export let profile: any,
 		showDrawer = false,
-		totalPageViews: any
+		totalPageViews: any,
+		isOnboarded: any
 
 	const useOueryEffect = createEffect()
 
@@ -86,24 +87,37 @@
 				<!--TODO: open sponsor dialog-->
 				<button class="btn btn-primary" formaction="?/sponsor" disabled>Sponsor</button>
 			</div>
-			<div class="dropdown dropdown-end">
-				<button
-					class="btn btn-circle"
-					tabindex="0"
-					disabled={currentUser?.username !== $page.params.username}>
+			{#await isOnboarded}
+				<button class="btn btn-circle" tabindex="0" disabled>
 					<IconMore />
 				</button>
-				<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
-					<li>
-						<!-- svelte-ignore a11y-click-events-have-key-events -->
-						<label for="edit-profile-drawer" on:click={() => (showDrawer = true)}>Edit</label>
-						{#if $is_feature_premium_enabled}
-							<a href="/browse">Setup Payouts</a>
-							<a href="/browse">See Payouts</a>
-						{/if}
-					</li>
-				</ul>
-			</div>
+			{:then value}
+				<div class="dropdown dropdown-end">
+					{#if !value}
+						<div class="z-30 absolute top-0 right-0 badge badge-secondary badge-xs animate-ping" />
+					{/if}
+					<button
+						class="btn btn-circle"
+						tabindex="0"
+						disabled={currentUser?.username !== $page.params.username}>
+						<IconMore />
+					</button>
+					<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+						<li>
+							<label for="edit-profile-drawer" on:click={() => (showDrawer = true)}>Edit</label>
+							{#if $is_feature_premium_enabled && $page.data.user?.user?.planTier > 0}
+								<form class="mt-auto" method="post">
+									{#if !value}
+										<button formaction="?/onboard">Complete Onboarding</button>
+									{:else}
+										<button formaction="?/dashboard">Payout dashboard</button>
+									{/if}
+								</form>
+							{/if}
+						</li>
+					</ul>
+				</div>
+			{/await}
 		</div>
 	</div>
 	<div class="w-full lg:w-4/12 px-4 lg:order-1">
