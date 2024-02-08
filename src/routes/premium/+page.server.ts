@@ -1,4 +1,5 @@
-import { get } from '$lib/api'
+import { get, post } from '$lib/api'
+import { redirect, type Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 
 export const load = (async ({ locals }) => {
@@ -11,3 +12,20 @@ export const load = (async ({ locals }) => {
 		}
 	}
 }) satisfies PageServerLoad
+
+export const actions = {
+	subscribe: async ({ request, locals }: { request: any; locals: any }) => {
+		const { userId, token } = locals.user
+		const data = await request.formData()
+		const priceId = data.get('priceId')
+		const response = await post(
+			'plan/subscribe',
+			{ priceId },
+			{
+				userId,
+				token
+			}
+		)
+		redirect(303, `${response}`)
+	}
+} satisfies Actions

@@ -16,7 +16,7 @@
 			<p class="mb-5 font-light text-gray-500 sm:text-xl">
 				Our platform is designed to expand your reach and grow your brand.
 			</p>
-			<div class="flex gap-2 justify-center">
+			<div class="flex gap-2 justify-center mb-8">
 				<span>Monthly</span>
 				<input type="checkbox" class="toggle toggle-accent" bind:checked={isChecked} />
 				<span>Yearly (2 months free)</span>
@@ -24,7 +24,7 @@
 		</div>
 		<div class="md:flex h-full gap-3">
 			{#await data.lazy.plans}
-				{#each Array(3) as _, index (index)}
+				{#each Array(2) as _, index (index)}
 					<LoadingItemPlan />
 				{/each}
 			{:then value}
