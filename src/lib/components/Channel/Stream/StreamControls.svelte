@@ -165,63 +165,61 @@
 			<IconSources />
 		</button>
 		<ul tabindex="0" class="dropdown-content">
-			<div class="flex flex-row gap-4 card p-3 bg-base-300">
-				<button
-					class="btn border-none tooltip font-normal normal-case {$is_sharing_screen
-						? 'btn-primary'
-						: 'btn-neutral'}"
-					data-tip="Screen"
-					on:click={async () => {
-						if ($is_sharing_screen === false || $is_sharing_screen === undefined) {
-							await startWebrtcStream()
-						}
-						$is_sharing_screen = !$is_sharing_screen
-					}}
-					disabled={$is_sharing_rtmps ||
-						!isHostOrGuest ||
-						!isChannelSocketConnected ||
-						!videoItemIsActive}>
-					<IconShareScreen />
-				</button>
-
-				<button
-					class="btn border-none tooltip font-normal normal-case {$is_sharing_webcam
-						? 'btn-primary'
-						: 'btn-neutral'}"
-					data-tip="Webcam"
-					on:click={async () => {
-						if ($is_sharing_webcam === false || $is_sharing_webcam === undefined) {
-							await startWebrtcStream()
-						}
-						$is_sharing_webcam = !$is_sharing_webcam
-					}}
-					disabled={$is_sharing_rtmps ||
-						!isHostOrGuest ||
-						!isChannelSocketConnected ||
-						!videoItemIsActive}>
-					<IconShareWebcam />
-				</button>
-
-				<button
-					class="btn border-none tooltip font-normal normal-case {$is_sharing_audio
-						? 'btn-primary'
-						: 'btn-neutral'}"
-					data-tip="Audio"
-					on:click={async () => {
-						if ($is_sharing_audio === false || $is_sharing_audio === undefined) {
-							await startWebrtcStream()
-						}
-						$is_sharing_audio = !$is_sharing_audio
-					}}
-					disabled={$is_sharing_rtmps ||
-						!isHostOrGuest ||
-						!isChannelSocketConnected ||
-						!videoItemIsActive}>
-					<IconShareAudio />
-				</button>
-
+			<div class="flex flex-row card p-3 bg-base-300">
+				<div class="flex gap-4">
+					<button
+						class="btn border-none tooltip font-normal normal-case {$is_sharing_screen
+							? 'btn-primary'
+							: 'btn-neutral'}"
+						data-tip="Screen"
+						on:click={async () => {
+							if ($is_sharing_screen === false || $is_sharing_screen === undefined) {
+								await startWebrtcStream()
+							}
+							$is_sharing_screen = !$is_sharing_screen
+						}}
+						disabled={$is_sharing_rtmps ||
+							!isHostOrGuest ||
+							!isChannelSocketConnected ||
+							!videoItemIsActive}>
+						<IconShareScreen />
+					</button>
+					<button
+						class="btn border-none tooltip font-normal normal-case {$is_sharing_webcam
+							? 'btn-primary'
+							: 'btn-neutral'}"
+						data-tip="Webcam"
+						on:click={async () => {
+							if ($is_sharing_webcam === false || $is_sharing_webcam === undefined) {
+								await startWebrtcStream()
+							}
+							$is_sharing_webcam = !$is_sharing_webcam
+						}}
+						disabled={$is_sharing_rtmps ||
+							!isHostOrGuest ||
+							!isChannelSocketConnected ||
+							!videoItemIsActive}>
+						<IconShareWebcam />
+					</button>
+					<button
+						class="btn border-none tooltip font-normal normal-case {$is_sharing_audio
+							? 'btn-primary'
+							: 'btn-neutral'}"
+						data-tip="Audio"
+						on:click={async () => {
+							if ($is_sharing_audio === false || $is_sharing_audio === undefined) {
+								await startWebrtcStream()
+							}
+							$is_sharing_audio = !$is_sharing_audio
+						}}
+						disabled={$is_sharing_rtmps ||
+							!isHostOrGuest ||
+							!isChannelSocketConnected ||
+							!videoItemIsActive}>
+						<IconShareAudio />
+					</button>
+				</div>
 				<div class="divider lg:divider-horizontal" />
-
 				<button
 					class="btn border-none tooltip font-normal normal-case btn-neutral"
 					data-tip="Stream key"
