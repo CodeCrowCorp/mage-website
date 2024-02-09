@@ -226,6 +226,7 @@
 			type: 'youtube',
 			redirected: false
 		})
+
 	}
 </script>
 
@@ -244,18 +245,10 @@
 				<p
 					class="p-3 text-xl mb-5 pb-2 border-purple-500 font-semibold border-b-2 justify-between flex">
 					Restream Urls
-					<button
-						class="btn btn-primary btn-sm"
-						disabled={urlList.length > 9}
-						on:click={() => {
-							showAddModal = true
-							touched = false
-						}}>
-						Add url
-					</button>
 				</p>
 				<div class="flex flex-col p-3">
-					<span class="text-warning">Restreaming is currently only available for RTMP streams</span>
+					<span class="text-warning"
+						>Restreaming is currently only available for RTMPS streams</span>
 					{#each urlList as item}
 						<div
 							class="bg-base-100 p-4 my-1 flex justify-between items-center h-fit font-normal normal-case rounded gap-3 border {item.isEnabled
@@ -285,6 +278,15 @@
 							</button>
 						</div>
 					{/each}
+					<button
+						class="btn btn-primary mt-3"
+						disabled={urlList.length > 9}
+						on:click={() => {
+							showAddModal = true
+							touched = false
+						}}>
+						Add url
+					</button>
 				</div>
 
 				<dialog class={`modal ${confirm_modal && 'modal-open'}`}>
