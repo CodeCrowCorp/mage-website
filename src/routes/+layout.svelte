@@ -65,9 +65,7 @@
 
 	const processSvgs = (svgs: any, category: any) => {
 		const modules = Object.values(svgs)
-		console.log('modules', modules)
 		modules.forEach((module: any) => {
-			console.log('module', module)
 			let filename = module.default.split('/').pop() || ''
 			filename = filename
 				.replace(/\..*$/, '')
