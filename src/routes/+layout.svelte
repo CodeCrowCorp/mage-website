@@ -51,14 +51,10 @@
 		$is_feature_apps_enabled = env.PUBLIC_FEATURE_APPS === 'true'
 		$is_feature_merge_platforms_enabled = env.PUBLIC_FEATURE_MERGE_PLATFORMS === 'true'
 		$is_feature_merch_enabled = env.PUBLIC_FEATURE_MERCH === 'true'
-		const devSvgs = import.meta.glob('/category-icons/dev/*.svg', {
-			query: { enhanced: true },
-			import: 'default',
+		const devSvgs = import.meta.glob('$lib/assets/icons/category-icons/dev/*.svg', {
 			eager: true
 		})
-		const gameSvgs = import.meta.glob('/category-icons/game/*.svg', {
-			query: { enhanced: true },
-			import: 'default',
+		const gameSvgs = import.meta.glob('$lib/assets/icons/category-icons/game/*.svg', {
 			eager: true
 		})
 		processSvgs(devSvgs, 'dev')
@@ -68,16 +64,16 @@
 	})
 
 	const processSvgs = (svgs: any, category: any) => {
-		console.log(svgs)
-		for (const path in svgs) {
-			let filename = path.split('/').pop() || ''
+		const modules = Object.values(svgs)
+		modules.forEach((module: any) => {
+			let filename = module.default.split('/').pop() || ''
 			filename = filename
 				.replace('.svg', '')
 				.replace(/-/g, ' ')
-				.replace(/\w\S*/g, (w) => w.replace(/^\w/, (c) => c.toUpperCase()))
-			$category_list[filename] = path
-			$category_assets[category][filename] = path
-		}
+				.replace(/\w\S*/g, (w: any) => w.replace(/^\w/, (c: any) => c.toUpperCase()))
+			$category_list[filename] = module.default
+			$category_assets[category][filename] = module.default
+		})
 	}
 
 	const getUserRole = async () => {
