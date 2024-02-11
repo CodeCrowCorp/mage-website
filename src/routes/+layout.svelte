@@ -51,8 +51,16 @@
 		$is_feature_apps_enabled = env.PUBLIC_FEATURE_APPS === 'true'
 		$is_feature_merge_platforms_enabled = env.PUBLIC_FEATURE_MERGE_PLATFORMS === 'true'
 		$is_feature_merch_enabled = env.PUBLIC_FEATURE_MERCH === 'true'
-		const devSvgs = import.meta.glob('$lib/assets/icons/category-icons/dev/*.svg')
-		const gameSvgs = import.meta.glob('$lib/assets/icons/category-icons/game/*.svg')
+		const devSvgs = import.meta.glob('$lib/assets/icons/category-icons/dev/*.svg', {
+			query: { enhanced: true },
+			import: 'default',
+			eager: true
+		})
+		const gameSvgs = import.meta.glob('$lib/assets/icons/category-icons/game/*.svg', {
+			query: { enhanced: true },
+			import: 'default',
+			eager: true
+		})
 		processSvgs(devSvgs, 'dev')
 		processSvgs(gameSvgs, 'game')
 		getUserRole()
