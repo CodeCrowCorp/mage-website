@@ -65,13 +65,12 @@
 
 	const processSvgs = (svgs: any, category: any) => {
 		const modules = Object.values(svgs)
-		console.log('modules', modules)
 		modules.forEach((module: any) => {
-			console.log('module', module)
 			let filename = module.default.split('/').pop() || ''
 			filename = filename
 				.replace(/\..*$/, '')
 				.replace(/-/g, ' ')
+				.replace(/_/g, '+')
 				.replace(/\w\S*/g, (w: any) => w.replace(/^\w/, (c: any) => c.toUpperCase()))
 			$category_list[filename] = module.default
 			$category_assets[category][filename] = module.default
