@@ -67,10 +67,10 @@
 		const modules = Object.values(svgs)
 		modules.forEach((module: any) => {
 			let filename = module.default.split('/').pop() || ''
-			filename = filename
-				.replace(/\..*$/, '')
-				.replace(/-/g, ' ')
-				.replace(/\w\S*/g, (w: any) => w.replace(/^\w/, (c: any) => c.toUpperCase()))
+			// filename = filename
+			// 	.replace(/\..*$/, '')
+			// 	.replace(/-/g, ' ')
+			// 	.replace(/\w\S*/g, (w: any) => w.replace(/^\w/, (c: any) => c.toUpperCase()))
 			$category_list[filename] = module.default
 			$category_assets[category][filename] = module.default
 		})
