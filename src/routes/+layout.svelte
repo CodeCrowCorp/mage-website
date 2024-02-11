@@ -68,7 +68,7 @@
 		modules.forEach((module: any) => {
 			let filename = module.default.split('/').pop() || ''
 			filename = filename
-				.replace('.svg', '')
+				.replace(/\.[A-Za-z0-9]*\.svg$/, '')
 				.replace(/-/g, ' ')
 				.replace(/\w\S*/g, (w: any) => w.replace(/^\w/, (c: any) => c.toUpperCase()))
 			$category_list[filename] = module.default
