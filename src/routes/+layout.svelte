@@ -72,6 +72,7 @@
 			filename = filename
 				.replace(/\..*$/, '')
 				.replace(/-/g, ' ')
+				.replace(/_/g, '+')
 				.replace(/\w\S*/g, (w: any) => w.replace(/^\w/, (c: any) => c.toUpperCase()))
 			$category_list[filename] = module.default
 			$category_assets[category][filename] = module.default
