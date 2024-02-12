@@ -126,24 +126,8 @@
 					}
 					break
 				case `channel-streaming-action-${$page.params.channelId}`:
-					switch (parsedMsg.data.action) {
-						case 'toggleTrack':
-							if (channel) {
-								// if ($page.data.user?.userId) {
-								// 	if ($page.data.user.userId !== parsedMsg.data.video._id) {
-								// 		channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
-								// 	}
-								// } else {
-								channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
-								if (
-									channel.userId === parsedMsg.data.video._id &&
-									parsedMsg.data.video.isConnected
-								) {
-									channel.platforms = parsedMsg.data.video.platforms
-								}
-								// }
-							}
-							break
+					if (channel) {
+						channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
 					}
 					break
 				case `channel-platform-count-${$page.params.channelId}`:
@@ -185,13 +169,6 @@
 				channelSocket: chan.socket,
 				channelId: $page.params.channelId,
 				hostId: chan.userId,
-				userId: $page.data.user?.userId,
-				username: $page.data.user?.user?.username
-			})
-			emitPlatformCount({
-				channelSocket: channel.socket,
-				channelId: $page.params.channelId,
-				hostId: channel.userId,
 				userId: $page.data.user?.userId,
 				username: $page.data.user?.user?.username
 			})
@@ -237,14 +214,11 @@
 			if (channel.socket && channel.socket.constructor === WebSocket) {
 				channel.socket.addEventListener('open', async (data: any) => {
 					initChannel(channel)
-
 					setInterval(async () => {
 						emitPlatformCount({
 							channelSocket: channel.socket,
 							channelId: $page.params.channelId,
-							hostId: channel.userId,
-							userId: $page.data.user?.userId,
-							username: $page.data.user?.user?.username
+							hostId: channel.userId
 						})
 					}, 5000)
 				})

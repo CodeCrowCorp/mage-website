@@ -2,15 +2,10 @@
 	import { onMount } from 'svelte'
 	import { get, put, del, patch, post } from '$lib/api'
 	import { page } from '$app/stores'
-	import { getHref, isValidRtmp } from '$lib/utils'
-	import {
-		is_restream_drawer_open,
-		streamStore,
-		streamViewerCountStore
-	} from '$lib/stores/channelStore'
+	import { isValidRtmp } from '$lib/utils'
+	import { is_restream_drawer_open } from '$lib/stores/channelStore'
 	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
 	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
-	import { env } from '$env/dynamic/public'
 
 	$: auth = {
 		userId: $page.data.user?.userId,
@@ -26,38 +21,19 @@
 	let add_output_modal: any
 	let confirm_modal = false
 	let showAddModal = false
-	let selected = ''
+	let selectedOutputId: number
 	let touched = false
 	let restream_drawer = false
-	let ws: WebSocket
-	let streamViewerCount: any
-	let streamData: any
-
-	// Subscribe to the streamViewerCount store
-	$: streamViewerCount = $streamViewerCountStore
-	$: streamData = $streamStore
 
 	$: cloudflareUrl = payload.url.includes('cloudflare')
 	$: invalidUrl = !isValidRtmp(payload.url)
 
-	$: disabledYoutube =
-		loading || !payload.title || !payload.url || invalidUrl || cloudflareUrl || !payload.streamKey
-
-	$: disabledTwitch = loading || !payload.title || !payload.streamKey
-
-	// invalidUrl ||
-	// cloudflareUrl
+	$: disbaled =
+		loading || !payload.title || !payload.url || !payload.streamKey || invalidUrl || cloudflareUrl
 
 	const addNew = async () => {
 		loading = true
-		await put(
-			'output',
-			{
-				...payload,
-				platform: selected
-			},
-			auth
-		)
+		await put('output', payload, auth)
 		loading = false
 		await getAll()
 		showAddModal = false
@@ -71,7 +47,7 @@
 
 	const remove = async () => {
 		loading = true
-		await del(`output?outputId=${selected}`, auth)
+		await del(`output?outputId=${selectedOutputId}`, auth)
 		await getAll()
 		loading = false
 		confirm_modal = false
@@ -82,16 +58,11 @@
 			loading = true
 			urlList = await get(`outputs`, auth)
 			loading = false
-			streamStore.set({
-				title: urlList[0].title,
-				url: urlList[0].url,
-				streamKey: urlList[0].streamKey
-			})
 		}
 	}
 
-	const confirm = (id: string) => {
-		selected = id
+	const confirm = (id: number) => {
+		selectedOutputId = id
 		confirm_modal = true
 	}
 
@@ -104,22 +75,10 @@
 		if (elt?.classList?.contains('drawer-overlay')) restream_drawer = false
 	}
 
-	onMount(() => {
+	onMount(async () => {
 		getAll()
-
-		if (streamData && streamData.redirected) {
-			selected = streamData.type
-			if (streamData.type === 'youtube') getYoutubeStreamLink()
-			else getTwitchStreamLink()
-		}
 	})
 
-	$: {
-		streamViewerCountStore.set(streamViewerCount)
-	}
-	$: {
-		streamStore.set(streamData)
-	}
 	const getLiveInput = async () => {
 		return await get(`live-input?channelId=${$page.params.channelId}&trackType=rtmps`, {
 			userId: $page.data.user?.userId,
@@ -153,80 +112,19 @@
 		const rtmps = await getLiveInput()
 		await sendOutputs({ liveInputUid: rtmps.rtmps.uid })
 	}
+
 	const linkTwitch = async () => {
 		try {
-			streamStore.set({
-				streamKey: '',
-				url: '',
-				type: 'twitch',
-				redirected: true
-			})
-
 			const linkRes = await get(`twitch/link?channelId=${$page.params.channelId}`, auth)
-
 			if (linkRes.redirect) window.location.replace(linkRes.redirectUrl)
-		} catch (err) {
-			getTwitchStreamLink()
-		}
-	}
-
-	const getTwitchStreamLink = async () => {
-		const streamRes = await get(`twitch/stream/link?channelId=${$page.params.channelId}`, auth)
-
-		if (streamRes.error === 404) return
-		payload.streamKey = streamRes.streamKey
-		selected = 'twitch'
-		is_restream_drawer_open.set(true)
-		showAddModal = true
-		touched = false
-		streamStore.set({
-			streamKey: streamRes.streamKey,
-			url: '',
-			type: 'twitch',
-			redirected: false
-		})
+		} catch (err) {}
 	}
 
 	const linkYoutube = async () => {
 		try {
-			streamStore.set({
-				streamKey: '',
-				url: '',
-				type: 'youtube',
-				redirected: true
-			})
-
 			const linkRes = await get(`youtube/link?channelId=${$page.params.channelId}`, auth)
-
 			if (linkRes.redirect) window.location.replace(linkRes.redirectUrl)
-		} catch (error) {
-			getYoutubeStreamLink()
-		}
-	}
-
-	const getYoutubeStreamLink = async () => {
-		const streamRes = await get(`youtube/stream/link?channelId=${$page.params.channelId}`, auth)
-		payload = {
-			title: '',
-			url: '',
-			streamKey: ''
-		}
-
-		if (streamRes.error === 404) return
-		;(payload.url = streamRes.streamaddress),
-			(payload.streamKey = streamRes.streamKey),
-			(selected = 'youtube')
-		is_restream_drawer_open.set(true)
-		showAddModal = true
-		touched = false
-
-		streamStore.set({
-			streamKey: streamRes.streamKey,
-			url: streamRes.streamaddress,
-			type: 'youtube',
-			redirected: false
-		})
-
+		} catch (error) {}
 	}
 </script>
 
@@ -314,32 +212,21 @@
 						<h3 class="font-bold text-lg">Add new stream</h3>
 						<div class="form-control w-full pt-4">
 							<div class="flex gap-3">
-								{#if env.PUBLIC_CROSS_ORIGIN === 'false'}
-									<button class="btn btn-sm" on:click={linkTwitch}
-										><IconSocialTwitch /> Twitch
-									</button>
-									<button class="btn btn-sm" on:click={linkYoutube}
-										><IconSocialYouTube /> YouTube</button>
-								{:else}
-									<button
-										class="btn btn-sm"
-										on:click={async () =>
-											await getHref({
-												provider: 'twitch',
-												apiUrl: env.PUBLIC_API_URL,
-												xApiKey: env.PUBLIC_X_API_KEY
-											})}><IconSocialTwitch /> Twitch</button>
-									<button
-										class="btn btn-sm"
-										on:click={async () =>
-											await getHref({
-												provider: 'youtube',
-												apiUrl: env.PUBLIC_API_URL,
-												xApiKey: env.PUBLIC_X_API_KEY
-											})}
-										><IconSocialYouTube /> YouTube
-									</button>
-								{/if}
+								<button
+									class="btn btn-sm"
+									on:click={linkTwitch}
+									disabled={urlList &&
+										Array.isArray(urlList) &&
+										urlList.some((item) => item.platform === 'twitch')}
+									><IconSocialTwitch /> Twitch
+								</button>
+								<button
+									class="btn btn-sm"
+									on:click={linkYoutube}
+									disabled={urlList &&
+										Array.isArray(urlList) &&
+										urlList.some((item) => item.platform === 'youtube')}
+									><IconSocialYouTube /> YouTube</button>
 							</div>
 							<label class="label">
 								<span class="label-text">Title</span>
@@ -351,18 +238,15 @@
 								class="input input-bordered w-full max-w-xs input-primary"
 								maxlength="20" />
 							<!-- svelte-ignore a11y-label-has-associated-control -->
-
-							{#if selected === 'youtube' && payload.url}
-								<label class="label mt-5">
-									<span class="label-text">Server</span>
-								</label>
-								<input
-									bind:value={payload.url}
-									type="text"
-									placeholder="Enter server url"
-									class="input input-bordered w-full max-w-xs input-primary"
-									on:blur={onBlur} />
-							{/if}
+							<label class="label mt-5">
+								<span class="label-text">Server</span>
+							</label>
+							<input
+								bind:value={payload.url}
+								type="text"
+								placeholder="Enter server url"
+								class="input input-bordered w-full max-w-xs input-primary"
+								on:blur={onBlur} />
 							{#if touched && invalidUrl}
 								<div class="text-error text-sm mt-2">Please enter a valid URL</div>
 							{/if}
@@ -391,12 +275,7 @@
 										streamKey: ''
 									}
 								}}>Cancel</button>
-							<button
-								disabled={selected === 'youtube' ? disabledYoutube : disabledTwitch}
-								class="btn btn-primary"
-								on:click={addNew}>
-								Save
-							</button>
+							<button disabled={disbaled} class="btn btn-primary" on:click={addNew}> Save </button>
 						</div>
 					</div>
 				</dialog>

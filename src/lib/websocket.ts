@@ -56,22 +56,17 @@ const emitChannelSubscribeByUser = ({
 const emitPlatformCount = ({
 	channelSocket,
 	channelId,
-	hostId,
-	userId,
-	username
+	hostId
 }: {
 	channelSocket: WebSocket
 	channelId: string
 	hostId: string
-	userId: string
-	username: string
 }) => {
 	channelSocket.send(
 		JSON.stringify({
 			eventName: `channel-platform-count`,
 			channelId,
-			hostId,
-			user: { userId, username }
+			hostId
 		})
 	)
 }
