@@ -12,9 +12,10 @@
 	export let channel: any,
 		viewers: any[] = []
 
-	let selectedCommand = 0
-	let selectedUser = 0
-	let inputBox: any = null
+	let selectedCommand = 0,
+		selectedUser = 0,
+		inputBox: any = null,
+		sponsor_modal: any = null
 
 	$: chatMessage = ''
 	$: isChannelSocketConnected = $channel_connection === `open-${channel._id}`
