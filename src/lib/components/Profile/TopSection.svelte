@@ -6,6 +6,7 @@
 	import { get } from '$lib/api'
 	import { createEffect, getNumberInThousands } from '$lib/utils'
 	import { is_feature_premium_enabled } from '$lib/stores/remoteConfigStore'
+	import { env } from '$env/dynamic/public'
 
 	export let profile: any,
 		showDrawer = false,
@@ -105,14 +106,17 @@
 					<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
 						<li>
 							<label for="edit-profile-drawer" on:click={() => (showDrawer = true)}>Edit</label>
-							{#if $is_feature_premium_enabled && $page.data.user?.user?.planTier > 0}
-								<form class="mt-auto" method="post">
-									{#if !value}
-										<button formaction="?/onboard">Complete Onboarding</button>
-									{:else}
-										<button formaction="?/dashboard">Payout dashboard</button>
-									{/if}
-								</form>
+							{#if $is_feature_premium_enabled}
+								<a href={env.PUBLIC_STRIPE_BILLING_URL}>Manage sponsors</a>
+								{#if $page.data.user?.user?.planTier > 0}
+									<form class="mt-auto" method="post">
+										{#if !value}
+											<button formaction="?/onboard">Complete onboarding</button>
+										{:else}
+											<button formaction="?/dashboard">Payout dashboard</button>
+										{/if}
+									</form>
+								{/if}
 							{/if}
 						</li>
 					</ul>
