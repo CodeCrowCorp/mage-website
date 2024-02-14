@@ -8,3 +8,4 @@ export const is_chat_drawer_destroy: Writable<boolean> = writable(false)
 export const was_chat_drawer_closed: Writable<boolean> = writable(false)
 
 export const is_restream_drawer_open: Writable<boolean> = writable(false)
+export const is_sponsor_dialog_open: Writable<boolean> = writable(false)
