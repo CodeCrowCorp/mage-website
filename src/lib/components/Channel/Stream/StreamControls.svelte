@@ -10,7 +10,6 @@
 	import { emitChannelUpdate } from '$lib/websocket'
 	import {
 		is_sharing_rtmps,
-		updateVideoItems,
 		is_sharing_screen,
 		is_sharing_webcam,
 		is_sharing_audio
@@ -21,7 +20,7 @@
 	import { is_restream_drawer_open } from '$lib/stores/channelStore'
 	import IconRefresh from '$lib/assets/icons/IconRefresh.svelte'
 	import IconCopy from '$lib/assets/icons/IconCopy.svelte'
-	import { copyToClipboard } from '$lib/utils'
+	import { copyToClipboard, updateVideoItems } from '$lib/utils'
 
 	export let isHostOrGuest: boolean = false,
 		channel: any,

@@ -42,7 +42,9 @@
 			)}
 		</div>
 		<div class="stat-desc">
-			{viewsMonthlyChange >= 0 ? `${viewsMonthlyChange}% more` : `${viewsMonthlyChange}% less`}
+			{viewsMonthlyChange >= 0
+				? `${viewsMonthlyChange}% more`
+				: `${Math.abs(viewsMonthlyChange)}% less`}
 			than last month
 		</div>
 	</div>
@@ -78,7 +80,7 @@
 		<div class="stat-desc">
 			{totalMinsMonthlyChange >= 0
 				? `${totalMinsMonthlyChange}% more`
-				: `${totalMinsMonthlyChange}% less`} than last month
+				: `${Math.abs(totalMinsMonthlyChange)}% less`} than last month
 		</div>
 	</div>
 

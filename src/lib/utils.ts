@@ -402,3 +402,17 @@ export const formatTime = (streamTime: number) => {
 
 	return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`
 }
+
+export const updateVideoItems = (videoItems: any, liveInputs: any[]) => {
+	const vidItems = [...videoItems]
+	if (Array.isArray(liveInputs)) {
+		vidItems.forEach((video: any) => {
+			liveInputs.forEach((liveInput: any) => {
+				if (video._id === liveInput._id) {
+					video = Object.assign(video, liveInput)
+				}
+			})
+		})
+	}
+	return vidItems
+}

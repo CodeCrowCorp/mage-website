@@ -11,19 +11,15 @@
 		emitPlatformCount
 	} from '$lib/websocket'
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
-	import { isJsonString } from '$lib/utils'
+	import { isJsonString, updateVideoItems } from '$lib/utils'
 	import { is_chat_drawer_open, is_chat_drawer_destroy } from '$lib/stores/channelStore'
 	import Modal from '$lib/components/Global/Modal.svelte'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import DrawerEditChannel from '$lib/components/Channel/Chat/DrawerEditChannel.svelte'
-	import {
-		is_sharing_screen,
-		is_sharing_webcam,
-		is_sharing_audio,
-		updateVideoItems
-	} from '$lib/stores/streamStore'
+	import { is_sharing_screen, is_sharing_webcam, is_sharing_audio } from '$lib/stores/streamStore'
 	import DrawerRestream from '$lib/components/Channel/Chat/DrawerRestream.svelte'
+	import DialogSponsor from '$lib/components/Channel/Chat/DialogSponsor.svelte'
 
 	let channel: any,
 		isDeleteModalOpen = false,
@@ -65,9 +61,9 @@
 					channel = {
 						...parsedMsg.channel,
 						socket: channel.socket,
-						videoItems: channel.videoItems
+						videoItems: channel.videoItems,
+						isOnboarded: channel.isOnboarded
 					}
-
 					if (parsedMsg.roleUpdate) {
 						switch (parsedMsg.roleUpdate.roleEvent) {
 							case 'ban':
@@ -157,6 +153,11 @@
 	const loadChannel = async () => {
 		const chan = await get(`channel?channelId=${$page.params.channelId}`)
 		chan.videoItems = []
+		const isOnboarded = await get('plan/onboarded', {
+			userId: $page.data.user?.userId,
+			token: $page.data.user?.token
+		})
+		chan.isOnboarded = isOnboarded || false
 		channels.push(chan)
 	}
 
@@ -359,6 +360,7 @@
 		yes="Yes"
 		yesAction={deleteChannelYesAction}
 		isError={true} />
+	<DialogSponsor userId={channel.userId} />
 {/if}
 
 <style>
