@@ -9,7 +9,7 @@
 	import { emitChatHistoryToChannel } from '$lib/websocket'
 	import { setRole } from '$lib/utils'
 	import LastItemInViewport from '$lib/actions/LastItemInViewport'
-	import ProfilePopup from './ProfilePopup.svelte'
+	import DialogProfile from '$lib/components/Channel/Chat/DialogProfile.svelte'
 
 	export let channel: any = undefined,
 		showEditChannelDrawer: boolean = false,
@@ -102,7 +102,7 @@
 <div class="bg-base-100 flex flex-col overflow-y-hidden w-72 md:w-full h-full rounded-lg">
 	<DropdownViewChannel bind:channel bind:showEditChannelDrawer />
 	<div on:scroll={closeProfile} class="flex flex-col-reverse p-3 grow overflow-y-scroll w-96">
-		<ProfilePopup
+		<DialogProfile
 			open={profileElt ? true : false}
 			elt={profileElt}
 			bind:userId={selectedUser}

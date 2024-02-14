@@ -26,6 +26,7 @@ const emitChannelUpdate = ({
 	const noSocketChannel = { ...channel }
 	delete noSocketChannel.socket
 	delete noSocketChannel.videoItems
+	delete noSocketChannel.isOnboarded
 	channelSocket.send(
 		JSON.stringify({ eventName: `channel-update`, channel: noSocketChannel, roleUpdate })
 	)
@@ -50,6 +51,23 @@ const emitChannelSubscribeByUser = ({
 			channelId,
 			hostId,
 			user: { userId, username }
+		})
+	)
+}
+const emitPlatformCount = ({
+	channelSocket,
+	channelId,
+	hostId
+}: {
+	channelSocket: WebSocket
+	channelId: string
+	hostId: string
+}) => {
+	channelSocket.send(
+		JSON.stringify({
+			eventName: `channel-platform-count`,
+			channelId,
+			hostId
 		})
 	)
 }
@@ -165,7 +183,7 @@ const emitGetConnectedUsers = ({
 }
 
 export {
-	// platformSocket,
+	emitPlatformCount,
 	// initPlatformSocket,
 	// emitUserConnection,
 	initChannelSocket,

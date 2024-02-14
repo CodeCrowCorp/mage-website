@@ -7,22 +7,19 @@
 		emitChatHistoryToChannel,
 		initChannelSocket,
 		emitChannelSubscribeByUser,
-		emitDeleteAllMessagesToChannel
+		emitDeleteAllMessagesToChannel,
+		emitPlatformCount
 	} from '$lib/websocket'
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
-	import { isJsonString } from '$lib/utils'
+	import { isJsonString, updateVideoItems } from '$lib/utils'
 	import { is_chat_drawer_open, is_chat_drawer_destroy } from '$lib/stores/channelStore'
 	import Modal from '$lib/components/Global/Modal.svelte'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import DrawerEditChannel from '$lib/components/Channel/Chat/DrawerEditChannel.svelte'
-	import {
-		is_sharing_screen,
-		is_sharing_webcam,
-		is_sharing_audio,
-		updateVideoItems
-	} from '$lib/stores/streamStore'
+	import { is_sharing_screen, is_sharing_webcam, is_sharing_audio } from '$lib/stores/streamStore'
 	import DrawerRestream from '$lib/components/Channel/Chat/DrawerRestream.svelte'
+	import DialogSponsor from '$lib/components/Channel/Chat/DialogSponsor.svelte'
 
 	let channel: any,
 		isDeleteModalOpen = false,
@@ -64,9 +61,9 @@
 					channel = {
 						...parsedMsg.channel,
 						socket: channel.socket,
-						videoItems: channel.videoItems
+						videoItems: channel.videoItems,
+						isOnboarded: channel.isOnboarded
 					}
-
 					if (parsedMsg.roleUpdate) {
 						switch (parsedMsg.roleUpdate.roleEvent) {
 							case 'ban':
@@ -125,24 +122,8 @@
 					}
 					break
 				case `channel-streaming-action-${$page.params.channelId}`:
-					switch (parsedMsg.data.action) {
-						case 'toggleTrack':
-							if (channel) {
-								// if ($page.data.user?.userId) {
-								// 	if ($page.data.user.userId !== parsedMsg.data.video._id) {
-								// 		channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
-								// 	}
-								// } else {
-								channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
-								if (
-									channel.userId === parsedMsg.data.video._id &&
-									parsedMsg.data.video.isConnected
-								) {
-									channel.platforms = parsedMsg.data.video.platforms
-								}
-								// }
-							}
-							break
+					if (channel) {
+						channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
 					}
 					break
 				case `channel-platform-count-${$page.params.channelId}`:
@@ -172,6 +153,11 @@
 	const loadChannel = async () => {
 		const chan = await get(`channel?channelId=${$page.params.channelId}`)
 		chan.videoItems = []
+		const isOnboarded = await get('plan/onboarded', {
+			userId: $page.data.user?.userId,
+			token: $page.data.user?.token
+		})
+		chan.isOnboarded = isOnboarded || false
 		channels.push(chan)
 	}
 
@@ -228,8 +214,14 @@
 			}
 			if (channel.socket && channel.socket.constructor === WebSocket) {
 				channel.socket.addEventListener('open', async (data: any) => {
-					// console.log('channel socket connection open', channelSocketId)
 					initChannel(channel)
+					setInterval(async () => {
+						emitPlatformCount({
+							channelSocket: channel.socket,
+							channelId: $page.params.channelId,
+							hostId: channel.userId
+						})
+					}, 5000)
 				})
 				channel.socket.addEventListener('message', (data: any) => {
 					console.log('channel listening to messages')
@@ -368,6 +360,7 @@
 		yes="Yes"
 		yesAction={deleteChannelYesAction}
 		isError={true} />
+	<DialogSponsor userId={channel.userId} />
 {/if}
 
 <style>

@@ -2,11 +2,10 @@
 	import { onMount } from 'svelte'
 	import { get, put, del, patch, post } from '$lib/api'
 	import { page } from '$app/stores'
-	import { getHref, isValidRtmp } from '$lib/utils'
+	import { isValidRtmp } from '$lib/utils'
 	import { is_restream_drawer_open } from '$lib/stores/channelStore'
 	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
 	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
-	import { env } from '$env/dynamic/public'
 
 	$: auth = {
 		userId: $page.data.user?.userId,
@@ -22,7 +21,7 @@
 	let add_output_modal: any
 	let confirm_modal = false
 	let showAddModal = false
-	let selected = ''
+	let selectedOutputId: number
 	let touched = false
 	let restream_drawer = false
 
@@ -48,7 +47,7 @@
 
 	const remove = async () => {
 		loading = true
-		await del(`output?outputId=${selected}`, auth)
+		await del(`output?outputId=${selectedOutputId}`, auth)
 		await getAll()
 		loading = false
 		confirm_modal = false
@@ -62,8 +61,8 @@
 		}
 	}
 
-	const confirm = (id: string) => {
-		selected = id
+	const confirm = (id: number) => {
+		selectedOutputId = id
 		confirm_modal = true
 	}
 
@@ -76,7 +75,7 @@
 		if (elt?.classList?.contains('drawer-overlay')) restream_drawer = false
 	}
 
-	onMount(() => {
+	onMount(async () => {
 		getAll()
 	})
 
@@ -114,20 +113,18 @@
 		await sendOutputs({ liveInputUid: rtmps.rtmps.uid })
 	}
 
-	const getTwitchStreamLink = async () => {
-		const linkRes = await get(`twitch/stream/link?channelId=${$page.params.channelId}`, auth)
-
-		payload.streamKey = linkRes.streamKey
-		selected = 'twitch'
+	const linkTwitch = async () => {
+		try {
+			const linkRes = await get(`twitch/link?channelId=${$page.params.channelId}`, auth)
+			if (linkRes.redirect) window.location.replace(linkRes.redirectUrl)
+		} catch (err) {}
 	}
 
-	const getYoutubeStreamLink = async () => {
-		const linkRes = await get(`youtube/stream/link?channelId=${$page.params.channelId}`, auth)
-
-		;(payload.url = linkRes.streamaddress),
-			(payload.streamKey = linkRes.streamKey),
-			(selected = 'youtube')
-		console.log(selected)
+	const linkYoutube = async () => {
+		try {
+			const linkRes = await get(`youtube/link?channelId=${$page.params.channelId}`, auth)
+			if (linkRes.redirect) window.location.replace(linkRes.redirectUrl)
+		} catch (error) {}
 	}
 </script>
 
@@ -137,6 +134,7 @@
 		type="checkbox"
 		class="drawer-toggle"
 		bind:checked={$is_restream_drawer_open} />
+
 	<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 	<div class="drawer-side z-50 overflow-x-hidden" on:click={overlayClick}>
 		<label id="overlay" for="restream-drawer" aria-label="close sidebar" class="drawer-overlay" />
@@ -190,7 +188,6 @@
 				</div>
 
 				<dialog class={`modal ${confirm_modal && 'modal-open'}`}>
-					<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 					<form on:keydown={(event) => event.key != 'Enter'} method="dialog" class="modal-box">
 						<h3 class="font-bold text-lg">Delete restream url</h3>
 						<p class="py-4">
@@ -215,51 +212,22 @@
 						<h3 class="font-bold text-lg">Add new stream</h3>
 						<div class="form-control w-full pt-4">
 							<div class="flex gap-3">
-								{#if env.PUBLIC_CROSS_ORIGIN === 'false'}
-									<button
-										on:click={async () => {
-											const linkRes = await get(
-												`youtube/link?channelId=${$page.params.channelId}`,
-												auth
-											)
-											if (linkRes.redirect) {
-												window.location.replace(linkRes.redirectUrl)
-											}
-										}}>Link Youtube</button>
-									<button
-										on:click={async () => {
-											const linkRes = await get(
-												`twitch/link?channelId=${$page.params.channelId}`,
-												auth
-											)
-											if (linkRes.redirect) {
-												window.location.replace(linkRes.redirectUrl)
-											}
-										}}>Link twitch</button>
-									<button class="btn btn-sm" on:click={getTwitchStreamLink}
-										><IconSocialTwitch /> Twitch</button>
-									<button class="btn btn-sm" on:click={getYoutubeStreamLink}
-										><IconSocialYouTube /> YouTube</button>
-								{:else}
-									<button
-										class="btn btn-sm"
-										on:click={async () =>
-											await getHref({
-												provider: 'twitch',
-												apiUrl: env.PUBLIC_API_URL,
-												xApiKey: env.PUBLIC_X_API_KEY
-											})}><IconSocialTwitch /> Twitch</button>
-									<button
-										class="btn btn-sm"
-										on:click={async () =>
-											await getHref({
-												provider: 'youtube',
-												apiUrl: env.PUBLIC_API_URL,
-												xApiKey: env.PUBLIC_X_API_KEY
-											})}><IconSocialYouTube /> YouTube</button>
-								{/if}
+								<button
+									class="btn btn-sm"
+									on:click={linkTwitch}
+									disabled={urlList &&
+										Array.isArray(urlList) &&
+										urlList.some((item) => item.platform === 'twitch')}
+									><IconSocialTwitch /> Twitch
+								</button>
+								<button
+									class="btn btn-sm"
+									on:click={linkYoutube}
+									disabled={urlList &&
+										Array.isArray(urlList) &&
+										urlList.some((item) => item.platform === 'youtube')}
+									><IconSocialYouTube /> YouTube</button>
 							</div>
-							<!-- svelte-ignore a11y-label-has-associated-control-->
 							<label class="label">
 								<span class="label-text">Title</span>
 							</label>
@@ -270,22 +238,20 @@
 								class="input input-bordered w-full max-w-xs input-primary"
 								maxlength="20" />
 							<!-- svelte-ignore a11y-label-has-associated-control -->
-							{#if selected == 'youtube'}
-								<label class="label mt-5">
-									<span class="label-text">Server</span>
-								</label>
-								<input
-									bind:value={payload.url}
-									type="text"
-									placeholder="Enter server url"
-									class="input input-bordered w-full max-w-xs input-primary"
-									on:blur={onBlur} />
-								{#if touched && invalidUrl}
-									<div class="text-error text-sm mt-2">Please enter a valid URL</div>
-								{/if}
-								{#if touched && !invalidUrl && cloudflareUrl}
-									<div class="text-error text-sm mt-2">Cloudfare urls not allowed</div>
-								{/if}
+							<label class="label mt-5">
+								<span class="label-text">Server</span>
+							</label>
+							<input
+								bind:value={payload.url}
+								type="text"
+								placeholder="Enter server url"
+								class="input input-bordered w-full max-w-xs input-primary"
+								on:blur={onBlur} />
+							{#if touched && invalidUrl}
+								<div class="text-error text-sm mt-2">Please enter a valid URL</div>
+							{/if}
+							{#if touched && !invalidUrl && cloudflareUrl}
+								<div class="text-error text-sm mt-2">Cloudfare urls not allowed</div>
 							{/if}
 							<!-- svelte-ignore a11y-label-has-associated-control -->
 							<label class="label mt-5">

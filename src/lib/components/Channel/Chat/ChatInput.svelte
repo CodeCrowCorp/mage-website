@@ -2,19 +2,22 @@
 	import IconChatAI from '$lib/assets/icons/chat/IconChatAI.svelte'
 	import IconChatCode from '$lib/assets/icons/chat/IconChatCode.svelte'
 	import IconChatSendMessage from '$lib/assets/icons/chat/IconChatSendMessage.svelte'
+	import IconChatSponsor from '$lib/assets/icons/chat/IconChatSponsor.svelte'
 	import { emitChannelUpdate, emitMessageToChannel } from '$lib/websocket'
 	import { page } from '$app/stores'
 	import { channel_connection } from '$lib/stores/websocketStore'
 	import EmojiPicker from '$lib/components/Channel/Chat/EmojiPicker.svelte'
 	import GifPicker from '$lib/components/Channel/Chat/GifPicker.svelte'
 	import { is_login_modal_open } from '$lib/stores/helperStore'
+	import { is_feature_premium_enabled } from '$lib/stores/remoteConfigStore'
+	import { is_sponsor_dialog_open } from '$lib/stores/channelStore'
 
 	export let channel: any,
 		viewers: any[] = []
 
-	let selectedCommand = 0
-	let selectedUser = 0
-	let inputBox: any = null
+	let selectedCommand = 0,
+		selectedUser = 0,
+		inputBox: any = null
 
 	$: chatMessage = ''
 	$: isChannelSocketConnected = $channel_connection === `open-${channel._id}`
@@ -24,7 +27,20 @@
 		(viewer) => viewer.userId !== channel.userId && viewer.userId !== 'anon'
 	)
 
-	function insert(str: string, index: number, value: string) {
+	$: messageIsCommand =
+		chatMessage && chatMessage.startsWith('/') && /[a-z] @[a-z]/.test(chatMessage.substr(1))
+
+	$: showUsers = chatMessage && chatMessage.endsWith('@')
+	$: showCommandOptions =
+		chatMessage &&
+		chatMessage.startsWith('/') &&
+		!chatMessage.startsWith('/ai ') &&
+		!chatMessage.includes('@') &&
+		(channel.userId === $page.data.user?.userId ||
+			channel.mods?.includes($page.data.user?.userId)) &&
+		!showUsers
+
+	const insert = (str: string, index: number, value: string) => {
 		return str.substr(0, index) + value + str.substr(index)
 	}
 
@@ -61,7 +77,7 @@
 		emitChannelUpdate({ channelSocket: channel.socket, channel })
 	}
 
-	const slectCommandfromKey = (key: string) => {
+	const selectCommandFromKey = (key: string) => {
 		if (key === 'ArrowDown' && selectedCommand < 4) {
 			selectedCommand++
 		} else if (key === 'ArrowUp' && selectedCommand >= 2) {
@@ -69,7 +85,7 @@
 		}
 	}
 
-	const slectUserfromKey = (key: string) => {
+	const selectUserFromKey = (key: string) => {
 		if (selectedUser >= viewersWithOutHost.length - 1) {
 			selectedUser = 0
 			return
@@ -202,22 +218,21 @@
 			action: toggleBan
 		}
 	]
-
-	$: messageIsCommand =
-		chatMessage && chatMessage.startsWith('/') && /[a-z] @[a-z]/.test(chatMessage.substr(1))
-
-	$: showUsers = chatMessage && chatMessage.endsWith('@')
-	$: showCommandOptions =
-		chatMessage &&
-		chatMessage.startsWith('/') &&
-		!chatMessage.startsWith('/ai ') &&
-		!chatMessage.includes('@') &&
-		(channel.userId === $page.data.user?.userId ||
-			channel.mods?.includes($page.data.user?.userId)) &&
-		!showUsers
 </script>
 
 <form class="rounded-lg bg-base-200 p-2 w-full relative">
+	<button
+		class="btn tooltip font-normal normal-case mr-1 btn-primary"
+		data-tip="Sponsor"
+		on:click={() => ($is_sponsor_dialog_open = true)}
+		disabled={!isChannelSocketConnected ||
+			!$page.data.user?.userId ||
+			!$is_feature_premium_enabled ||
+			!channel.isOnboarded}>
+		<IconChatSponsor />
+		<span class="sr-only">Sponsor</span>
+	</button>
+
 	<button
 		class="btn border-none tooltip font-normal normal-case mr-1 {!isHost
 			? 'no-animation'
@@ -309,8 +324,8 @@
 					if (showCommandOptions || showUsers) {
 						if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
 							e.preventDefault()
-							if (showUsers) slectUserfromKey(e.key)
-							else slectCommandfromKey(e.key)
+							if (showUsers) selectUserFromKey(e.key)
+							else selectCommandFromKey(e.key)
 						} else if (e.key === 'Enter') {
 							e.preventDefault()
 							if (showUsers) {
