@@ -9,6 +9,7 @@
 	import { env } from '$env/dynamic/public'
 	import DialogSponsor from '../Channel/Chat/DialogSponsor.svelte'
 	import { is_sponsor_dialog_open } from '$lib/stores/channelStore'
+	import IconChatSponsor from '$lib/assets/icons/chat/IconChatSponsor.svelte'
 
 	export let profile: any,
 		showDrawer = false,
@@ -83,7 +84,8 @@
 					<button
 						disabled={!subValues || profile._id === $page.data.user?.userId || !currentUser}
 						on:click={() => doFollow(!subValues?.isFollowing)}
-						class="btn btn-secondary">
+						class="btn btn-secondary tooltip"
+						data-tip="Follow">
 						{#if !subValues}
 							<span class="loading loading-dots loading-md" />
 						{:else if subValues?.isFollowing}
@@ -93,23 +95,26 @@
 						{/if}
 					</button>
 					<button
-						class="btn btn-primary"
+						class="btn btn-accent tooltip"
+						data-tip="Sponsor"
 						on:click={() => ($is_sponsor_dialog_open = true)}
-						disabled={!value}>Sponsor</button>
+						disabled={value}><IconChatSponsor /></button>
 				</div>
 				<div class="dropdown dropdown-end">
 					{#if $page.data.user?.user?.planTier > 0 && !value}
 						<div class="z-30 absolute top-0 right-0 badge badge-secondary badge-xs animate-ping" />
 					{/if}
 					<button
-						class="btn btn-circle"
+						class="btn btn-circle tooltip flex"
+						data-tip="More"
 						tabindex="0"
 						disabled={currentUser?.username !== $page.params.username}>
 						<IconMore />
 					</button>
-					<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+					<ul tabindex="-1" class="dropdown-content menu p-2 shadow bg-base-300 rounded-box w-52">
 						<li>
-							<label for="edit-profile-drawer" on:click={() => (showDrawer = true)}>Edit</label>
+							<label for="edit-profile-drawer" on:click={() => (showDrawer = true)}
+								>Edit profile</label>
 							{#if $is_feature_premium_enabled}
 								<a href={env.PUBLIC_STRIPE_BILLING_URL}>Manage sponsors</a>
 								{#if $page.data.user?.user?.planTier > 0}
@@ -155,4 +160,4 @@
 	</div>
 </div>
 
-<DialogSponsor userId={profile._id} />
+<DialogSponsor {profile} />

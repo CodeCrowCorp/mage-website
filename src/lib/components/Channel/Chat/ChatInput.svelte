@@ -220,19 +220,18 @@
 	]
 </script>
 
-<form class="rounded-lg bg-base-200 p-2 w-full relative">
-	<button
-		class="btn tooltip font-normal normal-case mr-1 btn-primary"
-		data-tip="Sponsor"
-		on:click={() => ($is_sponsor_dialog_open = true)}
-		disabled={!isChannelSocketConnected ||
+<!--disabled={!isChannelSocketConnected ||
 			!$page.data.user?.userId ||
 			!$is_feature_premium_enabled ||
-			!channel.isOnboarded}>
+			!channel.isOnboarded}-->
+<form class="rounded-lg bg-base-200 p-2 w-full relative">
+	<button
+		class="btn tooltip font-normal normal-case mr-1 btn-accent"
+		data-tip="Sponsor"
+		on:click={() => ($is_sponsor_dialog_open = true)}>
 		<IconChatSponsor />
 		<span class="sr-only">Sponsor</span>
 	</button>
-
 	<button
 		class="btn border-none tooltip font-normal normal-case mr-1 {!isHost
 			? 'no-animation'

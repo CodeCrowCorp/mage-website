@@ -360,7 +360,7 @@
 		yes="Yes"
 		yesAction={deleteChannelYesAction}
 		isError={true} />
-	<DialogSponsor userId={channel.userId} />
+	<DialogSponsor profile={{ _id: channel.userId, username: channel.username }} />
 {/if}
 
 <style>

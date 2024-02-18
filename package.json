@@ -19,8 +19,8 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-cloudflare": "^4.0.1",
 		"@playwright/test": "1.41.2",
+		"@sveltejs/adapter-cloudflare": "^4.0.1",
 		"@sveltejs/kit": "^2.0.6",
 		"@sveltejs/vite-plugin-svelte": "^3.0.1",
 		"@typescript-eslint/eslint-plugin": "^7.0.1",
@@ -49,11 +49,13 @@
 		"@event-calendar/core": "^2.0.0",
 		"@event-calendar/time-grid": "^2.0.0",
 		"@neodrag/svelte": "^2.0.3",
+		"@stripe/stripe-js": "^3.0.2",
 		"daisyui": "^4.7.2",
 		"emoji-picker-element": "^1.18.1",
 		"moment": "^2.29.4",
 		"nprogress": "^0.2.0",
 		"playwright-e2e-coverage-report": "^1.0.28",
+		"svelte-stripe": "^1.1.4",
 		"svelte-tags-input": "^6.0.0",
 		"theme-change": "^2.5.0"
 	}
