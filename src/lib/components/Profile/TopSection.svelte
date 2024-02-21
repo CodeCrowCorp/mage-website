@@ -98,7 +98,7 @@
 						class="btn btn-accent tooltip"
 						data-tip="Sponsor"
 						on:click={() => ($is_sponsor_dialog_open = true)}
-						disabled={value}><IconChatSponsor /></button>
+						disabled={!$is_feature_premium_enabled || value}><IconChatSponsor /></button>
 				</div>
 				<div class="dropdown dropdown-end">
 					{#if $page.data.user?.user?.planTier > 0 && !value}
