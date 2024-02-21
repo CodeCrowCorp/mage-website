@@ -6,6 +6,7 @@
 	import { is_restream_drawer_open } from '$lib/stores/channelStore'
 	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
 	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
+	import { is_feature_merge_platforms_enabled } from '$lib/stores/remoteConfigStore'
 
 	$: auth = {
 		userId: $page.data.user?.userId,
@@ -13,7 +14,7 @@
 	}
 	let urlList: any = []
 	let payload = {
-		title: '',
+		name: '',
 		url: '',
 		streamKey: ''
 	}
@@ -29,7 +30,7 @@
 	$: invalidUrl = !isValidRtmp(payload.url)
 
 	$: disbaled =
-		loading || !payload.title || !payload.url || !payload.streamKey || invalidUrl || cloudflareUrl
+		loading || !payload.name || !payload.url || !payload.streamKey || invalidUrl || cloudflareUrl
 
 	const addNew = async () => {
 		loading = true
@@ -39,7 +40,7 @@
 		showAddModal = false
 		touched = false
 		payload = {
-			title: '',
+			name: '',
 			url: '',
 			streamKey: ''
 		}
@@ -159,7 +160,7 @@
 								on:click={() => toggleOutput(item)} />
 							<div class="flex-1 text-left space-y-1">
 								<div class="break-all">
-									{item.title}
+									{item.name}
 								</div>
 								<div class="break-all">{item.url}</div>
 								<div>
@@ -211,28 +212,30 @@
 					<div class="modal-box">
 						<h3 class="font-bold text-lg">Add new stream</h3>
 						<div class="form-control w-full pt-4">
-							<div class="flex gap-3">
-								<button
-									class="btn btn-sm"
-									on:click={linkTwitch}
-									disabled={urlList &&
-										Array.isArray(urlList) &&
-										urlList.some((item) => item.platform === 'twitch')}
-									><IconSocialTwitch /> Twitch
-								</button>
-								<button
-									class="btn btn-sm"
-									on:click={linkYoutube}
-									disabled={urlList &&
-										Array.isArray(urlList) &&
-										urlList.some((item) => item.platform === 'youtube')}
-									><IconSocialYouTube /> YouTube</button>
-							</div>
+							{#if $is_feature_merge_platforms_enabled}
+								<div class="flex gap-3">
+									<button
+										class="btn btn-sm"
+										on:click={linkTwitch}
+										disabled={urlList &&
+											Array.isArray(urlList) &&
+											urlList.some((item) => item.platform === 'twitch')}
+										><IconSocialTwitch /> Twitch
+									</button>
+									<button
+										class="btn btn-sm"
+										on:click={linkYoutube}
+										disabled={urlList &&
+											Array.isArray(urlList) &&
+											urlList.some((item) => item.platform === 'youtube')}
+										><IconSocialYouTube /> YouTube</button>
+								</div>
+							{/if}
 							<label class="label">
-								<span class="label-text">Title</span>
+								<span class="label-text">Name</span>
 							</label>
 							<input
-								bind:value={payload.title}
+								bind:value={payload.name}
 								type="text"
 								placeholder="Enter the destination name"
 								class="input input-bordered w-full max-w-xs input-primary"
@@ -270,7 +273,7 @@
 								on:click={() => {
 									showAddModal = false
 									payload = {
-										title: '',
+										name: '',
 										url: '',
 										streamKey: ''
 									}
