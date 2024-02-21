@@ -13,7 +13,7 @@
 	}
 	let urlList: any = []
 	let payload = {
-		title: '',
+		name: '',
 		url: '',
 		streamKey: ''
 	}
@@ -29,7 +29,7 @@
 	$: invalidUrl = !isValidRtmp(payload.url)
 
 	$: disbaled =
-		loading || !payload.title || !payload.url || !payload.streamKey || invalidUrl || cloudflareUrl
+		loading || !payload.name || !payload.url || !payload.streamKey || invalidUrl || cloudflareUrl
 
 	const addNew = async () => {
 		loading = true
@@ -39,7 +39,7 @@
 		showAddModal = false
 		touched = false
 		payload = {
-			title: '',
+			name: '',
 			url: '',
 			streamKey: ''
 		}
@@ -159,7 +159,7 @@
 								on:click={() => toggleOutput(item)} />
 							<div class="flex-1 text-left space-y-1">
 								<div class="break-all">
-									{item.title}
+									{item.name}
 								</div>
 								<div class="break-all">{item.url}</div>
 								<div>
@@ -229,10 +229,10 @@
 									><IconSocialYouTube /> YouTube</button>
 							</div>
 							<label class="label">
-								<span class="label-text">Title</span>
+								<span class="label-text">Name</span>
 							</label>
 							<input
-								bind:value={payload.title}
+								bind:value={payload.name}
 								type="text"
 								placeholder="Enter the destination name"
 								class="input input-bordered w-full max-w-xs input-primary"
@@ -270,7 +270,7 @@
 								on:click={() => {
 									showAddModal = false
 									payload = {
-										title: '',
+										name: '',
 										url: '',
 										streamKey: ''
 									}
