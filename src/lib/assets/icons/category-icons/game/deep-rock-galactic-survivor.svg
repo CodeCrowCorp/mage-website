@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+<g>
+	<path fill="#FB5000" d="M47.604,19.59v-8.197H33.589v27.136h-0.231l-2.639-6.735h1.793V11.393H18.581v27.214h5.726V17.962h2.683
+		v7.234h-1.077v9.146l1.899,4.264h19.793V21.098h-7.324v5.59h1.644v5.349h-1.644v0.033h-1.039V17.962h2.683v1.627H47.604z
+		 M2.396,11.393v6.692h1.267v20.523h13.842V11.393H2.396z M12.041,31.978H9.358V17.962h2.683V31.978z"/>
+	
+		<linearGradient id="SVGID_00000027591606223209891900000005534977287459953034_" gradientUnits="userSpaceOnUse" x1="10.1709" y1="13.4724" x2="10.1709" y2="37.8227">
+		<stop  offset="0" style="stop-color:#F8F000"/>
+		<stop  offset="1" style="stop-color:#F8AE00"/>
+	</linearGradient>
+	<path fill="url(#SVGID_00000027591606223209891900000005534977287459953034_)" d="M3.104,13.292v4.069h1.657v20.704h12.477V13.292
+		H3.104z M9.22,34.118V17.36h3.559v16.758H9.22z"/>
+	
+		<linearGradient id="SVGID_00000087372860341906245580000002156419697076794786_" gradientUnits="userSpaceOnUse" x1="26.047" y1="13.4724" x2="26.047" y2="37.8227">
+		<stop  offset="0" style="stop-color:#F8F000"/>
+		<stop  offset="1" style="stop-color:#F8AE00"/>
+	</linearGradient>
+	<polygon fill="url(#SVGID_00000087372860341906245580000002156419697076794786_)" points="32.504,38.065 28.208,38.065 
+		26.537,34.313 26.537,27.215 27.817,27.215 27.817,17.36 24.049,17.36 24.049,38.065 19.59,38.065 19.59,13.292 32.276,13.292 
+		32.276,30.982 29.716,30.982 29.716,31.875 	"/>
+	
+		<linearGradient id="SVGID_00000113345025104324561750000007168006352575614881_" gradientUnits="userSpaceOnUse" x1="40.8314" y1="13.472" x2="40.8314" y2="37.7611">
+		<stop  offset="0" style="stop-color:#F8F000"/>
+		<stop  offset="1" style="stop-color:#F8AE00"/>
+	</linearGradient>
+	<polygon fill="url(#SVGID_00000113345025104324561750000007168006352575614881_)" points="42.784,19.047 42.784,17.36 
+		38.878,17.36 38.878,34.058 42.784,34.058 42.784,26.04 41.108,26.04 41.108,22.815 47.246,22.815 47.246,38.065 34.416,38.065 
+		34.416,13.292 47.246,13.292 47.246,19.047 	"/>
+</g>
+</svg>
