@@ -20,6 +20,7 @@
 	import { is_sharing_screen, is_sharing_webcam, is_sharing_audio } from '$lib/stores/streamStore'
 	import DrawerRestream from '$lib/components/Channel/Chat/DrawerRestream.svelte'
 	import DialogSponsor from '$lib/components/Channel/Chat/DialogSponsor.svelte'
+	import { is_feature_premium_enabled } from '$lib/stores/remoteConfigStore'
 
 	let channel: any,
 		isDeleteModalOpen = false,
@@ -360,7 +361,9 @@
 		yes="Yes"
 		yesAction={deleteChannelYesAction}
 		isError={true} />
-	<DialogSponsor profile={{ _id: channel.userId, username: channel.username }} />
+	{#if $is_feature_premium_enabled}
+		<DialogSponsor profile={{ _id: channel.userId, username: channel.username }} />
+	{/if}
 {/if}
 
 <style>

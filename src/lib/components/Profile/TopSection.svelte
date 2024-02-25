@@ -159,5 +159,6 @@
 		</div>
 	</div>
 </div>
-
-<DialogSponsor {profile} />
+{#if $is_feature_premium_enabled}
+	<DialogSponsor {profile} />
+{/if}
