@@ -77,7 +77,7 @@
 				{ userId: $page.data.user?.userId, token: $page.data.user?.token }
 			)
 		} else {
-			await del(`favorites?channelId=${channel._id}`, {
+			await del(`favorite?channelId=${channel._id}`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
