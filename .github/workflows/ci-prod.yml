@@ -63,7 +63,7 @@ jobs:
           retention-days: 30
 
       - name: Send to Codecov
-        uses: codecov/codecov-action@v4.0.1
+        uses: codecov/codecov-action@v4.0.2
         with:
           files: ./results.json
           flags: "e2ecoverage"
