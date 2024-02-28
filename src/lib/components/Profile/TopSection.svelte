@@ -99,7 +99,7 @@
 						data-tip="Sponsor"
 						on:click={() => ($is_sponsor_dialog_open = true)}
 						disabled={!$is_feature_premium_enabled ||
-							value ||
+							!value ||
 							profile._id === $page.data.user?.userId}><IconChatSponsor /></button>
 				</div>
 				<div class="dropdown dropdown-end">
@@ -122,7 +122,8 @@
 								{#if $page.data.user?.user?.planTier > 0}
 									<form class="mt-auto" method="post">
 										{#if !value}
-											<button formaction="?/onboard">Complete onboarding</button>
+											<button class="link link-accent" formaction="?/onboard"
+												>Complete onboarding</button>
 										{:else}
 											<button formaction="?/dashboard">Payout dashboard</button>
 										{/if}
