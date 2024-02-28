@@ -15,12 +15,12 @@ export const load = (async ({ locals }) => {
 
 export const actions = {
 	subscribe: async ({ request, locals }: { request: any; locals: any }) => {
-		const { userId, token } = locals.user
+		const { userId, token, user } = locals.user
 		const data = await request.formData()
 		const priceId = data.get('priceId')
 		const response = await post(
-			'plan/subscribe',
-			{ priceId },
+			'plan/subscribe-session',
+			{ priceId, username: user.username },
 			{
 				userId,
 				token
