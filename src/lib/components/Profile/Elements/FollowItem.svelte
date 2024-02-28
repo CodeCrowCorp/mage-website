@@ -39,7 +39,7 @@
 <div class="flex flex-row gap-2 px-4 py-2 card bg-base-100 justify-between mb-1">
 	<div class="flex">
 		<div class="avatar">
-			<div class="w-16 mask {followItem.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
+			<div class="w-16 mask {followItem.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
 				<img src={followItem.avatar} alt="" />
 			</div>
 		</div>
@@ -47,7 +47,7 @@
 		<div class="flex flex-col justify-center pl-4 text-start">
 			<p>{followItem.displayName}</p>
 			<p class="flex gap-1">
-				@{followItem.username}{#if followItem.planTier > 1}
+				@{followItem.username}{#if followItem.planTier > 0}
 					<div class="text-accent font-bold">
 						<IconDrawerVerification />
 					</div>
