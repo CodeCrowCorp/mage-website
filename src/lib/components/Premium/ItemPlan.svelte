@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores'
-	import IconAffiliateCheck from '$lib/assets/icons/premium/IconAffiliateCheck.svelte'
+	import IconPremiumCheck from '$lib/assets/icons/premium/IconPremiumCheck.svelte'
 	import { env } from '$env/dynamic/public'
 	import { enhance } from '$app/forms'
 
@@ -40,7 +40,7 @@
 	<ul class="mb-8 space-y-4 text-left">
 		{#each plan.features as feature}
 			<li class="flex items-center space-x-3">
-				<IconAffiliateCheck />
+				<IconPremiumCheck />
 				<span>{feature.name}</span>
 			</li>
 		{/each}
