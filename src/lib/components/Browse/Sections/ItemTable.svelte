@@ -14,7 +14,7 @@
 	<td>
 		<div class="flex items-center space-x-2 pl-3">
 			<div class="avatar">
-				<div class="w-12 mask {channel.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
+				<div class="w-12 mask {channel.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
 					<img src={channel.avatar} alt="" />
 				</div>
 			</div>
@@ -22,7 +22,7 @@
 				<div class="font-bold">{channel.displayName || ''}</div>
 				<div class="text-sm flex gap-1">
 					@{channel.username || ''}
-					{#if channel.planTier > 1}
+					{#if channel.planTier > 0}
 						<div class="text-accent font-bold">
 							<IconDrawerVerification />
 						</div>

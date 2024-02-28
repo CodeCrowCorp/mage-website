@@ -63,7 +63,7 @@
 				<div class="w-32 h-32">
 					<div class="avatar -top-16">
 						<div
-							class="mask {profile.planTier > 1
+							class="mask {profile.planTier > 0
 								? 'mask-hexagon'
 								: 'mask-squircle'} h-auto align-middle max-w-150-px">
 							<img src={profile.avatar} alt="" class="!w-32 !h-32" />

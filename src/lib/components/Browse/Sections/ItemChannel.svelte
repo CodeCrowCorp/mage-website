@@ -52,13 +52,13 @@
 	<p class="text-lg font-semibold truncate">{channel.title}</p>
 	<div class="flex flex-row gap-2 max-w-[25rem]">
 		<div class="avatar">
-			<div class="w-12 mask {channel?.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
+			<div class="w-12 mask {channel?.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
 				<img src={channel.avatar} alt="" />
 			</div>
 		</div>
 		<div class="flex items-center gap-1">
 			<p>@{channel.username}</p>
-			{#if channel.planTier > 1}
+			{#if channel.planTier > 0}
 				<div class="text-accent font-bold">
 					<IconDrawerVerification />
 				</div>
