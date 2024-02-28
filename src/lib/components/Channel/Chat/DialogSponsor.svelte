@@ -11,6 +11,7 @@
 	export let profile: any
 
 	let selectedDuration = 1
+	let step = 1
 
 	let stripe: any = null,
 		clientSecret: string = ''
@@ -21,7 +22,7 @@
 
 	const showCheckoutDialog = async () => {
 		clientSecret = await post(
-			`plan/sponsor`,
+			`plan/sponsor-session`,
 			{ recipientId: profile._id, numOfMonths: selectedDuration },
 			{ userId: $page.data.user?.userId, token: $page.data.user?.token }
 		)
@@ -31,6 +32,18 @@
 {#if $is_feature_premium_enabled}
 	<dialog class={`modal ${$is_sponsor_dialog_open && 'modal-open'}`}>
 		<div class="modal-box max-w-fit">
+			<!-- <div class="text-sm breadcrumbs">
+				<ul>
+					<li><a>Choose plan</a></li>
+					<li><a>Purchase</a></li>
+					<li>Done</li>
+				</ul>
+			</div> -->
+			<ul class="steps mb-2 w-full">
+				<li class="step {step > 0 ? 'step-primary' : ''}">Choose plan</li>
+				<li class="step {step > 1 ? 'step-primary' : ''}">Purchase</li>
+				<li class="step {step > 2 ? 'step-primary' : ''}">Done</li>
+			</ul>
 			<h3 class="font-bold text-lg">
 				Sponsor <span class="text-secondary">@{profile.username || ''}</span>
 			</h3>
@@ -38,27 +51,29 @@
 				Streamers work hard to provide entertaining and helpful content. You can be their sponsor
 				and encourage them!
 			</p>
-			<ul class="steps mb-2 w-full">
-				<li class="step step-primary">Choose plan</li>
-				<li class="step">Purchase</li>
-				<li class="step">Done</li>
-			</ul>
 			<span class="flex mt-1 font-semibold">Sponsor for:</span>
-			{#each [1, 3, 6] as duration (duration)}
-				<input type="radio" class="hidden" bind:group={selectedDuration} value={duration} />
-				<button
-					class={selectedDuration === duration ? 'btn btn-accent' : 'btn btn-neutral btn-outline'}
-					on:click={() => (selectedDuration = duration)}>
-					{duration === 1 ? `${duration} month` : `${duration} months`}
-				</button>
-			{/each}
-			<EmbeddedCheckout {stripe} {clientSecret} />
+			{#if step === 1}
+				{#each [1, 3, 6] as duration (duration)}
+					<input type="radio" class="hidden" bind:group={selectedDuration} value={duration} />
+					<button
+						class={selectedDuration === duration ? 'btn btn-accent' : 'btn btn-neutral btn-outline'}
+						on:click={() => (selectedDuration = duration)}>
+						{duration === 1 ? `${duration} month` : `${duration} months`}
+					</button>
+				{/each}
+			{:else if step === 2}
+				<EmbeddedCheckout {stripe} {clientSecret} />
+			{/if}
 			<div class="modal-action">
 				<form method="dialog">
 					<button class="btn" on:click={() => ($is_sponsor_dialog_open = !$is_sponsor_dialog_open)}
 						>Close</button>
-					<button class="btn btn-accent" on:click={async () => await showCheckoutDialog()}
-						>Sponsor</button>
+					<button
+						class="btn btn-accent"
+						on:click={async () => {
+							step = 2
+							await showCheckoutDialog()
+						}}>Next</button>
 				</form>
 			</div>
 		</div>
