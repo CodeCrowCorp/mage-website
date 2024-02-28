@@ -154,8 +154,7 @@
 	const loadChannel = async () => {
 		const chan = await get(`channel?channelId=${$page.params.channelId}`)
 		chan.videoItems = []
-		const isOnboarded = await get(`plan/onboarded?userId=${channel.userId}`)
-		console.log('got here----isOnboarded', isOnboarded)
+		const isOnboarded = await get(`plan/onboarded?userId=${chan.userId}`)
 		chan.isOnboarded = isOnboarded || false
 		channels.push(chan)
 	}
