@@ -34,7 +34,8 @@ export const load = (async ({ params, url }) => {
 				`analytics/stream/total-mins/monthly-change?userId=${profile._id}`
 			),
 			dailyAvgMins: get(`analytics/stream/avg-mins/daily?userId=${profile._id}`),
-			isOnboarded: get(`plan/onboarded?userId=${profile._id}`)
+			isOnboarded: get(`plan/onboarded?userId=${profile._id}`),
+			sponsors: get(`plan/sponsors?userId=${profile._id}`)
 		}
 	}
 }) satisfies PageServerLoad

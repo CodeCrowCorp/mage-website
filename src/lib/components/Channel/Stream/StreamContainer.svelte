@@ -23,7 +23,12 @@
 		is_chat_drawer_destroy,
 		was_chat_drawer_closed
 	} from '$lib/stores/channelStore'
-	import { is_feature_merge_platforms_enabled } from '$lib/stores/remoteConfigStore'
+	import {
+		is_feature_merge_platforms_enabled,
+		is_feature_premium_enabled
+	} from '$lib/stores/remoteConfigStore'
+	import DropdownSponsors from '$lib/components/Channel/Stream/DropdownSponsors.svelte'
+	import IconChatSponsor from '$lib/assets/icons/chat/IconChatSponsor.svelte'
 
 	const dispatch = createEventDispatcher()
 	export let userCount: number = 1,
@@ -117,6 +122,20 @@
 							</label>
 							<DropdownViewers {channel} bind:viewers />
 						</div>
+						{#if $is_feature_premium_enabled && channel.sponsors?.length}
+							<div
+								class="dropdown dropdown-bottom tooltip tooltip-bottom"
+								data-tip="{getNumberInThousands(channel.sponsors?.length || 0)} sponsors">
+								<label
+									for=""
+									class="btn btn-sm font-medium gap-2 btn-accent border-none"
+									tabindex="-1">
+									<IconChatSponsor />
+									{getNumberInThousands(channel.sponsors?.length || 0)}
+								</label>
+								<DropdownSponsors {channel} />
+							</div>
+						{/if}
 						{#if $is_feature_merge_platforms_enabled}
 							{#if channel.platforms}
 								{#each channel.platforms as platform}
