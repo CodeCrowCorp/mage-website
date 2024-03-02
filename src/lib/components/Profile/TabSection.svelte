@@ -16,7 +16,8 @@
 		totalMins: any,
 		lastStreamAndDuration: any,
 		totalMinsMonthlyChange: any,
-		dailyAvgMins: any
+		dailyAvgMins: any,
+		sponsors: any
 
 	let tabs: string[] = []
 	let activeTab = 0

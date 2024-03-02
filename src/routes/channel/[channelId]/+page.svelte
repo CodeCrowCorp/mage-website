@@ -156,6 +156,8 @@
 		chan.videoItems = []
 		const isOnboarded = await get(`plan/onboarded?userId=${chan.userId}`)
 		chan.isOnboarded = isOnboarded || false
+		const sponsors = await get(`plan/sponsors?userId=${chan.userId}`)
+		chan.sponsors = sponsors || []
 		channels.push(chan)
 	}
 

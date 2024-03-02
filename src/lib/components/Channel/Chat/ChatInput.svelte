@@ -220,13 +220,9 @@
 	]
 </script>
 
-<!--disabled={!isChannelSocketConnected ||
-			!$page.data.user?.userId ||
-			!$is_feature_premium_enabled ||
-			!channel.isOnboarded}-->
 <form class="rounded-lg bg-base-200 p-2 w-full relative">
 	<button
-		disabled={!$is_feature_premium_enabled || !channel.isOnboarded}
+		disabled={!$page.data.user?.userId || !$is_feature_premium_enabled || !channel.isOnboarded}
 		class="btn tooltip font-normal normal-case mr-1 btn-accent"
 		data-tip="Sponsor"
 		on:click={() => ($is_sponsor_dialog_open = true)}>

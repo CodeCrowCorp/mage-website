@@ -23,7 +23,11 @@
 	const showCheckoutDialog = async () => {
 		clientSecret = await post(
 			`plan/sponsor-session`,
-			{ recipientId: profile._id, numOfMonths: selectedDuration },
+			{
+				recipientUserId: profile._id,
+				numOfMonths: selectedDuration,
+				returnUrl: window.location.href
+			},
 			{ userId: $page.data.user?.userId, token: $page.data.user?.token }
 		)
 	}
@@ -32,18 +36,6 @@
 {#if $is_feature_premium_enabled}
 	<dialog class={`modal ${$is_sponsor_dialog_open && 'modal-open'}`}>
 		<div class="modal-box max-w-fit">
-			<!-- <div class="text-sm breadcrumbs">
-				<ul>
-					<li><a>Choose plan</a></li>
-					<li><a>Purchase</a></li>
-					<li>Done</li>
-				</ul>
-			</div> -->
-			<ul class="steps mb-2 w-full">
-				<li class="step {step > 0 ? 'step-primary' : ''}">Choose plan</li>
-				<li class="step {step > 1 ? 'step-primary' : ''}">Purchase</li>
-				<li class="step {step > 2 ? 'step-primary' : ''}">Done</li>
-			</ul>
 			<h3 class="font-bold text-lg">
 				Sponsor <span class="text-secondary">@{profile.username || ''}</span>
 			</h3>
@@ -51,8 +43,8 @@
 				Streamers work hard to provide entertaining and helpful content. You can be their sponsor
 				and encourage them!
 			</p>
-			<span class="flex mt-1 font-semibold">Sponsor for:</span>
 			{#if step === 1}
+				<span class="flex mt-1 font-semibold">Choose number of months to sponsor for:</span>
 				{#each [1, 3, 6] as duration (duration)}
 					<input type="radio" class="hidden" bind:group={selectedDuration} value={duration} />
 					<button
@@ -62,14 +54,24 @@
 					</button>
 				{/each}
 			{:else if step === 2}
+				<div class="mb-3">
+					Selected duration:
+					<button class="btn btn-accent">
+						{selectedDuration === 1 ? `${selectedDuration} month` : `${selectedDuration} months`}
+					</button>
+				</div>
 				<EmbeddedCheckout {stripe} {clientSecret} />
 			{/if}
 			<div class="modal-action">
 				<form method="dialog">
-					<button class="btn" on:click={() => ($is_sponsor_dialog_open = !$is_sponsor_dialog_open)}
-						>Close</button>
+					<button
+						class="btn"
+						on:click={() => {
+							step > 1 ? (step = 1) : ($is_sponsor_dialog_open = !$is_sponsor_dialog_open)
+						}}>{step > 1 ? 'Back' : 'Close'}</button>
 					<button
 						class="btn btn-accent"
+						disabled={step === 2}
 						on:click={async () => {
 							step = 2
 							await showCheckoutDialog()

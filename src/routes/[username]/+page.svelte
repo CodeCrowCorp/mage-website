@@ -72,7 +72,8 @@
 						lastStreamAndDuration={data.lazy.lastStreamAndDuration}
 						totalMins={data.lazy.totalMins}
 						totalMinsMonthlyChange={data.lazy.totalMinsMonthlyChange}
-						dailyAvgMins={data.lazy.dailyAvgMins} />
+						dailyAvgMins={data.lazy.dailyAvgMins}
+						sponsors={data.lazy.sponsors} />
 				</div>
 			</div>
 		</div>
