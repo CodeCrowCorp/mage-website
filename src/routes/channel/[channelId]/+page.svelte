@@ -8,7 +8,8 @@
 		initChannelSocket,
 		emitChannelSubscribeByUser,
 		emitDeleteAllMessagesToChannel,
-		emitPlatformCount
+		emitPlatformCount,
+		emitGetSponsors
 	} from '$lib/websocket'
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import { isJsonString, updateVideoItems } from '$lib/utils'
@@ -132,6 +133,11 @@
 						channel.platforms = parsedMsg.platforms
 					}
 					break
+				case `channel-get-sponsors-${$page.params.channelId}`:
+					if (channel) {
+						channel.sponsors = parsedMsg.sponsors
+					}
+					break
 			}
 		})
 	})
@@ -156,9 +162,8 @@
 		chan.videoItems = []
 		const isOnboarded = await get(`plan/onboarded?userId=${chan.userId}`)
 		chan.isOnboarded = isOnboarded || false
-		const sponsors = await get(`plan/sponsors?userId=${chan.userId}`)
-		chan.sponsors = sponsors || []
 		channels.push(chan)
+		emitGetSponsors({ channelSocket: channel.socket, recipientUserId: channel.userId })
 	}
 
 	const initChannel = (chan: any) => {
