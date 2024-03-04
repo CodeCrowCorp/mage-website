@@ -43,6 +43,12 @@
 			handleWebsocket()
 			timeoutConnection()
 		}
+		if ($page.data.hasSponsors === 'true') {
+			emitGetSponsors({ channelSocket: channel.socket, recipientUserId: channel.userId })
+			goto(`/channel/${$page.params.channelId}`, {
+				replaceState: true
+			})
+		}
 	}
 
 	onMount(async () => {
@@ -162,8 +168,9 @@
 		chan.videoItems = []
 		const isOnboarded = await get(`plan/onboarded?userId=${chan.userId}`)
 		chan.isOnboarded = isOnboarded || false
+		const sponsors = await get(`plan/sponsors?userId=${chan.userId}`)
+		chan.sponsors = sponsors || []
 		channels.push(chan)
-		emitGetSponsors({ channelSocket: channel.socket, recipientUserId: channel.userId })
 	}
 
 	const initChannel = (chan: any) => {
