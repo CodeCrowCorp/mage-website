@@ -136,6 +136,7 @@
 				case `channel-get-sponsors-${$page.params.channelId}`:
 					if (channel) {
 						channel.sponsors = parsedMsg.sponsors
+						console.log('got here----parsedMsg.sponsors', parsedMsg.sponsors)
 					}
 					break
 			}
