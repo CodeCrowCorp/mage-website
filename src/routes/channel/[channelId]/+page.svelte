@@ -166,8 +166,9 @@
 		chan.sponsors = sponsors || []
 		channels.push(chan)
 
-		const hasSponsors = $page.url?.searchParams?.has('hasSponsors')
+		const hasSponsors = $page.url?.searchParams?.get('hasSponsors') || ''
 		if (hasSponsors) {
+			console.log('got here---hasSponsors', hasSponsors)
 			emitGetSponsors({ channelSocket: chan.socket, recipientUserId: chan.userId })
 			goto(`/channel/${$page.params.channelId}`, {
 				replaceState: true
