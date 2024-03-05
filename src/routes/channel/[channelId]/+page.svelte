@@ -43,7 +43,7 @@
 			handleWebsocket()
 			timeoutConnection()
 		}
-		const hasSponsors = $page.url?.searchParams?.get('hasSponsors') === 'true'
+		const hasSponsors = $page.url?.searchParams?.has('hasSponsors')
 		if (hasSponsors) {
 			emitGetSponsors({ channelSocket: channel.socket, recipientUserId: channel.userId })
 			goto(`/channel/${$page.params.channelId}`, {
