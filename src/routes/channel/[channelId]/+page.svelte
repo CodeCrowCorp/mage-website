@@ -44,6 +44,7 @@
 			timeoutConnection()
 		}
 		if ($page.data.hasSponsors === 'true') {
+			console.log('got here----hasSponsors', true)
 			emitGetSponsors({ channelSocket: channel.socket, recipientUserId: channel.userId })
 			goto(`/channel/${$page.params.channelId}`, {
 				replaceState: true
@@ -142,7 +143,9 @@
 				case `channel-get-sponsors-${$page.params.channelId}`:
 					if (channel) {
 						channel.sponsors = parsedMsg.sponsors
+						console.log('got here----channelchannel-get-sponsors')
 					}
+					console.log('got here----channel-get-sponsors')
 					break
 			}
 		})
