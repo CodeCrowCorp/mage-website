@@ -140,7 +140,8 @@
 							{#if channel.platforms}
 								{#each channel.platforms as platform}
 									<span
-										class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center">
+										class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center tooltip tooltip-bottom"
+										data-tip={platform.name}>
 										{#if platform.name === 'twitch'}
 											<IconSocialTwitch />
 										{:else if platform.name === 'youtube'}

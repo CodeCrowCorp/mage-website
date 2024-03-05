@@ -162,7 +162,7 @@
 								<div class="break-all">
 									{item.name}
 								</div>
-								<div class="break-all">{item.url}</div>
+								<div class="break-all">{item.url || ''}</div>
 								<div>
 									<input
 										value="dummyvalues"
