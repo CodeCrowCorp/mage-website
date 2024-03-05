@@ -141,7 +141,7 @@
 		<li>
 			<a href="/{channel.username}">
 				<div class="flex flex-wrap gap-2">
-					<div class="avatar online">
+					<div class="avatar">
 						<div class="w-12 mask {channel.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
 							<img src={channel?.avatar} alt="" />
 						</div>
