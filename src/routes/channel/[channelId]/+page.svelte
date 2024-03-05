@@ -43,13 +43,6 @@
 			handleWebsocket()
 			timeoutConnection()
 		}
-		if ($page.data.hasSponsors === 'true') {
-			console.log('got here----hasSponsors', true)
-			emitGetSponsors({ channelSocket: channel.socket, recipientUserId: channel.userId })
-			goto(`/channel/${$page.params.channelId}`, {
-				replaceState: true
-			})
-		}
 	}
 
 	onMount(async () => {
@@ -174,6 +167,14 @@
 		const sponsors = await get(`plan/sponsors?userId=${chan.userId}`)
 		chan.sponsors = sponsors || []
 		channels.push(chan)
+		console.log('got here----$page.data.hasSponsors', $page.data.hasSponsors)
+		if ($page.data.hasSponsors === 'true') {
+			console.log('got here----hasSponsors', true)
+			emitGetSponsors({ channelSocket: chan.socket, recipientUserId: chan.userId })
+			goto(`/channel/${$page.params.channelId}`, {
+				replaceState: true
+			})
+		}
 	}
 
 	const initChannel = (chan: any) => {
