@@ -211,7 +211,7 @@
 					disabled={!$page.data.user?.userId}
 					class="btn btn-neutral col-span-1 {isFavorite
 						? 'bg-yellow-300 text-black hover:bg-yellow-500'
-						: ''} border-none font-normal normal-case tooltip tooltip-left flex"
+						: ''} border-none font-normal normal-case tooltip tooltip-left flex tooltip-warning"
 					data-tip="Fav channel"
 					on:click={() => toggleFavorite()}>
 					<IconChatStar />
