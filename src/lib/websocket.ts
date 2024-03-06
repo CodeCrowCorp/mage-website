@@ -184,15 +184,18 @@ const emitGetConnectedUsers = ({
 
 const emitGetSponsors = ({
 	channelSocket,
-	recipientUserId
+	recipientUserId,
+	channelId
 }: {
 	channelSocket: WebSocket
 	recipientUserId: number
+	channelId: number
 }) => {
 	channelSocket?.send(
 		JSON.stringify({
 			eventName: `channel-get-sponsors`,
-			recipientUserId
+			recipientUserId,
+			channelId
 		})
 	)
 }
