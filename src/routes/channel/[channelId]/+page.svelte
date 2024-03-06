@@ -186,6 +186,25 @@
 				channelId: $page.params.channelId,
 				limit: 100
 			})
+			setInterval(async () => {
+				emitPlatformCount({
+					channelSocket: channel.socket,
+					channelId: $page.params.channelId,
+					hostId: channel.userId
+				})
+			}, 5000)
+			const hasSponsors = $page.url?.searchParams?.get('hasSponsors') || ''
+			if (hasSponsors) {
+				console.log('got here---hasSponsors', hasSponsors)
+				emitGetSponsors({
+					channelSocket: channel.socket,
+					recipientUserId: channel.userId,
+					channelId: channel._id
+				})
+				goto(`/channel/${$page.params.channelId}`, {
+					replaceState: true
+				})
+			}
 		}
 	}
 
@@ -223,25 +242,6 @@
 			if (channel.socket && channel.socket.constructor === WebSocket) {
 				channel.socket.addEventListener('open', async (data: any) => {
 					initChannel(channel)
-					setInterval(async () => {
-						emitPlatformCount({
-							channelSocket: channel.socket,
-							channelId: $page.params.channelId,
-							hostId: channel.userId
-						})
-					}, 5000)
-					const hasSponsors = $page.url?.searchParams?.get('hasSponsors') || ''
-					if (hasSponsors) {
-						console.log('got here---hasSponsors', hasSponsors)
-						emitGetSponsors({
-							channelSocket: channel.socket,
-							recipientUserId: channel.userId,
-							channelId: channel._id
-						})
-						goto(`/channel/${$page.params.channelId}`, {
-							replaceState: true
-						})
-					}
 				})
 				channel.socket.addEventListener('message', (data: any) => {
 					console.log('channel listening to messages')
