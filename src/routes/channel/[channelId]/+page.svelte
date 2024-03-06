@@ -134,9 +134,10 @@
 					}
 					break
 				case `channel-get-sponsors-${$page.params.channelId}`:
+					console.log('got here----channel-get-sponsors1', parsedMsg.sponsors)
 					if (channel) {
 						channel.sponsors = parsedMsg.sponsors
-						console.log('got here----parsedMsg.sponsors', parsedMsg.sponsors)
+						console.log('got here----channel-get-sponsors2', parsedMsg.sponsors)
 					}
 					break
 			}
@@ -231,6 +232,7 @@
 					}, 5000)
 					const hasSponsors = $page.url?.searchParams?.get('hasSponsors') || ''
 					if (hasSponsors) {
+						console.log('got here---hasSponsors', hasSponsors)
 						emitGetSponsors({
 							channelSocket: channel.socket,
 							recipientUserId: channel.userId,
