@@ -194,8 +194,11 @@
 				})
 			}, 5000)
 			const hasSponsors = $page.url?.searchParams?.get('hasSponsors') || ''
+			const hasSponsors2 = $page.url?.searchParams?.has('hasSponsors')
+			console.log('got here---hasSponsors1', hasSponsors)
+			console.log('got here---hasSponsors2', hasSponsors2)
 			if (hasSponsors) {
-				console.log('got here---hasSponsors', hasSponsors)
+				console.log('got here---hasSponsors3', hasSponsors)
 				emitGetSponsors({
 					channelSocket: channel.socket,
 					recipientUserId: channel.userId,
