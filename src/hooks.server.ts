@@ -1,5 +1,5 @@
-import {sequence} from '@sveltejs/kit/hooks';
-import * as Sentry from '@sentry/sveltekit';
+import { sequence } from '@sveltejs/kit/hooks'
+import * as Sentry from '@sentry/sveltekit'
 import { redirect, type Handle } from '@sveltejs/kit'
 import { get as getWritableVal } from 'svelte/store'
 import { Authenticate } from '$lib/authentication/authentication'
@@ -8,8 +8,8 @@ import { user_role } from '$lib/stores/userStore'
 import { env } from '$env/dynamic/public'
 
 Sentry.init({
-    dsn: "https://38b0c55666d660604465c28cf793b090@o4504450889744384.ingest.us.sentry.io/4506862096941056",
-    tracesSampleRate: 1
+	dsn: 'https://38b0c55666d660604465c28cf793b090@o4504450889744384.ingest.us.sentry.io/4506862096941056',
+	tracesSampleRate: 1
 })
 
 export const handle: Handle = sequence(Sentry.sentryHandle(), async ({ event, resolve }) => {
