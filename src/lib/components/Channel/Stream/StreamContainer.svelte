@@ -53,7 +53,7 @@
 					dispatch('loadMore')
 				}
 
-				goto(`${id}`, {
+				goto(`${id}${$page.url?.searchParams}`, {
 					keepFocus: true,
 					replaceState: true,
 					noScroll: true,
