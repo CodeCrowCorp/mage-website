@@ -166,19 +166,6 @@
 		const sponsors = await get(`plan/sponsors?userId=${chan.userId}`)
 		chan.sponsors = sponsors || []
 		channels.push(chan)
-
-		const hasSponsors = $page.url?.searchParams?.get('hasSponsors') || ''
-		if (hasSponsors) {
-			console.log('got here---hasSponsors', hasSponsors)
-			emitGetSponsors({
-				channelSocket: chan.socket,
-				recipientUserId: chan.userId,
-				channelId: chan._id
-			})
-			goto(`/channel/${$page.params.channelId}`, {
-				replaceState: true
-			})
-		}
 	}
 
 	const initChannel = (chan: any) => {
@@ -242,6 +229,17 @@
 							hostId: channel.userId
 						})
 					}, 5000)
+					const hasSponsors = $page.url?.searchParams?.get('hasSponsors') || ''
+					if (hasSponsors) {
+						emitGetSponsors({
+							channelSocket: channel.socket,
+							recipientUserId: channel.userId,
+							channelId: channel._id
+						})
+						goto(`/channel/${$page.params.channelId}`, {
+							replaceState: true
+						})
+					}
 				})
 				channel.socket.addEventListener('message', (data: any) => {
 					console.log('channel listening to messages')
