@@ -16,12 +16,7 @@ const config = {
 	],
 
 	kit: {
-		adapter: adapter(),
-		vite: {
-			optimizeDeps: {
-				exclude: ['$app/stores']
-			}
-		}
+		adapter: adapter()
 	}
 }
 
