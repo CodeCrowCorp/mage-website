@@ -1,3 +1,5 @@
+import {sequence} from '@sveltejs/kit/hooks';
+import * as Sentry from '@sentry/sveltekit';
 import { redirect, type Handle } from '@sveltejs/kit'
 import { get as getWritableVal } from 'svelte/store'
 import { Authenticate } from '$lib/authentication/authentication'
@@ -5,7 +7,12 @@ import { get } from '$lib/api'
 import { user_role } from '$lib/stores/userStore'
 import { env } from '$env/dynamic/public'
 
-export const handle: Handle = async ({ event, resolve }) => {
+Sentry.init({
+    dsn: "https://38b0c55666d660604465c28cf793b090@o4504450889744384.ingest.us.sentry.io/4506862096941056",
+    tracesSampleRate: 1
+})
+
+export const handle: Handle = sequence(Sentry.sentryHandle(), async ({ event, resolve }) => {
 	const pathname = event.url.pathname
 	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
 	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
@@ -74,13 +81,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 	} else {
 		return await resolve(event)
 	}
-}
+})
 
-export const handleError = ({ error }: { error: any }) => {
+export const handleError = Sentry.handleErrorWithSentry(({ error }: { error: any }) => {
 	console.log('error', error)
 	// example integration with https://sentry.io/
 	// Sentry.captureException(error, { event, errorId });
 	return {
 		message: 'Whoops something went wrong!'
 	}
-}
+})

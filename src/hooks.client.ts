@@ -1,22 +1,13 @@
-// import type { Handle } from '@sveltejs/kit'
-// import { get } from '$lib/api'
-// import { platformConnection, platformMessage } from '$lib/stores/websocketStore'
-// import { platformSocket, initPlatformSocket } from '$lib/websocket'
+import * as Sentry from '@sentry/sveltekit';
 
-// export const handle = async ({ event, resolve }: { event: any; resolve: any }) => {
-// 	const platformSocketId = await get(`wsinit/wsid`)
-// 	initPlatformSocket(platformSocketId)
-// 	console.log('platformSocketId', platformSocketId)
-// 	return await resolve(event, { ssr: false })
-// }
+// If you don't want to use Session Replay, remove the `Replay` integration, 
+// `replaysSessionSampleRate` and `replaysOnErrorSampleRate` options.
+Sentry.init({
+    dsn: "https://38b0c55666d660604465c28cf793b090@o4504450889744384.ingest.us.sentry.io/4506862096941056",
+    tracesSampleRate: 1,
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1,
+    integrations: [Sentry.replayIntegration()]
+})
 
-// export const handleError = (({ error, event }) => {
-//     const errorId = crypto.randomUUID();
-//     // example integration with https://sentry.io/
-//     // Sentry.captureException(error, { event, errorId })
-
-//     return {
-//         message: 'Whoops!',
-//         errorId
-//     };
-// }) satisfies HandleClientError
+export const handleError = Sentry.handleErrorWithSentry();
