@@ -19,4 +19,3 @@ src/lib/stores/funFactStore.ts
 /static/sfx/
 .vscode/launch.json
 .yarn.lock
-.sentryclirc
