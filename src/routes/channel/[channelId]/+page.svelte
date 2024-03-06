@@ -188,9 +188,9 @@
 			})
 			setInterval(async () => {
 				emitPlatformCount({
-					channelSocket: channel.socket,
+					channelSocket: chan.socket,
 					channelId: $page.params.channelId,
-					hostId: channel.userId
+					hostId: chan.userId
 				})
 			}, 5000)
 			const hasSponsors = $page.url?.searchParams?.get('hasSponsors') || ''
@@ -200,13 +200,13 @@
 			if (hasSponsors) {
 				console.log('got here---hasSponsors3', hasSponsors)
 				emitGetSponsors({
-					channelSocket: channel.socket,
-					recipientUserId: channel.userId,
-					channelId: channel._id
+					channelSocket: chan.socket,
+					recipientUserId: chan.userId,
+					channelId: chan._id
 				})
-				goto(`/channel/${$page.params.channelId}`, {
-					replaceState: true
-				})
+				// goto(`/channel/${$page.params.channelId}`, {
+				// 	replaceState: true
+				// })
 			}
 		}
 	}
