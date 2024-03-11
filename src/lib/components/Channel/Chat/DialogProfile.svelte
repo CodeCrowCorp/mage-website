@@ -137,7 +137,7 @@
 					<p class="mb-3 text-sm font-normal">
 						<a class="link link-hover flex gap-1" href="/{profileData?.profile?.username}"
 							>@{profileData?.profile?.username}
-							{#if profileData?.profile?.planTier > 1}
+							{#if profileData?.profile?.planTier > 0}
 								<div class="text-accent font-bold">
 									<IconDrawerVerification />
 								</div>

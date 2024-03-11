@@ -315,7 +315,7 @@
 		<img
 			src={video.avatar}
 			alt=""
-			class="absolute inset-0 w-24 md:w-24 mask {video.planTier > 1
+			class="absolute inset-0 w-24 md:w-24 mask {video.planTier > 0
 				? 'mask-hexagon'
 				: 'mask-squircle'} object-cover m-auto" />
 		<div class="absolute inset-0">
@@ -380,7 +380,7 @@
 						? 'btn-outline'
 						: 'border-transparent'}"
 					>@{video.username}
-					{#if video.planTier > 1}
+					{#if video.planTier > 0}
 						<div class="text-accent font-bold">
 							<IconDrawerVerification />
 						</div>

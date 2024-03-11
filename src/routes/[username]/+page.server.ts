@@ -2,9 +2,9 @@ import type { Actions, PageServerLoad } from './$types'
 import { get, patch, putImage } from '$lib/api'
 import { redirect, fail, error } from '@sveltejs/kit'
 
-export const load = (async ({ params, url, locals }) => {
+export const load = (async ({ params, url }) => {
 	const profile = await get(`users/search/username?username=${params.username.toLowerCase()}`)
-	if (profile.error) {
+	if (profile?.error) {
 		error(404)
 	}
 	return {
@@ -34,10 +34,8 @@ export const load = (async ({ params, url, locals }) => {
 				`analytics/stream/total-mins/monthly-change?userId=${profile._id}`
 			),
 			dailyAvgMins: get(`analytics/stream/avg-mins/daily?userId=${profile._id}`),
-			isOnboarded: get('plan/onboarded', {
-				userId: locals.user?.userId,
-				token: locals.user?.token
-			})
+			isOnboarded: get(`plan/onboarded?userId=${profile._id}`),
+			sponsors: get(`plan/sponsors?userId=${profile._id}`)
 		}
 	}
 }) satisfies PageServerLoad

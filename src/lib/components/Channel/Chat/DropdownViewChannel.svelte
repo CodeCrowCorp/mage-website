@@ -141,8 +141,8 @@
 		<li>
 			<a href="/{channel.username}">
 				<div class="flex flex-wrap gap-2">
-					<div class="avatar online">
-						<div class="w-12 mask {channel.planTier > 1 ? 'mask-hexagon' : 'mask-squircle'}">
+					<div class="avatar">
+						<div class="w-12 mask {channel.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
 							<img src={channel?.avatar} alt="" />
 						</div>
 					</div>
@@ -152,7 +152,7 @@
 						</div>
 						<div class="col-span-3 flex gap-1">
 							<p class="truncate">@{channel.username}</p>
-							{#if channel.planTier > 1}
+							{#if channel.planTier > 0}
 								<div class="text-accent font-bold">
 									<IconDrawerVerification />
 								</div>
@@ -211,7 +211,7 @@
 					disabled={!$page.data.user?.userId}
 					class="btn btn-neutral col-span-1 {isFavorite
 						? 'bg-yellow-300 text-black hover:bg-yellow-500'
-						: ''} border-none font-normal normal-case tooltip tooltip-left flex"
+						: ''} border-none font-normal normal-case tooltip tooltip-left flex tooltip-warning"
 					data-tip="Fav channel"
 					on:click={() => toggleFavorite()}>
 					<IconChatStar />

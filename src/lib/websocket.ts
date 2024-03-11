@@ -182,6 +182,24 @@ const emitGetConnectedUsers = ({
 	)
 }
 
+const emitGetSponsors = ({
+	channelSocket,
+	recipientUserId,
+	channelId
+}: {
+	channelSocket: WebSocket
+	recipientUserId: number
+	channelId: number
+}) => {
+	channelSocket?.send(
+		JSON.stringify({
+			eventName: `channel-get-sponsors`,
+			recipientUserId,
+			channelId
+		})
+	)
+}
+
 export {
 	emitPlatformCount,
 	// initPlatformSocket,
@@ -194,5 +212,6 @@ export {
 	emitDeleteMessageToChannel,
 	emitDeleteAllMessagesToChannel,
 	emitChatHistoryToChannel,
-	emitGetConnectedUsers
+	emitGetConnectedUsers,
+	emitGetSponsors
 }

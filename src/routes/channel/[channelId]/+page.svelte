@@ -8,7 +8,8 @@
 		initChannelSocket,
 		emitChannelSubscribeByUser,
 		emitDeleteAllMessagesToChannel,
-		emitPlatformCount
+		emitPlatformCount,
+		emitGetSponsors
 	} from '$lib/websocket'
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import { isJsonString, updateVideoItems } from '$lib/utils'
@@ -132,6 +133,13 @@
 						channel.platforms = parsedMsg.platforms
 					}
 					break
+				case `channel-get-sponsors-${$page.params.channelId}`:
+					console.log('got here----channel-get-sponsors1', parsedMsg.sponsors)
+					if (channel) {
+						channel.sponsors = parsedMsg.sponsors
+						console.log('got here----channel-get-sponsors2', parsedMsg.sponsors)
+					}
+					break
 			}
 		})
 	})
@@ -154,11 +162,10 @@
 	const loadChannel = async () => {
 		const chan = await get(`channel?channelId=${$page.params.channelId}`)
 		chan.videoItems = []
-		const isOnboarded = await get('plan/onboarded', {
-			userId: $page.data.user?.userId,
-			token: $page.data.user?.token
-		})
+		const isOnboarded = await get(`plan/onboarded?userId=${chan.userId}`)
 		chan.isOnboarded = isOnboarded || false
+		const sponsors = await get(`plan/sponsors?userId=${chan.userId}`)
+		chan.sponsors = sponsors || []
 		channels.push(chan)
 	}
 
@@ -179,6 +186,24 @@
 				channelId: $page.params.channelId,
 				limit: 100
 			})
+			setInterval(async () => {
+				emitPlatformCount({
+					channelSocket: chan.socket,
+					channelId: $page.params.channelId,
+					hostId: chan.userId
+				})
+			}, 5000)
+			const hasSponsors = $page.url?.searchParams?.get('hasSponsors') || ''
+			if (hasSponsors) {
+				emitGetSponsors({
+					channelSocket: chan.socket,
+					recipientUserId: chan.userId,
+					channelId: chan._id
+				})
+				goto(`/channel/${$page.params.channelId}`, {
+					replaceState: true
+				})
+			}
 		}
 	}
 
@@ -216,13 +241,6 @@
 			if (channel.socket && channel.socket.constructor === WebSocket) {
 				channel.socket.addEventListener('open', async (data: any) => {
 					initChannel(channel)
-					setInterval(async () => {
-						emitPlatformCount({
-							channelSocket: channel.socket,
-							channelId: $page.params.channelId,
-							hostId: channel.userId
-						})
-					}, 5000)
 				})
 				channel.socket.addEventListener('message', (data: any) => {
 					console.log('channel listening to messages')

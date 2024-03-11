@@ -96,7 +96,7 @@
 							<div class="flex gap-3 {isChannelPage ? 'max-w-md' : 'max-w-full'}">
 								<div class="avatar">
 									<div
-										class="w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser?.planTier > 1
+										class="w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser?.planTier > 0
 											? 'mask-hexagon'
 											: 'mask-squircle'}">
 										<img src={currentUser.avatar} alt="" />
@@ -110,7 +110,7 @@
 							</div>
 							<div class="tooltip flex gap-1 w-fit" data-tip="@{currentUser.username}">
 								<p class="truncate">@{currentUser.username}</p>
-								{#if currentUser?.planTier > 1}
+								{#if currentUser?.planTier > 0}
 									<div class="text-accent font-bold">
 										<IconDrawerVerification />
 									</div>
@@ -286,7 +286,7 @@
 			<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 				<IconSocialGitHub />
 			</a>
-			<a href="https://discord.gg/cFkWepZfwc" target="_blank" rel="noreferrer">
+			<a href="https://discord.mage.stream" target="_blank" rel="noreferrer">
 				<img src={IconSocialDiscord} alt="" />
 			</a>
 			<a
@@ -306,7 +306,7 @@
 			</a>
 		</div>
 		<p>
-			<a href="https://codecrow.io" target="_blank" class="link link-hover">Code Crow © 2023</a>
+			<a href="https://codecrow.io" target="_blank" class="link link-hover">Code Crow © 2024</a>
 		</p>
 		<p class="text-gray-500">
 			v{__VERSION__} [{env.PUBLIC_ENV === 'production' ? 'beta' : env.PUBLIC_ENV}]

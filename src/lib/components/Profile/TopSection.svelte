@@ -63,7 +63,7 @@
 				<div class="w-32 h-32">
 					<div class="avatar -top-16">
 						<div
-							class="mask {profile.planTier > 1
+							class="mask {profile.planTier > 0
 								? 'mask-hexagon'
 								: 'mask-squircle'} h-auto align-middle max-w-150-px">
 							<img src={profile.avatar} alt="" class="!w-32 !h-32" />
@@ -98,7 +98,9 @@
 						class="btn btn-accent tooltip"
 						data-tip="Sponsor"
 						on:click={() => ($is_sponsor_dialog_open = true)}
-						disabled={!$is_feature_premium_enabled || value}><IconChatSponsor /></button>
+						disabled={!$is_feature_premium_enabled ||
+							!value ||
+							profile._id === $page.data.user?.userId}><IconChatSponsor /></button>
 				</div>
 				<div class="dropdown dropdown-end">
 					{#if $page.data.user?.user?.planTier > 0 && !value}
@@ -120,7 +122,8 @@
 								{#if $page.data.user?.user?.planTier > 0}
 									<form class="mt-auto" method="post">
 										{#if !value}
-											<button formaction="?/onboard">Complete onboarding</button>
+											<button class="link link-accent" formaction="?/onboard"
+												>Complete onboarding</button>
 										{:else}
 											<button formaction="?/dashboard">Payout dashboard</button>
 										{/if}
