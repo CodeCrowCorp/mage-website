@@ -286,7 +286,7 @@
 			<a href="https://github.com/CodeCrowCorp" target="_blank" rel="noreferrer">
 				<IconSocialGitHub />
 			</a>
-			<a href="https://discord.gg/cFkWepZfwc" target="_blank" rel="noreferrer">
+			<a href="https://discord.mage.stream" target="_blank" rel="noreferrer">
 				<img src={IconSocialDiscord} alt="" />
 			</a>
 			<a
