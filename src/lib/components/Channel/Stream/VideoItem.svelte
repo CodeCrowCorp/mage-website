@@ -273,12 +273,16 @@
 					if (streamTime < 1) {
 						const inputId = video.uid
 						const streamRecord = await get(`analytics/stream?inputId=${inputId}`)
+						console.log('got here---streamRecord', JSON.stringify(streamRecord))
 						streamTime = streamRecord
 							? Math.floor((Date.now() - new Date(streamRecord.start).getTime()) / 1000)
 							: 0
+						console.log('got here---streamTime1', JSON.stringify(streamTime))
 					}
 					streamTime += 1
-					formattedTime = formatTime(streamTime)
+					console.log('got here---streamTime2', JSON.stringify(streamTime))
+					formattedTime = formatTime(Math.abs(streamTime))
+					console.log('got here---formattedTime', JSON.stringify(formattedTime))
 					if (
 						!channel.thumbnail &&
 						video._id === channel.userId &&
