@@ -271,7 +271,7 @@
 							<!-- svelte-ignore a11y-click-events-have-key-events -->
 							<li
 								on:click={() => {
-									toggleGuest(user._id)
+									toggleGuest(user.userId)
 								}}>
 								<span class={'text-sm w-full' + (selectedUser == idx ? ' bg-gray-800' : '')}>
 									@{user.username}
