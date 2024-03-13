@@ -204,8 +204,8 @@ export default class WHIPClient extends EventTarget {
 		videoElement.play()
 
 		// Draw the video frame to the canvas
-		canvasElement.width = screenVideoElement.videoWidth
-		canvasElement.height = screenVideoElement.videoHeight
+		canvasElement.width = window.innerWidth
+		canvasElement.height = window.innerHeight
 		const context = canvasElement.getContext('2d')
 		const drawVideoFrame = () => {
 			if (
