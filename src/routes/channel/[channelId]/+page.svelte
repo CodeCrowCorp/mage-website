@@ -134,10 +134,8 @@
 					}
 					break
 				case `channel-get-sponsors-${$page.params.channelId}`:
-					console.log('got here----channel-get-sponsors1', parsedMsg.sponsors)
 					if (channel) {
 						channel.sponsors = parsedMsg.sponsors
-						console.log('got here----channel-get-sponsors2', parsedMsg.sponsors)
 					}
 					break
 			}
