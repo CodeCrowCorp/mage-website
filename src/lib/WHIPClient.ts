@@ -271,8 +271,8 @@ export default class WHIPClient extends EventTarget {
 		// Apply constraints to the video track
 		const constraints = isScreen
 			? {
-					width: screenVideoElement.videoWidth,
-					height: screenVideoElement.videoHeight
+					width: 1920,
+					height: 1080
 				}
 			: {
 					width: webcamVideoElement.videoWidth,
