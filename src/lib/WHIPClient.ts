@@ -205,8 +205,19 @@ export default class WHIPClient extends EventTarget {
 
 		// Draw the video frame to the canvas
 		const context = canvasElement.getContext('2d')
-		canvasElement.width = 1920
-		canvasElement.height = 1080
+		// Get the video aspect ratio
+		const aspectRatio = videoElement.videoWidth / videoElement.videoHeight
+
+		// Set the canvas size based on the video aspect ratio
+		if (aspectRatio > 1) {
+			// Landscape mode
+			canvasElement.width = Math.max(videoElement.videoWidth, 1920)
+			canvasElement.height = canvasElement.width / aspectRatio
+		} else {
+			// Portrait mode
+			canvasElement.height = Math.max(videoElement.videoHeight, 1080)
+			canvasElement.width = canvasElement.height * aspectRatio
+		}
 		const drawVideoFrame = () => {
 			if (
 				screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
