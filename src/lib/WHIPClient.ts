@@ -204,8 +204,8 @@ export default class WHIPClient extends EventTarget {
 		videoElement.play()
 
 		// Draw the video frame to the canvas
-		canvasElement.width = 1920
-		canvasElement.height = 1080
+		canvasElement.width = window.innerWidth
+		canvasElement.height = window.innerHeight
 		const context = canvasElement.getContext('2d')
 		const drawVideoFrame = () => {
 			if (
@@ -273,11 +273,11 @@ export default class WHIPClient extends EventTarget {
 			? {
 					width: 1920,
 					height: 1080
-			  }
+				}
 			: {
 					width: webcamVideoElement.videoWidth,
 					height: webcamVideoElement.videoHeight
-			  }
+				}
 		canvasStream.getVideoTracks()[0].applyConstraints(constraints)
 
 		// Clear the canvas when the stream is disconnected
