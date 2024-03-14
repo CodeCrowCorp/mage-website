@@ -278,7 +278,7 @@ export default class WHIPClient extends EventTarget {
 					width: webcamVideoElement.videoWidth,
 					height: webcamVideoElement.videoHeight
 				}
-		canvasStream.getVideoTracks()[0].applyConstraints(constraints)
+		await canvasStream.getVideoTracks()[0].applyConstraints(constraints)
 
 		// Clear the canvas when the stream is disconnected
 		stream.getVideoTracks()[0].addEventListener('ended', () => {
