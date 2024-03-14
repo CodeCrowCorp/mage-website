@@ -204,8 +204,8 @@ export default class WHIPClient extends EventTarget {
 		videoElement.play()
 
 		// Draw the video frame to the canvas
-		canvasElement.width = window.innerWidth
-		canvasElement.height = window.innerHeight
+		canvasElement.width = videoElement.videoWidth
+		canvasElement.height = videoElement.videoHeight
 		const context = canvasElement.getContext('2d')
 		const drawVideoFrame = () => {
 			if (
@@ -271,8 +271,8 @@ export default class WHIPClient extends EventTarget {
 		// Apply constraints to the video track
 		const constraints = isScreen
 			? {
-					width: 1920,
-					height: 1080
+					width: screenVideoElement.videoWidth,
+					height: screenVideoElement.videoHeight
 				}
 			: {
 					width: webcamVideoElement.videoWidth,
