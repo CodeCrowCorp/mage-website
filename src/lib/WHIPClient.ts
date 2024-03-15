@@ -212,27 +212,28 @@ export default class WHIPClient extends EventTarget {
 				screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
 				screenVideoElement.srcObject !== null
 			) {
-				// Get the natural size of the screen video
-				let width = screenVideoElement.videoWidth
-				let height = screenVideoElement.videoHeight
+				// Get the video resolution from the stream
+				const videoWidth = screenVideoElement.videoWidth
+				const videoHeight = screenVideoElement.videoHeight
 
-				// Calculate the aspect ratio of the screen video
-				const aspectRatio = width / height
+				const canvasWidth = canvasElement.width
+				const canvasHeight = canvasElement.height
 
-				// Calculate the new width and height based on the aspect ratio
-				if (canvasElement.width / aspectRatio <= canvasElement.height) {
-					width = canvasElement.width
-					height = canvasElement.width / aspectRatio
-				} else {
-					width = canvasElement.height * aspectRatio
-					height = canvasElement.height
-				}
+				// Calculate scale factors
+				const scaleWidth = canvasWidth / videoWidth
+				const scaleHeight = canvasHeight / videoHeight
 
-				// Center the screen video on the canvas
-				const x = (canvasElement.width - width) / 2
-				const y = (canvasElement.height - height) / 2
+				// Use the smaller scale factor
+				const scale = Math.min(scaleWidth, scaleHeight)
 
-				context?.drawImage(screenVideoElement, x, y, width, height)
+				const scaledWidth = videoWidth * scale
+				const scaledHeight = videoHeight * scale
+
+				// Calculate the position to center the image
+				const posX = (canvasWidth - scaledWidth) / 2
+				const posY = (canvasHeight - scaledHeight) / 2
+
+				context?.drawImage(screenVideoElement, posX, posY, scaledWidth, scaledHeight)
 			} else {
 				context?.clearRect(0, 0, canvasElement.width, canvasElement.height)
 			}
