@@ -205,27 +205,34 @@ export default class WHIPClient extends EventTarget {
 
 		// Draw the video frame to the canvas
 		const context = canvasElement.getContext('2d')
-		// Get the video aspect ratio
-		const aspectRatio = videoElement.videoWidth / videoElement.videoHeight
+		// Get the natural size of the screen video
+		const screenWidth = screenVideoElement.videoWidth
+		const screenHeight = screenVideoElement.videoHeight
 
-		// Set the canvas size based on the video aspect ratio
-		if (aspectRatio > 1) {
-			// Landscape mode
-			canvasElement.width = Math.max(videoElement.videoWidth, 1920)
-			canvasElement.height = canvasElement.width / aspectRatio
-		} else {
-			// Portrait mode
-			canvasElement.height = Math.max(videoElement.videoHeight, 1080)
-			canvasElement.width = canvasElement.height * aspectRatio
+		// Calculate the aspect ratio of the screen video
+		const screenAspectRatio = screenWidth / screenHeight
+
+		// Calculate the new width and height based on the aspect ratio
+		let canvasWidth = canvasElement.width
+		let canvasHeight = canvasWidth / screenAspectRatio
+
+		// If the new height is greater than the canvas height, adjust the width and height to fit within the canvas height
+		if (canvasHeight > canvasElement.height) {
+			canvasHeight = canvasElement.height
+			canvasWidth = canvasHeight * screenAspectRatio
 		}
+
+		// Update the canvas width and height
+		canvasElement.width = canvasWidth
+		canvasElement.height = canvasHeight
 		const drawVideoFrame = () => {
 			if (
 				screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
 				screenVideoElement.srcObject !== null
 			) {
-				context?.drawImage(screenVideoElement, 0, 0, canvasElement.width, canvasElement.height)
+				context?.drawImage(screenVideoElement, 0, 0, canvasWidth, canvasHeight)
 			} else {
-				context?.clearRect(0, 0, canvasElement.width, canvasElement.height)
+				context?.clearRect(0, 0, canvasWidth, canvasHeight)
 			}
 
 			if (webcamVideoElement.readyState === webcamVideoElement.HAVE_ENOUGH_DATA) {
@@ -278,18 +285,6 @@ export default class WHIPClient extends EventTarget {
 
 		// Capture the stream from the canvas
 		const canvasStream = canvasElement.captureStream(60)
-
-		// Apply constraints to the video track
-		// const constraints = isScreen
-		// 	? {
-		// 			width: screenVideoElement.videoWidth,
-		// 			height: screenVideoElement.videoHeight
-		// 		}
-		// 	: {
-		// 			width: webcamVideoElement.videoWidth,
-		// 			height: webcamVideoElement.videoHeight
-		// 		}
-		// canvasStream.getVideoTracks()[0].applyConstraints(constraints)
 
 		// Clear the canvas when the stream is disconnected
 		stream.getVideoTracks()[0].addEventListener('ended', () => {
