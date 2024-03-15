@@ -234,6 +234,10 @@ export default class WHIPClient extends EventTarget {
 			) {
 				context?.drawImage(
 					screenVideoElement,
+					0,
+					0,
+					screenVideoElement.videoWidth,
+					screenVideoElement.videoHeight,
 					videoDimensions.posX,
 					videoDimensions.posY,
 					videoDimensions.width,
