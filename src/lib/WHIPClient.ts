@@ -205,35 +205,25 @@ export default class WHIPClient extends EventTarget {
 
 		// Draw the video frame to the canvas
 		const context = canvasElement.getContext('2d')
+		// if (
+		// 	screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA ||
+		// 	webcamVideoElement.readyState === webcamVideoElement.HAVE_ENOUGH_DATA
+		// ) {
 		canvasElement.width = 1920
 		canvasElement.height = 1080
+		// }
 		const drawVideoFrame = () => {
 			if (
 				screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
 				screenVideoElement.srcObject !== null
 			) {
-				// Get the video resolution from the stream
-				const videoWidth = screenVideoElement.videoWidth
-				const videoHeight = screenVideoElement.videoHeight
-
-				const canvasWidth = canvasElement.width
-				const canvasHeight = canvasElement.height
-
-				// Calculate scale factors
-				const scaleWidth = canvasWidth / videoWidth
-				const scaleHeight = canvasHeight / videoHeight
-
-				// Use the smaller scale factor
-				const scale = Math.min(scaleWidth, scaleHeight)
-
-				const scaledWidth = videoWidth * scale
-				const scaledHeight = videoHeight * scale
-
-				// Calculate the position to center the image
-				const posX = (canvasWidth - scaledWidth) / 2
-				const posY = (canvasHeight - scaledHeight) / 2
-
-				context?.drawImage(screenVideoElement, posX, posY, scaledWidth, scaledHeight)
+				context?.drawImage(
+					screenVideoElement,
+					0,
+					0,
+					screenVideoElement.width,
+					screenVideoElement.height
+				)
 			} else {
 				context?.clearRect(0, 0, canvasElement.width, canvasElement.height)
 			}
@@ -287,7 +277,7 @@ export default class WHIPClient extends EventTarget {
 		drawVideoFrame()
 
 		// Capture the stream from the canvas
-		const canvasStream = canvasElement.captureStream(60)
+		const canvasStream = canvasElement.captureStream(30)
 
 		// Clear the canvas when the stream is disconnected
 		stream.getVideoTracks()[0].addEventListener('ended', () => {
