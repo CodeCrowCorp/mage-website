@@ -205,34 +205,36 @@ export default class WHIPClient extends EventTarget {
 
 		// Draw the video frame to the canvas
 		const context = canvasElement.getContext('2d')
-		// Get the natural size of the screen video
-		const screenWidth = screenVideoElement.videoWidth
-		const screenHeight = screenVideoElement.videoHeight
-
-		// Calculate the aspect ratio of the screen video
-		const screenAspectRatio = screenWidth / screenHeight
-
-		// Calculate the new width and height based on the aspect ratio
-		let canvasWidth = canvasElement.width
-		let canvasHeight = canvasWidth / screenAspectRatio
-
-		// If the new height is greater than the canvas height, adjust the width and height to fit within the canvas height
-		if (canvasHeight > canvasElement.height) {
-			canvasHeight = canvasElement.height
-			canvasWidth = canvasHeight * screenAspectRatio
-		}
-
-		// Update the canvas width and height
-		canvasElement.width = canvasWidth
-		canvasElement.height = canvasHeight
+		canvasElement.width = 1920
+		canvasElement.height = 1080
 		const drawVideoFrame = () => {
 			if (
 				screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
 				screenVideoElement.srcObject !== null
 			) {
-				context?.drawImage(screenVideoElement, 0, 0, canvasWidth, canvasHeight)
+				// Get the natural size of the screen video
+				let width = screenVideoElement.videoWidth
+				let height = screenVideoElement.videoHeight
+
+				// Calculate the aspect ratio of the screen video
+				const aspectRatio = width / height
+
+				// Calculate the new width and height based on the aspect ratio
+				if (canvasElement.width / aspectRatio <= canvasElement.height) {
+					width = canvasElement.width
+					height = canvasElement.width / aspectRatio
+				} else {
+					width = canvasElement.height * aspectRatio
+					height = canvasElement.height
+				}
+
+				// Center the screen video on the canvas
+				const x = (canvasElement.width - width) / 2
+				const y = (canvasElement.height - height) / 2
+
+				context?.drawImage(screenVideoElement, x, y, width, height)
 			} else {
-				context?.clearRect(0, 0, canvasWidth, canvasHeight)
+				context?.clearRect(0, 0, canvasElement.width, canvasElement.height)
 			}
 
 			if (webcamVideoElement.readyState === webcamVideoElement.HAVE_ENOUGH_DATA) {
