@@ -202,16 +202,31 @@ export default class WHIPClient extends EventTarget {
 		const videoElement = isScreen ? screenVideoElement : webcamVideoElement
 		videoElement.srcObject = stream
 		videoElement.play()
+		let videoDimensions = { width: 1920, height: 1080, posX: 0, posY: 0 }
 
 		// Draw the video frame to the canvas
 		const context = canvasElement.getContext('2d')
-		// if (
-		// 	screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA ||
-		// 	webcamVideoElement.readyState === webcamVideoElement.HAVE_ENOUGH_DATA
-		// ) {
-		canvasElement.width = 1920
-		canvasElement.height = 1080
-		// }
+		if (isScreen && screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA) {
+			// Get the video's aspect ratio
+			const videoAspectRatio = screenVideoElement.videoWidth / screenVideoElement.videoHeight
+
+			// Calculate the new width and height for the video that maintains the aspect ratio
+			let newVideoWidth = canvasElement.width
+			let newVideoHeight = newVideoWidth / videoAspectRatio
+
+			// If the new height is greater than the canvas height, adjust the width instead
+			if (newVideoHeight > canvasElement.height) {
+				newVideoHeight = canvasElement.height
+				newVideoWidth = newVideoHeight * videoAspectRatio
+			}
+
+			// Calculate the position to center the video on the canvas
+			const posX = (canvasElement.width - newVideoWidth) / 2
+			const posY = (canvasElement.height - newVideoHeight) / 2
+
+			// Update the stored video dimensions
+			videoDimensions = { width: newVideoWidth, height: newVideoHeight, posX, posY }
+		}
 		const drawVideoFrame = () => {
 			if (
 				screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
@@ -219,10 +234,10 @@ export default class WHIPClient extends EventTarget {
 			) {
 				context?.drawImage(
 					screenVideoElement,
-					0,
-					0,
-					screenVideoElement.width,
-					screenVideoElement.height
+					videoDimensions.posX,
+					videoDimensions.posY,
+					videoDimensions.width,
+					videoDimensions.height
 				)
 			} else {
 				context?.clearRect(0, 0, canvasElement.width, canvasElement.height)
