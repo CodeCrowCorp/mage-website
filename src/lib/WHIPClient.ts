@@ -212,12 +212,12 @@ export default class WHIPClient extends EventTarget {
 
 			// Calculate the new width and height for the video that maintains the aspect ratio
 			let newVideoWidth = canvasElement.width
-			let newVideoHeight = newVideoWidth / videoAspectRatio
+			let newVideoHeight = newVideoWidth * videoAspectRatio
 
 			// If the new height is greater than the canvas height, adjust the width instead
 			if (newVideoHeight > canvasElement.height) {
 				newVideoHeight = canvasElement.height
-				newVideoWidth = newVideoHeight * videoAspectRatio
+				newVideoWidth = newVideoHeight / videoAspectRatio
 			}
 
 			// Calculate the position to center the video on the canvas
