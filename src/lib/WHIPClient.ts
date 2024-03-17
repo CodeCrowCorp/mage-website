@@ -268,16 +268,39 @@ export default class WHIPClient extends EventTarget {
 		}
 		// drawVideoFrame()
 
-		const intervalId = setInterval(drawVideoFrame, 1000 / 60) // 30 FPS
+		let intervalId: number | null = null
+		const drawVideoFrameWithVisibilityCheck = () => {
+			if (document.hidden) {
+				if (intervalId !== null) {
+					clearInterval(intervalId)
+					intervalId = null
+				}
+			} else {
+				if (intervalId === null) {
+					intervalId = window.setInterval(drawVideoFrame, 1000 / 60) as unknown as number // 60 FPS
+				}
+			}
+		}
+
+		// Listen for visibility change events
+		document.addEventListener('visibilitychange', drawVideoFrameWithVisibilityCheck)
 
 		// Capture the stream from the canvas
 		const canvasStream = canvasElement.captureStream(60)
 
-		// Clear the canvas when the stream is disconnected
+		// Clear the canvas and stop the interval when the stream is disconnected
 		stream.getVideoTracks()[0].addEventListener('ended', () => {
 			context?.clearRect(0, 0, canvasElement.width, canvasElement.height)
-			clearInterval(intervalId) // Stop the interval
+			if (intervalId !== null) {
+				clearInterval(intervalId)
+			}
+			// Remove the visibility change event listener
+			document.removeEventListener('visibilitychange', drawVideoFrameWithVisibilityCheck)
 		})
+
+		// Start the drawing loop
+		drawVideoFrameWithVisibilityCheck()
+
 		return canvasStream
 	}
 
