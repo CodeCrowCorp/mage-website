@@ -202,11 +202,14 @@ export default class WHIPClient extends EventTarget {
 		const videoElement = isScreen ? screenVideoElement : webcamVideoElement
 		videoElement.srcObject = stream
 		videoElement.play()
-
+		canvasElement.width = 1920
+		canvasElement.height = 1080
 		// Draw the video frame to the canvas
 		const context = canvasElement.getContext('2d')
-		canvasElement.width = isScreen ? videoElement.videoWidth : 1920
-		canvasElement.height = isScreen ? videoElement.videoHeight : 1080
+		if (isScreen && screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA) {
+			canvasElement.width = screenVideoElement.videoWidth
+			canvasElement.height = screenVideoElement.videoHeight
+		}
 		const drawVideoFrame = () => {
 			if (
 				screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
