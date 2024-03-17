@@ -261,16 +261,19 @@ export default class WHIPClient extends EventTarget {
 				context?.drawImage(webcamVideoElement, x, y, width, height)
 			}
 
-			requestAnimationFrame(drawVideoFrame)
+			// requestAnimationFrame(drawVideoFrame)
 		}
-		drawVideoFrame()
+		// drawVideoFrame()
+
+		const intervalId = setInterval(drawVideoFrame, 1000 / 60) // 30 FPS
 
 		// Capture the stream from the canvas
-		const canvasStream = canvasElement.captureStream(30)
+		const canvasStream = canvasElement.captureStream(60)
 
 		// Clear the canvas when the stream is disconnected
 		stream.getVideoTracks()[0].addEventListener('ended', () => {
 			context?.clearRect(0, 0, canvasElement.width, canvasElement.height)
+			clearInterval(intervalId) // Stop the interval
 		})
 		return canvasStream
 	}
