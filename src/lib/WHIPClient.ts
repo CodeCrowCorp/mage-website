@@ -198,46 +198,21 @@ export default class WHIPClient extends EventTarget {
 		webcamContainerElement: HTMLDivElement,
 		isScreen: boolean
 	): Promise<MediaStream> {
-		// Create an offscreen canvas
-		const offscreenCanvas = document.createElement('canvas')
-		offscreenCanvas.width = canvasElement.width
-		offscreenCanvas.height = canvasElement.height
-		const offscreenContext = offscreenCanvas.getContext('2d')
-
 		// Determine which stream is being added
 		const videoElement = isScreen ? screenVideoElement : webcamVideoElement
 		videoElement.srcObject = stream
 		videoElement.play()
-		await new Promise((resolve) => videoElement.addEventListener('loadedmetadata', resolve))
 
-		// Update the offscreen canvas whenever a new frame is available
-		videoElement.addEventListener('play', () => {
-			const drawToOffscreenCanvas = () => {
-				if (videoElement.paused || videoElement.ended) {
-					return
-				}
-				offscreenContext?.drawImage(
-					videoElement,
-					0,
-					0,
-					offscreenCanvas.width,
-					offscreenCanvas.height
-				)
-				requestAnimationFrame(drawToOffscreenCanvas)
-			}
-			requestAnimationFrame(drawToOffscreenCanvas)
-		})
-
-		canvasElement.width = isScreen ? videoElement.videoWidth : 1920
-		canvasElement.height = isScreen ? videoElement.videoHeight : 1080
 		// Draw the video frame to the canvas
 		const context = canvasElement.getContext('2d')
+		canvasElement.width = isScreen ? videoElement.videoWidth : 1920
+		canvasElement.height = isScreen ? videoElement.videoHeight : 1080
 		const drawVideoFrame = () => {
 			if (
 				screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
 				screenVideoElement.srcObject !== null
 			) {
-				context?.drawImage(offscreenCanvas, 0, 0, canvasElement.width, canvasElement.height)
+				context?.drawImage(screenVideoElement, 0, 0, canvasElement.width, canvasElement.height)
 			} else {
 				context?.clearRect(0, 0, canvasElement.width, canvasElement.height)
 			}
