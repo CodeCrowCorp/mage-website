@@ -14,6 +14,21 @@ const initChannelSocket = ({ websocketId }: { websocketId: string }) => {
 	return new WebSocket(`${env.PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${websocketId}/connect`)
 }
 
+const emitChannelPing = ({
+	channelSocket,
+	channelId
+}: {
+	channelSocket: WebSocket
+	channelId: string
+}) => {
+	channelSocket.send(
+		JSON.stringify({
+			eventName: `channel-ping`,
+			channelId
+		})
+	)
+}
+
 const emitChannelUpdate = ({
 	channelSocket,
 	channel,
@@ -201,12 +216,13 @@ const emitGetSponsors = ({
 }
 
 export {
-	emitPlatformCount,
 	// initPlatformSocket,
 	// emitUserConnection,
 	initChannelSocket,
+	emitChannelPing,
 	emitChannelUpdate,
 	emitChannelSubscribeByUser,
+	emitPlatformCount,
 	emitMessageToChannel,
 	emitReactToMessage,
 	emitDeleteMessageToChannel,
