@@ -205,7 +205,7 @@ export default class WHIPClient extends EventTarget {
 			// Determine which stream is being added
 			const videoElement = isScreen ? screenVideoElement : webcamVideoElement
 			videoElement.srcObject = stream
-			await videoElement.play().catch((error) => console.log('Error auto-playing video: ', error))
+			videoElement.play()
 			// Draw the video frame to the canvas
 			const offscreen = canvasElement.transferControlToOffscreen()
 			offscreen.width = 1920
@@ -220,7 +220,6 @@ export default class WHIPClient extends EventTarget {
 
 			// Capture the stream from the canvas
 			const canvasStream = canvasElement.captureStream(30)
-			console.log('Captured stream:', stream)
 
 			// Clear the canvas when the stream is disconnected
 			stream.getVideoTracks()[0].addEventListener('ended', () => {
