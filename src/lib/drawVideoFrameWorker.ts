@@ -1,4 +1,13 @@
-interface WorkerData {
+interface InitData {
+	command: 'init'
+	canvas: OffscreenCanvas
+}
+
+interface ClearData {
+	command: 'clear'
+}
+
+interface DrawData {
 	canvas: OffscreenCanvas
 	bitmap: ImageBitmap
 	x: number
@@ -6,16 +15,23 @@ interface WorkerData {
 	width: number
 	height: number
 }
+
+type WorkerData = InitData | ClearData | DrawData
+
 let canvas: OffscreenCanvas | null = null
 
-self.onmessage = (event: { data: WorkerData | { command: string } }) => {
-	if ('command' in event.data && event.data.command === 'clear') {
+self.onmessage = (event: { data: WorkerData }) => {
+	if ('command' in event.data) {
+		if (event.data.command === 'init') {
+			// Receive the OffscreenCanvas
+			canvas = event.data.canvas
+		} else if (event.data.command === 'clear') {
+			const context = canvas?.getContext('2d')
+			context?.clearRect(0, 0, canvas?.width || 0, canvas?.height || 0)
+		}
+	} else {
+		const { bitmap, x, y, width, height } = event.data as DrawData
 		const context = canvas?.getContext('2d')
-		context?.clearRect(0, 0, canvas?.width || 0, canvas?.height || 0)
-	} else if ('canvas' in event.data) {
-		const { canvas: canvasData, bitmap, x, y, width, height } = event.data as WorkerData
-		canvas = canvasData
-		const context = canvas.getContext('2d')
 
 		// Perform the drawVideoFrame operation
 		context?.drawImage(bitmap, x, y, width, height)
