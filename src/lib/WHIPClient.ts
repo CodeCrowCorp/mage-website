@@ -208,7 +208,6 @@ export default class WHIPClient extends EventTarget {
 		canvasElement.height = 1080
 		// Draw the video frame to the canvas
 		const offscreen = canvasElement.transferControlToOffscreen()
-		const context = offscreen.getContext('2d')
 		offscreen.width = 1920
 		offscreen.height = 1080
 		if (isScreen && screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA) {
@@ -234,7 +233,8 @@ export default class WHIPClient extends EventTarget {
 					[offscreen, bitmap]
 				)
 			} else {
-				context?.clearRect(0, 0, offscreen.width, offscreen.height)
+				// Send a message to the worker to clear the OffscreenCanvas
+				worker.postMessage({ command: 'clear' })
 			}
 
 			if (webcamVideoElement.readyState === webcamVideoElement.HAVE_ENOUGH_DATA) {
@@ -295,16 +295,13 @@ export default class WHIPClient extends EventTarget {
 			requestAnimationFrame(drawVideoFrame)
 		}
 		drawVideoFrame()
-		worker.onmessage = (event) => {
-			// Apply the result to the canvas
-			context?.drawImage(event.data, 0, 0)
-		}
 		// Capture the stream from the canvas
 		const canvasStream = canvasElement.captureStream(30)
 
 		// Clear the canvas when the stream is disconnected
 		stream.getVideoTracks()[0].addEventListener('ended', () => {
-			context?.clearRect(0, 0, canvasElement.width, canvasElement.height)
+			// Send a message to the worker to clear the OffscreenCanvas
+			worker.postMessage({ command: 'clear' })
 		})
 		return canvasStream
 	}
