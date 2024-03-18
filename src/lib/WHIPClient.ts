@@ -1,5 +1,6 @@
 import negotiateConnectionWithClientOffer from '$lib/negotiateConnectionWithClientOffer'
 import { getAudioIndicator } from '$lib/utils'
+import { FFmpeg } from '@ffmpeg/ffmpeg'
 
 /**
  * Example implementation of a client that uses WHIP to broadcast video over WebRTC
@@ -11,7 +12,7 @@ export default class WHIPClient extends EventTarget {
 	private localScreenStream?: MediaStream
 	private localWebcamStream?: MediaStream
 	private localAudioStream?: MediaStream
-	private offscreen: OffscreenCanvas | null = null
+	private localWebrtcStream?: MediaStream
 
 	constructor(private endpoint: string) {
 		super()
@@ -49,7 +50,6 @@ export default class WHIPClient extends EventTarget {
 	 * https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
 	 */
 	public async accessLocalScreenMediaSources(
-		canvasElement: HTMLCanvasElement,
 		screenElement: HTMLVideoElement,
 		webcamElement: HTMLVideoElement,
 		webcamContainerElement: HTMLDivElement
@@ -78,17 +78,16 @@ export default class WHIPClient extends EventTarget {
 					this.peerConnection.addTransceiver(audioTrack, {
 						direction: 'sendonly'
 					})
-					// Add the stream to the canvas and get the canvas stream
-					const canvasStream = await this.addStreamToCanvas(
+					// Add the stream to the media and get the combined stream
+					await this.addStreamToMedia(
 						stream,
-						canvasElement,
 						screenElement,
 						webcamElement,
 						webcamContainerElement,
 						true
 					)
-					// Add the canvas stream's tracks to the peer connection
-					canvasStream.getTracks().forEach((track) => {
+					// Add the media stream's tracks to the peer connection
+					this.localWebrtcStream?.getTracks().forEach((track) => {
 						this.peerConnection.addTransceiver(track, {
 							direction: 'sendonly'
 						})
@@ -110,7 +109,6 @@ export default class WHIPClient extends EventTarget {
 	}
 
 	public async accessLocalWebcamMediaSources(
-		canvasElement: HTMLCanvasElement,
 		screenElement: HTMLVideoElement,
 		webcamElement: HTMLVideoElement,
 		webcamContainerElement: HTMLDivElement
@@ -135,17 +133,16 @@ export default class WHIPClient extends EventTarget {
 					this.peerConnection.addTransceiver(audioTrack, {
 						direction: 'sendonly'
 					})
-					// Add the stream to the canvas and get the canvas stream
-					const canvasStream = await this.addStreamToCanvas(
+					// Add the stream to the media and get the combined stream
+					await this.addStreamToMedia(
 						stream,
-						canvasElement,
 						screenElement,
 						webcamElement,
 						webcamContainerElement,
 						false
 					)
-					// Add the canvas stream's tracks to the peer connection
-					canvasStream.getTracks().forEach((track) => {
+					// Add the media stream's tracks to the peer connection
+					this.localWebrtcStream?.getTracks().forEach((track) => {
 						this.peerConnection.addTransceiver(track, {
 							direction: 'sendonly'
 						})
@@ -193,149 +190,75 @@ export default class WHIPClient extends EventTarget {
 		}
 	}
 
-	private async addStreamToCanvas(
+	private async addStreamToMedia(
 		stream: MediaStream,
-		canvasElement: HTMLCanvasElement,
 		screenVideoElement: HTMLVideoElement,
 		webcamVideoElement: HTMLVideoElement,
 		webcamContainerElement: HTMLDivElement,
 		isScreen: boolean
-	): Promise<MediaStream> {
+	) {
 		try {
+			// Initialize localWebrtcStream if it's null
+			if (!this.localWebrtcStream) {
+				this.localWebrtcStream = new MediaStream()
+			}
+
 			// Determine which stream is being added
 			const videoElement = isScreen ? screenVideoElement : webcamVideoElement
 			videoElement.srcObject = stream
 			videoElement.play()
-			// If the OffscreenCanvas doesn't exist, create it
-			if (!this.offscreen) {
-				this.offscreen = canvasElement.transferControlToOffscreen()
-			}
-			// Set the dimensions of the OffscreenCanvas
-			this.offscreen.width = 1920
-			this.offscreen.height = 1080
-			if (isScreen && screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA) {
-				this.offscreen.width = screenVideoElement.videoWidth
-				this.offscreen.height = screenVideoElement.videoHeight
-			}
-			const worker = new Worker(new URL('./drawVideoFrameWorker.ts', import.meta.url))
-			// Transfer the OffscreenCanvas to the worker
-			worker.postMessage({ command: 'init', canvas: this.offscreen }, [this.offscreen])
 
-			// Capture the stream from the canvas
-			const canvasStream = canvasElement.captureStream(30)
-
-			// Clear the canvas when the stream is disconnected
-			stream.getVideoTracks()[0].addEventListener('ended', () => {
-				// Send a message to the worker to clear the OffscreenCanvas
-				worker.postMessage({ command: 'clear' })
-				worker.postMessage({ command: 'stop' })
+			// Add 'ended' event listener to the stream's tracks
+			stream.getTracks().forEach((track) => {
+				if (!track.onended) {
+					track.onended = () => {
+						// Rerun the logic for adding a single or multiple streams to the combined stream
+						this.addStreamToMedia(
+							stream,
+							screenVideoElement,
+							webcamVideoElement,
+							webcamContainerElement,
+							isScreen
+						)
+					}
+				}
 			})
 
-			const drawVideoFrame = async () => {
-				try {
-					if (
-						screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
-						screenVideoElement.srcObject !== null &&
-						this.offscreen
-					) {
-						const offscreen = new OffscreenCanvas(
-							screenVideoElement.videoWidth,
-							screenVideoElement.videoHeight
-						)
-						const offscreenCanvasCtx: any = offscreen.getContext('bitmaprenderer')
-						if (offscreenCanvasCtx) {
-							const bitmap = await createImageBitmap(screenVideoElement)
-							offscreenCanvasCtx.transferFromImageBitmap(bitmap)
-							const transferCanvas = new OffscreenCanvas(
-								screenVideoElement.videoWidth,
-								screenVideoElement.videoHeight
-							)
-							const transferCtx = transferCanvas.getContext('2d')
-							if (transferCtx) {
-								transferCtx.drawImage(offscreen, 0, 0)
-							}
-							worker.postMessage(
-								{
-									x: 0,
-									y: 0,
-									width: transferCanvas.width,
-									height: transferCanvas.height
-								},
-								[transferCanvas]
-							)
-						}
-					} else {
-						// Send a message to the worker to clear the OffscreenCanvas
-						worker.postMessage({ command: 'clear' })
-					}
-
-					if (
-						webcamVideoElement.readyState === webcamVideoElement.HAVE_ENOUGH_DATA &&
-						this.offscreen
-					) {
-						// Get the position of the webcamContainerElement relative to the viewport
-						const rect = webcamContainerElement.getBoundingClientRect()
-
-						// Get the position of the canvas relative to the viewport
-						const canvasRect = canvasElement.getBoundingClientRect()
-
-						// Calculate the position of the webcamContainerElement relative to the canvas
-						let x = rect.left - canvasRect.left
-						let y = rect.top - canvasRect.top
-
-						// Get the natural size of the webcam video
-						let width = webcamVideoElement.videoWidth
-						let height = webcamVideoElement.videoHeight
-
-						// If screen is not being shared, make the webcam the size of the canvas
-						if (screenVideoElement.srcObject === null) {
-							// Calculate the aspect ratio of the webcam video
-							const aspectRatio = webcamVideoElement.videoWidth / webcamVideoElement.videoHeight
-
-							// Calculate the new width and height based on the aspect ratio
-							if (this.offscreen.width / aspectRatio <= this.offscreen.height) {
-								width = this.offscreen.width
-								height = this.offscreen.width / aspectRatio
-							} else {
-								width = this.offscreen.height * aspectRatio
-								height = this.offscreen.height
-							}
-
-							// Center the webcam video on the canvas
-							x = (this.offscreen.width - width) / 2
-							y = (this.offscreen.height - height) / 2
-						}
-
-						// Check if the webcam video is outside the canvas boundaries and adjust the position if necessary
-						if (x < 0) x = 0
-						if (y < 0) y = 0
-						if (x + width > this.offscreen.width) x = this.offscreen.width - width
-						if (y + height > this.offscreen.height) y = this.offscreen.height - height
-
-						// Draw the webcam video at the updated position and with its natural size
-						const webcamBitmap = await createImageBitmap(webcamVideoElement)
-						worker.postMessage(
-							{
-								bitmap: webcamBitmap,
-								x,
-								y,
-								width,
-								height
-							},
-							[webcamBitmap] // Only transfer the bitmap
-						)
-					}
-
-					requestAnimationFrame(drawVideoFrame)
-				} catch (error) {
-					console.log('Error in drawVideoFrame: ', error)
+			// Check if there is only one stream
+			if (
+				(isScreen && !(webcamVideoElement?.srcObject instanceof MediaStream)) ||
+				(!isScreen && !(screenVideoElement?.srcObject instanceof MediaStream))
+			) {
+				stream.getTracks().forEach((track) => {
+					this.localWebrtcStream?.addTrack(track)
+				})
+			} else if (
+				screenVideoElement?.srcObject instanceof MediaStream &&
+				webcamVideoElement?.srcObject instanceof MediaStream
+			) {
+				// If there are two streams, add the screen stream to the localWebrtcStream
+				if (isScreen) {
+					stream.getTracks().forEach((track) => {
+						this.localWebrtcStream?.addTrack(track)
+					})
 				}
-			}
-			drawVideoFrame()
 
-			return canvasStream
+				// Use ffmpeg.wasm to add the webcam stream to the bottom right corner of the screen stream at 25% of the screen size
+				// Note: This is a placeholder. You'll need to replace this with the actual ffmpeg.wasm code.
+				const ffmpeg = new FFmpeg()
+				ffmpeg.load()
+				ffmpeg.exec([
+					'-i',
+					'screenVideoElement.srcObject',
+					'-i',
+					'webcamVideoElement.srcObject',
+					'-filter_complex',
+					'[1]scale=iw/4:ih/4 [pip]; [0][pip] overlay=W-w-10:H-h-10',
+					'output.mp4'
+				])
+			}
 		} catch (error) {
-			console.log('got here----addStreamToCanvas error', error)
+			console.log('got here----addStreamToMedia error', error)
 			return new MediaStream()
 		}
 	}
