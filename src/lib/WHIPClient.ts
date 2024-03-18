@@ -238,7 +238,11 @@ export default class WHIPClient extends EventTarget {
 						screenVideoElement.srcObject !== null &&
 						this.offscreen
 					) {
-						const offscreenCanvasCtx: any = this.offscreen.getContext('bitmaprenderer')
+						const offscreen = new OffscreenCanvas(
+							screenVideoElement.videoWidth,
+							screenVideoElement.videoHeight
+						)
+						const offscreenCanvasCtx: any = offscreen.getContext('bitmaprenderer')
 						if (offscreenCanvasCtx) {
 							const bitmap = await createImageBitmap(screenVideoElement)
 							offscreenCanvasCtx.transferFromImageBitmap(bitmap)
@@ -246,10 +250,10 @@ export default class WHIPClient extends EventTarget {
 								{
 									x: 0,
 									y: 0,
-									width: this.offscreen.width,
-									height: this.offscreen.height
+									width: offscreen.width,
+									height: offscreen.height
 								},
-								[this.offscreen]
+								[offscreen]
 							)
 						}
 					} else {
