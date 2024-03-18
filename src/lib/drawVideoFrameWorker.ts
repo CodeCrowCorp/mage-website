@@ -7,6 +7,10 @@ interface ClearData {
 	command: 'clear'
 }
 
+interface StopData {
+	command: 'stop'
+}
+
 interface DrawData {
 	canvas: OffscreenCanvas
 	bitmap: ImageBitmap
@@ -16,7 +20,7 @@ interface DrawData {
 	height: number
 }
 
-type WorkerData = InitData | ClearData | DrawData
+type WorkerData = InitData | ClearData | DrawData | StopData
 
 let canvas: OffscreenCanvas | null = null
 
@@ -24,13 +28,14 @@ self.onmessage = (event: { data: WorkerData }) => {
 	try {
 		if ('command' in event.data) {
 			if (event.data.command === 'init') {
-				console.log('got here----command-init')
 				// Receive the OffscreenCanvas
 				canvas = event.data.canvas
 			} else if (event.data.command === 'clear') {
-				console.log('got here----command-clear')
 				const context = canvas?.getContext('2d')
 				context?.clearRect(0, 0, canvas?.width || 0, canvas?.height || 0)
+			} else if (event.data.command === 'stop') {
+				// Stop the worker
+				self.close()
 			}
 		} else {
 			const { bitmap, x, y, width, height } = event.data as DrawData
