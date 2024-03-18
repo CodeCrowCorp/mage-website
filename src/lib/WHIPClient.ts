@@ -98,10 +98,12 @@ export default class WHIPClient extends EventTarget {
 					}
 					this.localScreenStream = stream
 				})
-				.catch(() => {
+				.catch((err) => {
+					console.error('err--------1', err)
 					this.disconnectStreamScreen()
 				})
-		} catch (error) {
+		} catch (err) {
+			console.error('err--------2', err)
 			this.disconnectStreamScreen()
 		}
 	}
