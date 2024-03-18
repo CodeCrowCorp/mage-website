@@ -13,7 +13,11 @@ interface StopData {
 
 interface DrawData {
 	canvas: OffscreenCanvas
-	screenVideoElement: HTMLVideoElement
+	bitmap: ImageBitmap
+	x: number
+	y: number
+	width: number
+	height: number
 }
 
 type WorkerData = InitData | ClearData | DrawData | StopData
@@ -34,11 +38,11 @@ self.onmessage = (event: { data: WorkerData }) => {
 				self.close()
 			}
 		} else {
-			const { screenVideoElement } = event.data as DrawData
+			const { bitmap, x, y, width, height } = event.data as DrawData
 			const context = canvas?.getContext('2d')
 
 			// Perform the drawVideoFrame operation
-			context?.drawImage(screenVideoElement, 0, 0, canvas?.width || 1920, canvas?.height || 1080)
+			context?.drawImage(bitmap, x, y, width, height)
 			console.log('self.onmessage')
 
 			// Do not post the OffscreenCanvas back to the main thread

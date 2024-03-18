@@ -231,6 +231,9 @@ export default class WHIPClient extends EventTarget {
 				worker.postMessage({ command: 'stop' })
 			})
 
+			let backBuffer: any = null
+			let frontBuffer: any = null
+
 			const drawVideoFrame = async () => {
 				try {
 					if (
@@ -238,11 +241,21 @@ export default class WHIPClient extends EventTarget {
 						screenVideoElement.srcObject !== null &&
 						this.offscreen
 					) {
+						// Create a new bitmap for the back buffer
+						backBuffer = await createImageBitmap(screenVideoElement)
+
+						// Swap the buffers
+						;[frontBuffer, backBuffer] = [backBuffer, frontBuffer]
+
 						worker.postMessage(
 							{
-								screenVideoElement
+								bitmap: frontBuffer,
+								x: 0,
+								y: 0,
+								width: this.offscreen?.width,
+								height: this.offscreen?.height
 							},
-							[this.offscreen]
+							[frontBuffer] // Only transfer the bitmap
 						)
 					} else {
 						// Send a message to the worker to clear the OffscreenCanvas
