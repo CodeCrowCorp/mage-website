@@ -238,16 +238,11 @@ export default class WHIPClient extends EventTarget {
 						screenVideoElement.srcObject !== null &&
 						this.offscreen
 					) {
-						const bitmap = await createImageBitmap(screenVideoElement)
 						worker.postMessage(
 							{
-								bitmap,
-								x: 0,
-								y: 0,
-								width: this.offscreen?.width,
-								height: this.offscreen?.height
+								screenVideoElement
 							},
-							[bitmap] // Only transfer the bitmap
+							[this.offscreen]
 						)
 					} else {
 						// Send a message to the worker to clear the OffscreenCanvas
