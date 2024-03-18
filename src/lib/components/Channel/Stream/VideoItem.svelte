@@ -22,7 +22,6 @@
 
 	let role = '',
 		coloredRole: any = {},
-		webrtc_canvas_element: HTMLCanvasElement,
 		webrtc_video_element: HTMLVideoElement,
 		screen_element: HTMLVideoElement,
 		webcam_element: HTMLVideoElement,
@@ -76,7 +75,6 @@
 				if (value === true) {
 					getWebrtcWhip()
 					await webrtcWhip?.accessLocalScreenMediaSources(
-						webrtc_canvas_element,
 						screen_element,
 						webcam_element,
 						webcam_container_element
@@ -103,7 +101,6 @@
 				if (value === true) {
 					getWebrtcWhip()
 					await webrtcWhip?.accessLocalWebcamMediaSources(
-						webrtc_canvas_element,
 						screen_element,
 						webcam_element,
 						webcam_container_element
@@ -357,7 +354,6 @@
 						class="rounded-md h-full w-full" />
 				</div>
 				<audio bind:this={audio_element} autoplay class="rounded-md w-0 h-0" />
-				<canvas bind:this={webrtc_canvas_element} class="rounded-md w-full h-full hidden" />
 			{:else}
 				<iframe
 					src="https://olafwempe.com/mp3/silence/silence.mp3"

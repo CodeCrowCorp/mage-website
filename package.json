@@ -48,6 +48,8 @@
 	"dependencies": {
 		"@event-calendar/core": "^2.0.0",
 		"@event-calendar/time-grid": "^2.0.0",
+		"@ffmpeg/ffmpeg": "^0.12.10",
+		"@ffmpeg/util": "^0.12.1",
 		"@neodrag/svelte": "^2.0.3",
 		"@stripe/stripe-js": "^3.0.10",
 		"daisyui": "^4.7.2",
