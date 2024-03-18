@@ -204,15 +204,16 @@ export default class WHIPClient extends EventTarget {
 		const videoElement = isScreen ? screenVideoElement : webcamVideoElement
 		videoElement.srcObject = stream
 		await videoElement.play().catch((error) => console.log('Error auto-playing video: ', error))
-
+		canvasElement.width = 1920
+		canvasElement.height = 1080
 		// Draw the video frame to the canvas
 		const offscreen = canvasElement.transferControlToOffscreen()
 		const context = offscreen.getContext('2d')
 		offscreen.width = 1920
 		offscreen.height = 1080
 		if (isScreen && screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA) {
-			canvasElement.width = screenVideoElement.videoWidth
-			canvasElement.height = screenVideoElement.videoHeight
+			offscreen.width = screenVideoElement.videoWidth
+			offscreen.height = screenVideoElement.videoHeight
 		}
 		const worker = new Worker(new URL('./drawVideoFrameWorker.ts', import.meta.url))
 		const drawVideoFrame = async () => {
