@@ -11,6 +11,7 @@ export default class WHIPClient extends EventTarget {
 	private localScreenStream?: MediaStream
 	private localWebcamStream?: MediaStream
 	private localAudioStream?: MediaStream
+	private offscreen: OffscreenCanvas | null = null
 
 	constructor(private endpoint: string) {
 		super()
@@ -205,17 +206,20 @@ export default class WHIPClient extends EventTarget {
 			const videoElement = isScreen ? screenVideoElement : webcamVideoElement
 			videoElement.srcObject = stream
 			videoElement.play()
-			// Draw the video frame to the canvas
-			const offscreen = canvasElement.transferControlToOffscreen()
-			offscreen.width = 1920
-			offscreen.height = 1080
+			// If the OffscreenCanvas doesn't exist, create it
+			if (!this.offscreen) {
+				this.offscreen = canvasElement.transferControlToOffscreen()
+			}
+			// Set the dimensions of the OffscreenCanvas
+			this.offscreen.width = 1920
+			this.offscreen.height = 1080
 			if (isScreen && screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA) {
-				offscreen.width = screenVideoElement.videoWidth
-				offscreen.height = screenVideoElement.videoHeight
+				this.offscreen.width = screenVideoElement.videoWidth
+				this.offscreen.height = screenVideoElement.videoHeight
 			}
 			const worker = new Worker(new URL('./drawVideoFrameWorker.ts', import.meta.url))
 			// Transfer the OffscreenCanvas to the worker
-			worker.postMessage({ command: 'init', canvas: offscreen }, [offscreen])
+			worker.postMessage({ command: 'init', canvas: this.offscreen }, [this.offscreen])
 
 			// Capture the stream from the canvas
 			const canvasStream = canvasElement.captureStream(30)
@@ -231,7 +235,8 @@ export default class WHIPClient extends EventTarget {
 				try {
 					if (
 						screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
-						screenVideoElement.srcObject !== null
+						screenVideoElement.srcObject !== null &&
+						this.offscreen
 					) {
 						const bitmap = await createImageBitmap(screenVideoElement)
 						worker.postMessage(
@@ -239,8 +244,8 @@ export default class WHIPClient extends EventTarget {
 								bitmap,
 								x: 0,
 								y: 0,
-								width: offscreen.width,
-								height: offscreen.height
+								width: this.offscreen?.width,
+								height: this.offscreen?.height
 							},
 							[bitmap] // Only transfer the bitmap
 						)
@@ -249,7 +254,10 @@ export default class WHIPClient extends EventTarget {
 						worker.postMessage({ command: 'clear' })
 					}
 
-					if (webcamVideoElement.readyState === webcamVideoElement.HAVE_ENOUGH_DATA) {
+					if (
+						webcamVideoElement.readyState === webcamVideoElement.HAVE_ENOUGH_DATA &&
+						this.offscreen
+					) {
 						// Get the position of the webcamContainerElement relative to the viewport
 						const rect = webcamContainerElement.getBoundingClientRect()
 
@@ -270,24 +278,24 @@ export default class WHIPClient extends EventTarget {
 							const aspectRatio = webcamVideoElement.videoWidth / webcamVideoElement.videoHeight
 
 							// Calculate the new width and height based on the aspect ratio
-							if (offscreen.width / aspectRatio <= offscreen.height) {
-								width = offscreen.width
-								height = offscreen.width / aspectRatio
+							if (this.offscreen.width / aspectRatio <= this.offscreen.height) {
+								width = this.offscreen.width
+								height = this.offscreen.width / aspectRatio
 							} else {
-								width = offscreen.height * aspectRatio
-								height = offscreen.height
+								width = this.offscreen.height * aspectRatio
+								height = this.offscreen.height
 							}
 
 							// Center the webcam video on the canvas
-							x = (offscreen.width - width) / 2
-							y = (offscreen.height - height) / 2
+							x = (this.offscreen.width - width) / 2
+							y = (this.offscreen.height - height) / 2
 						}
 
 						// Check if the webcam video is outside the canvas boundaries and adjust the position if necessary
 						if (x < 0) x = 0
 						if (y < 0) y = 0
-						if (x + width > offscreen.width) x = offscreen.width - width
-						if (y + height > offscreen.height) y = offscreen.height - height
+						if (x + width > this.offscreen.width) x = this.offscreen.width - width
+						if (y + height > this.offscreen.height) y = this.offscreen.height - height
 
 						// Draw the webcam video at the updated position and with its natural size
 						const webcamBitmap = await createImageBitmap(webcamVideoElement)
