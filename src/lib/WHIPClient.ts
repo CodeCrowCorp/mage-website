@@ -246,14 +246,22 @@ export default class WHIPClient extends EventTarget {
 						if (offscreenCanvasCtx) {
 							const bitmap = await createImageBitmap(screenVideoElement)
 							offscreenCanvasCtx.transferFromImageBitmap(bitmap)
+							const transferCanvas = new OffscreenCanvas(
+								screenVideoElement.videoWidth,
+								screenVideoElement.videoHeight
+							)
+							const transferCtx = transferCanvas.getContext('2d')
+							if (transferCtx) {
+								transferCtx.drawImage(offscreen, 0, 0)
+							}
 							worker.postMessage(
 								{
 									x: 0,
 									y: 0,
-									width: offscreen.width,
-									height: offscreen.height
+									width: transferCanvas.width,
+									height: transferCanvas.height
 								},
-								[offscreen]
+								[transferCanvas]
 							)
 						}
 					} else {
