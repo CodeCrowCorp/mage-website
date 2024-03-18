@@ -215,6 +215,9 @@ export default class WHIPClient extends EventTarget {
 			offscreen.height = screenVideoElement.videoHeight
 		}
 		const worker = new Worker(new URL('./drawVideoFrameWorker.ts', import.meta.url))
+		// Transfer the OffscreenCanvas to the worker
+		worker.postMessage({ command: 'init', canvas: offscreen }, [offscreen])
+
 		const drawVideoFrame = async () => {
 			if (
 				screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
@@ -223,14 +226,13 @@ export default class WHIPClient extends EventTarget {
 				const bitmap = await createImageBitmap(screenVideoElement)
 				worker.postMessage(
 					{
-						canvas: offscreen,
 						bitmap,
 						x: 0,
 						y: 0,
 						width: offscreen.width,
 						height: offscreen.height
 					},
-					[bitmap, offscreen] // Transfer both the bitmap and the OffscreenCanvas
+					[bitmap] // Only transfer the bitmap
 				)
 			} else {
 				// Send a message to the worker to clear the OffscreenCanvas
@@ -281,14 +283,13 @@ export default class WHIPClient extends EventTarget {
 				const webcamBitmap = await createImageBitmap(webcamVideoElement)
 				worker.postMessage(
 					{
-						canvas: offscreen,
 						bitmap: webcamBitmap,
 						x,
 						y,
 						width,
 						height
 					},
-					[webcamBitmap, offscreen] // Transfer both the bitmap and the OffscreenCanvas
+					[webcamBitmap] // Only transfer the bitmap
 				)
 			}
 
