@@ -89,7 +89,7 @@ export default class WHIPClient extends EventTarget {
 					console.log('got here--canvasStream', canvasStream)
 					// Add the canvas stream's tracks to the peer connection
 					canvasStream.getTracks().forEach((track) => {
-						console.log('canvasStream.getTracks()')
+						console.log('canvasStream.getTracks()', track)
 						this.peerConnection.addTransceiver(track, {
 							direction: 'sendonly'
 						})
@@ -98,7 +98,8 @@ export default class WHIPClient extends EventTarget {
 					if (stream.getVideoTracks()[0].readyState === 'live') {
 						this.dispatchEvent(new CustomEvent(`isScreenLive`, { detail: true }))
 					}
-					this.localScreenStream = stream
+					this.localScreenStream = canvasStream
+					// this.localScreenStream = stream
 				})
 				.catch(() => {
 					this.disconnectStreamScreen()
@@ -305,6 +306,7 @@ export default class WHIPClient extends EventTarget {
 		stream.getVideoTracks()[0].addEventListener('ended', () => {
 			// Send a message to the worker to clear the OffscreenCanvas
 			worker.postMessage({ command: 'clear' })
+			worker.postMessage({ command: 'stop' })
 		})
 		return canvasStream
 	}
