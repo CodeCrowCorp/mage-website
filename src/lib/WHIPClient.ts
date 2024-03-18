@@ -230,7 +230,7 @@ export default class WHIPClient extends EventTarget {
 						width: offscreen.width,
 						height: offscreen.height
 					},
-					[offscreen, bitmap]
+					[bitmap]
 				)
 			} else {
 				// Send a message to the worker to clear the OffscreenCanvas
@@ -288,7 +288,7 @@ export default class WHIPClient extends EventTarget {
 						width,
 						height
 					},
-					[offscreen, webcamBitmap]
+					[webcamBitmap]
 				)
 			}
 
