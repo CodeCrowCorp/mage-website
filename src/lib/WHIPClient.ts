@@ -91,12 +91,12 @@ export default class WHIPClient extends EventTarget {
 						this.peerConnection.addTransceiver(track, {
 							direction: 'sendonly'
 						})
-						console.log('RTCPeerConnection transceivers:', this.peerConnection.getTransceivers())
 					})
 					stream.getVideoTracks()[0].addEventListener('ended', () => this.disconnectStreamScreen())
 					if (stream.getVideoTracks()[0].readyState === 'live') {
 						this.dispatchEvent(new CustomEvent(`isScreenLive`, { detail: true }))
 					}
+					screenElement.srcObject = canvasStream
 					this.localScreenStream = stream
 				})
 				.catch((err) => {
