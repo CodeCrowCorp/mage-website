@@ -16,6 +16,8 @@ export default async function negotiateConnectionWithClientOffer(
 ) {
 	/** https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createOffer */
 	const offer = await peerConnection.createOffer()
+	console.log('Created offer:', offer)
+
 	/** https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/setLocalDescription */
 	await peerConnection.setLocalDescription(offer)
 
@@ -37,6 +39,7 @@ export default async function negotiateConnectionWithClientOffer(
 		const response = await postSDPOffer(endpoint, ofr.sdp)
 		if (response.status === 201) {
 			const answerSDP = await response.text()
+			console.log('Created answer:', answerSDP)
 			await peerConnection.setRemoteDescription(
 				new RTCSessionDescription({ type: 'answer', sdp: answerSDP })
 			)

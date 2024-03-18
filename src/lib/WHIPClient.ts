@@ -86,13 +86,12 @@ export default class WHIPClient extends EventTarget {
 						webcamContainerElement,
 						true
 					)
-					console.log('got here--canvasStream', canvasStream)
 					// Add the canvas stream's tracks to the peer connection
 					canvasStream.getTracks().forEach((track) => {
-						console.log('canvasStream.getTracks()', track)
 						this.peerConnection.addTransceiver(track, {
 							direction: 'sendonly'
 						})
+						console.log('RTCPeerConnection transceivers:', this.peerConnection.getTransceivers())
 					})
 					stream.getVideoTracks()[0].addEventListener('ended', () => this.disconnectStreamScreen())
 					if (stream.getVideoTracks()[0].readyState === 'live') {
@@ -100,10 +99,12 @@ export default class WHIPClient extends EventTarget {
 					}
 					this.localScreenStream = stream
 				})
-				.catch(() => {
+				.catch((err) => {
+					console.log('got here----1', err)
 					this.disconnectStreamScreen()
 				})
 		} catch (err) {
+			console.log('got here----2', err)
 			this.disconnectStreamScreen()
 		}
 	}
@@ -219,6 +220,7 @@ export default class WHIPClient extends EventTarget {
 
 			// Capture the stream from the canvas
 			const canvasStream = canvasElement.captureStream(30)
+			console.log('Captured stream:', stream)
 
 			// Clear the canvas when the stream is disconnected
 			stream.getVideoTracks()[0].addEventListener('ended', () => {
