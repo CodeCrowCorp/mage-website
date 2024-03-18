@@ -210,12 +210,26 @@ export default class WHIPClient extends EventTarget {
 			canvasElement.width = screenVideoElement.videoWidth
 			canvasElement.height = screenVideoElement.videoHeight
 		}
-		const drawVideoFrame = () => {
+		const offscreen = canvasElement.transferControlToOffscreen()
+		const worker = new Worker(new URL('./drawVideoFrameWorker.ts', import.meta.url))
+
+		const drawVideoFrame = async () => {
 			if (
 				screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
 				screenVideoElement.srcObject !== null
 			) {
-				context?.drawImage(screenVideoElement, 0, 0, canvasElement.width, canvasElement.height)
+				const bitmap = await createImageBitmap(screenVideoElement)
+				worker.postMessage(
+					{
+						canvas: offscreen,
+						bitmap,
+						x: 0,
+						y: 0,
+						width: canvasElement.width,
+						height: canvasElement.height
+					},
+					[offscreen, bitmap]
+				)
 			} else {
 				context?.clearRect(0, 0, canvasElement.width, canvasElement.height)
 			}
@@ -261,46 +275,35 @@ export default class WHIPClient extends EventTarget {
 				if (y + height > canvasElement.height) y = canvasElement.height - height
 
 				// Draw the webcam video at the updated position and with its natural size
-				context?.drawImage(webcamVideoElement, x, y, width, height)
+				const webcamBitmap = await createImageBitmap(webcamVideoElement)
+				worker.postMessage(
+					{
+						canvas: offscreen,
+						bitmap: webcamBitmap,
+						x,
+						y,
+						width,
+						height
+					},
+					[offscreen, webcamBitmap]
+				)
 			}
 
-			// requestAnimationFrame(drawVideoFrame)
+			requestAnimationFrame(drawVideoFrame)
 		}
-		// drawVideoFrame()
-
-		let intervalId: number | null = null
-		const drawVideoFrameWithVisibilityCheck = () => {
-			if (document.hidden) {
-				if (intervalId !== null) {
-					clearInterval(intervalId)
-					intervalId = null
-				}
-			} else {
-				if (intervalId === null) {
-					intervalId = window.setInterval(drawVideoFrame, 1000 / 60) as unknown as number // 60 FPS
-				}
-			}
+		drawVideoFrame()
+		worker.onmessage = (event) => {
+			// Apply the result to the canvas
+			const offscreenCanvas = event.data
+			context?.drawImage(offscreenCanvas, 0, 0)
 		}
-
-		// Listen for visibility change events
-		document.addEventListener('visibilitychange', drawVideoFrameWithVisibilityCheck)
-
 		// Capture the stream from the canvas
-		const canvasStream = canvasElement.captureStream(60)
+		const canvasStream = canvasElement.captureStream(30)
 
-		// Clear the canvas and stop the interval when the stream is disconnected
+		// Clear the canvas when the stream is disconnected
 		stream.getVideoTracks()[0].addEventListener('ended', () => {
 			context?.clearRect(0, 0, canvasElement.width, canvasElement.height)
-			if (intervalId !== null) {
-				clearInterval(intervalId)
-			}
-			// Remove the visibility change event listener
-			document.removeEventListener('visibilitychange', drawVideoFrameWithVisibilityCheck)
 		})
-
-		// Start the drawing loop
-		drawVideoFrameWithVisibilityCheck()
-
 		return canvasStream
 	}
 
