@@ -44,6 +44,10 @@ self.onmessage = (event: { data: WorkerData }) => {
 			// Perform the drawVideoFrame operation
 			context?.drawImage(bitmap, x, y, width, height)
 			console.log('self.onmessage')
+
+			// Close the ImageBitmap
+			bitmap.close()
+
 			// Do not post the OffscreenCanvas back to the main thread
 			// If you need to send some information back to the main thread, send a message without the OffscreenCanvas
 			// For example, you can send a message indicating that the draw operation has been completed
