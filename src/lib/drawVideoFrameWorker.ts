@@ -36,7 +36,6 @@ self.onmessage = (event: { data: WorkerData }) => {
 			} else if (event.data.command === 'stop') {
 				// Stop the worker
 				self.close()
-				canvas = null
 			}
 		} else {
 			const { bitmap, x, y, width, height } = event.data as DrawData
