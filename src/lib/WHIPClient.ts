@@ -230,7 +230,7 @@ export default class WHIPClient extends EventTarget {
 						width: offscreen.width,
 						height: offscreen.height
 					},
-					[bitmap]
+					[bitmap, offscreen] // Transfer both the bitmap and the OffscreenCanvas
 				)
 			} else {
 				// Send a message to the worker to clear the OffscreenCanvas
@@ -288,7 +288,7 @@ export default class WHIPClient extends EventTarget {
 						width,
 						height
 					},
-					[webcamBitmap]
+					[webcamBitmap, offscreen] // Transfer both the bitmap and the OffscreenCanvas
 				)
 			}
 
