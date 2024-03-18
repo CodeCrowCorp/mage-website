@@ -201,7 +201,7 @@ export default class WHIPClient extends EventTarget {
 		// Determine which stream is being added
 		const videoElement = isScreen ? screenVideoElement : webcamVideoElement
 		videoElement.srcObject = stream
-		videoElement.play()
+		await videoElement.play().catch((error) => console.log('Error auto-playing video: ', error))
 		canvasElement.width = 1920
 		canvasElement.height = 1080
 		// Draw the video frame to the canvas
