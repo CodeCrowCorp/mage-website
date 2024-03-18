@@ -13,7 +13,6 @@ interface StopData {
 
 interface DrawData {
 	canvas: OffscreenCanvas
-	bitmap: ImageBitmap
 	x: number
 	y: number
 	width: number
@@ -23,6 +22,7 @@ interface DrawData {
 type WorkerData = InitData | ClearData | DrawData | StopData
 
 let canvas: OffscreenCanvas | null = null
+let context: OffscreenCanvasRenderingContext2D | null = null
 
 self.onmessage = (event: { data: WorkerData }) => {
 	try {
@@ -30,25 +30,27 @@ self.onmessage = (event: { data: WorkerData }) => {
 			if (event.data.command === 'init') {
 				// Receive the OffscreenCanvas
 				canvas = event.data.canvas
+				context = canvas.getContext('2d')
 			} else if (event.data.command === 'clear') {
-				const context = canvas?.getContext('2d')
 				context?.clearRect(0, 0, canvas?.width || 0, canvas?.height || 0)
 			} else if (event.data.command === 'stop') {
 				// Stop the worker
 				self.close()
 			}
 		} else {
-			const { bitmap, x, y, width, height } = event.data as DrawData
-			const context = canvas?.getContext('2d')
+			if (canvas && context) {
+				const { x, y, width, height } = event.data as DrawData
 
-			// Perform the drawVideoFrame operation
-			context?.drawImage(bitmap, x, y, width, height)
-			console.log('self.onmessage')
+				// Perform the drawVideoFrame operation
+				// The image data has already been transferred onto the OffscreenCanvas
+				context?.drawImage(canvas, x, y, width, height)
+				console.log('self.onmessage')
 
-			// Do not post the OffscreenCanvas back to the main thread
-			// If you need to send some information back to the main thread, send a message without the OffscreenCanvas
-			// For example, you can send a message indicating that the draw operation has been completed
-			self.postMessage({ status: 'drawCompleted' })
+				// Do not post the OffscreenCanvas back to the main thread
+				// If you need to send some information back to the main thread, send a message without the OffscreenCanvas
+				// For example, you can send a message indicating that the draw operation has been completed
+				self.postMessage({ status: 'drawCompleted' })
+			}
 		}
 	} catch (err) {
 		console.error(err)
