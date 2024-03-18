@@ -24,9 +24,11 @@ self.onmessage = (event: { data: WorkerData }) => {
 	try {
 		if ('command' in event.data) {
 			if (event.data.command === 'init') {
+				console.log('got here----command-init')
 				// Receive the OffscreenCanvas
 				canvas = event.data.canvas
 			} else if (event.data.command === 'clear') {
+				console.log('got here----command-clear')
 				const context = canvas?.getContext('2d')
 				context?.clearRect(0, 0, canvas?.width || 0, canvas?.height || 0)
 			}

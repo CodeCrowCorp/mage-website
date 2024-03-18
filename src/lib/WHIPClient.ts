@@ -86,8 +86,10 @@ export default class WHIPClient extends EventTarget {
 						webcamContainerElement,
 						true
 					)
+					console.log('got here--canvasStream', canvasStream)
 					// Add the canvas stream's tracks to the peer connection
 					canvasStream.getTracks().forEach((track) => {
+						console.log('canvasStream.getTracks()')
 						this.peerConnection.addTransceiver(track, {
 							direction: 'sendonly'
 						})
@@ -206,8 +208,6 @@ export default class WHIPClient extends EventTarget {
 		canvasElement.height = 1080
 		// Draw the video frame to the canvas
 		const offscreen = canvasElement.transferControlToOffscreen()
-		offscreen.width = 1920
-		offscreen.height = 1080
 		if (isScreen && screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA) {
 			offscreen.width = screenVideoElement.videoWidth
 			offscreen.height = screenVideoElement.videoHeight
@@ -217,81 +217,85 @@ export default class WHIPClient extends EventTarget {
 		worker.postMessage({ command: 'init', canvas: offscreen }, [offscreen])
 
 		const drawVideoFrame = async () => {
-			if (
-				screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
-				screenVideoElement.srcObject !== null
-			) {
-				const bitmap = await createImageBitmap(screenVideoElement)
-				worker.postMessage(
-					{
-						bitmap,
-						x: 0,
-						y: 0,
-						width: offscreen.width,
-						height: offscreen.height
-					},
-					[bitmap] // Only transfer the bitmap
-				)
-			} else {
-				// Send a message to the worker to clear the OffscreenCanvas
-				worker.postMessage({ command: 'clear' })
-			}
-
-			if (webcamVideoElement.readyState === webcamVideoElement.HAVE_ENOUGH_DATA) {
-				// Get the position of the webcamContainerElement relative to the viewport
-				const rect = webcamContainerElement.getBoundingClientRect()
-
-				// Get the position of the canvas relative to the viewport
-				const canvasRect = canvasElement.getBoundingClientRect()
-
-				// Calculate the position of the webcamContainerElement relative to the canvas
-				let x = rect.left - canvasRect.left
-				let y = rect.top - canvasRect.top
-
-				// Get the natural size of the webcam video
-				let width = webcamVideoElement.videoWidth
-				let height = webcamVideoElement.videoHeight
-
-				// If screen is not being shared, make the webcam the size of the canvas
-				if (screenVideoElement.srcObject === null) {
-					// Calculate the aspect ratio of the webcam video
-					const aspectRatio = webcamVideoElement.videoWidth / webcamVideoElement.videoHeight
-
-					// Calculate the new width and height based on the aspect ratio
-					if (canvasElement.width / aspectRatio <= canvasElement.height) {
-						width = canvasElement.width
-						height = canvasElement.width / aspectRatio
-					} else {
-						width = canvasElement.height * aspectRatio
-						height = canvasElement.height
-					}
-
-					// Center the webcam video on the canvas
-					x = (canvasElement.width - width) / 2
-					y = (canvasElement.height - height) / 2
+			try {
+				if (
+					screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
+					screenVideoElement.srcObject !== null
+				) {
+					const bitmap = await createImageBitmap(screenVideoElement)
+					worker.postMessage(
+						{
+							bitmap,
+							x: 0,
+							y: 0,
+							width: offscreen.width,
+							height: offscreen.height
+						},
+						[bitmap] // Only transfer the bitmap
+					)
+				} else {
+					// Send a message to the worker to clear the OffscreenCanvas
+					worker.postMessage({ command: 'clear' })
 				}
 
-				// Check if the webcam video is outside the canvas boundaries and adjust the position if necessary
-				if (x < 0) x = 0
-				if (y < 0) y = 0
-				if (x + width > canvasElement.width) x = canvasElement.width - width
-				if (y + height > canvasElement.height) y = canvasElement.height - height
+				if (webcamVideoElement.readyState === webcamVideoElement.HAVE_ENOUGH_DATA) {
+					// Get the position of the webcamContainerElement relative to the viewport
+					const rect = webcamContainerElement.getBoundingClientRect()
 
-				// Draw the webcam video at the updated position and with its natural size
-				const webcamBitmap = await createImageBitmap(webcamVideoElement)
-				worker.postMessage(
-					{
-						bitmap: webcamBitmap,
-						x,
-						y,
-						width,
-						height
-					},
-					[webcamBitmap] // Only transfer the bitmap
-				)
+					// Get the position of the canvas relative to the viewport
+					const canvasRect = canvasElement.getBoundingClientRect()
+
+					// Calculate the position of the webcamContainerElement relative to the canvas
+					let x = rect.left - canvasRect.left
+					let y = rect.top - canvasRect.top
+
+					// Get the natural size of the webcam video
+					let width = webcamVideoElement.videoWidth
+					let height = webcamVideoElement.videoHeight
+
+					// If screen is not being shared, make the webcam the size of the canvas
+					if (screenVideoElement.srcObject === null) {
+						// Calculate the aspect ratio of the webcam video
+						const aspectRatio = webcamVideoElement.videoWidth / webcamVideoElement.videoHeight
+
+						// Calculate the new width and height based on the aspect ratio
+						if (offscreen.width / aspectRatio <= offscreen.height) {
+							width = offscreen.width
+							height = offscreen.width / aspectRatio
+						} else {
+							width = offscreen.height * aspectRatio
+							height = offscreen.height
+						}
+
+						// Center the webcam video on the canvas
+						x = (offscreen.width - width) / 2
+						y = (offscreen.height - height) / 2
+					}
+
+					// Check if the webcam video is outside the canvas boundaries and adjust the position if necessary
+					if (x < 0) x = 0
+					if (y < 0) y = 0
+					if (x + width > offscreen.width) x = offscreen.width - width
+					if (y + height > offscreen.height) y = offscreen.height - height
+
+					// Draw the webcam video at the updated position and with its natural size
+					const webcamBitmap = await createImageBitmap(webcamVideoElement)
+					worker.postMessage(
+						{
+							bitmap: webcamBitmap,
+							x,
+							y,
+							width,
+							height
+						},
+						[webcamBitmap] // Only transfer the bitmap
+					)
+				}
+
+				requestAnimationFrame(drawVideoFrame)
+			} catch (error) {
+				console.log('Error in drawVideoFrame: ', error)
 			}
-
-			requestAnimationFrame(drawVideoFrame)
 		}
 		drawVideoFrame()
 		// Capture the stream from the canvas
