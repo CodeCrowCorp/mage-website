@@ -254,6 +254,13 @@ export default class WHIPClient extends EventTarget {
 						webrtcVideoElement
 					)
 				}
+				webcamRecorder.onstop = (e) => {
+					console.log('webcamRecorder stopped', e)
+				}
+
+				webcamRecorder.onerror = (e) => {
+					console.log('webcamRecorder error', e)
+				}
 				screenRecorder.start()
 				webcamRecorder.start()
 			}
