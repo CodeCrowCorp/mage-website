@@ -89,12 +89,6 @@ export default class WHIPClient extends EventTarget {
 						webcamContainerElement,
 						true
 					)
-					// Add the media stream's tracks to the peer connection
-					this.localWebrtcStream?.getTracks().forEach((track) => {
-						this.peerConnection.addTransceiver(track, {
-							direction: 'sendonly'
-						})
-					})
 					stream.getVideoTracks()[0].addEventListener('ended', () => this.disconnectStreamScreen())
 					if (stream.getVideoTracks()[0].readyState === 'live') {
 						this.dispatchEvent(new CustomEvent(`isScreenLive`, { detail: true }))
@@ -146,12 +140,6 @@ export default class WHIPClient extends EventTarget {
 						webcamContainerElement,
 						false
 					)
-					// Add the media stream's tracks to the peer connection
-					this.localWebrtcStream?.getTracks().forEach((track) => {
-						this.peerConnection.addTransceiver(track, {
-							direction: 'sendonly'
-						})
-					})
 					stream.getVideoTracks()[0].addEventListener('ended', () => this.disconnectStreamWebcam())
 					if (stream.getVideoTracks()[0].readyState === 'live') {
 						this.dispatchEvent(new CustomEvent(`isWebcamLive`, { detail: true }))
@@ -301,6 +289,13 @@ export default class WHIPClient extends EventTarget {
 				screenRecorder.start()
 				webcamRecorder.start()
 			}
+
+			// Add the media stream's tracks to the peer connection
+			this.localWebrtcStream?.getTracks().forEach((track) => {
+				this.peerConnection.addTransceiver(track, {
+					direction: 'sendonly'
+				})
+			})
 		} catch (error) {
 			console.log('got here----addStreamToMedia error', error)
 			return new MediaStream()
