@@ -290,18 +290,6 @@ export default class WHIPClient extends EventTarget {
 				webcamRecorder.start()
 			}
 
-			if (this.localWebrtcStream) {
-				stream.getTracks().forEach((track) => {
-					// Only add audio track if it doesn't exist in localWebrtcStream
-					if (
-						(track.kind === 'audio' && this.localWebrtcStream?.getAudioTracks().length) ||
-						0 > 0
-					) {
-						return
-					}
-					this.localWebrtcStream?.addTrack(track)
-				})
-			}
 			// Add the media stream's tracks to the peer connection
 			this.localWebrtcStream?.getTracks().forEach((newTrack) => {
 				const senders = this.peerConnection.getSenders()
