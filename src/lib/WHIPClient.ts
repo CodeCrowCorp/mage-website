@@ -208,6 +208,12 @@ export default class WHIPClient extends EventTarget {
 				this.localWebrtcStream = new MediaStream()
 			}
 
+			if (isScreen) {
+				screenVideoElement.srcObject = stream
+			} else {
+				webcamVideoElement.srcObject = stream
+			}
+
 			stream.getTracks().forEach((track) => {
 				if (!track.onended) {
 					track.onended = () => {
@@ -269,6 +275,7 @@ export default class WHIPClient extends EventTarget {
 				const webcamRecorder = new MediaRecorder(webcamStream)
 
 				let screenVideoURL: string
+				let webcamVideoURL: string
 
 				screenRecorder.ondataavailable = async (e) => {
 					const screenBlob = new Blob([e.data], { type: 'video/mp4' })
@@ -276,52 +283,22 @@ export default class WHIPClient extends EventTarget {
 					await this.combineAndSendStreams(
 						ffmpeg,
 						screenVideoURL,
-						webcamVideoElement,
+						webcamVideoURL,
 						webrtcVideoElement
 					)
 				}
 
-				webcamRecorder.ondataavailable = async () => {
+				webcamRecorder.ondataavailable = async (e) => {
+					const webcamBlob = new Blob([e.data], { type: 'video/mp4' })
+					webcamVideoURL = URL.createObjectURL(webcamBlob)
 					await this.combineAndSendStreams(
 						ffmpeg,
 						screenVideoURL,
-						webcamVideoElement,
+						webcamVideoURL,
 						webrtcVideoElement
 					)
 				}
 				screenRecorder.start()
-				webcamRecorder.start()
-			}
-			// Only screen stream is present
-			else if (screenVideoElement?.srcObject instanceof MediaStream) {
-				const screenStream = screenVideoElement.srcObject as MediaStream
-				const screenRecorder = new MediaRecorder(screenStream)
-				screenRecorder.ondataavailable = async (e) => {
-					const screenBlob = new Blob([e.data], { type: 'video/mp4' })
-					const screenVideoURL = URL.createObjectURL(screenBlob)
-					webrtcVideoElement.src = screenVideoURL
-					await webrtcVideoElement.play()
-					const outputStream = webrtcVideoElement.captureStream(60)
-					outputStream.getTracks().forEach((track: any) => {
-						this.localWebrtcStream?.addTrack(track)
-					})
-				}
-				screenRecorder.start()
-			}
-			// Only webcam stream is present
-			else if (webcamVideoElement?.srcObject instanceof MediaStream) {
-				const webcamStream = webcamVideoElement.srcObject as MediaStream
-				const webcamRecorder = new MediaRecorder(webcamStream)
-				webcamRecorder.ondataavailable = async (e) => {
-					const webcamBlob = new Blob([e.data], { type: 'video/mp4' })
-					const webcamVideoURL = URL.createObjectURL(webcamBlob)
-					webrtcVideoElement.src = webcamVideoURL
-					await webrtcVideoElement.play()
-					const outputStream = webrtcVideoElement.captureStream(60)
-					outputStream.getTracks().forEach((track: any) => {
-						this.localWebrtcStream?.addTrack(track)
-					})
-				}
 				webcamRecorder.start()
 			}
 		} catch (error) {
@@ -333,14 +310,14 @@ export default class WHIPClient extends EventTarget {
 	private async combineAndSendStreams(
 		ffmpeg: any,
 		screenVideoURL: string,
-		webcamVideoElement: HTMLVideoElement,
+		webcamVideoURL: string,
 		webrtcVideoElement: any
 	) {
 		await ffmpeg.exec([
 			'-i',
 			screenVideoURL,
 			'-i',
-			webcamVideoElement.src,
+			webcamVideoURL,
 			'-filter_complex',
 			'[1]scale=iw/4:ih/4 [pip]; [0][pip] overlay=W-w-10:H-h-10',
 			'output.mp4'
