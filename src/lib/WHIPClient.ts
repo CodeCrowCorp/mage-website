@@ -64,22 +64,22 @@ export default class WHIPClient extends EventTarget {
 			navigator.mediaDevices
 				.getDisplayMedia({ video: true, audio: true })
 				.then(async (stream) => {
-					let audioTrack = stream.getAudioTracks()[0]
-					if (!audioTrack) {
-						const audioContext = new AudioContext()
-						const oscillator = audioContext.createOscillator()
-						const destination = audioContext.createMediaStreamDestination()
-						oscillator.connect(destination)
-						oscillator.frequency.setValueAtTime(0, audioContext.currentTime)
-						oscillator.start()
-						audioTrack = destination.stream.getAudioTracks()[0]
-						audioTrack.enabled = true
-						// audioTrack.id = 'silent-audio-track'
-						// audioTrack.label = 'Silent Audio Track'
-					}
-					this.peerConnection.addTransceiver(audioTrack, {
-						direction: 'sendonly'
-					})
+					// let audioTrack = stream.getAudioTracks()[0]
+					// if (!audioTrack) {
+					// 	const audioContext = new AudioContext()
+					// 	const oscillator = audioContext.createOscillator()
+					// 	const destination = audioContext.createMediaStreamDestination()
+					// 	oscillator.connect(destination)
+					// 	oscillator.frequency.setValueAtTime(0, audioContext.currentTime)
+					// 	oscillator.start()
+					// 	audioTrack = destination.stream.getAudioTracks()[0]
+					// 	audioTrack.enabled = true
+					// 	// audioTrack.id = 'silent-audio-track'
+					// 	// audioTrack.label = 'Silent Audio Track'
+					// }
+					// this.peerConnection.addTransceiver(audioTrack, {
+					// 	direction: 'sendonly'
+					// })
 					// Add the stream to the media and get the combined stream
 					await this.addStreamToMedia(
 						stream,
