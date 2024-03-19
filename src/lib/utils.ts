@@ -127,7 +127,7 @@ export const getColoredRole = (role: string) =>
 		Mod: { tagColor: 'bg-green-700', textColor: 'text-green-600' },
 		You: { tagColor: 'bg-gray-600' },
 		Rando: { textColor: 'text-info' }
-	}[role] || {})
+	})[role] || {}
 
 /*
 Input: 33, 16
@@ -310,8 +310,8 @@ export const captureScreenShot = (channel: any) => {
 		`webcam-${channel.videoItems[0]._id}`
 	) as HTMLVideoElement
 	const canvas = document.createElement('canvas')
-	canvas.width = 1920
-	canvas.height = 1080
+	canvas.width = screenElement?.videoWidth || 1920
+	canvas.height = screenElement?.videoHeight || 1080
 
 	const ctx = canvas.getContext('2d')
 

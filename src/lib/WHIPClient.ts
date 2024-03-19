@@ -1,6 +1,7 @@
 import negotiateConnectionWithClientOffer from '$lib/negotiateConnectionWithClientOffer'
 import { getAudioIndicator } from '$lib/utils'
 import { FFmpeg } from '@ffmpeg/ffmpeg'
+import { toBlobURL } from '@ffmpeg/util'
 
 /**
  * Example implementation of a client that uses WHIP to broadcast video over WebRTC
@@ -292,7 +293,10 @@ export default class WHIPClient extends EventTarget {
 			) {
 				// Combine the streams using ffmpeg.wasm
 				const ffmpeg = new FFmpeg()
-				await ffmpeg.load()
+				const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm'
+				await ffmpeg.load({
+					coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript')
+				})
 
 				const screenStream = screenVideoElement.srcObject as MediaStream
 				const webcamStream = webcamVideoElement.srcObject as MediaStream
