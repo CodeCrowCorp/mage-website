@@ -51,6 +51,7 @@ export default class WHIPClient extends EventTarget {
 	 * https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
 	 */
 	public async accessLocalScreenMediaSources(
+		webrtcElement: HTMLVideoElement,
 		screenElement: HTMLVideoElement,
 		webcamElement: HTMLVideoElement,
 		webcamContainerElement: HTMLDivElement
@@ -82,6 +83,7 @@ export default class WHIPClient extends EventTarget {
 					// Add the stream to the media and get the combined stream
 					await this.addStreamToMedia(
 						stream,
+						webrtcElement,
 						screenElement,
 						webcamElement,
 						webcamContainerElement,
@@ -110,6 +112,7 @@ export default class WHIPClient extends EventTarget {
 	}
 
 	public async accessLocalWebcamMediaSources(
+		webrtcElement: HTMLVideoElement,
 		screenElement: HTMLVideoElement,
 		webcamElement: HTMLVideoElement,
 		webcamContainerElement: HTMLDivElement
@@ -137,6 +140,7 @@ export default class WHIPClient extends EventTarget {
 					// Add the stream to the media and get the combined stream
 					await this.addStreamToMedia(
 						stream,
+						webrtcElement,
 						screenElement,
 						webcamElement,
 						webcamContainerElement,
@@ -193,28 +197,23 @@ export default class WHIPClient extends EventTarget {
 
 	private async addStreamToMedia(
 		stream: MediaStream,
+		webrtcVideoElement: any,
 		screenVideoElement: HTMLVideoElement,
 		webcamVideoElement: HTMLVideoElement,
 		webcamContainerElement: HTMLDivElement,
 		isScreen: boolean
 	) {
 		try {
-			let mediaRecorder: MediaRecorder | null = null
-			let chunks: any = []
-
 			if (!this.localWebrtcStream) {
 				this.localWebrtcStream = new MediaStream()
 			}
-
-			const videoElement: any = isScreen ? screenVideoElement : webcamVideoElement
-			videoElement.srcObject = stream
-			videoElement.play()
 
 			stream.getTracks().forEach((track) => {
 				if (!track.onended) {
 					track.onended = () => {
 						this.addStreamToMedia(
 							stream,
+							webrtcVideoElement,
 							screenVideoElement,
 							webcamVideoElement,
 							webcamContainerElement,
@@ -225,72 +224,35 @@ export default class WHIPClient extends EventTarget {
 			})
 
 			// Check if screen stream is present
-			if (screenVideoElement?.srcObject instanceof MediaStream) {
-				// If screen stream is present, add the screen stream to the localWebrtcStream
-				if (isScreen) {
-					stream.getTracks().forEach((track) => {
-						this.localWebrtcStream?.addTrack(track)
-					})
-				}
-				// Record the MediaStream to a MediaRecorder
-				mediaRecorder = new MediaRecorder(stream)
-				mediaRecorder.ondataavailable = async (e) => {
-					chunks.push(e.data)
-					const blob = new Blob(chunks, { type: 'video/mp4' })
-					chunks = []
-
-					const videoURL = URL.createObjectURL(blob)
-
-					videoElement.src = videoURL
-					await videoElement.play()
-
-					const outputStream = videoElement.captureStream(60)
-					this.localWebrtcStream?.getTracks().forEach((track: any) => {
-						this.localWebrtcStream?.removeTrack(track)
-					})
-					outputStream.getTracks().forEach((track: any) => {
-						this.localWebrtcStream?.addTrack(track)
-					})
-				}
-				mediaRecorder.start()
-			}
-
-			// Check if webcam stream is present
-			if (webcamVideoElement?.srcObject instanceof MediaStream) {
-				// If webcam stream is present, add the webcam stream to the localWebrtcStream
-				if (!isScreen) {
-					stream.getTracks().forEach((track) => {
-						this.localWebrtcStream?.addTrack(track)
-					})
-				}
-				// Record the MediaStream to a MediaRecorder
-				mediaRecorder = new MediaRecorder(stream)
-				mediaRecorder.ondataavailable = async (e) => {
-					chunks.push(e.data)
-					const blob = new Blob(chunks, { type: 'video/mp4' })
-					chunks = []
-
-					const videoURL = URL.createObjectURL(blob)
-
-					videoElement.src = videoURL
-					await videoElement.play()
-
-					const outputStream = videoElement.captureStream(60)
-					this.localWebrtcStream?.getTracks().forEach((track: any) => {
-						this.localWebrtcStream?.removeTrack(track)
-					})
-					outputStream.getTracks().forEach((track: any) => {
-						this.localWebrtcStream?.addTrack(track)
-					})
-				}
-				mediaRecorder.start()
-			}
-
-			// Check if both streams are present
 			if (
+				isScreen &&
+				screenVideoElement?.srcObject instanceof MediaStream &&
+				!this.localWebrtcStream?.getTracks().length
+			) {
+				// If screen stream is present, add the screen stream to the localWebrtcStream
+				stream.getTracks().forEach((track) => {
+					this.localWebrtcStream?.addTrack(track)
+				})
+			}
+			// Check if webcam stream is present
+			else if (
+				!isScreen &&
+				webcamVideoElement?.srcObject instanceof MediaStream &&
+				!this.localWebrtcStream?.getTracks().length
+			) {
+				// If webcam stream is present, add the webcam stream to the localWebrtcStream
+				stream.getTracks().forEach((track) => {
+					this.localWebrtcStream?.addTrack(track)
+				})
+			}
+			// Check if both streams are present
+			else if (
 				screenVideoElement?.srcObject instanceof MediaStream &&
 				webcamVideoElement?.srcObject instanceof MediaStream
 			) {
+				this.localWebrtcStream?.getTracks().forEach((track: any) => {
+					this.localWebrtcStream?.removeTrack(track)
+				})
 				// Combine the streams using ffmpeg.wasm
 				const ffmpeg = new FFmpeg()
 				const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm'
@@ -306,67 +268,102 @@ export default class WHIPClient extends EventTarget {
 				const screenRecorder = new MediaRecorder(screenStream)
 				const webcamRecorder = new MediaRecorder(webcamStream)
 
-				const screenChunks: any = []
-				const webcamChunks: any = []
+				let screenVideoURL: string
 
-				screenRecorder.ondataavailable = (e) => {
-					screenChunks.push(e.data)
-				}
-				webcamRecorder.ondataavailable = (e) => {
-					webcamChunks.push(e.data)
+				screenRecorder.ondataavailable = async (e) => {
+					const screenBlob = new Blob([e.data], { type: 'video/mp4' })
+					screenVideoURL = URL.createObjectURL(screenBlob)
+					await this.combineAndSendStreams(
+						ffmpeg,
+						screenVideoURL,
+						webcamVideoElement,
+						webrtcVideoElement
+					)
 				}
 
+				webcamRecorder.ondataavailable = async () => {
+					await this.combineAndSendStreams(
+						ffmpeg,
+						screenVideoURL,
+						webcamVideoElement,
+						webrtcVideoElement
+					)
+				}
 				screenRecorder.start()
 				webcamRecorder.start()
-
-				await new Promise((resolve) => (screenRecorder.onstop = resolve))
-				await new Promise((resolve) => (webcamRecorder.onstop = resolve))
-
-				screenRecorder.stop()
-				webcamRecorder.stop()
-
-				const screenBlob = new Blob(screenChunks, { type: 'video/mp4' })
-				const webcamBlob = new Blob(webcamChunks, { type: 'video/mp4' })
-
-				const screenVideoURL = URL.createObjectURL(screenBlob)
-				const webcamVideoURL = URL.createObjectURL(webcamBlob)
-
-				await ffmpeg.exec([
-					'-i',
-					screenVideoURL,
-					'-i',
-					webcamVideoURL,
-					'-filter_complex',
-					'[1]scale=iw/4:ih/4 [pip]; [0][pip] overlay=W-w-10:H-h-10',
-					'output.mp4'
-				])
-
-				const data: any = await ffmpeg.readFile('output.mp4')
-				let dataBuffer
-				if (typeof data === 'string') {
-					const encoder = new TextEncoder()
-					dataBuffer = encoder.encode(data)
-				} else {
-					dataBuffer = data
+			}
+			// Only screen stream is present
+			else if (screenVideoElement?.srcObject instanceof MediaStream) {
+				const screenStream = screenVideoElement.srcObject as MediaStream
+				const screenRecorder = new MediaRecorder(screenStream)
+				screenRecorder.ondataavailable = async (e) => {
+					const screenBlob = new Blob([e.data], { type: 'video/mp4' })
+					const screenVideoURL = URL.createObjectURL(screenBlob)
+					webrtcVideoElement.src = screenVideoURL
+					await webrtcVideoElement.play()
+					const outputStream = webrtcVideoElement.captureStream(60)
+					outputStream.getTracks().forEach((track: any) => {
+						this.localWebrtcStream?.addTrack(track)
+					})
 				}
-				const outputBlob = new Blob([dataBuffer], { type: 'video/mp4' })
-				const outputURL = URL.createObjectURL(outputBlob)
-
-				videoElement.src = outputURL
-				await videoElement.play()
-
-				const outputStream = videoElement.captureStream(60)
-				this.localWebrtcStream?.getTracks().forEach((track: any) => {
-					this.localWebrtcStream?.removeTrack(track)
-				})
-				outputStream.getTracks().forEach((track: any) => {
-					this.localWebrtcStream?.addTrack(track)
-				})
+				screenRecorder.start()
+			}
+			// Only webcam stream is present
+			else if (webcamVideoElement?.srcObject instanceof MediaStream) {
+				const webcamStream = webcamVideoElement.srcObject as MediaStream
+				const webcamRecorder = new MediaRecorder(webcamStream)
+				webcamRecorder.ondataavailable = async (e) => {
+					const webcamBlob = new Blob([e.data], { type: 'video/mp4' })
+					const webcamVideoURL = URL.createObjectURL(webcamBlob)
+					webrtcVideoElement.src = webcamVideoURL
+					await webrtcVideoElement.play()
+					const outputStream = webrtcVideoElement.captureStream(60)
+					outputStream.getTracks().forEach((track: any) => {
+						this.localWebrtcStream?.addTrack(track)
+					})
+				}
+				webcamRecorder.start()
 			}
 		} catch (error) {
 			console.log('got here----addStreamToMedia error', error)
 			return new MediaStream()
 		}
+	}
+
+	private async combineAndSendStreams(
+		ffmpeg: any,
+		screenVideoURL: string,
+		webcamVideoElement: HTMLVideoElement,
+		webrtcVideoElement: any
+	) {
+		await ffmpeg.exec([
+			'-i',
+			screenVideoURL,
+			'-i',
+			webcamVideoElement.src,
+			'-filter_complex',
+			'[1]scale=iw/4:ih/4 [pip]; [0][pip] overlay=W-w-10:H-h-10',
+			'output.mp4'
+		])
+
+		const data: any = await ffmpeg.readFile('output.mp4')
+		let dataBuffer
+		if (typeof data === 'string') {
+			const encoder = new TextEncoder()
+			dataBuffer = encoder.encode(data)
+		} else {
+			dataBuffer = data
+		}
+		const outputBlob = new Blob([dataBuffer], { type: 'video/mp4' })
+		const outputURL = URL.createObjectURL(outputBlob)
+
+		webrtcVideoElement.src = outputURL
+		await webrtcVideoElement.play()
+
+		const outputStream = webrtcVideoElement.captureStream(60)
+		outputStream.getTracks().forEach((track: any) => {
+			this.localWebrtcStream?.addTrack(track)
+		})
 	}
 
 	/**

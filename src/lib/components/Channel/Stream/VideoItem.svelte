@@ -22,7 +22,7 @@
 
 	let role = '',
 		coloredRole: any = {},
-		webrtc_video_element: HTMLVideoElement,
+		webrtc_element: HTMLVideoElement,
 		screen_element: HTMLVideoElement,
 		webcam_element: HTMLVideoElement,
 		webcam_container_element: HTMLDivElement,
@@ -75,6 +75,7 @@
 				if (value === true) {
 					getWebrtcWhip()
 					await webrtcWhip?.accessLocalScreenMediaSources(
+						webrtc_element,
 						screen_element,
 						webcam_element,
 						webcam_container_element
@@ -101,6 +102,7 @@
 				if (value === true) {
 					getWebrtcWhip()
 					await webrtcWhip?.accessLocalWebcamMediaSources(
+						webrtc_element,
 						screen_element,
 						webcam_element,
 						webcam_container_element
@@ -173,22 +175,22 @@
 					break
 				case 'webrtc':
 					if (video.isConnected) {
-						webrtcWhep = new WHEPClient(video.webRTCPlayback.url, webrtc_video_element)
+						webrtcWhep = new WHEPClient(video.webRTCPlayback.url, webrtc_element)
 						webrtcWhep.addEventListener(`isScreenLive`, (ev: any) => {
 							isScreenLive = ev.detail
 						})
 						webrtcWhep.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
 							speakingValue = ev.detail
 						})
-						webrtc_video_element.addEventListener('dblclick', (event: any) => {
+						webrtc_element.addEventListener('dblclick', (event: any) => {
 							if (document.fullscreenElement) {
 								document.exitFullscreen()
 							} else {
-								webrtc_video_element.requestFullscreen()
+								webrtc_element.requestFullscreen()
 							}
 						})
 					} else {
-						if (webrtc_video_element) webrtc_video_element.srcObject = null
+						if (webrtc_element) webrtc_element.srcObject = null
 						webrtcWhep?.removeEventListener(`localAudioSpeakingValue`, () => {})
 					}
 					break
@@ -354,6 +356,7 @@
 						class="rounded-md h-full w-full" />
 				</div>
 				<audio bind:this={audio_element} autoplay class="rounded-md w-0 h-0" />
+				<video bind:this={webrtc_element} class="rounded-md w-full h-full hidden" autoplay muted />
 			{:else}
 				<iframe
 					src="https://olafwempe.com/mp3/silence/silence.mp3"
@@ -361,7 +364,7 @@
 					id="audio"
 					style="display:none" />
 				<video
-					bind:this={webrtc_video_element}
+					bind:this={webrtc_element}
 					class="rounded-md w-full h-full {video.isConnected && video.trackType === 'webrtc'
 						? ''
 						: 'hidden'}"
