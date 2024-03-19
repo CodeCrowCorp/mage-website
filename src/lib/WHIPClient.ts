@@ -246,6 +246,7 @@ export default class WHIPClient extends EventTarget {
 				webcamRecorder.ondataavailable = async (e) => {
 					const webcamBlob = new Blob([e.data], { type: 'video/mp4' })
 					webcamVideoURL = URL.createObjectURL(webcamBlob)
+					console.log('got here----webcamRecorder')
 					await this.combineAndSendStreams(
 						ffmpeg,
 						screenVideoURL,
@@ -328,6 +329,7 @@ export default class WHIPClient extends EventTarget {
 		outputStream.getTracks().forEach((track: any) => {
 			this.localWebrtcStream?.addTrack(track)
 		})
+		console.log('got here----webcamRecorder--2')
 	}
 
 	/**
