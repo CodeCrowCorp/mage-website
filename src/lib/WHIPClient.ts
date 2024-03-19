@@ -268,13 +268,12 @@ export default class WHIPClient extends EventTarget {
 				oscillator.start()
 				audioTrack = destination.stream.getAudioTracks()[0]
 				audioTrack.enabled = true
-				// audioTrack.id = 'silent-audio-track'
-				// audioTrack.label = 'Silent Audio Track'
 			}
-			this.peerConnection.addTransceiver(audioTrack, {
-				direction: 'sendonly'
-			})
-
+			const audioTracks = this.localWebrtcStream.getAudioTracks()
+			if (audioTracks && audioTracks.length === 0) {
+				// Add the new audio track to the peer connection
+				this.localWebrtcStream?.addTrack(audioTrack)
+			}
 			// Add the media stream's tracks to the peer connection
 			this.localWebrtcStream?.getTracks().forEach((newTrack) => {
 				const senders = this.peerConnection.getSenders()
