@@ -115,22 +115,22 @@ export default class WHIPClient extends EventTarget {
 			navigator.mediaDevices
 				.getUserMedia({ video: true, audio: false })
 				.then(async (stream) => {
-					let audioTrack = stream.getAudioTracks()[0]
-					if (!audioTrack) {
-						const audioContext = new AudioContext()
-						const oscillator = audioContext.createOscillator()
-						const destination = audioContext.createMediaStreamDestination()
-						oscillator.connect(destination)
-						oscillator.frequency.setValueAtTime(0, audioContext.currentTime)
-						oscillator.start()
-						audioTrack = destination.stream.getAudioTracks()[0]
-						audioTrack.enabled = true
-						// audioTrack.id = 'silent-audio-track'
-						// audioTrack.label = 'Silent Audio Track'
-					}
-					this.peerConnection.addTransceiver(audioTrack, {
-						direction: 'sendonly'
-					})
+					// let audioTrack = stream.getAudioTracks()[0]
+					// if (!audioTrack) {
+					// 	const audioContext = new AudioContext()
+					// 	const oscillator = audioContext.createOscillator()
+					// 	const destination = audioContext.createMediaStreamDestination()
+					// 	oscillator.connect(destination)
+					// 	oscillator.frequency.setValueAtTime(0, audioContext.currentTime)
+					// 	oscillator.start()
+					// 	audioTrack = destination.stream.getAudioTracks()[0]
+					// 	audioTrack.enabled = true
+					// audioTrack.id = 'silent-audio-track'
+					// audioTrack.label = 'Silent Audio Track'
+					// }
+					// this.peerConnection.addTransceiver(audioTrack, {
+					// 	direction: 'sendonly'
+					// })
 					// Add the stream to the media and get the combined stream
 					await this.addStreamToMedia(
 						stream,
@@ -290,6 +290,18 @@ export default class WHIPClient extends EventTarget {
 				webcamRecorder.start()
 			}
 
+			if (this.localWebrtcStream) {
+				stream.getTracks().forEach((track) => {
+					// Only add audio track if it doesn't exist in localWebrtcStream
+					if (
+						(track.kind === 'audio' && this.localWebrtcStream?.getAudioTracks().length) ||
+						0 > 0
+					) {
+						return
+					}
+					this.localWebrtcStream?.addTrack(track)
+				})
+			}
 			// Add the media stream's tracks to the peer connection
 			this.localWebrtcStream?.getTracks().forEach((newTrack) => {
 				const senders = this.peerConnection.getSenders()
