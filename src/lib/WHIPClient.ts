@@ -291,10 +291,19 @@ export default class WHIPClient extends EventTarget {
 			}
 
 			// Add the media stream's tracks to the peer connection
-			this.localWebrtcStream?.getTracks().forEach((track) => {
-				this.peerConnection.addTransceiver(track, {
-					direction: 'sendonly'
-				})
+			this.localWebrtcStream?.getTracks().forEach((newTrack) => {
+				const senders = this.peerConnection.getSenders()
+				const existingSender = senders.find((sender) => sender.track?.kind === newTrack.kind)
+
+				if (existingSender) {
+					// Replace the existing track with the new one
+					existingSender.replaceTrack(newTrack)
+				} else {
+					// Add the new track to the peer connection
+					this.peerConnection.addTransceiver(newTrack, {
+						direction: 'sendonly'
+					})
+				}
 			})
 		} catch (error) {
 			console.log('got here----addStreamToMedia error', error)
