@@ -91,9 +91,6 @@ export default class WHIPClient extends EventTarget {
 					}
 				})
 				stream.getVideoTracks()[0].addEventListener('ended', () => this.disconnectStream())
-				if (stream.getVideoTracks()[0].readyState === 'live') {
-					this.dispatchEvent(new CustomEvent(`isScreenLive`, { detail: true }))
-				}
 				return stream
 			})
 		} else if (trackType === 'webcam') {
@@ -111,9 +108,6 @@ export default class WHIPClient extends EventTarget {
 					}
 				})
 				stream.getVideoTracks()[0].addEventListener('ended', () => this.disconnectStream())
-				if (stream.getVideoTracks()[0].readyState === 'live') {
-					this.dispatchEvent(new CustomEvent(`isWebcamLive`, { detail: true }))
-				}
 				return stream
 			})
 		} else if (trackType === 'audio') {
