@@ -188,20 +188,9 @@
 					if (audio_element) audio_element.srcObject = null
 				}
 			})
-		} else {
-			screen_element.addEventListener('loadedmetadata', playMedia)
-			screen_element.addEventListener('canplay', playMedia)
-			webcam_element.addEventListener('loadedmetadata', playMedia)
-			webcam_element.addEventListener('canplay', playMedia)
-			audio_element.addEventListener('loadedmetadata', playMedia)
-			audio_element.addEventListener('canplay', playMedia)
 		}
 		isMounted = true
 	})
-
-	const playMedia = (event: any) => {
-		event.target.play()
-	}
 
 	const toggleClient = async ({ trackType }: { trackType: string }) => {
 		if ($page.data.user?.userId === video._id) {
