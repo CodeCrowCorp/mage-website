@@ -9,7 +9,8 @@
 		emitChannelSubscribeByUser,
 		emitDeleteAllMessagesToChannel,
 		emitPlatformCount,
-		emitGetSponsors
+		emitGetSponsors,
+		emitChannelPing
 	} from '$lib/websocket'
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import { isJsonString, updateVideoItems } from '$lib/utils'
@@ -202,6 +203,12 @@
 					replaceState: true
 				})
 			}
+			setInterval(async () => {
+				emitChannelPing({
+					channelSocket: chan.socket,
+					channelId: chan._id
+				})
+			}, 45000)
 		}
 	}
 

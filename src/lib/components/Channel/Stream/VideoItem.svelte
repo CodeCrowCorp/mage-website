@@ -22,15 +22,19 @@
 
 	let role = '',
 		coloredRole: any = {},
-		webrtc_canvas_element: HTMLCanvasElement,
-		webrtc_video_element: HTMLVideoElement,
 		screen_element: HTMLVideoElement,
 		webcam_element: HTMLVideoElement,
-		webcam_container_element: HTMLDivElement,
 		audio_element: HTMLAudioElement,
-		webrtcWhip: WHIPClient,
-		webrtcWhep: WHEPClient,
-		prevVid: any,
+		screenWhip: WHIPClient,
+		screenWhep: WHEPClient,
+		webcamWhip: WHIPClient,
+		webcamWhep: WHEPClient,
+		audioWhip: WHIPClient,
+		audioWhep: WHEPClient,
+		isConnectedRtmps: any,
+		isConnectedScreen: any,
+		isConnectedWebcam: any,
+		isConnectedAudio: any,
 		isMounted: boolean = false,
 		isWebcamFocused: boolean = false,
 		speakingValue: number = 0,
@@ -39,10 +43,6 @@
 		formattedTime: string = '00:00:00',
 		isHoverVideo: boolean = false,
 		iframeUrl: string = ''
-
-	// WHIP/WHEP variables that determine if stream is coming in
-	$: isScreenLive = false
-	$: isWebcamLive = false
 
 	$: if (channel) {
 		role = setRole({ userId: video._id, channel, currentUserId: $page.data.user?.userId })
@@ -61,27 +61,69 @@
 		video._id !== $page.data.user?.userId &&
 		role !== '🤖 AI'
 
-	$: if (isMounted && video?.isConnected !== prevVid?.isConnected) {
-		handleRealtimeChanges()
+	$: if (isMounted && video.rtmps?.isConnected !== isConnectedRtmps) {
+		handleRtmpsChanges()
 	}
 
-	$: toggleTimer(video.isConnected)
+	$: if (isMounted && video.screen?.isConnected !== isConnectedScreen) {
+		handleScreenChanges()
+	}
+
+	$: if (isMounted && video.webcam?.isConnected !== isConnectedWebcam) {
+		handleWebcamChanges()
+	}
+
+	$: if (isMounted && video.audio?.isConnected !== isConnectedAudio) {
+		handleAudioChanges()
+	}
+
+	$: if (video.rtmps?.isConnected || video.screen?.isConnected) {
+		toggleTimer(true)
+	} else {
+		toggleTimer(false)
+	}
 
 	$: animate = isWebcamFocused ? '' : 'transition-all'
 
+	const handleRtmpsChanges = () => {
+		isConnectedRtmps = video.rtmps?.isConnected
+		toggleClient({
+			trackType: 'rtmps'
+		})
+	}
+	const handleScreenChanges = () => {
+		isConnectedScreen = video.screen?.isConnected
+		toggleClient({
+			trackType: 'screen'
+		})
+	}
+	const handleWebcamChanges = () => {
+		isConnectedWebcam = video.webcam?.isConnected
+		toggleClient({
+			trackType: 'webcam'
+		})
+	}
+	const handleAudioChanges = () => {
+		isConnectedAudio = video.audio?.isConnected
+		toggleClient({
+			trackType: 'audio'
+		})
+	}
+
 	onMount(() => {
-		handleRealtimeChanges()
+		handleRtmpsChanges()
+		handleScreenChanges()
+		handleWebcamChanges()
+		handleAudioChanges()
 		if (video._id === $page.data.user?.userId) {
 			is_sharing_screen.subscribe(async (value: any) => {
 				if (value === true) {
-					getWebrtcWhip()
-					await webrtcWhip?.accessLocalScreenMediaSources(
-						webrtc_canvas_element,
-						screen_element,
-						webcam_element,
-						webcam_container_element
-					)
-					webrtcWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
+					screenWhip = getWhip({
+						whip: screenWhip,
+						url: video.screen?.webRTC.url,
+						videoElement: screen_element,
+						trackType: `screen`
+					})
 					screen_element.addEventListener('dblclick', (event: any) => {
 						if (document.fullscreenElement) {
 							document.exitFullscreen()
@@ -89,26 +131,23 @@
 							screen_element.requestFullscreen()
 						}
 					})
-					webrtcWhip.addEventListener(`localStreamStopped-screen`, () => {
+					screenWhip.addEventListener(`localStreamStopped-screen`, () => {
 						$is_sharing_screen = undefined
 					})
 				} else {
-					if (value === false) webrtcWhip?.disconnectStreamScreen()
+					if (value === false) screenWhip?.disconnectStream()
 					if (screen_element) screen_element.srcObject = null
-					isScreenLive = false
 				}
 			})
 
 			is_sharing_webcam.subscribe(async (value: any) => {
 				if (value === true) {
-					getWebrtcWhip()
-					await webrtcWhip?.accessLocalWebcamMediaSources(
-						webrtc_canvas_element,
-						screen_element,
-						webcam_element,
-						webcam_container_element
-					)
-					webrtcWhip.addEventListener(`isWebcamLive`, (ev: any) => (isWebcamLive = ev.detail))
+					webcamWhip = getWhip({
+						whip: webcamWhip,
+						url: video.webcam?.webRTC.url,
+						videoElement: webcam_element,
+						trackType: `webcam`
+					})
 					webcam_element.addEventListener('dblclick', (event: any) => {
 						if (document.fullscreenElement) {
 							document.exitFullscreen()
@@ -116,29 +155,32 @@
 							webcam_element.requestFullscreen()
 						}
 					})
-					webrtcWhip.addEventListener(`localStreamStopped-webcam`, () => {
+					webcamWhip.addEventListener(`localStreamStopped-webcam`, () => {
 						$is_sharing_webcam = undefined
 					})
 				} else {
-					if (value === false) webrtcWhip?.disconnectStreamWebcam()
+					if (value === false) webcamWhip?.disconnectStream()
 					if (webcam_element) webcam_element.srcObject = null
-					isWebcamLive = false
 				}
 			})
 
 			is_sharing_audio.subscribe(async (value: any) => {
 				if (value === true) {
-					getWebrtcWhip()
-					await webrtcWhip?.accessLocalAudioMediaSources(audio_element)
-					webrtcWhip.addEventListener(`localStreamStopped-audio`, () => {
-						webrtcWhip.removeEventListener(`localAudioSpeakingValue`, () => {})
+					audioWhip = getWhip({
+						whip: audioWhip,
+						url: video.audio?.webRTC.url,
+						videoElement: audio_element,
+						trackType: `audio`
+					})
+					audioWhip.addEventListener(`localStreamStopped-audio`, () => {
+						audioWhip.removeEventListener(`localAudioSpeakingValue`, () => {})
 						$is_sharing_audio = undefined
 					})
-					webrtcWhip.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
+					audioWhip.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
 						speakingValue = ev.detail
 					})
 				} else {
-					if (value === false) webrtcWhip?.disconnectStreamAudio()
+					if (value === false) audioWhip?.disconnectStream()
 					if (audio_element) audio_element.srcObject = null
 				}
 			})
@@ -146,17 +188,11 @@
 		isMounted = true
 	})
 
-	const handleRealtimeChanges = () => {
-		prevVid = video
-		toggleClient()
-	}
-
-	const toggleClient = async () => {
-		const trackType = video.trackType
+	const toggleClient = async ({ trackType }: { trackType: string }) => {
 		if ($page.data.user?.userId === video._id) {
 			switch (trackType) {
 				case 'rtmps':
-					if (video.isConnected) {
+					if (video.rtmps?.isConnected) {
 						iframeUrl = video.playback?.iframe
 						$is_sharing_rtmps = true
 					} else {
@@ -168,31 +204,49 @@
 		} else {
 			switch (trackType) {
 				case 'rtmps':
-					if (video.isConnected) {
+					if (video.rtmps?.isConnected) {
 						iframeUrl = video.playback?.iframe
 					} else {
 						iframeUrl = ''
 					}
 					break
-				case 'webrtc':
-					if (video.isConnected) {
-						webrtcWhep = new WHEPClient(video.webRTCPlayback.url, webrtc_video_element)
-						webrtcWhep.addEventListener(`isScreenLive`, (ev: any) => {
-							isScreenLive = ev.detail
-						})
-						webrtcWhep.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
-							speakingValue = ev.detail
-						})
-						webrtc_video_element.addEventListener('dblclick', (event: any) => {
+				case 'screen':
+					if (video.screen?.isConnected) {
+						screenWhep = new WHEPClient(video.screen?.webRTCPlayback.url, screen_element, `screen`)
+						screen_element.addEventListener('dblclick', (event: any) => {
 							if (document.fullscreenElement) {
 								document.exitFullscreen()
 							} else {
-								webrtc_video_element.requestFullscreen()
+								screen_element.requestFullscreen()
 							}
 						})
 					} else {
-						if (webrtc_video_element) webrtc_video_element.srcObject = null
-						webrtcWhep?.removeEventListener(`localAudioSpeakingValue`, () => {})
+						if (screen_element) screen_element.srcObject = null
+					}
+					break
+				case 'webcam':
+					if (video.webcam?.isConnected) {
+						webcamWhep = new WHEPClient(video.webcam?.webRTCPlayback.url, webcam_element, `webcam`)
+						webcam_element.addEventListener('dblclick', (event: any) => {
+							if (document.fullscreenElement) {
+								document.exitFullscreen()
+							} else {
+								webcam_element.requestFullscreen()
+							}
+						})
+					} else {
+						if (webcam_element) webcam_element.srcObject = null
+					}
+					break
+				case 'audio':
+					if (video.audio?.isConnected) {
+						audioWhep = new WHEPClient(video.audio?.webRTCPlayback.url, audio_element, `audio`)
+						audioWhep.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
+							speakingValue = ev.detail
+						})
+					} else {
+						if (audio_element) audio_element.srcObject = null
+						audioWhep?.removeEventListener(`localAudioSpeakingValue`, () => {})
 					}
 					break
 			}
@@ -207,10 +261,21 @@
 		isWebcamFocused = false
 	}
 
-	const getWebrtcWhip = () => {
-		if (!webrtcWhip || webrtcWhip.peerConnection?.connectionState === 'closed') {
-			webrtcWhip = new WHIPClient(video.webRTC.url)
+	const getWhip = ({
+		whip,
+		url,
+		videoElement,
+		trackType
+	}: {
+		whip: WHIPClient
+		url: string
+		videoElement: HTMLVideoElement | HTMLAudioElement
+		trackType: string
+	}) => {
+		if (!whip || whip.peerConnection?.connectionState === 'closed') {
+			whip = new WHIPClient(url, videoElement, trackType)
 		}
+		return whip
 	}
 
 	const toggleBan = () => {
@@ -271,7 +336,7 @@
 			timerInterval = setInterval(async () => {
 				try {
 					if (streamTime < 1) {
-						const inputId = video.uid
+						const inputId = video.rtmps?.uid || video.screen?.uid
 						const streamRecord = await get(`analytics/stream?inputId=${inputId}`)
 						streamTime = streamRecord
 							? Math.floor((Date.now() - new Date(streamRecord.start + 'Z').getTime()) / 1000)
@@ -308,7 +373,9 @@
 </script>
 
 <div
-	class={video.isConnected ? 'w-full h-full' : 'w-[500px] max-h-80'}
+	class={video.rtmps?.isConnected || video.screen?.isConnected || video.webcam?.isConnected
+		? 'w-full h-full'
+		: 'w-[500px] max-h-80'}
 	on:mouseenter={() => (isHoverVideo = true)}
 	on:mouseleave={() => (isHoverVideo = false)}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
@@ -319,7 +386,7 @@
 				? 'mask-hexagon'
 				: 'mask-squircle'} object-cover m-auto" />
 		<div class="absolute inset-0">
-			{#if video.isConnected}
+			{#if video.rtmps?.isConnected || video.screen?.isConnected}
 				<span
 					class="z-10 btn btn-sm btn-neutral font-medium text-white border-none items-center w-fit absolute top-2 left-2 {isHoverVideo
 						? 'opacity-100'
@@ -327,14 +394,22 @@
 					{formattedTime}
 				</span>
 			{/if}
-			{#if video.isConnected && video.trackType === 'rtmps'}
+			{#if video.rtmps?.isConnected && video.rtmps?.trackType === 'rtmps'}
 				<div class="absolute rounded-md w-full h-full">
 					<iframe
 						src={iframeUrl}
 						class="rounded-md w-full h-full"
 						allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;" />
 				</div>
-			{:else if $page.data.user?.userId === video._id}
+			{/if}
+			{#if !iframeUrl}
+				{#if $page.data.user?.userId !== video._id}
+					<iframe
+						src="https://olafwempe.com/mp3/silence/silence.mp3"
+						allow="autoplay"
+						id="audio"
+						style="display:none" />
+				{/if}
 				<video
 					bind:this={screen_element}
 					id={`screen-${video._id}`}
@@ -342,13 +417,14 @@
 					muted
 					class="rounded-md w-full h-full" />
 				<div
-					bind:this={webcam_container_element}
 					use:draggable={{ bounds: 'parent' }}
 					on:mousedown={onMouseDown}
 					on:mouseup={onMouseUp}
 					class={animate +
 						' absolute ' +
-						(!isScreenLive ? 'w-full bottom-0 left-0 h-full' : 'w-1/4 bottom-0 right-0')}>
+						(!video.screen?.isConnected
+							? 'w-full bottom-0 left-0 h-full'
+							: 'w-1/4 bottom-0 right-0')}>
 					<video
 						bind:this={webcam_element}
 						id={`webcam-${video._id}`}
@@ -357,22 +433,11 @@
 						class="rounded-md h-full w-full" />
 				</div>
 				<audio bind:this={audio_element} autoplay class="rounded-md w-0 h-0" />
-				<canvas bind:this={webrtc_canvas_element} class="rounded-md w-full h-full hidden" />
-			{:else}
-				<iframe
-					src="https://olafwempe.com/mp3/silence/silence.mp3"
-					allow="autoplay"
-					id="audio"
-					style="display:none" />
-				<video
-					bind:this={webrtc_video_element}
-					class="rounded-md w-full h-full {video.isConnected && video.trackType === 'webrtc'
-						? ''
-						: 'hidden'}"
-					autoplay
-					controls />
 			{/if}
-			<div class="absolute left-2 bottom-2 rounded-md dropdown {video.isConnected ? 'mb-16' : ''}">
+			<div
+				class="absolute left-2 bottom-2 rounded-md dropdown {video.rtmps?.isConnected
+					? 'mb-16'
+					: ''}">
 				<label
 					tabindex="0"
 					class="{coloredRole.textColor} bg-base-100 btn btn-sm normal-case flex gap-1 {speakingValue >

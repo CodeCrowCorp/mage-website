@@ -8,11 +8,13 @@ import { getAudioIndicator } from '$lib/utils'
  */
 export default class WHIPClient extends EventTarget {
 	public peerConnection: RTCPeerConnection
-	private localScreenStream?: MediaStream
-	private localWebcamStream?: MediaStream
-	private localAudioStream?: MediaStream
+	public localStream?: MediaStream
 
-	constructor(private endpoint: string) {
+	constructor(
+		private endpoint: string,
+		private videoElement: any,
+		private trackType: string
+	) {
 		super()
 		/**
 		 * Create a new WebRTC connection, using public STUN servers with ICE,
@@ -39,6 +41,19 @@ export default class WHIPClient extends EventTarget {
 			await negotiateConnectionWithClientOffer(this.peerConnection, this.endpoint)
 			console.log('Connection negotiation ended')
 		})
+
+		/**
+		 * While the connection is being initialized,
+		 * connect the video stream to the provided <video> element.
+		 */
+		this.accessLocalMediaSources(trackType)
+			.then((stream: any) => {
+				this.localStream = stream
+				videoElement.srcObject = stream
+			})
+			.catch(() => {
+				this.disconnectStream()
+			})
 	}
 
 	/**
@@ -47,253 +62,78 @@ export default class WHIPClient extends EventTarget {
 	 *
 	 * https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
 	 */
-	public async accessLocalScreenMediaSources(
-		canvasElement: HTMLCanvasElement,
-		screenElement: HTMLVideoElement,
-		webcamElement: HTMLVideoElement,
-		webcamContainerElement: HTMLDivElement
-	) {
-		try {
-			/**
-			 * While the connection is being initialized,
-			 * connect the video stream to the provided <video> element.
-			 */
-			navigator.mediaDevices
-				.getDisplayMedia({ video: true, audio: true })
-				.then(async (stream) => {
-					let audioTrack = stream.getAudioTracks()[0]
-					if (!audioTrack) {
-						const audioContext = new AudioContext()
-						const oscillator = audioContext.createOscillator()
-						const destination = audioContext.createMediaStreamDestination()
-						oscillator.connect(destination)
-						oscillator.frequency.setValueAtTime(0, audioContext.currentTime)
-						oscillator.start()
-						audioTrack = destination.stream.getAudioTracks()[0]
-						audioTrack.enabled = true
-						// audioTrack.id = 'silent-audio-track'
-						// audioTrack.label = 'Silent Audio Track'
-					}
+	private async accessLocalMediaSources(trackType: string) {
+		if (trackType === 'screen') {
+			return navigator.mediaDevices.getDisplayMedia({ video: true, audio: true }).then((stream) => {
+				if (!stream.getAudioTracks().length) {
+					const audioContext = new AudioContext()
+					const oscillator = audioContext.createOscillator()
+					const destination = audioContext.createMediaStreamDestination()
+					oscillator.connect(destination)
+					oscillator.frequency.setValueAtTime(0, audioContext.currentTime)
+					oscillator.start()
+					const audioTrack = destination.stream.getAudioTracks()[0]
+					audioTrack.enabled = true
 					this.peerConnection.addTransceiver(audioTrack, {
 						direction: 'sendonly'
 					})
-					// Add the stream to the canvas and get the canvas stream
-					const canvasStream = await this.addStreamToCanvas(
-						stream,
-						canvasElement,
-						screenElement,
-						webcamElement,
-						webcamContainerElement,
-						true
-					)
-					// Add the canvas stream's tracks to the peer connection
-					canvasStream.getTracks().forEach((track) => {
-						this.peerConnection.addTransceiver(track, {
-							direction: 'sendonly'
-						})
-					})
-					stream.getVideoTracks()[0].addEventListener('ended', () => this.disconnectStreamScreen())
-					if (stream.getVideoTracks()[0].readyState === 'live') {
-						this.dispatchEvent(new CustomEvent(`isScreenLive`, { detail: true }))
-					}
-					this.localScreenStream = stream
-				})
-				.catch(() => {
-					this.disconnectStreamScreen()
-				})
-		} catch (error) {
-			this.disconnectStreamScreen()
-		}
-	}
-
-	public async accessLocalWebcamMediaSources(
-		canvasElement: HTMLCanvasElement,
-		screenElement: HTMLVideoElement,
-		webcamElement: HTMLVideoElement,
-		webcamContainerElement: HTMLDivElement
-	) {
-		try {
-			navigator.mediaDevices
-				.getUserMedia({ video: true, audio: false })
-				.then(async (stream) => {
-					let audioTrack = stream.getAudioTracks()[0]
-					if (!audioTrack) {
-						const audioContext = new AudioContext()
-						const oscillator = audioContext.createOscillator()
-						const destination = audioContext.createMediaStreamDestination()
-						oscillator.connect(destination)
-						oscillator.frequency.setValueAtTime(0, audioContext.currentTime)
-						oscillator.start()
-						audioTrack = destination.stream.getAudioTracks()[0]
-						audioTrack.enabled = true
-						// audioTrack.id = 'silent-audio-track'
-						// audioTrack.label = 'Silent Audio Track'
-					}
-					this.peerConnection.addTransceiver(audioTrack, {
+				}
+				stream.getTracks().forEach((track) => {
+					const transceiver = this.peerConnection.addTransceiver(track, {
+						/** WHIP is only for sending streaming media */
 						direction: 'sendonly'
 					})
-					// Add the stream to the canvas and get the canvas stream
-					const canvasStream = await this.addStreamToCanvas(
-						stream,
-						canvasElement,
-						screenElement,
-						webcamElement,
-						webcamContainerElement,
-						false
-					)
-					// Add the canvas stream's tracks to the peer connection
-					canvasStream.getTracks().forEach((track) => {
-						this.peerConnection.addTransceiver(track, {
-							direction: 'sendonly'
+					if (track.kind == 'video' && transceiver.sender.track) {
+						transceiver.sender.track.applyConstraints({
+							width: 1920,
+							height: 1080
 						})
-					})
-					stream.getVideoTracks()[0].addEventListener('ended', () => this.disconnectStreamWebcam())
-					if (stream.getVideoTracks()[0].readyState === 'live') {
-						this.dispatchEvent(new CustomEvent(`isWebcamLive`, { detail: true }))
 					}
-					this.localWebcamStream = stream
 				})
-				.catch(() => {
-					this.disconnectStreamWebcam()
+				stream.getVideoTracks()[0].addEventListener('ended', () => this.disconnectStream())
+				return stream
+			})
+		} else if (trackType === 'webcam') {
+			return navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
+				stream.getTracks().forEach((track) => {
+					const transceiver = this.peerConnection.addTransceiver(track, {
+						/** WHIP is only for sending streaming media */
+						direction: 'sendonly'
+					})
+					if (track.kind == 'video' && transceiver.sender.track) {
+						transceiver.sender.track.applyConstraints({
+							width: 1280,
+							height: 720
+						})
+					}
 				})
-		} catch (error) {
-			this.disconnectStreamWebcam()
-		}
-	}
-
-	public async accessLocalAudioMediaSources(audioElement: any) {
-		try {
-			navigator.mediaDevices
+				stream.getVideoTracks()[0].addEventListener('ended', () => this.disconnectStream())
+				return stream
+			})
+		} else if (trackType === 'audio') {
+			return navigator.mediaDevices
 				.getUserMedia({
 					video: false,
-					audio: true
+					audio: {
+						echoCancellation: true,
+						noiseSuppression: true,
+						deviceId: 'default'
+					}
 				})
 				.then((stream) => {
-					stream.getAudioTracks().forEach((track) => {
+					stream.getTracks().forEach((track) => {
 						this.peerConnection.addTransceiver(track, {
 							/** WHIP is only for sending streaming media */
 							direction: 'sendonly'
 						})
 					})
 					stream.getAudioTracks()[0].addEventListener('ended', () => {
-						this.disconnectStreamAudio()
+						this.disconnectStream()
 					})
 					getAudioIndicator(stream, this)
-					this.localAudioStream = stream
-					audioElement.srcObject = stream
+					return stream
 				})
-				.catch(() => {
-					this.disconnectStreamAudio()
-				})
-		} catch (error) {
-			this.disconnectStreamAudio()
 		}
-	}
-
-	private async addStreamToCanvas(
-		stream: MediaStream,
-		canvasElement: HTMLCanvasElement,
-		screenVideoElement: HTMLVideoElement,
-		webcamVideoElement: HTMLVideoElement,
-		webcamContainerElement: HTMLDivElement,
-		isScreen: boolean
-	): Promise<MediaStream> {
-		// Determine which stream is being added
-		const videoElement = isScreen ? screenVideoElement : webcamVideoElement
-		videoElement.srcObject = stream
-		videoElement.play()
-
-		// Draw the video frame to the canvas
-		const context = canvasElement.getContext('2d')
-		canvasElement.width = 1920
-		canvasElement.height = 1080
-		const drawVideoFrame = () => {
-			if (
-				screenVideoElement.readyState === screenVideoElement.HAVE_ENOUGH_DATA &&
-				screenVideoElement.srcObject !== null
-			) {
-				// Get the video resolution from the stream
-				const videoWidth = screenVideoElement.videoWidth
-				const videoHeight = screenVideoElement.videoHeight
-
-				const canvasWidth = canvasElement.width
-				const canvasHeight = canvasElement.height
-
-				// Calculate scale factors
-				const scaleWidth = canvasWidth / videoWidth
-				const scaleHeight = canvasHeight / videoHeight
-
-				// Use the smaller scale factor
-				const scale = Math.min(scaleWidth, scaleHeight)
-
-				const scaledWidth = videoWidth * scale
-				const scaledHeight = videoHeight * scale
-
-				// Calculate the position to center the image
-				const posX = (canvasWidth - scaledWidth) / 2
-				const posY = (canvasHeight - scaledHeight) / 2
-
-				context?.drawImage(screenVideoElement, posX, posY, scaledWidth, scaledHeight)
-			} else {
-				context?.clearRect(0, 0, canvasElement.width, canvasElement.height)
-			}
-
-			if (webcamVideoElement.readyState === webcamVideoElement.HAVE_ENOUGH_DATA) {
-				// Get the position of the webcamContainerElement relative to the viewport
-				const rect = webcamContainerElement.getBoundingClientRect()
-
-				// Get the position of the canvas relative to the viewport
-				const canvasRect = canvasElement.getBoundingClientRect()
-
-				// Calculate the position of the webcamContainerElement relative to the canvas
-				let x = rect.left - canvasRect.left
-				let y = rect.top - canvasRect.top
-
-				// Get the natural size of the webcam video
-				let width = webcamVideoElement.videoWidth
-				let height = webcamVideoElement.videoHeight
-
-				// If screen is not being shared, make the webcam the size of the canvas
-				if (screenVideoElement.srcObject === null) {
-					// Calculate the aspect ratio of the webcam video
-					const aspectRatio = webcamVideoElement.videoWidth / webcamVideoElement.videoHeight
-
-					// Calculate the new width and height based on the aspect ratio
-					if (canvasElement.width / aspectRatio <= canvasElement.height) {
-						width = canvasElement.width
-						height = canvasElement.width / aspectRatio
-					} else {
-						width = canvasElement.height * aspectRatio
-						height = canvasElement.height
-					}
-
-					// Center the webcam video on the canvas
-					x = (canvasElement.width - width) / 2
-					y = (canvasElement.height - height) / 2
-				}
-
-				// Check if the webcam video is outside the canvas boundaries and adjust the position if necessary
-				if (x < 0) x = 0
-				if (y < 0) y = 0
-				if (x + width > canvasElement.width) x = canvasElement.width - width
-				if (y + height > canvasElement.height) y = canvasElement.height - height
-
-				// Draw the webcam video at the updated position and with its natural size
-				context?.drawImage(webcamVideoElement, x, y, width, height)
-			}
-
-			requestAnimationFrame(drawVideoFrame)
-		}
-		drawVideoFrame()
-
-		// Capture the stream from the canvas
-		const canvasStream = canvasElement.captureStream(60)
-
-		// Clear the canvas when the stream is disconnected
-		stream.getVideoTracks()[0].addEventListener('ended', () => {
-			context?.clearRect(0, 0, canvasElement.width, canvasElement.height)
-		})
-		return canvasStream
 	}
 
 	/**
@@ -310,47 +150,9 @@ export default class WHIPClient extends EventTarget {
 		// 	mode: 'cors'
 		// })
 		this.peerConnection.close()
+		this.localStream?.getTracks().forEach((track) => track.stop())
+		this.videoElement.srcObject = null
+		this.dispatchEvent(new CustomEvent(`localStreamStopped-${this.trackType}`))
 		console.log('Disconnected')
-	}
-
-	public disconnectStreamScreen() {
-		this.localScreenStream?.getTracks().forEach((track) => track.stop())
-		this.dispatchEvent(new CustomEvent(`localStreamStopped-screen`))
-		console.log('Screen stream disconnected')
-		if (this.areAllStreamsStopped()) {
-			this.disconnectStream()
-		}
-	}
-
-	public disconnectStreamWebcam() {
-		this.localWebcamStream?.getTracks().forEach((track) => track.stop())
-		this.dispatchEvent(new CustomEvent(`localStreamStopped-webcam`))
-		console.log('Webcam stream disconnected')
-		if (this.areAllStreamsStopped()) {
-			this.disconnectStream()
-		}
-	}
-
-	public disconnectStreamAudio() {
-		this.localAudioStream?.getTracks().forEach((track) => track.stop())
-		this.dispatchEvent(new CustomEvent(`localStreamStopped-audio`))
-		console.log('Audio stream disconnected')
-		if (this.areAllStreamsStopped()) {
-			this.disconnectStream()
-		}
-	}
-
-	private areAllStreamsStopped(): boolean {
-		const screenStopped =
-			!this.localScreenStream ||
-			this.localScreenStream.getTracks().every((track) => track.readyState === 'ended')
-		const webcamStopped =
-			!this.localWebcamStream ||
-			this.localWebcamStream.getTracks().every((track) => track.readyState === 'ended')
-		const audioStopped =
-			!this.localAudioStream ||
-			this.localAudioStream.getTracks().every((track) => track.readyState === 'ended')
-
-		return screenStopped && webcamStopped && audioStopped
 	}
 }

@@ -127,7 +127,7 @@ export const getColoredRole = (role: string) =>
 		Mod: { tagColor: 'bg-green-700', textColor: 'text-green-600' },
 		You: { tagColor: 'bg-gray-600' },
 		Rando: { textColor: 'text-info' }
-	}[role] || {})
+	})[role] || {}
 
 /*
 Input: 33, 16
@@ -310,8 +310,8 @@ export const captureScreenShot = (channel: any) => {
 		`webcam-${channel.videoItems[0]._id}`
 	) as HTMLVideoElement
 	const canvas = document.createElement('canvas')
-	canvas.width = 1920
-	canvas.height = 1080
+	canvas.width = screenElement?.videoWidth || 1920
+	canvas.height = screenElement?.videoHeight || 1080
 
 	const ctx = canvas.getContext('2d')
 
@@ -405,13 +405,29 @@ export const formatTime = (streamTime: number) => {
 
 export const updateVideoItems = (videoItems: any, liveInputs: any[]) => {
 	const vidItems = [...videoItems]
+	const liveInputsMap = new Map()
 	if (Array.isArray(liveInputs)) {
+		liveInputs.forEach((liveInput: any) => {
+			liveInputsMap.set(liveInput._id, liveInput)
+		})
 		vidItems.forEach((video: any) => {
-			liveInputs.forEach((liveInput: any) => {
-				if (video._id === liveInput._id) {
-					video = Object.assign(video, liveInput)
+			const liveInput = liveInputsMap.get(video._id)
+			if (liveInput) {
+				switch (liveInput.trackType) {
+					case 'rtmps':
+						video.rtmps = liveInput
+						break
+					case 'screen':
+						video.screen = liveInput
+						break
+					case 'webcam':
+						video.webcam = liveInput
+						break
+					case 'audio':
+						video.audio = liveInput
+						break
 				}
-			})
+			}
 		})
 	}
 	return vidItems
