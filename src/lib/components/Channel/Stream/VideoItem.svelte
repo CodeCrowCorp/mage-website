@@ -419,11 +419,6 @@
 				</div>
 			{/if}
 			{#if !iframeUrl}
-				<iframe
-					src="https://olafwempe.com/mp3/silence/silence.mp3"
-					allow="autoplay"
-					id="audio"
-					style="display:none" />
 				<video
 					bind:this={screen_element}
 					id={`screen-${video._id}`}
