@@ -217,7 +217,7 @@
 				case 'screen':
 					if (video.screen?.isConnected) {
 						screenWhep = new WHEPClient(video.screen?.webRTCPlayback.url, screen_element, `screen`)
-						screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
+						screenWhep.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 						screen_element.addEventListener('dblclick', (event: any) => {
 							if (document.fullscreenElement) {
 								document.exitFullscreen()
