@@ -127,6 +127,7 @@
 						videoElement: screen_element,
 						trackType: `screen`
 					})
+					screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 					screen_element.addEventListener('dblclick', (event: any) => {
 						if (document.fullscreenElement) {
 							document.exitFullscreen()
@@ -375,6 +376,13 @@
 			}, 1000)
 		}
 	}
+
+	const unmuteTracks = async () => {
+		if (video.screen?.isConnected || video.audio?.isConnected) {
+			screen_element.muted = false
+			audio_element.muted = false
+		}
+	}
 </script>
 
 <div
@@ -382,7 +390,8 @@
 		? 'w-full h-full'
 		: 'w-[500px] max-h-80'}
 	on:mouseenter={() => (isHoverVideo = true)}
-	on:mouseleave={() => (isHoverVideo = false)}>
+	on:mouseleave={() => (isHoverVideo = false)}
+	on:click={unmuteTracks}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
 		<img
 			src={video.avatar}
@@ -412,7 +421,7 @@
 					bind:this={screen_element}
 					id={`screen-${video._id}`}
 					autoplay
-					muted={$page.data.user?.userId === video._id}
+					muted
 					class="rounded-md w-full h-full" />
 				<div
 					use:draggable={{ bounds: 'parent' }}
@@ -428,11 +437,7 @@
 						muted
 						class="rounded-md h-full w-full" />
 				</div>
-				<audio
-					bind:this={audio_element}
-					autoplay
-					muted={$page.data.user?.userId === video._id}
-					class="rounded-md w-0 h-0" />
+				<audio bind:this={audio_element} autoplay muted class="rounded-md w-0 h-0" />
 			{/if}
 			<div
 				class="absolute left-2 bottom-2 rounded-md dropdown {video.rtmps?.isConnected
