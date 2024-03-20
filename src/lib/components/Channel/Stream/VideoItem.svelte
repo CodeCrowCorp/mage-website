@@ -124,7 +124,7 @@
 				if (value === true) {
 					screenWhip = getWhip({
 						whip: screenWhip,
-						url: video.screen.url,
+						url: video.screen?.webRTC.url,
 						videoElement: screen_element,
 						trackType: `screen`
 					})
@@ -150,7 +150,7 @@
 				if (value === true) {
 					webcamWhip = getWhip({
 						whip: webcamWhip,
-						url: video.webcam.url,
+						url: video.webcam?.webRTC.url,
 						videoElement: webcam_element,
 						trackType: `webcam`
 					})
@@ -176,7 +176,7 @@
 				if (value === true) {
 					audioWhip = getWhip({
 						whip: audioWhip,
-						url: video.audio.url,
+						url: video.audio?.webRTC.url,
 						videoElement: audio_element,
 						trackType: `audio`
 					})
