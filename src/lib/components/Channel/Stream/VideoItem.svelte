@@ -44,6 +44,9 @@
 		isHoverVideo: boolean = false,
 		iframeUrl: string = ''
 
+	// WHIP/WHEP variables that determine if stream is coming in
+	$: isScreenLive = false
+
 	$: if (channel) {
 		role = setRole({ userId: video._id, channel, currentUserId: $page.data.user?.userId })
 		coloredRole = getColoredRole(role)
@@ -137,6 +140,7 @@
 				} else {
 					if (value === false) screenWhip?.disconnectStream()
 					if (screen_element) screen_element.srcObject = null
+					isScreenLive = false
 				}
 			})
 
@@ -213,6 +217,7 @@
 				case 'screen':
 					if (video.screen?.isConnected) {
 						screenWhep = new WHEPClient(video.screen?.webRTCPlayback.url, screen_element, `screen`)
+						screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 						screen_element.addEventListener('dblclick', (event: any) => {
 							if (document.fullscreenElement) {
 								document.exitFullscreen()
@@ -422,9 +427,7 @@
 					on:mouseup={onMouseUp}
 					class={animate +
 						' absolute ' +
-						(!video.screen?.isConnected
-							? 'w-full bottom-0 left-0 h-full'
-							: 'w-1/4 bottom-0 right-0')}>
+						(!isScreenLive ? 'w-full bottom-0 left-0 h-full' : 'w-1/4 bottom-0 right-0')}>
 					<video
 						bind:this={webcam_element}
 						id={`webcam-${video._id}`}
