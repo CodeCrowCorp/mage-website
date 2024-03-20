@@ -419,7 +419,7 @@
 					bind:this={screen_element}
 					id={`screen-${video._id}`}
 					autoplay
-					muted
+					muted={$page.data.user?.userId === video._id}
 					class="rounded-md w-full h-full" />
 				<div
 					use:draggable={{ bounds: 'parent' }}
@@ -435,7 +435,11 @@
 						muted
 						class="rounded-md h-full w-full" />
 				</div>
-				<audio bind:this={audio_element} autoplay class="rounded-md w-0 h-0" />
+				<audio
+					bind:this={audio_element}
+					autoplay
+					muted={$page.data.user?.userId === video._id}
+					class="rounded-md w-0 h-0" />
 			{/if}
 			<div
 				class="absolute left-2 bottom-2 rounded-md dropdown {video.rtmps?.isConnected
