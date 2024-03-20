@@ -387,7 +387,9 @@
 </script>
 
 <div
-	class={video.isConnected ? 'w-full h-full' : 'w-[500px] max-h-80'}
+	class={video.rtmps?.isConnected || video.screen?.isConnected || video.webcam?.isConnected
+		? 'w-full h-full'
+		: 'w-[500px] max-h-80'}
 	on:mouseenter={() => (isHoverVideo = true)}
 	on:mouseleave={() => (isHoverVideo = false)}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
