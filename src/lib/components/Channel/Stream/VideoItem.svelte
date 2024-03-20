@@ -65,23 +65,23 @@
 		video._id !== $page.data.user?.userId &&
 		role !== '🤖 AI'
 
-	$: if (isMounted && video.rtmps.isConnected !== isConnectedRtmps) {
+	$: if (isMounted && video.rtmps?.isConnected !== isConnectedRtmps) {
 		handleRtmpsChanges()
 	}
 
-	$: if (isMounted && video.screen.isConnected !== isConnectedScreen) {
+	$: if (isMounted && video.screen?.isConnected !== isConnectedScreen) {
 		handleScreenChanges()
 	}
 
-	$: if (isMounted && video.webcam.isConnected !== isConnectedWebcam) {
+	$: if (isMounted && video.webcam?.isConnected !== isConnectedWebcam) {
 		handleWebcamChanges()
 	}
 
-	$: if (isMounted && video.audio.isConnected !== isConnectedAudio) {
+	$: if (isMounted && video.audio?.isConnected !== isConnectedAudio) {
 		handleAudioChanges()
 	}
 
-	$: if (video.rtmps.isConnected || video.screen.isConnected) {
+	$: if (video.rtmps?.isConnected || video.screen?.isConnected) {
 		toggleTimer(true)
 	} else {
 		toggleTimer(false)
@@ -90,25 +90,25 @@
 	$: animate = isWebcamFocused ? '' : 'transition-all'
 
 	const handleRtmpsChanges = () => {
-		isConnectedRtmps = video.rtmps.isConnected
+		isConnectedRtmps = video.rtmps?.isConnected
 		toggleClient({
 			trackType: 'rtmps'
 		})
 	}
 	const handleScreenChanges = () => {
-		isConnectedScreen = video.screen.isConnected
+		isConnectedScreen = video.screen?.isConnected
 		toggleClient({
 			trackType: 'screen'
 		})
 	}
 	const handleWebcamChanges = () => {
-		isConnectedWebcam = video.webcam.isConnected
+		isConnectedWebcam = video.webcam?.isConnected
 		toggleClient({
 			trackType: 'webcam'
 		})
 	}
 	const handleAudioChanges = () => {
-		isConnectedAudio = video.audio.isConnected
+		isConnectedAudio = video.audio?.isConnected
 		toggleClient({
 			trackType: 'audio'
 		})
@@ -200,7 +200,7 @@
 		if ($page.data.user?.userId === video._id) {
 			switch (trackType) {
 				case 'rtmps':
-					if (video.rtmps.isConnected) {
+					if (video.rtmps?.isConnected) {
 						iframeUrl = video.playback?.iframe
 						$is_sharing_rtmps = true
 					} else {
@@ -212,15 +212,15 @@
 		} else {
 			switch (trackType) {
 				case 'rtmps':
-					if (video.rtmps.isConnected) {
+					if (video.rtmps?.isConnected) {
 						iframeUrl = video.playback?.iframe
 					} else {
 						iframeUrl = ''
 					}
 					break
 				case 'screen':
-					if (video.isConnected) {
-						screenWhep = new WHEPClient(video.screen.webRTCPlayback.url, screen_element, `screen`)
+					if (video.screen?.isConnected) {
+						screenWhep = new WHEPClient(video.screen?.webRTCPlayback.url, screen_element, `screen`)
 						screenWhep.addEventListener(`isScreenLive`, (ev: any) => {
 							isScreenLive = ev.detail
 						})
@@ -236,8 +236,8 @@
 					}
 					break
 				case 'webcam':
-					if (video.isConnected) {
-						webcamWhep = new WHEPClient(video.webRTCPlayback.url, webcam_element, `webcam`)
+					if (video.webcam?.isConnected) {
+						webcamWhep = new WHEPClient(video.webcam?.webRTCPlayback.url, webcam_element, `webcam`)
 						webcamWhep.addEventListener(`isScreenLive`, (ev: any) => {
 							isScreenLive = ev.detail
 						})
@@ -253,8 +253,8 @@
 					}
 					break
 				case 'audio':
-					if (video.isConnected) {
-						audioWhep = new WHEPClient(video.audio.webRTCPlayback.url, audio_element, `audio`)
+					if (video.audio?.isConnected) {
+						audioWhep = new WHEPClient(video.audio?.webRTCPlayback.url, audio_element, `audio`)
 						audioWhep.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
 							speakingValue = ev.detail
 						})
@@ -350,7 +350,7 @@
 			timerInterval = setInterval(async () => {
 				try {
 					if (streamTime < 1) {
-						const inputId = video.uid
+						const inputId = video.rtmps?.uid || video.screen?.uid
 						const streamRecord = await get(`analytics/stream?inputId=${inputId}`)
 						streamTime = streamRecord
 							? Math.floor((Date.now() - new Date(streamRecord.start + 'Z').getTime()) / 1000)
@@ -398,7 +398,7 @@
 				? 'mask-hexagon'
 				: 'mask-squircle'} object-cover m-auto" />
 		<div class="absolute inset-0">
-			{#if video.isConnected}
+			{#if video.rtmps?.isConnected || video.screen?.isConnected}
 				<span
 					class="z-10 btn btn-sm btn-neutral font-medium text-white border-none items-center w-fit absolute top-2 left-2 {isHoverVideo
 						? 'opacity-100'
@@ -406,7 +406,7 @@
 					{formattedTime}
 				</span>
 			{/if}
-			{#if video.rtmps.isConnected && video.rtmps.trackType === 'rtmps'}
+			{#if video.rtmps?.isConnected && video.rtmps?.trackType === 'rtmps'}
 				<div class="absolute rounded-md w-full h-full">
 					<iframe
 						src={iframeUrl}
@@ -445,7 +445,12 @@
 				</div>
 				<audio bind:this={audio_element} autoplay class="rounded-md w-0 h-0" />
 			{/if}
-			<div class="absolute left-2 bottom-2 rounded-md dropdown {video.isConnected ? 'mb-16' : ''}">
+			<div
+				class="absolute left-2 bottom-2 rounded-md dropdown {video.rtmps?.isConnected ||
+				video.screen?.isConnected ||
+				video.webcam?.isConnected
+					? 'mb-16'
+					: ''}">
 				<label
 					tabindex="0"
 					class="{coloredRole.textColor} bg-base-100 btn btn-sm normal-case flex gap-1 {speakingValue >
