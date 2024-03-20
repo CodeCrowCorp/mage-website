@@ -426,7 +426,6 @@
 					bind:this={screen_element}
 					id={`screen-${video._id}`}
 					autoplay
-					controls
 					muted
 					class="rounded-md w-full h-full" />
 				<div
