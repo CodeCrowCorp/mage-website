@@ -228,6 +228,7 @@
 						})
 					} else {
 						if (screen_element) screen_element.srcObject = null
+						isScreenLive = false
 					}
 					break
 				case 'webcam':
