@@ -338,6 +338,13 @@
 	<DrawerRestream />
 {/if}
 
+<iframe
+	src="https://olafwempe.com/mp3/silence/silence.mp3"
+	allow="autoplay"
+	id="audio"
+	style="display:none"
+	title="silent track" />
+
 {#if channel && channel._id === parseInt($page.params.channelId)}
 	<div class="relative h-full bg-base-200 overflow-hidden flex">
 		<div
