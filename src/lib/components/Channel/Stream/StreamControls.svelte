@@ -70,19 +70,19 @@
 		})
 	}
 
-	const startWebrtcStream = async () => {
+	const startWebrtcStream = async (trackType: string) => {
 		let liveInput = await getLiveInput({
 			channelId: parseInt($page.params.channelId),
-			trackType: 'webrtc'
+			trackType
 		})
 		if (!liveInput) {
 			liveInput = await createLiveInput({
 				channelId: `${$page.params.channelId}`,
 				userId: $page.data.user?.userId,
-				trackType: 'webrtc',
+				trackType,
 				liveInput: {
 					meta: {
-						name: `${$page.params.channelId}-${$page.data.user.userId}-webrtc`
+						name: `${$page.params.channelId}-${$page.data.user.userId}-webrtc-${trackType}`
 					},
 					recording: { mode: 'off' }
 				}
@@ -172,7 +172,7 @@
 						data-tip="Screen"
 						on:click={async () => {
 							if ($is_sharing_screen === false || $is_sharing_screen === undefined) {
-								await startWebrtcStream()
+								await startWebrtcStream(`screen`)
 							}
 							$is_sharing_screen = !$is_sharing_screen
 						}}
@@ -189,7 +189,7 @@
 						data-tip="Webcam"
 						on:click={async () => {
 							if ($is_sharing_webcam === false || $is_sharing_webcam === undefined) {
-								await startWebrtcStream()
+								await startWebrtcStream(`webcam`)
 							}
 							$is_sharing_webcam = !$is_sharing_webcam
 						}}
@@ -206,7 +206,7 @@
 						data-tip="Audio"
 						on:click={async () => {
 							if ($is_sharing_audio === false || $is_sharing_audio === undefined) {
-								await startWebrtcStream()
+								await startWebrtcStream(`audio`)
 							}
 							$is_sharing_audio = !$is_sharing_audio
 						}}

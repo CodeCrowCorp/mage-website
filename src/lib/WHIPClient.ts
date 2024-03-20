@@ -1,7 +1,5 @@
 import negotiateConnectionWithClientOffer from '$lib/negotiateConnectionWithClientOffer'
 import { getAudioIndicator } from '$lib/utils'
-import { FFmpeg } from '@ffmpeg/ffmpeg'
-import { toBlobURL } from '@ffmpeg/util'
 
 /**
  * Example implementation of a client that uses WHIP to broadcast video over WebRTC
@@ -10,12 +8,13 @@ import { toBlobURL } from '@ffmpeg/util'
  */
 export default class WHIPClient extends EventTarget {
 	public peerConnection: RTCPeerConnection
-	private localScreenStream?: MediaStream
-	private localWebcamStream?: MediaStream
-	private localAudioStream?: MediaStream
-	private localWebrtcStream?: MediaStream
+	public localStream?: MediaStream
 
-	constructor(private endpoint: string) {
+	constructor(
+		private endpoint: string,
+		private videoElement: any,
+		private trackType: string
+	) {
 		super()
 		/**
 		 * Create a new WebRTC connection, using public STUN servers with ICE,
@@ -42,6 +41,19 @@ export default class WHIPClient extends EventTarget {
 			await negotiateConnectionWithClientOffer(this.peerConnection, this.endpoint)
 			console.log('Connection negotiation ended')
 		})
+
+		/**
+		 * While the connection is being initialized,
+		 * connect the video stream to the provided <video> element.
+		 */
+		this.accessLocalMediaSources(trackType)
+			.then((stream: any) => {
+				this.localStream = stream
+				videoElement.srcObject = stream
+			})
+			.catch(() => {
+				this.disconnectStream()
+			})
 	}
 
 	/**
@@ -50,293 +62,84 @@ export default class WHIPClient extends EventTarget {
 	 *
 	 * https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
 	 */
-	public async accessLocalScreenMediaSources(
-		webrtcElement: HTMLVideoElement,
-		screenElement: HTMLVideoElement,
-		webcamElement: HTMLVideoElement,
-		webcamContainerElement: HTMLDivElement
-	) {
-		try {
-			/**
-			 * While the connection is being initialized,
-			 * connect the video stream to the provided <video> element.
-			 */
-			navigator.mediaDevices
-				.getDisplayMedia({ video: true, audio: true })
-				.then(async (stream) => {
-					// Add the stream to the media and get the combined stream
-					await this.addStreamToMedia(
-						stream,
-						webrtcElement,
-						screenElement,
-						webcamElement,
-						webcamContainerElement,
-						true
-					)
-					stream.getVideoTracks()[0].addEventListener('ended', () => this.disconnectStreamScreen())
-					if (stream.getVideoTracks()[0].readyState === 'live') {
-						this.dispatchEvent(new CustomEvent(`isScreenLive`, { detail: true }))
+	private async accessLocalMediaSources(trackType: string) {
+		if (trackType === 'screen') {
+			return navigator.mediaDevices.getDisplayMedia({ video: true, audio: true }).then((stream) => {
+				if (!stream.getAudioTracks().length) {
+					const audioContext = new AudioContext()
+					const oscillator = audioContext.createOscillator()
+					const destination = audioContext.createMediaStreamDestination()
+					oscillator.connect(destination)
+					oscillator.frequency.setValueAtTime(0, audioContext.currentTime)
+					oscillator.start()
+					const audioTrack = destination.stream.getAudioTracks()[0]
+					audioTrack.enabled = true
+					this.peerConnection.addTransceiver(audioTrack, {
+						direction: 'sendonly'
+					})
+				}
+				stream.getTracks().forEach((track) => {
+					const transceiver = this.peerConnection.addTransceiver(track, {
+						/** WHIP is only for sending streaming media */
+						direction: 'sendonly'
+					})
+					if (track.kind == 'video' && transceiver.sender.track) {
+						transceiver.sender.track.applyConstraints({
+							width: 1920,
+							height: 1080
+						})
 					}
-					this.localScreenStream = stream
 				})
-				.catch((err) => {
-					console.log('got here----1', err)
-					this.disconnectStreamScreen()
-				})
-		} catch (err) {
-			console.log('got here----2', err)
-			this.disconnectStreamScreen()
-		}
-	}
-
-	public async accessLocalWebcamMediaSources(
-		webrtcElement: HTMLVideoElement,
-		screenElement: HTMLVideoElement,
-		webcamElement: HTMLVideoElement,
-		webcamContainerElement: HTMLDivElement
-	) {
-		try {
-			navigator.mediaDevices
-				.getUserMedia({ video: true, audio: false })
-				.then(async (stream) => {
-					// Add the stream to the media and get the combined stream
-					await this.addStreamToMedia(
-						stream,
-						webrtcElement,
-						screenElement,
-						webcamElement,
-						webcamContainerElement,
-						false
-					)
-					stream.getVideoTracks()[0].addEventListener('ended', () => this.disconnectStreamWebcam())
-					if (stream.getVideoTracks()[0].readyState === 'live') {
-						this.dispatchEvent(new CustomEvent(`isWebcamLive`, { detail: true }))
+				stream.getVideoTracks()[0].addEventListener('ended', () => this.disconnectStream())
+				if (stream.getVideoTracks()[0].readyState === 'live') {
+					this.dispatchEvent(new CustomEvent(`isScreenLive`, { detail: true }))
+				}
+				return stream
+			})
+		} else if (trackType === 'webcam') {
+			return navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
+				stream.getTracks().forEach((track) => {
+					const transceiver = this.peerConnection.addTransceiver(track, {
+						/** WHIP is only for sending streaming media */
+						direction: 'sendonly'
+					})
+					if (track.kind == 'video' && transceiver.sender.track) {
+						transceiver.sender.track.applyConstraints({
+							width: 1280,
+							height: 720
+						})
 					}
-					this.localWebcamStream = stream
 				})
-				.catch(() => {
-					this.disconnectStreamWebcam()
-				})
-		} catch (error) {
-			this.disconnectStreamWebcam()
-		}
-	}
-
-	public async accessLocalAudioMediaSources(audioElement: any) {
-		try {
-			navigator.mediaDevices
+				stream.getVideoTracks()[0].addEventListener('ended', () => this.disconnectStream())
+				if (stream.getVideoTracks()[0].readyState === 'live') {
+					this.dispatchEvent(new CustomEvent(`isWebcamLive`, { detail: true }))
+				}
+				return stream
+			})
+		} else if (trackType === 'audio') {
+			return navigator.mediaDevices
 				.getUserMedia({
 					video: false,
-					audio: true
+					audio: {
+						echoCancellation: true,
+						noiseSuppression: true,
+						deviceId: 'default'
+					}
 				})
 				.then((stream) => {
-					stream.getAudioTracks().forEach((track) => {
+					stream.getTracks().forEach((track) => {
 						this.peerConnection.addTransceiver(track, {
 							/** WHIP is only for sending streaming media */
 							direction: 'sendonly'
 						})
 					})
 					stream.getAudioTracks()[0].addEventListener('ended', () => {
-						this.disconnectStreamAudio()
+						this.disconnectStream()
 					})
 					getAudioIndicator(stream, this)
-					this.localAudioStream = stream
-					audioElement.srcObject = stream
+					return stream
 				})
-				.catch(() => {
-					this.disconnectStreamAudio()
-				})
-		} catch (error) {
-			this.disconnectStreamAudio()
 		}
-	}
-
-	private async addStreamToMedia(
-		stream: MediaStream,
-		webrtcVideoElement: any,
-		screenVideoElement: HTMLVideoElement,
-		webcamVideoElement: HTMLVideoElement,
-		webcamContainerElement: HTMLDivElement,
-		isScreen: boolean
-	) {
-		try {
-			if (!this.localWebrtcStream) {
-				this.localWebrtcStream = new MediaStream()
-			}
-
-			if (isScreen) {
-				screenVideoElement.srcObject = stream
-			} else {
-				webcamVideoElement.srcObject = stream
-			}
-
-			stream.getTracks().forEach((track) => {
-				if (!track.onended) {
-					track.onended = () => {
-						this.addStreamToMedia(
-							stream,
-							webrtcVideoElement,
-							screenVideoElement,
-							webcamVideoElement,
-							webcamContainerElement,
-							isScreen
-						)
-					}
-				}
-			})
-
-			// Check if screen stream is present
-			if (
-				isScreen &&
-				screenVideoElement?.srcObject instanceof MediaStream &&
-				!this.localWebrtcStream?.getTracks().length
-			) {
-				// If screen stream is present, add the screen stream to the localWebrtcStream
-				stream.getTracks().forEach((track) => {
-					this.localWebrtcStream?.addTrack(track)
-				})
-			}
-			// Check if webcam stream is present
-			else if (
-				!isScreen &&
-				webcamVideoElement?.srcObject instanceof MediaStream &&
-				!this.localWebrtcStream?.getTracks().length
-			) {
-				// If webcam stream is present, add the webcam stream to the localWebrtcStream
-				stream.getTracks().forEach((track) => {
-					this.localWebrtcStream?.addTrack(track)
-				})
-			}
-			// Check if both streams are present
-			else if (
-				screenVideoElement?.srcObject instanceof MediaStream &&
-				webcamVideoElement?.srcObject instanceof MediaStream
-			) {
-				this.localWebrtcStream?.getTracks().forEach((track: any) => {
-					this.localWebrtcStream?.removeTrack(track)
-				})
-				// Combine the streams using ffmpeg.wasm
-				const ffmpeg = new FFmpeg()
-				const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm'
-				await ffmpeg.load({
-					coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-					wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm')
-				})
-
-				const screenStream = screenVideoElement.srcObject as MediaStream
-				const webcamStream = webcamVideoElement.srcObject as MediaStream
-
-				const screenRecorder = new MediaRecorder(screenStream)
-				const webcamRecorder = new MediaRecorder(webcamStream)
-
-				let screenVideoURL: string
-				let webcamVideoURL: string
-
-				screenRecorder.ondataavailable = async (e) => {
-					const screenBlob = new Blob([e.data], { type: 'video/mp4' })
-					screenVideoURL = URL.createObjectURL(screenBlob)
-					await this.combineAndSendStreams(
-						ffmpeg,
-						screenVideoURL,
-						webcamVideoURL,
-						webrtcVideoElement
-					)
-				}
-
-				webcamRecorder.ondataavailable = async (e) => {
-					const webcamBlob = new Blob([e.data], { type: 'video/mp4' })
-					webcamVideoURL = URL.createObjectURL(webcamBlob)
-					console.log('got here----webcamRecorder')
-					await this.combineAndSendStreams(
-						ffmpeg,
-						screenVideoURL,
-						webcamVideoURL,
-						webrtcVideoElement
-					)
-				}
-				webcamRecorder.onstop = (e) => {
-					console.log('webcamRecorder stopped', e)
-				}
-
-				webcamRecorder.onerror = (e) => {
-					console.log('webcamRecorder error', e)
-				}
-				screenRecorder.start()
-				webcamRecorder.start()
-			}
-
-			let audioTrack = stream.getAudioTracks()[0]
-			if (!audioTrack) {
-				const audioContext = new AudioContext()
-				const oscillator = audioContext.createOscillator()
-				const destination = audioContext.createMediaStreamDestination()
-				oscillator.connect(destination)
-				oscillator.frequency.setValueAtTime(0, audioContext.currentTime)
-				oscillator.start()
-				audioTrack = destination.stream.getAudioTracks()[0]
-				audioTrack.enabled = true
-			}
-			const audioTracks = this.localWebrtcStream.getAudioTracks()
-			if (audioTracks && audioTracks.length === 0) {
-				// Add the new audio track to the peer connection
-				this.localWebrtcStream?.addTrack(audioTrack)
-			}
-			// Add the media stream's tracks to the peer connection
-			this.localWebrtcStream?.getTracks().forEach((newTrack) => {
-				const senders = this.peerConnection.getSenders()
-				const existingSender = senders.find((sender) => sender.track?.kind === newTrack.kind)
-
-				if (existingSender) {
-					// Replace the existing track with the new one
-					existingSender.replaceTrack(newTrack)
-				} else {
-					// Add the new track to the peer connection
-					this.peerConnection.addTransceiver(newTrack, {
-						direction: 'sendonly'
-					})
-				}
-			})
-		} catch (error) {
-			console.log('got here----addStreamToMedia error', error)
-			return new MediaStream()
-		}
-	}
-
-	private async combineAndSendStreams(
-		ffmpeg: any,
-		screenVideoURL: string,
-		webcamVideoURL: string,
-		webrtcVideoElement: any
-	) {
-		await ffmpeg.exec([
-			'-i',
-			screenVideoURL,
-			'-i',
-			webcamVideoURL,
-			'-filter_complex',
-			'[1]scale=iw/4:ih/4 [pip]; [0][pip] overlay=W-w-10:H-h-10',
-			'output.mp4'
-		])
-
-		const data: any = await ffmpeg.readFile('output.mp4')
-		let dataBuffer
-		if (typeof data === 'string') {
-			const encoder = new TextEncoder()
-			dataBuffer = encoder.encode(data)
-		} else {
-			dataBuffer = data
-		}
-		const outputBlob = new Blob([dataBuffer], { type: 'video/mp4' })
-		const outputURL = URL.createObjectURL(outputBlob)
-
-		webrtcVideoElement.src = outputURL
-		await webrtcVideoElement.play()
-
-		const outputStream = webrtcVideoElement.captureStream(60)
-		outputStream.getTracks().forEach((track: any) => {
-			this.localWebrtcStream?.addTrack(track)
-		})
-		console.log('got here----webcamRecorder--2')
 	}
 
 	/**
@@ -353,47 +156,9 @@ export default class WHIPClient extends EventTarget {
 		// 	mode: 'cors'
 		// })
 		this.peerConnection.close()
+		this.localStream?.getTracks().forEach((track) => track.stop())
+		this.videoElement.srcObject = null
+		this.dispatchEvent(new CustomEvent(`localStreamStopped-${this.trackType}`))
 		console.log('Disconnected')
-	}
-
-	public disconnectStreamScreen() {
-		this.localScreenStream?.getTracks().forEach((track) => track.stop())
-		this.dispatchEvent(new CustomEvent(`localStreamStopped-screen`))
-		console.log('Screen stream disconnected')
-		if (this.areAllStreamsStopped()) {
-			this.disconnectStream()
-		}
-	}
-
-	public disconnectStreamWebcam() {
-		this.localWebcamStream?.getTracks().forEach((track) => track.stop())
-		this.dispatchEvent(new CustomEvent(`localStreamStopped-webcam`))
-		console.log('Webcam stream disconnected')
-		if (this.areAllStreamsStopped()) {
-			this.disconnectStream()
-		}
-	}
-
-	public disconnectStreamAudio() {
-		this.localAudioStream?.getTracks().forEach((track) => track.stop())
-		this.dispatchEvent(new CustomEvent(`localStreamStopped-audio`))
-		console.log('Audio stream disconnected')
-		if (this.areAllStreamsStopped()) {
-			this.disconnectStream()
-		}
-	}
-
-	private areAllStreamsStopped(): boolean {
-		const screenStopped =
-			!this.localScreenStream ||
-			this.localScreenStream.getTracks().every((track) => track.readyState === 'ended')
-		const webcamStopped =
-			!this.localWebcamStream ||
-			this.localWebcamStream.getTracks().every((track) => track.readyState === 'ended')
-		const audioStopped =
-			!this.localAudioStream ||
-			this.localAudioStream.getTracks().every((track) => track.readyState === 'ended')
-
-		return screenStopped && webcamStopped && audioStopped
 	}
 }
