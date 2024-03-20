@@ -44,10 +44,6 @@
 		isHoverVideo: boolean = false,
 		iframeUrl: string = ''
 
-	// WHIP/WHEP variables that determine if stream is coming in
-	$: isScreenLive = false
-	$: isWebcamLive = false
-
 	$: if (channel) {
 		role = setRole({ userId: video._id, channel, currentUserId: $page.data.user?.userId })
 		coloredRole = getColoredRole(role)
@@ -128,7 +124,6 @@
 						videoElement: screen_element,
 						trackType: `screen`
 					})
-					screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 					screen_element.addEventListener('dblclick', (event: any) => {
 						if (document.fullscreenElement) {
 							document.exitFullscreen()
@@ -142,7 +137,6 @@
 				} else {
 					if (value === false) screenWhip?.disconnectStream()
 					if (screen_element) screen_element.srcObject = null
-					isScreenLive = false
 				}
 			})
 
@@ -154,7 +148,6 @@
 						videoElement: webcam_element,
 						trackType: `webcam`
 					})
-					webcamWhip.addEventListener(`isWebcamLive`, (ev: any) => (isWebcamLive = ev.detail))
 					webcam_element.addEventListener('dblclick', (event: any) => {
 						if (document.fullscreenElement) {
 							document.exitFullscreen()
@@ -168,7 +161,6 @@
 				} else {
 					if (value === false) webcamWhip?.disconnectStream()
 					if (webcam_element) webcam_element.srcObject = null
-					isWebcamLive = false
 				}
 			})
 
@@ -221,9 +213,6 @@
 				case 'screen':
 					if (video.screen?.isConnected) {
 						screenWhep = new WHEPClient(video.screen?.webRTCPlayback.url, screen_element, `screen`)
-						screenWhep.addEventListener(`isScreenLive`, (ev: any) => {
-							isScreenLive = ev.detail
-						})
 						screen_element.addEventListener('dblclick', (event: any) => {
 							if (document.fullscreenElement) {
 								document.exitFullscreen()
@@ -238,9 +227,6 @@
 				case 'webcam':
 					if (video.webcam?.isConnected) {
 						webcamWhep = new WHEPClient(video.webcam?.webRTCPlayback.url, webcam_element, `webcam`)
-						webcamWhep.addEventListener(`isScreenLive`, (ev: any) => {
-							isScreenLive = ev.detail
-						})
 						webcam_element.addEventListener('dblclick', (event: any) => {
 							if (document.fullscreenElement) {
 								document.exitFullscreen()
@@ -436,7 +422,9 @@
 					on:mouseup={onMouseUp}
 					class={animate +
 						' absolute ' +
-						(!isScreenLive ? 'w-full bottom-0 left-0 h-full' : 'w-1/4 bottom-0 right-0')}>
+						(!video.screen?.isConnected
+							? 'w-full bottom-0 left-0 h-full'
+							: 'w-1/4 bottom-0 right-0')}>
 					<video
 						bind:this={webcam_element}
 						id={`webcam-${video._id}`}
@@ -447,9 +435,7 @@
 				<audio bind:this={audio_element} autoplay class="rounded-md w-0 h-0" />
 			{/if}
 			<div
-				class="absolute left-2 bottom-2 rounded-md dropdown {video.rtmps?.isConnected ||
-				video.screen?.isConnected ||
-				video.webcam?.isConnected
+				class="absolute left-2 bottom-2 rounded-md dropdown {video.rtmps?.isConnected
 					? 'mb-16'
 					: ''}">
 				<label
