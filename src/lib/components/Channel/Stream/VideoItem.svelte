@@ -17,6 +17,7 @@
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { get, putImage } from '$lib/api'
+	import IconListen from '$lib/assets/icons/channel/IconListen.svelte'
 
 	export let video: any, channel: any
 
@@ -42,7 +43,8 @@
 		timerInterval: any,
 		formattedTime: string = '00:00:00',
 		isHoverVideo: boolean = false,
-		iframeUrl: string = ''
+		iframeUrl: string = '',
+		isListenBtnShown: boolean = true
 
 	// WHIP/WHEP variables that determine if stream is coming in
 	$: isScreenLive = false
@@ -127,6 +129,7 @@
 						videoElement: screen_element,
 						trackType: `screen`
 					})
+					screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
 					screen_element.addEventListener('dblclick', (event: any) => {
 						if (document.fullscreenElement) {
 							document.exitFullscreen()
@@ -227,6 +230,7 @@
 						})
 					} else {
 						if (screen_element) screen_element.srcObject = null
+						isScreenLive = false
 					}
 					break
 				case 'webcam':
@@ -375,6 +379,16 @@
 			}, 1000)
 		}
 	}
+
+	const unmuteTracks = async () => {
+		if (video.screen?.isConnected || video.audio?.isConnected) {
+			screen_element.play()
+			screen_element.muted = video._id === $page.data.user?.userId
+			audio_element.play()
+			audio_element.muted = video._id === $page.data.user?.userId
+			isListenBtnShown = false
+		}
+	}
 </script>
 
 <div
@@ -382,7 +396,8 @@
 		? 'w-full h-full'
 		: 'w-[500px] max-h-80'}
 	on:mouseenter={() => (isHoverVideo = true)}
-	on:mouseleave={() => (isHoverVideo = false)}>
+	on:mouseleave={() => (isHoverVideo = false)}
+	on:click={unmuteTracks}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
 		<img
 			src={video.avatar}
@@ -408,13 +423,6 @@
 				</div>
 			{/if}
 			{#if !iframeUrl}
-				{#if $page.data.user?.userId !== video._id}
-					<iframe
-						src="https://olafwempe.com/mp3/silence/silence.mp3"
-						allow="autoplay"
-						id="audio"
-						style="display:none" />
-				{/if}
 				<video
 					bind:this={screen_element}
 					id={`screen-${video._id}`}
@@ -435,7 +443,7 @@
 						muted
 						class="rounded-md h-full w-full" />
 				</div>
-				<audio bind:this={audio_element} autoplay class="rounded-md w-0 h-0" />
+				<audio bind:this={audio_element} autoplay muted class="rounded-md w-0 h-0" />
 			{/if}
 			<div
 				class="absolute left-2 bottom-2 rounded-md dropdown {video.rtmps?.isConnected
@@ -476,6 +484,12 @@
 					</ul>
 				{/if}
 			</div>
+			{#if isListenBtnShown && video._id !== $page.data.user?.userId && (video.screen?.isConnected || video.audio?.isConnected)}
+				<div class="absolute right-2 bottom-1 tooltip tooltip-top" data-tip="Enable audio">
+					<button class="btn btn-sm btn-active rounded-md" on:click={unmuteTracks}
+						><IconListen /></button>
+				</div>
+			{/if}
 		</div>
 	</div>
 </div>
