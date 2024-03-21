@@ -17,6 +17,7 @@
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { get, putImage } from '$lib/api'
+	import IconListen from '$lib/assets/icons/channel/IconListen.svelte'
 
 	export let video: any, channel: any
 
@@ -42,7 +43,8 @@
 		timerInterval: any,
 		formattedTime: string = '00:00:00',
 		isHoverVideo: boolean = false,
-		iframeUrl: string = ''
+		iframeUrl: string = '',
+		isListenBtnShown: boolean = true
 
 	// WHIP/WHEP variables that determine if stream is coming in
 	$: isScreenLive = false
@@ -384,6 +386,7 @@
 			screen_element.muted = video._id === $page.data.user?.userId
 			audio_element.play()
 			audio_element.muted = video._id === $page.data.user?.userId
+			isListenBtnShown = false
 		}
 	}
 </script>
@@ -481,6 +484,12 @@
 					</ul>
 				{/if}
 			</div>
+			{#if isListenBtnShown && video._id !== $page.data.user?.userId && (video.screen?.isConnected || video.audio?.isConnected)}
+				<div class="absolute right-2 bottom-1 tooltip tooltip-top" data-tip="Enable audio">
+					<button class="btn btn-sm btn-active rounded-md" on:click={unmuteTracks}
+						><IconListen /></button>
+				</div>
+			{/if}
 		</div>
 	</div>
 </div>
