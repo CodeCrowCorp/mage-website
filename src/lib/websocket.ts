@@ -86,6 +86,7 @@ const emitPlatformCount = ({
 		})
 	)
 }
+
 const emitPlatformChat = ({
 	channelSocket,
 	channelId,
