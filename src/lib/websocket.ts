@@ -86,6 +86,23 @@ const emitPlatformCount = ({
 		})
 	)
 }
+const emitPlatformChat = ({
+	channelSocket,
+	channelId,
+	hostId
+}: {
+	channelSocket: WebSocket
+	channelId: string
+	hostId: string
+}) => {
+	channelSocket.send(
+		JSON.stringify({
+			eventName: `channel-platform-chat`,
+			channelId,
+			hostId
+		})
+	)
+}
 
 const emitMessageToChannel = ({
 	channelSocket,
@@ -229,5 +246,6 @@ export {
 	emitDeleteAllMessagesToChannel,
 	emitChatHistoryToChannel,
 	emitGetConnectedUsers,
-	emitGetSponsors
+	emitGetSponsors,
+	emitPlatformChat
 }

@@ -10,7 +10,8 @@
 		emitDeleteAllMessagesToChannel,
 		emitPlatformCount,
 		emitGetSponsors,
-		emitChannelPing
+		emitChannelPing,
+		emitPlatformChat
 	} from '$lib/websocket'
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import { isJsonString, updateVideoItems } from '$lib/utils'
@@ -192,6 +193,13 @@
 			})
 			setInterval(async () => {
 				emitPlatformCount({
+					channelSocket: chan.socket,
+					channelId: $page.params.channelId,
+					hostId: chan.userId
+				})
+			}, 5000)
+			setInterval(async () => {
+				emitPlatformChat({
 					channelSocket: chan.socket,
 					channelId: $page.params.channelId,
 					hostId: chan.userId
