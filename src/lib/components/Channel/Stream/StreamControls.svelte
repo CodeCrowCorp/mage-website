@@ -350,7 +350,7 @@
 			<h5>Restreaming to:</h5>
 			{#if urlList.length}
 				{#each urlList as url}
-					<div class="badge badge-success badge-outline mx-1">{url.title}</div>
+					<div class="badge badge-success badge-outline mx-1">{url.name}</div>
 				{/each}
 			{:else}
 				<div class="badge badge-ghost badge-outline mx-1">None</div>
