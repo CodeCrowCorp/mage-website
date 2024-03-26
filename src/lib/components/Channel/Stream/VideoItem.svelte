@@ -200,7 +200,7 @@
 			switch (trackType) {
 				case 'rtmps':
 					if (video.rtmps?.isConnected) {
-						iframeUrl = video.playback?.iframe
+						iframeUrl = video.rtmps?.playback?.iframe
 						$is_sharing_rtmps = true
 					} else {
 						iframeUrl = ''
@@ -212,7 +212,7 @@
 			switch (trackType) {
 				case 'rtmps':
 					if (video.rtmps?.isConnected) {
-						iframeUrl = video.playback?.iframe
+						iframeUrl = video.rtmps?.playback?.iframe
 					} else {
 						iframeUrl = ''
 					}
