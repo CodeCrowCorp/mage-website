@@ -115,7 +115,9 @@
 		})
 	}
 
-	onMount(() => {
+	onMount(async () => {
+		const streamIngestUrlRes = await fetch('https://ingest.twitch.tv/ingests')
+		console.log('got here----streamIngestUrlRes', JSON.stringify(streamIngestUrlRes))
 		handleRtmpsChanges()
 		handleScreenChanges()
 		handleWebcamChanges()
