@@ -116,7 +116,17 @@
 
 	const linkTwitch = async () => {
 		try {
-			const linkRes = await get(`twitch/link?channelId=${$page.params.channelId}`, auth)
+			const streamIngestUrlRes = await fetch('https://ingest.twitch.tv/ingests')
+			const streamIngestUrlData: any = await streamIngestUrlRes.json()
+			const filteredIngests = streamIngestUrlData.ingests.filter(
+				(ingest: any) => ingest.availability === 1
+			)
+			const url = filteredIngests[0].url_template
+			const ingestUrl = url.substring(0, url.lastIndexOf('/'))
+			const linkRes = await get(
+				`twitch/link?channelId=${$page.params.channelId}&ingestUrl=${ingestUrl}`,
+				auth
+			)
 			if (linkRes.redirect) window.location.replace(linkRes.redirectUrl)
 		} catch (err) {}
 	}
