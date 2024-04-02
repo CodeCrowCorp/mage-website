@@ -9,10 +9,10 @@ export const load = (async ({ params, url }) => {
 	}
 	return {
 		seo: {
-			title: profile.username.toLowerCase(),
+			title: profile.username?.toLowerCase(),
 			description: profile.bio,
 			image: profile.avatar,
-			imageAlt: `${profile.username.toLowerCase()} avatar`,
+			imageAlt: `${profile.username?.toLowerCase()} avatar`,
 			url: url.href
 		},
 		profile: profile,
