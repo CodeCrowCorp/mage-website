@@ -21,13 +21,13 @@ export const load = (async ({ locals }) => {
 						`${getSectionUrl({ sectionId: 'my', query: '', lastId: 0, limit: 10 })}&userId=${
 							locals.user?.userId
 						}`
-				  )
+					)
 				: [],
 			favChannels: locals.user
 				? get(getSectionUrl({ sectionId: 'fav', query: '', lastId: 0, limit: 10 }), {
 						userId: locals.user.userId,
 						token: locals.user.token
-				  })
+					})
 				: [],
 			tableChannels: get(getSectionUrl({ sectionId: '', query: '', lastId: 0, limit: 100 }))
 		}
@@ -39,7 +39,7 @@ export const actions = {
 		const { userId, token } = locals.user
 		const data = await request.formData()
 		const newChannel = data.get('newChannel')
-		const channel = await post('channel', JSON.parse(newChannel), {
+		const channel = await post(`channel`, JSON.parse(newChannel), {
 			userId,
 			token
 		})

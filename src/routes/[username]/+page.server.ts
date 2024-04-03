@@ -3,16 +3,16 @@ import { get, patch, putImage } from '$lib/api'
 import { redirect, fail, error } from '@sveltejs/kit'
 
 export const load = (async ({ params, url }) => {
-	const profile = await get(`users/search/username?username=${params.username.toLowerCase()}`)
+	const profile = await get(`user/search/username?username=${params.username.toLowerCase()}`)
 	if (profile?.error) {
 		error(404)
 	}
 	return {
 		seo: {
-			title: profile.username.toLowerCase(),
+			title: profile.username?.toLowerCase(),
 			description: profile.bio,
 			image: profile.avatar,
-			imageAlt: `${profile.username.toLowerCase()} avatar`,
+			imageAlt: `${profile.username?.toLowerCase()} avatar`,
 			url: url.href
 		},
 		profile: profile,
@@ -51,14 +51,12 @@ export const actions = {
 		addPropertyIfDefined(data, 'urls', newUser, true)
 
 		newUser.urls = newUser.urls.filter((i: string) => i)
-
 		const avatar = data.get('avatar') as File
-
 		const banner = data.get('banner') as File
 
 		if (data.get('avatar') !== null && avatar.size > 0) {
 			const urlLocation = await putImage(
-				`users/current/avatar?bucketName=avatars`,
+				`user/current/avatar?bucketName=avatars`,
 				data.get('avatar'),
 				{
 					userId: locals.user.userId,
@@ -70,7 +68,7 @@ export const actions = {
 
 		if (data.get('banner') !== null && banner.size > 0) {
 			const urlLocation = await putImage(
-				`users/current/banner?bucketName=banners`,
+				`user/current/banner?bucketName=banners`,
 				data.get('banner'),
 				{
 					userId: locals.user.userId,
@@ -80,7 +78,7 @@ export const actions = {
 			console.log(urlLocation)
 		}
 
-		const updatedUser = await patch(`users`, newUser, {
+		const updatedUser = await patch(`user`, newUser, {
 			userId: locals.user.userId,
 			token: locals.user.token
 		})
@@ -98,7 +96,7 @@ export const actions = {
 	},
 	onboard: async ({ locals }: { locals: any }) => {
 		const { userId, token } = locals.user
-		const response = await get('plan/onboard-link', {
+		const response = await get(`plan/onboard-link`, {
 			userId,
 			token
 		})
@@ -106,7 +104,7 @@ export const actions = {
 	},
 	dashboard: async ({ locals }: { locals: any }) => {
 		const { userId, token } = locals.user
-		const response = await get('plan/dashboard-link', {
+		const response = await get(`plan/dashboard-link`, {
 			userId,
 			token
 		})

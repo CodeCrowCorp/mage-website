@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
+	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 	import { category_list } from '$lib/stores/channelStore'
@@ -112,6 +113,9 @@
 				use:enhance={({ formData }) => {
 					if (profile?.category?.length) {
 						formData.append('category', JSON.stringify(profile?.category))
+					}
+					return async ({ result }) => {
+						location.reload()
 					}
 				}}
 				on:submit={() => {

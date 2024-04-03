@@ -8,7 +8,6 @@
 		initChannelSocket,
 		emitChannelSubscribeByUser,
 		emitDeleteAllMessagesToChannel,
-		emitPlatformCount,
 		emitGetSponsors,
 		emitChannelPing
 	} from '$lib/websocket'
@@ -112,19 +111,6 @@
 								// for new users joining the channel
 								const liveInputs = await get(`live-inputs?channelId=${$page.params.channelId}`)
 								channel.videoItems = updateVideoItems([...activeGuests], liveInputs)
-
-								// check if host's video and is connected
-								const isConnectedUser = channel.videoItems.some(
-									(videoItem: any) =>
-										(videoItem.rtmps?.isConnected ||
-											videoItem.screen?.isConnected ||
-											videoItem.webcam?.isConnected ||
-											videoItem.audio?.isConnected) &&
-										videoItem._id === channel.userId
-								)
-								if (isConnectedUser) {
-									channel.platforms = await get(`outputs/platforms?userId=${channel.userId}`)
-								}
 							}
 						}
 					}
@@ -132,11 +118,6 @@
 				case `channel-streaming-action-${$page.params.channelId}`:
 					if (channel) {
 						channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
-					}
-					break
-				case `channel-platform-count-${$page.params.channelId}`:
-					if (channel) {
-						channel.platforms = parsedMsg.platforms
 					}
 					break
 				case `channel-get-sponsors-${$page.params.channelId}`:
@@ -191,11 +172,7 @@
 				limit: 100
 			})
 			setInterval(async () => {
-				emitPlatformCount({
-					channelSocket: chan.socket,
-					channelId: $page.params.channelId,
-					hostId: chan.userId
-				})
+				await getPlatformCount()
 			}, 5000)
 			const hasSponsors = $page.url?.searchParams?.get('hasSponsors') || ''
 			if (hasSponsors) {
@@ -331,6 +308,21 @@
 		})
 		channels = [...channels, ...newchannels]
 		lastId = newchannels[newchannels.length - 1]?._id
+	}
+
+	const getPlatformCount = async () => {
+		// check if host's video and is connected
+		const isConnectedUser = channel.videoItems.some(
+			(videoItem: any) =>
+				(videoItem.rtmps?.isConnected ||
+					videoItem.screen?.isConnected ||
+					videoItem.webcam?.isConnected ||
+					videoItem.audio?.isConnected) &&
+				videoItem._id === channel.userId
+		)
+		if (isConnectedUser) {
+			channel.platforms = await get(`outputs/platforms?userId=${channel.userId}`)
+		}
 	}
 </script>
 

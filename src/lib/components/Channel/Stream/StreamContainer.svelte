@@ -149,9 +149,9 @@
 									<span
 										class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center tooltip tooltip-bottom"
 										data-tip={platform.name}>
-										{#if platform.name === 'twitch'}
+										{#if platform.name === 'Twitch'}
 											<IconSocialTwitch />
-										{:else if platform.name === 'youtube'}
+										{:else if platform.name === 'YouTube'}
 											<IconSocialYouTube />
 										{/if}
 										{getNumberInThousands(platform.count || 0)}

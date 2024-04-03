@@ -34,7 +34,7 @@
 
 	const addNew = async () => {
 		loading = true
-		await put('output', payload, auth)
+		await put(`output`, payload, auth)
 		loading = false
 		await getAll()
 		showAddModal = false
@@ -223,7 +223,7 @@
 						<h3 class="font-bold text-lg">Add new stream</h3>
 						<div class="form-control w-full pt-4">
 							{#if $is_feature_merge_platforms_enabled}
-								<div class="flex gap-3">
+								<div class="flex gap-3 mb-4">
 									<button
 										class="btn btn-sm"
 										on:click={linkTwitch}
@@ -264,7 +264,7 @@
 								<div class="text-error text-sm mt-2">Please enter a valid URL</div>
 							{/if}
 							{#if touched && !invalidUrl && cloudflareUrl}
-								<div class="text-error text-sm mt-2">Cloudfare urls not allowed</div>
+								<div class="text-error text-sm mt-2">Cloudfare url not allowed</div>
 							{/if}
 							<!-- svelte-ignore a11y-label-has-associated-control -->
 							<label class="label mt-5">
