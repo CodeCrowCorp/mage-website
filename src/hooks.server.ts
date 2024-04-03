@@ -15,7 +15,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	if (token && userId) {
 		if (!user) {
-			const response = await get('auth/me', { userId, token })
+			const response = await get(`auth/me`, { userId, token })
 			if (response) {
 				if (response.freshJwt) {
 					token = response.freshJwt

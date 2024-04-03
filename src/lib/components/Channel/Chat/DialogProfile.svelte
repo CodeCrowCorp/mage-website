@@ -57,7 +57,7 @@
 			if ($page?.data?.user?.user?.username === userId) {
 				profileData.profile = $page?.data?.user?.user
 			} else {
-				profileData.profile = await get(`users/search/username?username=${userId}`, auth)
+				profileData.profile = await get(`user/search/username?username=${userId}`, auth)
 			}
 			const id = profileData.profile._id
 			profileData.followerCount = await get(`follows/count?source=${id}&sourceType=source1`, auth)

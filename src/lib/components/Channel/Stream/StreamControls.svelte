@@ -140,7 +140,7 @@
 		if (!rtmps) {
 			await refreshStreamKey()
 		}
-		urlList = await get('outputs', {
+		urlList = await get(`outputs`, {
 			userId: $page.data.user?.userId,
 			token: $page.data.user?.token
 		})
