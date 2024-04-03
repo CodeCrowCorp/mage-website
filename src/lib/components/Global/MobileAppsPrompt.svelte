@@ -6,7 +6,7 @@
 </script>
 
 <div
-	class="modal cursor-pointer {$is_apps_modal_open ? 'modal-open' : ''}"
+	class="modal {$is_apps_modal_open ? 'modal-open' : ''}"
 	on:click={() => {
 		$is_apps_modal_open = false
 	}}>
@@ -16,16 +16,32 @@
 			e.stopPropagation()
 		}}>
 		<h3 class="font-bold text-lg">Download the apps</h3>
-		<div class="py-4 space-y-5 px-4 md:px-10">
-			<a
-				href="https://play.google.com/store/apps/details?id=com.google.android.apps.messaging&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
-				><img alt="Get it from Microsoft" src={IconDesktopAppWindows} /></a>
-			<!-- <a
-				href="https://play.google.com/store/apps/details?id=com.google.android.apps.messaging&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
-				><img alt="Get it on Google Play" src={IconMobileAppAndroid} /></a>
-			<a
-				href="https://apps.apple.com/us/app/telegram-messenger/id686449807?itsct=apps_box_badge&amp;itscg=30200">
-				<img src={IconMobileAppiOS} alt="Download on the App Store" class="w-full h-full p-6" /></a> -->
+		<div class="py-4 space-y-2 px-4 md:px-10">
+			<a href="https://www.microsoft.com/store/productId/9NL59CNMQG0Q?ocid=pdpshare" target="_blank"
+				><img
+					alt="Get it from Microsoft"
+					src={IconDesktopAppWindows}
+					class="w-full h-full p-6" /></a>
+			<!-- <a href="" target="_blank">
+				<img alt="Get it on Google Play" src={IconMobileAppAndroid} class="grayscale" />
+			</a>
+			<a href="" target="_blank">
+				<img
+					src={IconMobileAppiOS}
+					alt="Download on the App Store"
+					class="w-full h-full p-6 grayscale" />
+			</a> -->
+			<div style="position: relative;">
+				<img alt="Get it on Google Play" src={IconMobileAppAndroid} class="grayscale" />
+				<div class="badge badge-warning gap-2 absolute top-4 right-0">coming soon</div>
+			</div>
+			<div style="position: relative;">
+				<img
+					src={IconMobileAppiOS}
+					alt="Download on the App Store"
+					class="w-full h-full p-6 grayscale" />
+				<div class="badge badge-warning gap-2 absolute top-4 right-0">coming soon</div>
+			</div>
 		</div>
 		<div class="modal-action">
 			<button class="btn" on:click={() => ($is_apps_modal_open = false)}>Close</button>
