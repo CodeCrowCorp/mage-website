@@ -18,7 +18,6 @@
 	import {
 		is_feature_video_responses_enabled,
 		is_feature_premium_enabled,
-		is_feature_apps_enabled,
 		is_feature_merch_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
@@ -226,23 +225,21 @@
 					><IconDrawerMore />
 					<span class={isChannelPage ? 'md:hidden' : ''}>More</span></summary>
 				<ul class="p-2 {isChannelPage ? 'lg:menu-sm' : 'ml-5'}">
-					{#if $is_feature_apps_enabled}
-						<li>
-							<a
-								class="whitespace-nowrap"
-								on:click={() => {
-									$is_apps_modal_open = true
-									if (nav_drawer.checked) {
-										nav_drawer.checked = false
-									}
-								}}>
-								Get apps
-								{#if !isChannelPage}
-									<span class="badge badge-secondary">New</span>
-								{/if}
-							</a>
-						</li>
-					{/if}
+					<li>
+						<a
+							class="whitespace-nowrap"
+							on:click={() => {
+								$is_apps_modal_open = true
+								if (nav_drawer.checked) {
+									nav_drawer.checked = false
+								}
+							}}>
+							Get apps
+							{#if !isChannelPage}
+								<span class="badge badge-secondary">New</span>
+							{/if}
+						</a>
+					</li>
 					<li>
 						<a href="https://codecrow.io/careers" target="_blank">Careers</a>
 					</li>
