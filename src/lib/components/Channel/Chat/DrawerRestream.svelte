@@ -34,7 +34,7 @@
 
 	const addNew = async () => {
 		loading = true
-		await put('output', payload, auth)
+		await put(`output`, payload, auth)
 		loading = false
 		await getAll()
 		showAddModal = false

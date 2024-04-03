@@ -102,6 +102,7 @@
 				bind:categories={channel.category} />
 		{:else}
 			<form
+				enctype="multipart/form-data"
 				class="flex h-full p-5"
 				action="?/edit-channel"
 				method="post"

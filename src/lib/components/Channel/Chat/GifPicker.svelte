@@ -21,7 +21,7 @@
 
 	const getTrending = async () => {
 		loading = true
-		const resp = await get('giphy/trending', {
+		const resp = await get(`giphy/trending`, {
 			userId: $page.data.user?.userId,
 			token: $page.data.user?.token
 		})
@@ -32,7 +32,7 @@
 	const onSearch = async (evt: any) => {
 		query = evt.target.value
 		loading = true
-		const resp = await get('giphy/search?query=' + query, {
+		const resp = await get(`giphy/search?query=` + query, {
 			userId: $page.data.user?.userId,
 			token: $page.data.user?.token
 		})

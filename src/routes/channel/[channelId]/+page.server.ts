@@ -14,9 +14,8 @@ export const actions = {
 			thumbnail !== null && thumbnail.size > 0
 				? thumbnail
 				: imageSrc
-				? dataURLtoFile(imageSrc, 'thumbnail-image')
-				: null
-		console.log('file---', file)
+					? dataURLtoFile(imageSrc, 'thumbnail-image')
+					: null
 		if (file !== null && file.size > 0 && file.type !== '') {
 			await putImage(`channels/thumbnail?channelId=${channelId}&bucketName=thumbnails`, file, {
 				userId: locals.user.userId,
