@@ -313,12 +313,7 @@
 	const getPlatformCount = async () => {
 		// check if host's video and is connected
 		const isConnectedUser = channel.videoItems.some(
-			(videoItem: any) =>
-				(videoItem.rtmps?.isConnected ||
-					videoItem.screen?.isConnected ||
-					videoItem.webcam?.isConnected ||
-					videoItem.audio?.isConnected) &&
-				videoItem._id === channel.userId
+			(videoItem: any) => videoItem._id === channel.userId
 		)
 		if (isConnectedUser) {
 			channel.platforms = await get(`outputs/platforms?userId=${channel.userId}`)
