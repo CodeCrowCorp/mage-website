@@ -71,7 +71,7 @@
 			{/if}
 			<p>
 				By using our platform, you confirm that you are atleast 18 years old and agree to
-				<a class="link link-info" href="/legal">all of our policies </a>
+				<a class="link link-info" href="https://codecrow.io/legal">all of our policies </a>
 			</p>
 		</div>
 	</div>
