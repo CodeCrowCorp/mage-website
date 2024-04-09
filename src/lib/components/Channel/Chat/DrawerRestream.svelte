@@ -36,7 +36,7 @@
 		loading = true
 		await put(`output`, payload, auth)
 		loading = false
-		await getAll()
+		await getRestreamUrls()
 		showAddModal = false
 		touched = false
 		payload = {
@@ -49,12 +49,12 @@
 	const remove = async () => {
 		loading = true
 		await del(`output?outputId=${selectedOutputId}`, auth)
-		await getAll()
+		await getRestreamUrls()
 		loading = false
 		confirm_modal = false
 	}
 
-	const getAll = async () => {
+	const getRestreamUrls = async () => {
 		if ($page.data.user?.userId) {
 			loading = true
 			urlList = await get(`outputs`, auth)
@@ -77,7 +77,7 @@
 	}
 
 	onMount(async () => {
-		getAll()
+		getRestreamUrls()
 	})
 
 	const getLiveInput = async () => {
@@ -158,38 +158,40 @@
 				<div class="flex flex-col p-3">
 					<span class="text-warning"
 						>Restreaming is currently only available for RTMPS streams</span>
-					{#each urlList as item}
-						<div
-							class="bg-base-100 p-4 my-1 flex justify-between items-center h-fit font-normal normal-case rounded gap-3 border {item.isEnabled
-								? 'border-success'
-								: 'border-error'}">
-							<input
-								type="checkbox"
-								checked={item.isEnabled}
-								class="checkbox {item.isEnabled ? 'checkbox-success' : ''}"
-								on:click={() => toggleOutput(item)} />
-							<div class="flex-1 text-left space-y-1">
-								<div class="break-all">
-									{item.name}
+					{#if urlList && Array.isArray(urlList)}
+						{#each urlList as item}
+							<div
+								class="bg-base-100 p-4 my-1 flex justify-between items-center h-fit font-normal normal-case rounded gap-3 border {item.isEnabled
+									? 'border-success'
+									: 'border-error'}">
+								<input
+									type="checkbox"
+									checked={item.isEnabled}
+									class="checkbox {item.isEnabled ? 'checkbox-success' : ''}"
+									on:click={() => toggleOutput(item)} />
+								<div class="flex-1 text-left space-y-1">
+									<div class="break-all">
+										{item.name}
+									</div>
+									<div class="break-all">{item.url || ''}</div>
+									<div>
+										<input
+											value="dummyvalues"
+											type="password"
+											placeholder="Type here"
+											class="bg-transparent"
+											disabled />
+									</div>
 								</div>
-								<div class="break-all">{item.url || ''}</div>
-								<div>
-									<input
-										value="dummyvalues"
-										type="password"
-										placeholder="Type here"
-										class="bg-transparent"
-										disabled />
-								</div>
+								<button on:click={() => confirm(item._id)} class="btn btn-sm btn-circle btn-ghost">
+									✕
+								</button>
 							</div>
-							<button on:click={() => confirm(item._id)} class="btn btn-sm btn-circle btn-ghost">
-								✕
-							</button>
-						</div>
-					{/each}
+						{/each}
+					{/if}
 					<button
 						class="btn btn-primary mt-3"
-						disabled={urlList.length > 9}
+						disabled={urlList?.length > 9}
 						on:click={() => {
 							showAddModal = true
 							touched = false
