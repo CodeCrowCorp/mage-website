@@ -174,7 +174,7 @@
 			})
 			setInterval(async () => {
 				await getPlatformCount()
-				await getPlatformChatYouTube()
+				// await getPlatformChatYouTube()
 			}, 5000)
 			const hasSponsors = $page.url?.searchParams?.get('hasSponsors') || ''
 			if (hasSponsors) {
@@ -223,6 +223,7 @@
 			let channelSocketId = ''
 			if (!channel.socket) {
 				channelSocketId = await get(`wsinit/channelid?channelId=${$page.params.channelId}`)
+				console.log('got here----channelSocketId', channelSocketId)
 				channel.socket = initChannelSocket({ websocketId: channelSocketId })
 			} else {
 				initChannel(channel)
