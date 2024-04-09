@@ -223,7 +223,6 @@
 			let channelSocketId = ''
 			if (!channel.socket) {
 				channelSocketId = await get(`wsinit/channelid?channelId=${$page.params.channelId}`)
-				console.log('got here----channelSocketId', channelSocketId)
 				channel.socket = initChannelSocket({ websocketId: channelSocketId })
 			} else {
 				initChannel(channel)

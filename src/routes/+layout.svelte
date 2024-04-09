@@ -12,8 +12,6 @@
 	import DrawerMain from '$lib/components/Global/DrawerMain.svelte'
 	import { onMount } from 'svelte'
 	// import { get, put } from '$lib/api'
-	// import { emitUserConnection, initPlatformSocket, platformSocket } from '$lib/websocket'
-	// import { platform_connection, platform_message } from '$lib/stores/websocketStore'
 	// import { isJsonString } from '$lib/utils'
 	import IconMageText from '$lib/assets/icons/IconMageText.svelte'
 	import { current_theme } from '$lib/stores/helperStore'
@@ -58,7 +56,6 @@
 		processSvgs(devSvgs, 'dev')
 		processSvgs(gameSvgs, 'game')
 		getUserRole()
-		// await handleWebsocket()
 	})
 
 	const processSvgs = (svgs: any, category: any) => {
@@ -79,50 +76,6 @@
 		//TODO: get role from backend
 		$user_role = 'user'
 	}
-
-	// const handleWebsocket = async () => {
-	// 	try {
-	// 		if ($page.data.user?.userId) {
-	// 			const platformSocketId = await get(`wsinit/wsid`)
-	// 			initPlatformSocket({ websocketId: platformSocketId })
-	// 			platformSocket.addEventListener('open', (data) => {
-	// 				console.log('socket connection open')
-	// 				console.log(data)
-	// 				$platform_connection = 'open'
-	// 			})
-	// 			platformSocket.addEventListener('message', (data) => {
-	// 				console.log('listening to messages')
-	// 				console.log(data.data)
-	// 				if (isJsonString(data.data)) platform_message.set(data.data)
-	// 			})
-	// 			platformSocket.addEventListener('error', (data) => {
-	// 				console.log('socket connection error')
-	// 				console.log(data)
-	// 			})
-	// 			platformSocket.addEventListener('close', (data) => {
-	// 				console.log('socket connection close')
-	// 				console.log(data)
-	// 				$platform_connection = 'close'
-	// 				attemptReconnect()
-	// 			})
-	// 		}
-	// 	} catch (error) {
-	// 		attemptReconnect()
-	// 	}
-	// }
-	// const attemptReconnect = () => {
-	// 	setTimeout(async () => {
-	// 		console.log('Reconnecting to WebSocket...')
-	// 		await handleWebsocket()
-	// 	}, 4000)
-	// }
-	// platform_connection.subscribe(async (value: any) => {
-	// 	if (!value) return
-	// 	$is_online = value === 'open'
-	// 	if ($page.data.user?.userId && value === 'open') {
-	// 		emitUserConnection({ userId: $page.data.user?.userId, isOnline: $is_online })
-	// 	}
-	// })
 </script>
 
 <svelte:head>
