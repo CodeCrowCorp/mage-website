@@ -1,14 +1,9 @@
 import { env } from '$env/dynamic/public'
 
 const initChannelSocket = ({ websocketId }: { websocketId: string }) => {
-	const ws = new WebSocket(`${env.PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${websocketId}/connect`)
-
-	ws.onerror = (error) => {
-		console.log('WebSocket Error: ', error)
-	}
-
-	return ws
+	return new WebSocket(`${env.PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${websocketId}/connect`)
 }
+
 const emitChannelPing = ({
 	channelSocket,
 	channelId
