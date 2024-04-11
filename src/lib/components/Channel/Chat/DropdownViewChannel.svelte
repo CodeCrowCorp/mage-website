@@ -34,10 +34,11 @@
 
 	onMount(async () => {
 		if ($page.data.user?.userId) {
-			isFavorite = await get(`favorite?channelId=${channel._id}`, {
+			const fav = await get(`favorite?channelId=${channel._id}`, {
 				userId: $page.data.user?.userId,
 				token: $page.data.user?.token
 			})
+			isFavorite = fav?.isFavorite
 		}
 	})
 
