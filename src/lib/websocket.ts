@@ -1,15 +1,5 @@
 import { env } from '$env/dynamic/public'
 
-// let platformSocket: WebSocket
-// const initPlatformSocket = ({ websocketId }: { websocketId: string }) => {
-// 	platformSocket = new WebSocket(`${env.PUBLIC_WEBSOCKET_URL}/wsinit/wsid/${websocketId}/connect`)
-// }
-// const emitUserConnection = ({ userId, isOnline }: { userId: string; isOnline: boolean }) => {
-// 	platformSocket.send(
-// 		JSON.stringify({ eventName: isOnline ? 'user-connect' : 'user-disconnect', userId: userId })
-// 	)
-// }
-
 const initChannelSocket = ({ websocketId }: { websocketId: string }) => {
 	return new WebSocket(`${env.PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${websocketId}/connect`)
 }
@@ -199,8 +189,6 @@ const emitGetSponsors = ({
 }
 
 export {
-	// initPlatformSocket,
-	// emitUserConnection,
 	initChannelSocket,
 	emitChannelPing,
 	emitChannelUpdate,
