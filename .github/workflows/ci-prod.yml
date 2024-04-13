@@ -47,12 +47,12 @@ jobs:
           PUBLIC_CROSS_ORIGIN: ${{ secrets.PUBLIC_CROSS_ORIGIN }}
           PUBLIC_ENV: ${{ secrets.PUBLIC_ENV }}
 
-      - name: Convert E2E Report to Coverage Report
-        run: |
-          npm install playwright-e2e-coverage-report
-          wget https://raw.githubusercontent.com/CodeCrowCorp/playwright-e2e-coverage-report/master/scripts/reportConverter.js
-          chmod u+x reportConverter.js
-          node ./reportConverter.js
+      # - name: Convert E2E Report to Coverage Report
+      #   run: |
+      #     npm install playwright-e2e-coverage-report
+      #     wget https://raw.githubusercontent.com/CodeCrowCorp/playwright-e2e-coverage-report/master/scripts/reportConverter.js
+      #     chmod u+x reportConverter.js
+      #     node ./reportConverter.js
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4.3.1

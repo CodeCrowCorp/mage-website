@@ -8,8 +8,7 @@
 		initChannelSocket,
 		emitChannelSubscribeByUser,
 		emitDeleteAllMessagesToChannel,
-		emitGetSponsors,
-		emitChannelPing
+		emitGetSponsors
 	} from '$lib/websocket'
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import { isJsonString, updateVideoItems } from '$lib/utils'
@@ -31,7 +30,8 @@
 		limit = 10,
 		viewers: any[] = [],
 		chatHistory: any[] = [],
-		youtubeHistoryPageToken = 0
+		youtubeHistoryPageToken = 0,
+		platformPollingInterval: any
 
 	$: userCount = 0
 	$: isHostOrGuest =
@@ -159,6 +159,8 @@
 		$channel_connection = `open-${$page.params.channelId}`
 		$channel_message = ''
 		chan.videoItems = []
+		clearInterval(platformPollingInterval)
+		platformPollingInterval = null
 		if (chan.socket?.readyState === WebSocket.OPEN) {
 			emitChannelSubscribeByUser({
 				channelSocket: chan.socket,
@@ -172,7 +174,7 @@
 				channelId: $page.params.channelId,
 				limit: 100
 			})
-			setInterval(async () => {
+			platformPollingInterval = setInterval(async () => {
 				await getPlatformCount()
 				// await getPlatformChatYouTube()
 			}, 5000)
@@ -187,12 +189,6 @@
 					replaceState: true
 				})
 			}
-			setInterval(async () => {
-				emitChannelPing({
-					channelSocket: chan.socket,
-					channelId: chan._id
-				})
-			}, 45000)
 		}
 	}
 
@@ -261,7 +257,7 @@
 			console.log('Reconnecting to WebSocket...')
 			channel = channels.find((ch: any) => ch._id === parseInt($page.params.channelId))
 			if (channel) {
-				channel.socket = {}
+				channel.socket = null
 				await handleWebsocket()
 			}
 		}, 4000)
