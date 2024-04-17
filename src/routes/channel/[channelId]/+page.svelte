@@ -176,7 +176,7 @@
 			})
 			platformPollingInterval = setInterval(async () => {
 				await getPlatformCount()
-				// await getPlatformChatYouTube()
+				await getPlatformChatYouTube()
 			}, 5000)
 			const hasSponsors = $page.url?.searchParams?.get('hasSponsors') || ''
 			if (hasSponsors) {
