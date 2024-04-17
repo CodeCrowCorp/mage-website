@@ -319,9 +319,11 @@
 	}
 
 	const getPlatformChatYouTube = async () => {
-		const youtubeChat = await get(
-			`youtube/messages?userId=${channel.userId}&pageToken=${youtubeChatPageToken}`
-		)
+		let url = `youtube/messages?userId=${channel.userId}`
+		if (youtubeChatPageToken) {
+			url += `&pageToken=${youtubeChatPageToken}`
+		}
+		const youtubeChat = await get(url)
 		youtubeChatPageToken = youtubeChat.nextPageToken
 		console.log('got here----youtubeChat', JSON.stringify(youtubeChat))
 		//TODO: add youtubeChat to chatHistory sorted by timestamp.
