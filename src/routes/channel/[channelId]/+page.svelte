@@ -30,7 +30,7 @@
 		limit = 10,
 		viewers: any[] = [],
 		chatHistory: any[] = [],
-		youtubeHistoryPageToken = 0,
+		youtubeChatPageToken: any = null,
 		platformPollingInterval: any
 
 	$: userCount = 0
@@ -320,9 +320,9 @@
 
 	const getPlatformChatYouTube = async () => {
 		const youtubeChat = await get(
-			`youtube/chat-history?userId=${channel.userId}&pageToken=${youtubeHistoryPageToken}`
+			`youtube/messages?userId=${channel.userId}&pageToken=${youtubeChatPageToken}`
 		)
-		youtubeHistoryPageToken = youtubeChat.nextPageToken
+		youtubeChatPageToken = youtubeChat.nextPageToken
 		console.log('got here----youtubeChat', JSON.stringify(youtubeChat))
 		//TODO: add youtubeChat to chatHistory sorted by timestamp.
 	}
