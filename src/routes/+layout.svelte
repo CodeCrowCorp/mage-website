@@ -18,7 +18,6 @@
 	import {
 		is_feature_video_responses_enabled,
 		is_feature_premium_enabled,
-		is_feature_merge_platforms_enabled,
 		is_feature_merch_enabled
 	} from '$lib/stores/remoteConfigStore'
 	import { env } from '$env/dynamic/public'
@@ -45,7 +44,6 @@
 		$current_theme = localStorage.getItem('theme') || 'dark'
 		$is_feature_video_responses_enabled = env.PUBLIC_FEATURE_VIDEO_RESPONSES === 'true'
 		$is_feature_premium_enabled = env.PUBLIC_FEATURE_PREMIUM === 'true'
-		$is_feature_merge_platforms_enabled = env.PUBLIC_FEATURE_MERGE_PLATFORMS === 'true'
 		$is_feature_merch_enabled = env.PUBLIC_FEATURE_MERCH === 'true'
 		const devSvgs = import.meta.glob('$lib/assets/icons/category-icons/dev/*.svg', {
 			eager: true

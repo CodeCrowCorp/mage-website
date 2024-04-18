@@ -194,12 +194,12 @@
 					{/if}
 				</ul>
 			</div>
-			<label style="text-wrap:wrap">
+			<div class="d-flex align-items-center">
 				{#if sender.platform === 'twitch'}
 					<IconSocialTwitch />
 				{/if}
 				{#if sender.platform === 'youtube'}
-					<IconSocialYouTube />
+					<div style="display: ruby;"><IconSocialYouTube /></div>
 				{/if}
 				{#if role === '🤖 AI' || role === 'Host' || role === 'Mod' || role === 'You'}
 					<span class="{coloredRole.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"
@@ -232,7 +232,7 @@
 				{:else}
 					<span style="overflow-wrap: anywhere">{@html parse(sender.message)}</span>
 				{/if}
-			</label>
+			</div>
 		</div>
 	</div>
 </div>
