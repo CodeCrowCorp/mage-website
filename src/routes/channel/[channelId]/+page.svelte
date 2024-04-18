@@ -325,8 +325,10 @@
 		}
 		const youtubeChat = await get(url)
 		youtubeChatPageToken = youtubeChat.nextPageToken
-		console.log('got here----youtubeChat', JSON.stringify(youtubeChat))
-		//TODO: add youtubeChat to chatHistory sorted by timestamp.
+		chatHistory = [...youtubeChat.messages, ...chatHistory].sort(
+			(a, b) => b.timestamp - a.timestamp
+		)
+		console.log('got here----chatHistory', JSON.stringify(chatHistory))
 	}
 </script>
 
