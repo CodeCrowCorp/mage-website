@@ -30,7 +30,7 @@
 		limit = 10,
 		viewers: any[] = [],
 		chatHistory: any[] = [],
-		youtubeHistoryPageToken = 0,
+		youtubeChatPageToken: any = null,
 		platformPollingInterval: any
 
 	$: userCount = 0
@@ -176,7 +176,7 @@
 			})
 			platformPollingInterval = setInterval(async () => {
 				await getPlatformCount()
-				// await getPlatformChatYouTube()
+				await getPlatformChatYouTube()
 			}, 5000)
 			const hasSponsors = $page.url?.searchParams?.get('hasSponsors') || ''
 			if (hasSponsors) {
@@ -319,12 +319,20 @@
 	}
 
 	const getPlatformChatYouTube = async () => {
-		const youtubeChat = await get(
-			`youtube/chat-history?userId=${channel.userId}&pageToken=${youtubeHistoryPageToken}`
-		)
-		youtubeHistoryPageToken = youtubeChat.nextPageToken
-		console.log('got here----youtubeChat', JSON.stringify(youtubeChat))
-		//TODO: add youtubeChat to chatHistory sorted by timestamp.
+		if (channel.isLive) {
+			let url = `youtube/messages?userId=${channel.userId}`
+			if (youtubeChatPageToken) {
+				url += `&pageToken=${youtubeChatPageToken}`
+			}
+			const youtubeChat = await get(url)
+			youtubeChatPageToken = youtubeChat?.nextPageToken
+			if (youtubeChat?.messages?.length > 0) {
+				chatHistory = [...youtubeChat.messages, ...chatHistory].sort(
+					(a, b) => b.timestamp - a.timestamp
+				)
+				console.log('got here----chatHistory', JSON.stringify(chatHistory))
+			}
+		}
 	}
 </script>
 

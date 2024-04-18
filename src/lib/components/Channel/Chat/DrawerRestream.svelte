@@ -6,7 +6,6 @@
 	import { is_restream_drawer_open } from '$lib/stores/channelStore'
 	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
 	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
-	import { is_feature_merge_platforms_enabled } from '$lib/stores/remoteConfigStore'
 
 	$: auth = {
 		userId: $page.data.user?.userId,
@@ -224,25 +223,23 @@
 					<div class="modal-box">
 						<h3 class="font-bold text-lg">Add new stream</h3>
 						<div class="form-control w-full pt-4">
-							{#if $is_feature_merge_platforms_enabled}
-								<div class="flex gap-3 mb-4">
-									<button
-										class="btn btn-sm"
-										on:click={linkTwitch}
-										disabled={urlList &&
-											Array.isArray(urlList) &&
-											urlList.some((item) => item.platform === 'twitch')}
-										><IconSocialTwitch /> Twitch
-									</button>
-									<button
-										class="btn btn-sm"
-										on:click={linkYoutube}
-										disabled={urlList &&
-											Array.isArray(urlList) &&
-											urlList.some((item) => item.platform === 'youtube')}
-										><IconSocialYouTube /> YouTube</button>
-								</div>
-							{/if}
+							<div class="flex gap-3 mb-4">
+								<button
+									class="btn btn-sm"
+									on:click={linkTwitch}
+									disabled={urlList &&
+										Array.isArray(urlList) &&
+										urlList.some((item) => item.platform === 'twitch')}
+									><IconSocialTwitch /> Twitch
+								</button>
+								<button
+									class="btn btn-sm"
+									on:click={linkYoutube}
+									disabled={urlList &&
+										Array.isArray(urlList) &&
+										urlList.some((item) => item.platform === 'youtube')}
+									><IconSocialYouTube /> YouTube</button>
+							</div>
 							<label class="label">
 								<span class="label-text">Name</span>
 							</label>
