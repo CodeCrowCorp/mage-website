@@ -319,16 +319,20 @@
 	}
 
 	const getPlatformChatYouTube = async () => {
-		let url = `youtube/messages?userId=${channel.userId}`
-		if (youtubeChatPageToken) {
-			url += `&pageToken=${youtubeChatPageToken}`
+		if (channel.isLive) {
+			let url = `youtube/messages?userId=${channel.userId}`
+			if (youtubeChatPageToken) {
+				url += `&pageToken=${youtubeChatPageToken}`
+			}
+			const youtubeChat = await get(url)
+			youtubeChatPageToken = youtubeChat?.nextPageToken
+			if (youtubeChat?.messages?.length > 0) {
+				chatHistory = [...youtubeChat.messages, ...chatHistory].sort(
+					(a, b) => b.timestamp - a.timestamp
+				)
+				console.log('got here----chatHistory', JSON.stringify(chatHistory))
+			}
 		}
-		const youtubeChat = await get(url)
-		youtubeChatPageToken = youtubeChat.nextPageToken
-		chatHistory = [...youtubeChat.messages, ...chatHistory].sort(
-			(a, b) => b.timestamp - a.timestamp
-		)
-		console.log('got here----chatHistory', JSON.stringify(chatHistory))
 	}
 </script>
 

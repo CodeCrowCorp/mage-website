@@ -23,10 +23,7 @@
 		is_chat_drawer_destroy,
 		was_chat_drawer_closed
 	} from '$lib/stores/channelStore'
-	import {
-		is_feature_merge_platforms_enabled,
-		is_feature_premium_enabled
-	} from '$lib/stores/remoteConfigStore'
+	import { is_feature_premium_enabled } from '$lib/stores/remoteConfigStore'
 	import DropdownSponsors from '$lib/components/Channel/Stream/DropdownSponsors.svelte'
 	import IconChatSponsor from '$lib/assets/icons/chat/IconChatSponsor.svelte'
 
@@ -143,21 +140,19 @@
 								<DropdownSponsors {channel} />
 							</div>
 						{/if}
-						{#if $is_feature_merge_platforms_enabled}
-							{#if channel.platforms}
-								{#each channel.platforms as platform}
-									<span
-										class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center tooltip tooltip-bottom"
-										data-tip={platform.name}>
-										{#if platform.name === 'Twitch'}
-											<IconSocialTwitch />
-										{:else if platform.name === 'YouTube'}
-											<IconSocialYouTube />
-										{/if}
-										{getNumberInThousands(platform.count || 0)}
-									</span>
-								{/each}
-							{/if}
+						{#if channel.platforms}
+							{#each channel.platforms as platform}
+								<span
+									class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center tooltip tooltip-bottom"
+									data-tip={platform.name}>
+									{#if platform.name === 'Twitch'}
+										<IconSocialTwitch />
+									{:else if platform.name === 'YouTube'}
+										<IconSocialYouTube />
+									{/if}
+									{getNumberInThousands(platform.count || 0)}
+								</span>
+							{/each}
 						{/if}
 						<label class="swap swap-rotate ml-auto">
 							<input type="checkbox" bind:checked={$is_chat_drawer_open} />
