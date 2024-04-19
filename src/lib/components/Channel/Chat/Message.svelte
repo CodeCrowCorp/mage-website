@@ -159,41 +159,45 @@
 	<div class="relative m-1">
 		<!--Host, Mod, You or Rando-->
 		<div class="border border-transparent rounded-lg gap-2 flex">
-			<div
-				class="group-hover:block dropdown-menu absolute hidden right-0 dropdown dropdown-left dropdown-end"
-				tabindex="1">
-				<div class="rounded-lg bg-base-300 absolute bottom-0 right-0 border-base-100 border-2">
-					<IconChatHorizontalMore />
+			{#if !sender.platform}
+				<div
+					class="group-hover:block dropdown-menu absolute hidden right-0 dropdown dropdown-left dropdown-end"
+					tabindex="1">
+					<div class="rounded-lg bg-base-300 absolute bottom-0 right-0 border-base-100 border-2">
+						<IconChatHorizontalMore />
+					</div>
+					<ul
+						tabindex="1"
+						class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 z-10">
+						<li class="disabled"><a><IconChatReact /> React </a></li>
+						<li class="disabled"><a><IconChatQuote /> Quote </a></li>
+						{#if showRoleItem && !channel.bans.includes(sender.user?.userId)}
+							<li>
+								<a on:click={() => toggleMod()}
+									><IconChatMod /> {role === 'Mod' ? 'Revoke Mod' : 'Grant Mod'}
+								</a>
+							</li>
+							<li>
+								<a on:click={() => toggleGuest()}
+									><IconChatGuest /> {isGuest ? 'Revoke Guest' : 'Grant Guest'}
+								</a>
+							</li>
+						{/if}
+						{#if showBanItem}
+							<li>
+								<a on:click={() => toggleBan()}
+									><IconChatBan /> {channel.bans?.includes(sender.user?.userId) ? 'Unban' : 'Ban'}
+								</a>
+							</li>
+						{/if}
+						{#if hostId === $page.data.user?.userId || sender.user?.userId === $page.data.user?.userId}
+							<li>
+								<a on:click={() => deleteMessage()}><IconChatDelete /> Delete</a>
+							</li>
+						{/if}
+					</ul>
 				</div>
-				<ul tabindex="1" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 z-10">
-					<li class="disabled"><a><IconChatReact /> React </a></li>
-					<li class="disabled"><a><IconChatQuote /> Quote </a></li>
-					{#if showRoleItem && !channel.bans.includes(sender.user?.userId)}
-						<li>
-							<a on:click={() => toggleMod()}
-								><IconChatMod /> {role === 'Mod' ? 'Revoke Mod' : 'Grant Mod'}
-							</a>
-						</li>
-						<li>
-							<a on:click={() => toggleGuest()}
-								><IconChatGuest /> {isGuest ? 'Revoke Guest' : 'Grant Guest'}
-							</a>
-						</li>
-					{/if}
-					{#if showBanItem}
-						<li>
-							<a on:click={() => toggleBan()}
-								><IconChatBan /> {channel.bans?.includes(sender.user?.userId) ? 'Unban' : 'Ban'}
-							</a>
-						</li>
-					{/if}
-					{#if hostId === $page.data.user?.userId || sender.user?.userId === $page.data.user?.userId}
-						<li>
-							<a on:click={() => deleteMessage()}><IconChatDelete /> Delete</a>
-						</li>
-					{/if}
-				</ul>
-			</div>
+			{/if}
 			<div class="d-flex align-items-center">
 				{#if sender.platform === 'twitch'}
 					<IconSocialTwitch />
