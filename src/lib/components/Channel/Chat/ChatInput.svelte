@@ -56,12 +56,7 @@
 			if (chatMessage === null || chatMessage.match(/^\s*$/) !== null) return
 			const completeMessage = {
 				isAiChatEnabled: channel.isAiChatEnabled,
-				body: chatMessage,
-				state: { timestamp: Date.now() },
-				user: {
-					userId: $page.data.user?.userId || '',
-					username: $page.data.user?.user?.username || ''
-				}
+				body: chatMessage
 			}
 			emitMessageToChannel({
 				channelSocket: channel.socket,

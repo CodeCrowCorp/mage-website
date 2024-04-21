@@ -47,6 +47,8 @@
 	}
 
 	onMount(async () => {
+		clearInterval(platformPollingInterval)
+		platformPollingInterval = null
 		await loadChannel()
 		await handleWebsocket()
 		await loadMoreChannels()
@@ -237,18 +239,24 @@
 				channel.socket.addEventListener('error', (data: any) => {
 					console.log('channel socket connection error')
 					console.log(data)
+					clearInterval(platformPollingInterval)
+					platformPollingInterval = null
 				})
 				channel.socket.addEventListener('close', (data: any) => {
 					console.log('channel socket connection close')
 					console.log(data)
 
 					//if manually closed, don't reconnect
-					if (data.code === 1005) return
+					if (data.code === 1005) {
+						clearInterval(platformPollingInterval)
+						platformPollingInterval = null
+						return
+					}
 					attemptReconnect()
 				})
 			}
-		} catch (error) {
-			if (error) attemptReconnect()
+		} catch (err) {
+			if (err) attemptReconnect()
 		}
 	}
 
