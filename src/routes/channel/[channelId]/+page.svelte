@@ -327,7 +327,7 @@
 	}
 
 	const getPlatformChatYouTube = async () => {
-		if (channel.isLive && channel.platforms.some((platform: any) => platform.name === 'YouTube')) {
+		if (channel.isLive && channel.platforms?.some((platform: any) => platform.name === 'YouTube')) {
 			let url = `youtube/messages?userId=${channel.userId}`
 			if (youtubeChatPageToken) {
 				url += `&pageToken=${youtubeChatPageToken}`
