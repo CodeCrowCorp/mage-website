@@ -54,14 +54,13 @@
 			}
 		} else if (!chatMessage.startsWith('/') || chatMessage.startsWith('/ai')) {
 			if (chatMessage === null || chatMessage.match(/^\s*$/) !== null) return
-			const completeMessage = {
-				isAiChatEnabled: channel.isAiChatEnabled,
-				body: chatMessage
-			}
 			emitMessageToChannel({
 				channelSocket: channel.socket,
 				channelId: channel._id,
-				message: JSON.stringify(completeMessage)
+				message: {
+					isAiChatEnabled: channel.isAiChatEnabled,
+					body: chatMessage
+				}
 			})
 		}
 		chatMessage = ''

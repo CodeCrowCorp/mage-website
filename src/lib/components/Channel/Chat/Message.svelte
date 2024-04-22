@@ -200,7 +200,7 @@
 			{/if}
 			<div class="d-flex align-items-center">
 				{#if sender.platform === 'twitch'}
-					<IconSocialTwitch />
+					<div style="display: ruby;"><IconSocialTwitch /></div>
 				{/if}
 				{#if sender.platform === 'youtube'}
 					<div style="display: ruby;"><IconSocialYouTube /></div>
