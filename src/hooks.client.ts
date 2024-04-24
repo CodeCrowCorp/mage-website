@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/browser'
 
 const onError = init(env.PUBLIC_SENTRY_DSN || '', {
 	sentryOptions: {
-		tunnel: '/api/tunnel',
+		tunnel: '/tunnel',
 		integrations: [
 			Sentry.browserTracingIntegration(),
 			Sentry.browserProfilingIntegration(),
