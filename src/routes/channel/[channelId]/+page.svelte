@@ -262,6 +262,7 @@
 
 	const attemptReconnect = () => {
 		setTimeout(async () => {
+			if (!$page.params.channelId) return
 			console.log('Reconnecting to WebSocket...')
 			channel = channels.find((ch: any) => ch._id === parseInt($page.params.channelId))
 			if (channel) {
