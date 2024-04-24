@@ -4,8 +4,19 @@ import { Authenticate } from '$lib/authentication/authentication'
 import { get } from '$lib/api'
 import { user_role } from '$lib/stores/userStore'
 import { env } from '$env/dynamic/public'
+import { init } from '@jill64/sentry-sveltekit-cloudflare/server'
 
-export const handle: Handle = async ({ event, resolve }) => {
+const { onHandle, onError } = init(env.PUBLIC_SENTRY_DSN || '', {
+	toucanOptions: {
+		tracesSampleRate: 1.0
+	},
+	handleOptions: {
+		handleUnknownRoutes: false
+	},
+	enableInDevMode: false
+})
+
+export const handle = onHandle(async ({ event, resolve }) => {
 	const pathname = event.url.pathname
 	const userId = event.url.searchParams.get('userId') || event.cookies.get('userId') || ''
 	let token = event.url.searchParams.get('token') || event.cookies.get('token') || ''
@@ -74,13 +85,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 	} else {
 		return await resolve(event)
 	}
-}
+})
 
-export const handleError = ({ error }: { error: any }) => {
-	console.log('error', error)
-	// example integration with https://sentry.io/
-	// Sentry.captureException(error, { event, errorId });
+export const handleError = onError((e, sentryEventId) => {
+	console.log('error', e)
 	return {
 		message: 'Whoops something went wrong!'
 	}
-}
+})
