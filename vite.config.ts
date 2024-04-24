@@ -11,6 +11,11 @@ const config: UserConfig = {
 	},
 	ssr: {
 		noExternal: ['@jill64/sentry-sveltekit-cloudflare']
+	},
+	server: {
+		headers: {
+			'Document-Policy': 'js-profiling'
+		}
 	}
 }
 
