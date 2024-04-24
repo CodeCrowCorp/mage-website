@@ -4,10 +4,22 @@
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 	import { getNumberInThousands } from '$lib/utils'
+	import { onMount } from 'svelte'
 
 	export let channel: any = {}
 
 	let bg_cover = channel.thumbnail || '/placeholder/programming-placeholder.jpg'
+
+	onMount(async () => {
+		try {
+			const response = await fetch(channel.thumbnail)
+			if (!response.ok) {
+				throw new Error(response.statusText)
+			}
+		} catch (error) {
+			bg_cover = '/placeholder/programming-placeholder.jpg'
+		}
+	})
 </script>
 
 <a
