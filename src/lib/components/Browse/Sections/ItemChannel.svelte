@@ -6,6 +6,13 @@
 	import { getNumberInThousands } from '$lib/utils'
 
 	export let channel: any = {}
+
+	const handleError = (e: any) => {
+		const imgElement = e.target
+		if (imgElement instanceof HTMLImageElement) {
+			imgElement.src = '/placeholder/programming-placeholder.jpg'
+		}
+	}
 </script>
 
 <a
@@ -46,14 +53,16 @@
 		<div class="video-thumbnail">
 			<img
 				class="w-full h-full mask rounded-lg object-cover"
-				src={channel.thumbnail ? channel.thumbnail : '/placeholder/programming-placeholder.jpg'} />
+				alt="channel thumbnail"
+				src={channel.thumbnail ? channel.thumbnail : '/placeholder/programming-placeholder.jpg'}
+				on:error={handleError} />
 		</div>
 	</div>
 	<p class="text-lg font-semibold truncate">{channel.title}</p>
 	<div class="flex flex-row gap-2 max-w-[25rem]">
 		<div class="avatar">
 			<div class="w-12 mask {channel?.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
-				<img src={channel.avatar} alt="" />
+				<img src={channel.avatar} alt="user avatar" />
 			</div>
 		</div>
 		<div class="flex items-center gap-1">

@@ -84,6 +84,13 @@
 			})
 		}
 	}
+
+	const handleError = (e: any) => {
+		const imgElement = e.target
+		if (imgElement instanceof HTMLImageElement) {
+			imgElement.src = '/placeholder/programming-placeholder.jpg'
+		}
+	}
 </script>
 
 <div class="menu dropdown dropdown-bottom z-10">
@@ -103,7 +110,11 @@
 			<li class="flex flex-row justify-center w-full">
 				<div class="w-full shadow-xl">
 					<div class="items-center cursor-pointer">
-						<img src={channel.thumbnail} alt="Preview" class="rounded-lg h-full" />
+						<img
+							src={channel.thumbnail}
+							alt="Preview"
+							class="rounded-lg h-full"
+							on:error={handleError} />
 					</div>
 				</div>
 			</li>
