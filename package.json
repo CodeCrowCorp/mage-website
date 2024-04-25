@@ -1,6 +1,6 @@
 {
 	"name": "mage-website",
-	"version": "0.2.13",
+	"version": "0.2.14",
 	"license": "GPL-3.0",
 	"private": true,
 	"type": "module",
