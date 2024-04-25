@@ -232,13 +232,13 @@
 										urlList.some((item) => item.platform === 'twitch')}
 									><IconSocialTwitch /> Twitch
 								</button>
-								<!-- <button
+								<button
 									class="btn btn-sm"
 									on:click={linkYoutube}
 									disabled={urlList &&
 										Array.isArray(urlList) &&
 										urlList.some((item) => item.platform === 'youtube')}
-									><IconSocialYouTube /> YouTube</button> -->
+									><IconSocialYouTube /> YouTube</button>
 							</div>
 							<label class="label">
 								<span class="label-text">Name</span>
