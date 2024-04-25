@@ -233,7 +233,6 @@
 				channel.socket.addEventListener('message', (data: any) => {
 					console.log('channel listening to messages')
 					if (isJsonString(data.data)) {
-						// console.log('data.data', data.data)
 						$channel_message = data.data
 					}
 				})
