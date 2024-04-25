@@ -346,7 +346,7 @@
 						message: {
 							isAiChatEnabled: false,
 							body: item.message,
-							platform: 'youtube',
+							platform: item.platform,
 							youtubeMessageId: item.id
 						}
 					})

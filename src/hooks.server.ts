@@ -55,7 +55,6 @@ export const handle = onHandle(async ({ event, resolve }) => {
 				maxAge: 60 * 60 * 24 * 30
 			})
 		}
-		//TODO: if need to update platform object, visit app.d.ts file
 		event.locals = {
 			user: {
 				userId: parseInt(userId),
