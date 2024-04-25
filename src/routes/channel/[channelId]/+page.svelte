@@ -349,7 +349,8 @@
 							isAiChatEnabled: false,
 							body: item.message,
 							platform: item.platform,
-							youtubeMessageId: item.id
+							youtubeMessageId: item.id,
+							user: item.user
 						}
 					})
 				}
