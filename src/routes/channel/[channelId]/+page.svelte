@@ -224,7 +224,12 @@
 			let channelSocketId = ''
 			if (!channel.socket) {
 				channelSocketId = await get(`wsinit/channelid?channelId=${$page.params.channelId}`)
-				channel.socket = initChannelSocket({ websocketId: channelSocketId })
+				if (channelSocketId) {
+					channel.socket = initChannelSocket({ websocketId: channelSocketId })
+				} else {
+					attemptReconnect()
+					return
+				}
 			} else {
 				initChannel(channel)
 			}
@@ -330,6 +335,12 @@
 	}
 
 	const getPlatformChatYouTube = async () => {
+		console.log(
+			'got here----channel.userId === $page.data.user?.userId',
+			channel.userId === $page.data.user?.userId
+		)
+		console.log('got here----channel.isLive', channel.isLive)
+		console.log('got here----platforms', JSON.stringify(channel.platforms))
 		if (
 			channel.userId === $page.data.user?.userId &&
 			channel.isLive &&
