@@ -8,7 +8,8 @@
 		initChannelSocket,
 		emitChannelSubscribeByUser,
 		emitDeleteAllMessagesToChannel,
-		emitGetSponsors
+		emitGetSponsors,
+		emitMessageToChannel
 	} from '$lib/websocket'
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import { isJsonString, updateVideoItems } from '$lib/utils'
@@ -335,12 +336,20 @@
 			}
 			const youtubeChat = await get(url)
 			youtubeChatPageToken = youtubeChat?.nextPageToken
-			if (youtubeChat?.messages?.length > 0) {
-				chatHistory = [...youtubeChat.messages, ...chatHistory].sort(
-					(a, b) => b.timestamp - a.timestamp
-				)
-				console.log('got here----chatHistory', JSON.stringify(chatHistory))
-			}
+			youtubeChat?.messages?.forEach((message: any) => {
+				if (!chatHistory.some((chat) => chat.youtubeMessageId === message.id)) {
+					emitMessageToChannel({
+						channelSocket: channel.socket,
+						channelId: channel._id,
+						message: {
+							isAiChatEnabled: false,
+							body: youtubeChat?.messages,
+							platform: 'youtube',
+							youtubeMessageId: message.id
+						}
+					})
+				}
+			})
 		}
 	}
 </script>
