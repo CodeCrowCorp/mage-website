@@ -329,27 +329,31 @@
 	}
 
 	const getPlatformChatYouTube = async () => {
-		if (channel.isLive && channel.platforms?.some((platform: any) => platform.name === 'YouTube')) {
+		if (
+			channel.userId === $page.data.user?.userId &&
+			channel.isLive &&
+			channel.platforms?.some((platform: any) => platform.name === 'YouTube')
+		) {
 			let url = `youtube/messages?userId=${channel.userId}`
 			if (youtubeChatPageToken) {
 				url += `&pageToken=${youtubeChatPageToken}`
 			}
 			const youtubeChat = await get(url)
-			youtubeChatPageToken = youtubeChat?.nextPageToken
-			youtubeChat?.messages?.forEach((message: any) => {
-				if (!chatHistory.some((chat) => chat.youtubeMessageId === message.id)) {
+			youtubeChat?.messages?.forEach((item: any) => {
+				if (!chatHistory.some((chat) => chat.youtubeMessageId === item.id)) {
 					emitMessageToChannel({
 						channelSocket: channel.socket,
 						channelId: channel._id,
 						message: {
 							isAiChatEnabled: false,
-							body: youtubeChat?.messages,
+							body: item.message,
 							platform: 'youtube',
-							youtubeMessageId: message.id
+							youtubeMessageId: item.id
 						}
 					})
 				}
 			})
+			youtubeChatPageToken = youtubeChat?.nextPageToken
 		}
 	}
 </script>
