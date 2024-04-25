@@ -104,9 +104,11 @@
 							</div>
 						{:else}
 							<img
-								class="w-10 h-10 mask mask-squircle"
+								class="w-10 h-10 mask {profileData.profile?.planTier > 0
+									? 'mask-hexagon'
+									: 'mask-squircle'}"
 								src={profileData?.profile?.avatar}
-								alt={profileData?.profile?.avatar} />
+								alt="profile avatar" />
 						{/if}
 					</span>
 					<div>
