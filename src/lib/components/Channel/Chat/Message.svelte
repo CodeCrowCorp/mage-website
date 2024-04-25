@@ -148,7 +148,7 @@
 	onMount(() => {
 		const spans = document.querySelectorAll('span[name="username"]')
 		spans.forEach((span: any) => {
-			span.onclick = onUsernameClick
+			span.onclick = sender.platform ?? onUsernameClick
 		})
 	})
 
