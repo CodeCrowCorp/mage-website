@@ -47,6 +47,8 @@
 		}
 	}
 
+	$: isLive = channel?.videoItems?.some((input: any) => input?.rtmps?.isConnected) ?? false
+
 	onMount(async () => {
 		clearInterval(platformPollingInterval)
 		platformPollingInterval = null
@@ -180,8 +182,10 @@
 				limit: 100
 			})
 			platformPollingInterval = setInterval(async () => {
-				await getPlatformCount()
-				await getPlatformChatYouTube()
+				if (isLive) {
+					await getPlatformCount()
+					await getPlatformChatYouTube()
+				}
 			}, 5000)
 			const hasSponsors = $page.url?.searchParams?.get('hasSponsors') || ''
 			if (hasSponsors) {
@@ -335,15 +339,9 @@
 	}
 
 	const getPlatformChatYouTube = async () => {
-		console.log(
-			'got here----channel.userId === $page.data.user?.userId',
-			channel.userId === $page.data.user?.userId
-		)
-		console.log('got here----channel.isLive', channel.isLive)
-		console.log('got here----platforms', JSON.stringify(channel.platforms))
 		if (
 			channel.userId === $page.data.user?.userId &&
-			channel.isLive &&
+			isLive &&
 			channel.platforms?.some((platform: any) => platform.name === 'YouTube')
 		) {
 			let url = `youtube/messages?userId=${channel.userId}`
