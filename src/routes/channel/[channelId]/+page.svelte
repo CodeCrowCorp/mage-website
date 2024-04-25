@@ -134,6 +134,8 @@
 	})
 
 	onDestroy(async () => {
+		clearInterval(platformPollingInterval)
+		platformPollingInterval = null
 		disableSharing()
 		channels.forEach((ch: any) => {
 			if (ch.socket && ch.socket.constructor === WebSocket) ch.socket.close()
@@ -328,16 +330,6 @@
 	}
 
 	const getPlatformChatYouTube = async () => {
-		console.log(
-			'got here----channel.userId === $page.data.user?.userId',
-			channel.userId === $page.data.user?.userId
-		)
-		console.log('got here----channel.isLive', channel.isLive)
-		console.log(
-			'got here----platforms',
-			channel.platforms?.some((platform: any) => platform.name === 'YouTube')
-		)
-		console.log('got here----platforms2', JSON.stringify(channel.platforms))
 		if (
 			channel.userId === $page.data.user?.userId &&
 			channel.isLive &&
