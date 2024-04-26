@@ -47,6 +47,8 @@
 		}
 	}
 
+	$: isLive = channel?.videoItems?.some((input: any) => input?.rtmps?.isConnected) ?? false
+
 	onMount(async () => {
 		clearInterval(platformPollingInterval)
 		platformPollingInterval = null
@@ -134,6 +136,8 @@
 	})
 
 	onDestroy(async () => {
+		clearInterval(platformPollingInterval)
+		platformPollingInterval = null
 		disableSharing()
 		channels.forEach((ch: any) => {
 			if (ch.socket && ch.socket.constructor === WebSocket) ch.socket.close()
@@ -178,8 +182,10 @@
 				limit: 100
 			})
 			platformPollingInterval = setInterval(async () => {
-				await getPlatformCount()
-				await getPlatformChatYouTube()
+				if (isLive) {
+					await getPlatformCount()
+					await getPlatformChatYouTube()
+				}
 			}, 5000)
 			const hasSponsors = $page.url?.searchParams?.get('hasSponsors') || ''
 			if (hasSponsors) {
@@ -222,7 +228,12 @@
 			let channelSocketId = ''
 			if (!channel.socket) {
 				channelSocketId = await get(`wsinit/channelid?channelId=${$page.params.channelId}`)
-				channel.socket = initChannelSocket({ websocketId: channelSocketId })
+				if (channelSocketId) {
+					channel.socket = initChannelSocket({ websocketId: channelSocketId })
+				} else {
+					attemptReconnect()
+					return
+				}
 			} else {
 				initChannel(channel)
 			}
@@ -330,7 +341,7 @@
 	const getPlatformChatYouTube = async () => {
 		if (
 			channel.userId === $page.data.user?.userId &&
-			channel.isLive &&
+			isLive &&
 			channel.platforms?.some((platform: any) => platform.name === 'YouTube')
 		) {
 			let url = `youtube/messages?userId=${channel.userId}`
@@ -347,7 +358,8 @@
 							isAiChatEnabled: false,
 							body: item.message,
 							platform: item.platform,
-							youtubeMessageId: item.id
+							youtubeMessageId: item.id,
+							user: item.user
 						}
 					})
 				}

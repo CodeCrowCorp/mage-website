@@ -86,11 +86,11 @@
 		})
 	}
 
-	const sendOutputs = async ({ inputId }: { inputId: string }) => {
+	const sendOutputs = async ({ liveInputUid }: { liveInputUid: string }) => {
 		if ($page.data.user?.userId) {
 			return await post(
 				`outputs/send`,
-				{ inputId },
+				{ liveInputUid },
 				{
 					userId: $page.data.user?.userId,
 					token: $page.data.user?.token
@@ -110,7 +110,7 @@
 			item._id === streamItem._id ? { ...item, isEnabled: streamItem.isEnabled } : item
 		)
 		const rtmps = await getLiveInput()
-		await sendOutputs({ inputId: rtmps.rtmps.uid })
+		await sendOutputs({ liveInputUid: rtmps.rtmps.uid })
 	}
 
 	const linkTwitch = async () => {
