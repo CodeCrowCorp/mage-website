@@ -43,6 +43,8 @@
 		"vite": "^5.0.10"
 	},
 	"dependencies": {
+		"@baselime/node-opentelemetry": "^0.5.8",
+		"@baselime/sveltekit-opentelemetry-middleware": "^0.1.6",
 		"@event-calendar/core": "^2.0.0",
 		"@event-calendar/time-grid": "^2.0.0",
 		"@neodrag/svelte": "^2.0.3",
