@@ -8,14 +8,6 @@ const config: UserConfig = {
 	},
 	build: {
 		assetsInlineLimit: 0
-	},
-	ssr: {
-		noExternal: ['@jill64/sentry-sveltekit-cloudflare']
-	},
-	server: {
-		headers: {
-			'Document-Policy': 'js-profiling'
-		}
 	}
 }
 

@@ -1,6 +1,6 @@
 {
 	"name": "mage-website",
-	"version": "0.2.14",
+	"version": "0.2.15",
 	"license": "GPL-3.0",
 	"private": true,
 	"type": "module",
@@ -45,7 +45,6 @@
 	"dependencies": {
 		"@event-calendar/core": "^2.0.0",
 		"@event-calendar/time-grid": "^2.0.0",
-		"@jill64/sentry-sveltekit-cloudflare": "^1.7.11",
 		"@neodrag/svelte": "^2.0.3",
 		"@stripe/stripe-js": "^3.0.10",
 		"daisyui": "^4.7.2",
