@@ -207,8 +207,8 @@
 				{#if role !== '🤖 AI'}
 					<span
 						class="{coloredRole.textColor} font-medium cursor-pointer"
-						on:click={() => {
-							if (!sender.platform) onUsernameClick()
+						on:click={(evt) => {
+							if (!sender.platform) onUsernameClick(evt)
 						}}
 						id={'@' + sender.user?.username}>
 						@{sender.user?.username}
