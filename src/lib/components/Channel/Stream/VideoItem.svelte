@@ -363,7 +363,7 @@
 						const file = dataURLtoFile(imageSrc, 'thumbnail-image')
 						if (file !== null && file.size > 0 && file.type !== '') {
 							await putImage(
-								`channels/thumbnail?channelId=${channel._id}&bucketName=thumbnails`,
+								`channel/thumbnail?channelId=${channel._id}&bucketName=thumbnails`,
 								file,
 								{
 									userId: $page.data.user?.userId,
