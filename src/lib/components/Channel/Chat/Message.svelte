@@ -10,8 +10,6 @@
 	import { page } from '$app/stores'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import { onMount } from 'svelte'
-	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
-	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
 
 	export let sender: any, hostId: string, channel: any, onUsernameClick: any
 	let role: string, coloredRole: any
