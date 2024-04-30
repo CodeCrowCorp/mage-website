@@ -10,8 +10,6 @@
 	import { page } from '$app/stores'
 	import IconChatBan from '$lib/assets/icons/chat/IconChatBan.svelte'
 	import { onMount } from 'svelte'
-	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
-	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
 
 	export let sender: any, hostId: string, channel: any, onUsernameClick: any
 	let role: string, coloredRole: any
@@ -197,11 +195,10 @@
 				</ul>
 			</div>
 			<div class="d-flex align-items-center">
-				{#if sender.platform === 'twitch'}
-					<div style="display: ruby;"><IconSocialTwitch /></div>
-				{/if}
-				{#if sender.platform === 'youtube'}
-					<div style="display: ruby;"><IconSocialYouTube /></div>
+				{#if sender.platform}
+					<div style="display: ruby;">
+						<img src={sender.iconUrl} class="w-6 h-6" alt="platform icon" />
+					</div>
 				{/if}
 				{#if role === '🤖 AI' || role === 'Host' || role === 'Mod' || role === 'You'}
 					<span class="{coloredRole.tagColor} rounded-sm text-sm px-[5px] py-[2px] text-white"

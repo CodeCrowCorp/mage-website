@@ -2,8 +2,6 @@
 	import IconViewers from '$lib/assets/icons/IconViewers.svelte'
 	import IconChatDrawerChevronOpen from '$lib/assets/icons/channel/IconChatDrawerChevronOpen.svelte'
 	import IconChatDrawerChevronClose from '$lib/assets/icons/channel/IconChatDrawerChevronClose.svelte'
-	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
-	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
 	import IconViews from '$lib/assets/icons/IconViews.svelte'
 	import StreamControls from '$lib/components/Channel/Stream/StreamControls.svelte'
 	import DropdownViewers from '$lib/components/Channel/Stream/DropdownViewers.svelte'
@@ -145,11 +143,7 @@
 								<span
 									class="btn btn-sm btn-neutral font-medium text-white border-none flex items-center tooltip tooltip-bottom"
 									data-tip={platform.name}>
-									{#if platform.name === 'Twitch'}
-										<IconSocialTwitch />
-									{:else if platform.name === 'YouTube'}
-										<IconSocialYouTube />
-									{/if}
+									<img src={platform.iconUrl} class="w-6 h-6" alt="platform icon" />
 									{getNumberInThousands(platform.count || 0)}
 								</span>
 							{/each}
