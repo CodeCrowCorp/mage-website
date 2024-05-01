@@ -130,16 +130,18 @@
 						trackType: `screen`
 					})
 					screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
-					screen_element.addEventListener('dblclick', (event: any) => {
-						if (document.fullscreenElement) {
-							document.exitFullscreen()
-						} else {
-							screen_element.requestFullscreen()
-						}
-					})
-					screenWhip.addEventListener(`localStreamStopped-screen`, () => {
-						$is_sharing_screen = undefined
-					})
+					if (screen_element) {
+						screen_element.addEventListener('dblclick', (event: any) => {
+							if (document.fullscreenElement) {
+								document.exitFullscreen()
+							} else {
+								screen_element.requestFullscreen()
+							}
+						})
+						screenWhip.addEventListener(`localStreamStopped-screen`, () => {
+							$is_sharing_screen = undefined
+						})
+					}
 				} else {
 					if (value === false) screenWhip?.disconnectStream()
 					if (screen_element) screen_element.srcObject = null
@@ -155,16 +157,18 @@
 						videoElement: webcam_element,
 						trackType: `webcam`
 					})
-					webcam_element.addEventListener('dblclick', (event: any) => {
-						if (document.fullscreenElement) {
-							document.exitFullscreen()
-						} else {
-							webcam_element.requestFullscreen()
-						}
-					})
-					webcamWhip.addEventListener(`localStreamStopped-webcam`, () => {
-						$is_sharing_webcam = undefined
-					})
+					if (webcam_element) {
+						webcam_element.addEventListener('dblclick', (event: any) => {
+							if (document.fullscreenElement) {
+								document.exitFullscreen()
+							} else {
+								webcam_element.requestFullscreen()
+							}
+						})
+						webcamWhip.addEventListener(`localStreamStopped-webcam`, () => {
+							$is_sharing_webcam = undefined
+						})
+					}
 				} else {
 					if (value === false) webcamWhip?.disconnectStream()
 					if (webcam_element) webcam_element.srcObject = null
@@ -221,13 +225,15 @@
 					if (video.screen?.isConnected) {
 						screenWhep = new WHEPClient(video.screen?.webRTCPlayback.url, screen_element, `screen`)
 						screenWhep.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
-						screen_element.addEventListener('dblclick', (event: any) => {
-							if (document.fullscreenElement) {
-								document.exitFullscreen()
-							} else {
-								screen_element.requestFullscreen()
-							}
-						})
+						if (screen_element) {
+							screen_element.addEventListener('dblclick', (event: any) => {
+								if (document.fullscreenElement) {
+									document.exitFullscreen()
+								} else {
+									screen_element.requestFullscreen()
+								}
+							})
+						}
 					} else {
 						if (screen_element) screen_element.srcObject = null
 						isScreenLive = false
@@ -236,13 +242,15 @@
 				case 'webcam':
 					if (video.webcam?.isConnected) {
 						webcamWhep = new WHEPClient(video.webcam?.webRTCPlayback.url, webcam_element, `webcam`)
-						webcam_element.addEventListener('dblclick', (event: any) => {
-							if (document.fullscreenElement) {
-								document.exitFullscreen()
-							} else {
-								webcam_element.requestFullscreen()
-							}
-						})
+						if (webcam_element) {
+							webcam_element.addEventListener('dblclick', (event: any) => {
+								if (document.fullscreenElement) {
+									document.exitFullscreen()
+								} else {
+									webcam_element.requestFullscreen()
+								}
+							})
+						}
 					} else {
 						if (webcam_element) webcam_element.srcObject = null
 					}
@@ -392,6 +400,7 @@
 </script>
 
 <div
+	aria-roledescription="video item"
 	class={video.rtmps?.isConnected || video.screen?.isConnected || video.webcam?.isConnected
 		? 'w-full h-full'
 		: 'w-[500px] max-h-80'}
