@@ -30,7 +30,8 @@
 		channel: any,
 		channels: any = [],
 		isHostOrGuest: boolean = false,
-		viewers: any[] = []
+		viewers: any[] = [],
+		channelId: string
 
 	let isScrollable = false
 	$: isLive =
@@ -54,7 +55,7 @@
 				if (channels?.length && channels[channels.length - 2]?._id == id) {
 					dispatch('loadMore')
 				}
-
+				channelId = channel._id
 				goto(`${id}?${$page.url?.searchParams}`, {
 					keepFocus: true,
 					replaceState: true,
@@ -154,7 +155,7 @@
 							<IconChatDrawerChevronClose />
 						</label>
 					</div>
-					{#if channel && nextchannel?._id === parseInt($page.params.channelId)}
+					{#if channel && nextchannel?._id === parseInt(channelId)}
 						<VideoGrid bind:channel />
 					{/if}
 				</div>
@@ -162,6 +163,6 @@
 		{/each}
 	</div>
 	<div class="absolute lg:bottom-0 bottom-10 m-3 w-full items-center justify-center flex">
-		<StreamControls bind:isHostOrGuest bind:channel bind:isScrollable bind:viewers />
+		<StreamControls bind:isHostOrGuest bind:channel bind:isScrollable bind:viewers bind:channelId />
 	</div>
 </div>
