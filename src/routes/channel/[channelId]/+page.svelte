@@ -40,7 +40,7 @@
 		channel?.guests?.includes($page.data.user?.userId)
 
 	$: if (channel) {
-		if (channel._id !== parseInt($page.params.channelId)) {
+		if (channel._id !== parseInt(channelId)) {
 			disableSharing()
 			handleWebsocket()
 			timeoutConnection()
@@ -48,6 +48,7 @@
 	}
 
 	$: isLive = channel?.videoItems?.some((input: any) => input?.rtmps?.isConnected) ?? false
+	$: channelId = $page.params.channelId
 
 	onMount(async () => {
 		clearInterval(platformPollingInterval)
@@ -61,10 +62,10 @@
 		}, 600)
 
 		channel_message.subscribe(async (value: any) => {
-			if (!value || (channel && parseInt($page.params.channelId) !== channel._id)) return
+			if (!value || (channel && parseInt(channelId) !== channel._id)) return
 			var parsedMsg = JSON.parse(value)
 			switch (parsedMsg.eventName) {
-				case `channel-update-${$page.params.channelId}`:
+				case `channel-update-${channelId}`:
 					console.log('channel-update', parsedMsg)
 					channel = {
 						...parsedMsg.channel,
@@ -94,7 +95,7 @@
 						}
 					}
 					break
-				case `channel-subscribe-${$page.params.channelId}`:
+				case `channel-subscribe-${channelId}`:
 					userCount = parsedMsg.userCount
 					if (parsedMsg.quitUserId) {
 						channel.videoItems = channel.videoItems.filter(
@@ -115,18 +116,18 @@
 								})
 							} else {
 								// for new users joining the channel
-								const liveInputs = await get(`live-inputs?channelId=${$page.params.channelId}`)
+								const liveInputs = await get(`live-inputs?channelId=${channelId}`)
 								channel.videoItems = updateVideoItems([...activeGuests], liveInputs)
 							}
 						}
 					}
 					break
-				case `channel-streaming-action-${$page.params.channelId}`:
+				case `channel-streaming-action-${channelId}`:
 					if (channel) {
 						channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
 					}
 					break
-				case `channel-get-sponsors-${$page.params.channelId}`:
+				case `channel-get-sponsors-${channelId}`:
 					if (channel) {
 						channel.sponsors = parsedMsg.sponsors
 					}
@@ -136,11 +137,15 @@
 	})
 
 	onDestroy(async () => {
+		channelId = ''
 		clearInterval(platformPollingInterval)
 		platformPollingInterval = null
 		disableSharing()
 		channels.forEach((ch: any) => {
-			if (ch.socket && ch.socket.constructor === WebSocket) ch.socket.close()
+			if (ch.socket && ch.socket.constructor === WebSocket) {
+				console.log('got here----', ch.socket)
+				ch.socket.close()
+			}
 		})
 	})
 
@@ -153,7 +158,7 @@
 	}
 
 	const loadChannel = async () => {
-		const chan = await get(`channel?channelId=${$page.params.channelId}`)
+		const chan = await get(`channel?channelId=${channelId}`)
 		chan.videoItems = []
 		const isOnboarded = await get(`plan/onboarded?userId=${chan.userId}`)
 		chan.isOnboarded = isOnboarded || false
@@ -163,7 +168,7 @@
 	}
 
 	const initChannel = (chan: any) => {
-		$channel_connection = `open-${$page.params.channelId}`
+		$channel_connection = `open-${channelId}`
 		$channel_message = ''
 		chan.videoItems = []
 		clearInterval(platformPollingInterval)
@@ -171,14 +176,14 @@
 		if (chan.socket?.readyState === WebSocket.OPEN) {
 			emitChannelSubscribeByUser({
 				channelSocket: chan.socket,
-				channelId: $page.params.channelId,
+				channelId: channelId,
 				hostId: chan.userId,
 				userId: $page.data.user?.userId,
 				username: $page.data.user?.user?.username
 			})
 			emitChatHistoryToChannel({
 				channelSocket: chan.socket,
-				channelId: $page.params.channelId,
+				channelId: channelId,
 				limit: 100
 			})
 			platformPollingInterval = setInterval(async () => {
@@ -194,7 +199,7 @@
 					recipientUserId: chan.userId,
 					channelId: chan._id
 				})
-				goto(`/channel/${$page.params.channelId}`, {
+				goto(`/channel/${channelId}`, {
 					replaceState: true
 				})
 			}
@@ -219,7 +224,7 @@
 
 	const handleWebsocket = async () => {
 		try {
-			channel = channels.find((ch: any) => ch._id === parseInt($page.params.channelId))
+			channel = channels.find((ch: any) => ch._id === parseInt(channelId))
 			await insertChannelView(channel)
 			chatHistory = []
 			isHostOrGuest =
@@ -227,7 +232,7 @@
 				channel.guests?.includes($page.data.user?.userId)
 			let channelSocketId = ''
 			if (!channel.socket) {
-				channelSocketId = await get(`wsinit/channelid?channelId=${$page.params.channelId}`)
+				channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
 				if (channelSocketId) {
 					channel.socket = initChannelSocket({ websocketId: channelSocketId })
 				} else {
@@ -273,9 +278,9 @@
 
 	const attemptReconnect = () => {
 		setTimeout(async () => {
-			if (!$page.params.channelId) return
+			if (!channelId) return
 			console.log('Reconnecting to WebSocket...')
-			channel = channels.find((ch: any) => ch._id === parseInt($page.params.channelId))
+			channel = channels.find((ch: any) => ch._id === parseInt(channelId))
 			if (channel) {
 				channel.socket = null
 				await handleWebsocket()
@@ -284,9 +289,7 @@
 	}
 
 	const timeoutConnection = () => {
-		const currentChannelIndex = channels.findIndex(
-			(ch: any) => ch._id === parseInt($page.params.channelId)
-		)
+		const currentChannelIndex = channels.findIndex((ch: any) => ch._id === parseInt(channelId))
 		channels.forEach((channel: any, index: number) => {
 			if (
 				Math.abs(index - currentChannelIndex) > 10 &&
@@ -303,13 +306,13 @@
 	}
 
 	const deleteChannelYesAction = async () => {
-		await del(`channel?channelId=${$page.params.channelId}&bucketName=thumbnails`, {
+		await del(`channel?channelId=${channelId}&bucketName=thumbnails`, {
 			userId: $page.data.user?.userId,
 			token: $page.data.user?.token
 		})
 		emitDeleteAllMessagesToChannel({
 			channelSocket: channel.socket,
-			channelId: $page.params.channelId
+			channelId: channelId
 		})
 		goto('/browse')
 	}
@@ -369,65 +372,69 @@
 	}
 </script>
 
-{#if !$is_sharing_screen && !$is_sharing_webcam && !$is_sharing_audio && isHostOrGuest}
-	<DrawerRestream />
-{/if}
+{#key $page.url.pathname}
+	{#if !$is_sharing_screen && !$is_sharing_webcam && !$is_sharing_audio && isHostOrGuest}
+		<DrawerRestream bind:channelId />
+	{/if}
 
-{#if channel && channel._id === parseInt($page.params.channelId)}
-	<div class="relative h-full bg-base-200 overflow-hidden flex">
-		<div
-			class={'lg:ml-24 h-full transition-all delay-75 ' +
-				(!$is_chat_drawer_open ? 'w-full' : 'with-drawer')}>
-			<StreamContainer
-				bind:channel
-				bind:userCount
-				bind:channels
-				on:loadMore={loadMoreChannels}
-				bind:isHostOrGuest
-				bind:viewers />
+	{#if channel && channel._id === parseInt(channelId)}
+		<div class="relative h-full bg-base-200 overflow-hidden flex">
+			<div
+				class={'lg:ml-24 h-full transition-all delay-75 ' +
+					(!$is_chat_drawer_open ? 'w-full' : 'with-drawer')}>
+				<StreamContainer
+					bind:channel
+					bind:userCount
+					bind:channels
+					on:loadMore={loadMoreChannels}
+					bind:isHostOrGuest
+					bind:viewers
+					bind:channelId />
 
-			{#if showEditChannelDrawer}
-				<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />
-			{/if}
-		</div>
-		{#if !$is_chat_drawer_destroy}
-			<div class={'absolute right-0 top-0 ' + ($is_chat_drawer_open ? 'drawer-container' : 'w-0')}>
-				<div class="drawer drawer-end">
-					<input
-						id="chat-drawer"
-						type="checkbox"
-						class="drawer-toggle"
-						bind:checked={$is_chat_drawer_open} />
-					<div class="drawer-side w-fit lg:absolute lg:right-0 lg:pb-0 pb-4">
-						<label for="chat-drawer" class="drawer-overlay lg:hidden" />
-						<div
-							class="h-full pt-12 lg:p-5 md:w-fit lg:ml-0 md:ml-0 w-max-full mobile-margin lg:drop-shadow-lg">
-							<DrawerChat bind:channel bind:showEditChannelDrawer bind:viewers {chatHistory} />
+				{#if showEditChannelDrawer}
+					<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />
+				{/if}
+			</div>
+			{#if !$is_chat_drawer_destroy}
+				<div
+					class={'absolute right-0 top-0 ' + ($is_chat_drawer_open ? 'drawer-container' : 'w-0')}>
+					<div class="drawer drawer-end">
+						<input
+							id="chat-drawer"
+							type="checkbox"
+							class="drawer-toggle"
+							bind:checked={$is_chat_drawer_open} />
+						<div class="drawer-side w-fit lg:absolute lg:right-0 lg:pb-0 pb-4">
+							<label for="chat-drawer" class="drawer-overlay lg:hidden" />
+							<div
+								class="h-full pt-12 lg:p-5 md:w-fit lg:ml-0 md:ml-0 w-max-full mobile-margin lg:drop-shadow-lg">
+								<DrawerChat bind:channel bind:showEditChannelDrawer bind:viewers {chatHistory} />
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		{/if}
-	</div>
+			{/if}
+		</div>
 
-	<input
-		type="checkbox"
-		id="modal-delete-channel"
-		class="modal-toggle"
-		bind:checked={isDeleteModalOpen} />
-	<Modal
-		id="modal-delete-channel"
-		title="Delete channel"
-		message="Are you sure you want to delete this channel?"
-		no="Cancel"
-		noAction={deleteChannelNoAction}
-		yes="Yes"
-		yesAction={deleteChannelYesAction}
-		isError={true} />
-	{#if $is_feature_premium_enabled}
-		<DialogSponsor profile={{ _id: channel.userId, username: channel.username }} />
+		<input
+			type="checkbox"
+			id="modal-delete-channel"
+			class="modal-toggle"
+			bind:checked={isDeleteModalOpen} />
+		<Modal
+			id="modal-delete-channel"
+			title="Delete channel"
+			message="Are you sure you want to delete this channel?"
+			no="Cancel"
+			noAction={deleteChannelNoAction}
+			yes="Yes"
+			yesAction={deleteChannelYesAction}
+			isError={true} />
+		{#if $is_feature_premium_enabled}
+			<DialogSponsor profile={{ _id: channel.userId, username: channel.username }} />
+		{/if}
 	{/if}
-{/if}
+{/key}
 
 <style>
 	.with-drawer {

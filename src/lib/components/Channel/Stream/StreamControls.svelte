@@ -25,7 +25,8 @@
 	export let isHostOrGuest: boolean = false,
 		channel: any,
 		isScrollable: boolean = false,
-		viewers: any[] = []
+		viewers: any[] = [],
+		channelId: string
 
 	let selectedUser = 0,
 		rtmps_modal: any = null,
@@ -41,7 +42,7 @@
 	)
 
 	$: isChannelSocketConnected =
-		$channel_connection === `open-${$page.params.channelId}` && $page.data.user?.userId
+		$channel_connection === `open-${channelId}` && $page.data.user?.userId
 	$: videoItemIsActive = channel.videoItems.some(
 		(video: any) => video._id === $page.data.user?.userId
 	)
@@ -72,17 +73,17 @@
 
 	const startWebrtcStream = async (trackType: string) => {
 		let liveInput = await getLiveInput({
-			channelId: parseInt($page.params.channelId),
+			channelId: parseInt(channelId),
 			trackType
 		})
 		if (!liveInput) {
 			liveInput = await createLiveInput({
-				channelId: `${$page.params.channelId}`,
+				channelId: `${channelId}`,
 				userId: $page.data.user?.userId,
 				trackType,
 				liveInput: {
 					meta: {
-						name: `${$page.params.channelId}-${$page.data.user.userId}-webrtc-${trackType}`
+						name: `${channelId}-${$page.data.user.userId}-webrtc-${trackType}`
 					},
 					recording: { mode: 'off' }
 				}
@@ -119,12 +120,12 @@
 	const refreshStreamKey = async () => {
 		rtmps = null
 		rtmps = await createLiveInput({
-			channelId: `${$page.params.channelId}`,
+			channelId: `${channelId}`,
 			userId: $page.data.user?.userId,
 			trackType: 'rtmps',
 			liveInput: {
 				meta: {
-					name: `${$page.params.channelId}-${$page.data.user.userId}-rtmps`
+					name: `${channelId}-${$page.data.user.userId}-rtmps`
 				},
 				recording: { mode: 'automatic' }
 			}
@@ -134,7 +135,7 @@
 	const showStreamKeyModal = async () => {
 		rtmps_modal.showModal()
 		rtmps = await getLiveInput({
-			channelId: parseInt($page.params.channelId),
+			channelId: parseInt(channelId),
 			trackType: 'rtmps'
 		})
 		if (!rtmps) {
