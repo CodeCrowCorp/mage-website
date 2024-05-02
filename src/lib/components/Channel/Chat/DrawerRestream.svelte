@@ -7,8 +7,6 @@
 	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
 	import IconSocialYouTube from '$lib/assets/icons/social/IconSocialYouTube.svelte'
 
-	export let channelId: string
-
 	$: auth = {
 		userId: $page.data.user?.userId,
 		token: $page.data.user?.token
@@ -82,7 +80,7 @@
 	})
 
 	const getLiveInput = async () => {
-		return await get(`live-input?channelId=${channelId}&trackType=rtmps`, {
+		return await get(`live-input?channelId=${$page.params.channelId}&trackType=rtmps`, {
 			userId: $page.data.user?.userId,
 			token: $page.data.user?.token
 		})
@@ -124,14 +122,17 @@
 			)
 			const url = filteredIngests[0].url_template
 			const ingestUrl = url.substring(0, url.lastIndexOf('/'))
-			const linkRes = await get(`twitch/link?channelId=${channelId}&ingestUrl=${ingestUrl}`, auth)
+			const linkRes = await get(
+				`twitch/link?channelId=${$page.params.channelId}&ingestUrl=${ingestUrl}`,
+				auth
+			)
 			if (linkRes.redirect) window.location.replace(linkRes.redirectUrl)
 		} catch (err) {}
 	}
 
 	const linkYoutube = async () => {
 		try {
-			const linkRes = await get(`youtube/link?channelId=${channelId}`, auth)
+			const linkRes = await get(`youtube/link?channelId=${$page.params.channelId}`, auth)
 			if (linkRes.redirect) window.location.replace(linkRes.redirectUrl)
 		} catch (error) {}
 	}

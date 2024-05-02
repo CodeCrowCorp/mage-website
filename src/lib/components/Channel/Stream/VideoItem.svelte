@@ -400,7 +400,6 @@
 </script>
 
 <div
-	aria-roledescription="video item"
 	class={video.rtmps?.isConnected || video.screen?.isConnected || video.webcam?.isConnected
 		? 'w-full h-full'
 		: 'w-[500px] max-h-80'}

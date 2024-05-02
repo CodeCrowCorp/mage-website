@@ -40,7 +40,7 @@
 		channel?.guests?.includes($page.data.user?.userId)
 
 	$: if (channel) {
-		if (channel._id !== parseInt(channelId)) {
+		if (channel._id !== parseInt($page.params.channelId)) {
 			disableSharing()
 			handleWebsocket()
 			timeoutConnection()
@@ -48,7 +48,6 @@
 	}
 
 	$: isLive = channel?.videoItems?.some((input: any) => input?.rtmps?.isConnected) ?? false
-	$: channelId = $page.params.channelId
 
 	onMount(async () => {
 		clearInterval(platformPollingInterval)
@@ -62,10 +61,10 @@
 		}, 600)
 
 		channel_message.subscribe(async (value: any) => {
-			if (!value || (channel && parseInt(channelId) !== channel._id)) return
+			if (!value || (channel && parseInt($page.params.channelId) !== channel._id)) return
 			var parsedMsg = JSON.parse(value)
 			switch (parsedMsg.eventName) {
-				case `channel-update-${channelId}`:
+				case `channel-update-${$page.params.channelId}`:
 					console.log('channel-update', parsedMsg)
 					channel = {
 						...parsedMsg.channel,
@@ -95,7 +94,7 @@
 						}
 					}
 					break
-				case `channel-subscribe-${channelId}`:
+				case `channel-subscribe-${$page.params.channelId}`:
 					userCount = parsedMsg.userCount
 					if (parsedMsg.quitUserId) {
 						channel.videoItems = channel.videoItems.filter(
@@ -116,18 +115,18 @@
 								})
 							} else {
 								// for new users joining the channel
-								const liveInputs = await get(`live-inputs?channelId=${channelId}`)
+								const liveInputs = await get(`live-inputs?channelId=${$page.params.channelId}`)
 								channel.videoItems = updateVideoItems([...activeGuests], liveInputs)
 							}
 						}
 					}
 					break
-				case `channel-streaming-action-${channelId}`:
+				case `channel-streaming-action-${$page.params.channelId}`:
 					if (channel) {
 						channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
 					}
 					break
-				case `channel-get-sponsors-${channelId}`:
+				case `channel-get-sponsors-${$page.params.channelId}`:
 					if (channel) {
 						channel.sponsors = parsedMsg.sponsors
 					}
@@ -137,16 +136,13 @@
 	})
 
 	onDestroy(async () => {
-		channelId = ''
 		clearInterval(platformPollingInterval)
 		platformPollingInterval = null
 		disableSharing()
 		channels.forEach((ch: any) => {
-			if (ch.socket && ch.socket.constructor === WebSocket) {
-				console.log('got here----', ch.socket)
-				ch.socket.close()
-			}
+			if (ch.socket && ch.socket.constructor === WebSocket) ch.socket.close()
 		})
+		channels = []
 	})
 
 	const disableSharing = () => {
@@ -158,7 +154,7 @@
 	}
 
 	const loadChannel = async () => {
-		const chan = await get(`channel?channelId=${channelId}`)
+		const chan = await get(`channel?channelId=${$page.params.channelId}`)
 		chan.videoItems = []
 		const isOnboarded = await get(`plan/onboarded?userId=${chan.userId}`)
 		chan.isOnboarded = isOnboarded || false
@@ -168,7 +164,7 @@
 	}
 
 	const initChannel = (chan: any) => {
-		$channel_connection = `open-${channelId}`
+		$channel_connection = `open-${$page.params.channelId}`
 		$channel_message = ''
 		chan.videoItems = []
 		clearInterval(platformPollingInterval)
@@ -176,14 +172,14 @@
 		if (chan.socket?.readyState === WebSocket.OPEN) {
 			emitChannelSubscribeByUser({
 				channelSocket: chan.socket,
-				channelId: channelId,
+				channelId: $page.params.channelId,
 				hostId: chan.userId,
 				userId: $page.data.user?.userId,
 				username: $page.data.user?.user?.username
 			})
 			emitChatHistoryToChannel({
 				channelSocket: chan.socket,
-				channelId: channelId,
+				channelId: $page.params.channelId,
 				limit: 100
 			})
 			platformPollingInterval = setInterval(async () => {
@@ -199,7 +195,7 @@
 					recipientUserId: chan.userId,
 					channelId: chan._id
 				})
-				goto(`/channel/${channelId}`, {
+				goto(`/channel/${$page.params.channelId}`, {
 					replaceState: true
 				})
 			}
@@ -224,7 +220,7 @@
 
 	const handleWebsocket = async () => {
 		try {
-			channel = channels.find((ch: any) => ch._id === parseInt(channelId))
+			channel = channels.find((ch: any) => ch._id === parseInt($page.params.channelId))
 			await insertChannelView(channel)
 			chatHistory = []
 			isHostOrGuest =
@@ -232,7 +228,7 @@
 				channel.guests?.includes($page.data.user?.userId)
 			let channelSocketId = ''
 			if (!channel.socket) {
-				channelSocketId = await get(`wsinit/channelid?channelId=${channelId}`)
+				channelSocketId = await get(`wsinit/channelid?channelId=${$page.params.channelId}`)
 				if (channelSocketId) {
 					channel.socket = initChannelSocket({ websocketId: channelSocketId })
 				} else {
@@ -263,7 +259,7 @@
 					console.log(data)
 
 					//if manually closed, don't reconnect
-					if (data.code === 1005) {
+					if (data.code === 1005 || channel.socket.readyState >= WebSocket.CLOSING) {
 						clearInterval(platformPollingInterval)
 						platformPollingInterval = null
 						return
@@ -278,9 +274,9 @@
 
 	const attemptReconnect = () => {
 		setTimeout(async () => {
-			if (!channelId) return
+			if (!$page.params.channelId) return
 			console.log('Reconnecting to WebSocket...')
-			channel = channels.find((ch: any) => ch._id === parseInt(channelId))
+			channel = channels.find((ch: any) => ch._id === parseInt($page.params.channelId))
 			if (channel) {
 				channel.socket = null
 				await handleWebsocket()
@@ -289,7 +285,9 @@
 	}
 
 	const timeoutConnection = () => {
-		const currentChannelIndex = channels.findIndex((ch: any) => ch._id === parseInt(channelId))
+		const currentChannelIndex = channels.findIndex(
+			(ch: any) => ch._id === parseInt($page.params.channelId)
+		)
 		channels.forEach((channel: any, index: number) => {
 			if (
 				Math.abs(index - currentChannelIndex) > 10 &&
@@ -306,13 +304,13 @@
 	}
 
 	const deleteChannelYesAction = async () => {
-		await del(`channel?channelId=${channelId}&bucketName=thumbnails`, {
+		await del(`channel?channelId=${$page.params.channelId}&bucketName=thumbnails`, {
 			userId: $page.data.user?.userId,
 			token: $page.data.user?.token
 		})
 		emitDeleteAllMessagesToChannel({
 			channelSocket: channel.socket,
-			channelId: channelId
+			channelId: $page.params.channelId
 		})
 		goto('/browse')
 	}
@@ -374,10 +372,10 @@
 
 {#key $page.url.pathname}
 	{#if !$is_sharing_screen && !$is_sharing_webcam && !$is_sharing_audio && isHostOrGuest}
-		<DrawerRestream bind:channelId />
+		<DrawerRestream />
 	{/if}
 
-	{#if channel && channel._id === parseInt(channelId)}
+	{#if channel && channel._id === parseInt($page.params.channelId)}
 		<div class="relative h-full bg-base-200 overflow-hidden flex">
 			<div
 				class={'lg:ml-24 h-full transition-all delay-75 ' +
@@ -388,8 +386,7 @@
 					bind:channels
 					on:loadMore={loadMoreChannels}
 					bind:isHostOrGuest
-					bind:viewers
-					bind:channelId />
+					bind:viewers />
 
 				{#if showEditChannelDrawer}
 					<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />
