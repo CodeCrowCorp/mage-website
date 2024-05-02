@@ -30,8 +30,7 @@
 		channel: any,
 		channels: any = [],
 		isHostOrGuest: boolean = false,
-		viewers: any[] = [],
-		channelId: string
+		viewers: any[] = []
 
 	let isScrollable = false
 	$: isLive =
@@ -51,11 +50,14 @@
 			const entry = entries.find((entry) => entry.isIntersecting)
 			if (entry) {
 				const id = parseInt(entry.target.id)
-				channel = channels?.filter((channel: any) => channel?._id === id)[0]
+				channel = channels?.find((channel: any) => channel?._id === id)
+				// If the channel ID is the same as the current page's channel ID, return early
+				if (channel._id === $page.params.channelId) {
+					return
+				}
 				if (channels?.length && channels[channels.length - 2]?._id == id) {
 					dispatch('loadMore')
 				}
-				channelId = channel._id
 				goto(`${id}?${$page.url?.searchParams}`, {
 					keepFocus: true,
 					replaceState: true,
@@ -155,7 +157,7 @@
 							<IconChatDrawerChevronClose />
 						</label>
 					</div>
-					{#if channel && nextchannel?._id === parseInt(channelId)}
+					{#if channel && nextchannel?._id === parseInt($page.params.channelId)}
 						<VideoGrid bind:channel />
 					{/if}
 				</div>
@@ -163,6 +165,6 @@
 		{/each}
 	</div>
 	<div class="absolute lg:bottom-0 bottom-10 m-3 w-full items-center justify-center flex">
-		<StreamControls bind:isHostOrGuest bind:channel bind:isScrollable bind:viewers bind:channelId />
+		<StreamControls bind:isHostOrGuest bind:channel bind:isScrollable bind:viewers />
 	</div>
 </div>
