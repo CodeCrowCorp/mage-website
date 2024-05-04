@@ -227,15 +227,8 @@
 			isHostOrGuest =
 				channel.userId === $page.data.user?.userId ||
 				channel.guests?.includes($page.data.user?.userId)
-			let channelSocketId = ''
 			if (!channel.socket) {
-				channelSocketId = await get(`wsinit/channelid?channelId=${$page.params.channelId}`)
-				if (channelSocketId) {
-					channel.socket = initChannelSocket({ websocketId: channelSocketId })
-				} else {
-					attemptReconnect()
-					return
-				}
+				channel.socket = initChannelSocket({ channelId: $page.params.channelId })
 			} else {
 				initChannel(channel)
 			}
