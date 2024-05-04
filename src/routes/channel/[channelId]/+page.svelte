@@ -61,7 +61,8 @@
 		}, 600)
 
 		channel_message.subscribe(async (value: any) => {
-			if (!value || (channel && parseInt($page.params.channelId) !== channel._id)) return
+			if (!value || !channel || (channel && parseInt($page.params.channelId) !== channel._id))
+				return
 			var parsedMsg = JSON.parse(value)
 			switch (parsedMsg.eventName) {
 				case `channel-update-${$page.params.channelId}`:
