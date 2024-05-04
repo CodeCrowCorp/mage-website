@@ -1,7 +1,7 @@
 import { env } from '$env/dynamic/public'
 
-const initChannelSocket = ({ websocketId }: { websocketId: string }) => {
-	return new WebSocket(`${env.PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${websocketId}/connect`)
+const initChannelSocket = ({ channelId }: { channelId: string }) => {
+	return new WebSocket(`${env.PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${channelId}/connect`)
 }
 
 const emitChannelUpdate = ({
