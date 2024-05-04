@@ -370,68 +370,65 @@
 	}
 </script>
 
-{#key $page.url.pathname}
-	{#if !$is_sharing_screen && !$is_sharing_webcam && !$is_sharing_audio && isHostOrGuest}
-		<DrawerRestream />
-	{/if}
+{#if !$is_sharing_screen && !$is_sharing_webcam && !$is_sharing_audio && isHostOrGuest}
+	<DrawerRestream />
+{/if}
 
-	{#if channel && channel._id === parseInt($page.params.channelId)}
-		<div class="relative h-full bg-base-200 overflow-hidden flex">
-			<div
-				class={'lg:ml-24 h-full transition-all delay-75 ' +
-					(!$is_chat_drawer_open ? 'w-full' : 'with-drawer')}>
-				<StreamContainer
-					bind:channel
-					bind:userCount
-					bind:channels
-					on:loadMore={loadMoreChannels}
-					bind:isHostOrGuest
-					bind:viewers />
+{#if channel && channel._id === parseInt($page.params.channelId)}
+	<div class="relative h-full bg-base-200 overflow-hidden flex">
+		<div
+			class={'lg:ml-24 h-full transition-all delay-75 ' +
+				(!$is_chat_drawer_open ? 'w-full' : 'with-drawer')}>
+			<StreamContainer
+				bind:channel
+				bind:userCount
+				bind:channels
+				on:loadMore={loadMoreChannels}
+				bind:isHostOrGuest
+				bind:viewers />
 
-				{#if showEditChannelDrawer}
-					<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />
-				{/if}
-			</div>
-			{#if !$is_chat_drawer_destroy}
-				<div
-					class={'absolute right-0 top-0 ' + ($is_chat_drawer_open ? 'drawer-container' : 'w-0')}>
-					<div class="drawer drawer-end">
-						<input
-							id="chat-drawer"
-							type="checkbox"
-							class="drawer-toggle"
-							bind:checked={$is_chat_drawer_open} />
-						<div class="drawer-side w-fit lg:absolute lg:right-0 lg:pb-0 pb-4">
-							<label for="chat-drawer" class="drawer-overlay lg:hidden" />
-							<div
-								class="h-full pt-12 lg:p-5 md:w-fit lg:ml-0 md:ml-0 w-max-full mobile-margin lg:drop-shadow-lg">
-								<DrawerChat bind:channel bind:showEditChannelDrawer bind:viewers {chatHistory} />
-							</div>
+			{#if showEditChannelDrawer}
+				<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />
+			{/if}
+		</div>
+		{#if !$is_chat_drawer_destroy}
+			<div class={'absolute right-0 top-0 ' + ($is_chat_drawer_open ? 'drawer-container' : 'w-0')}>
+				<div class="drawer drawer-end">
+					<input
+						id="chat-drawer"
+						type="checkbox"
+						class="drawer-toggle"
+						bind:checked={$is_chat_drawer_open} />
+					<div class="drawer-side w-fit lg:absolute lg:right-0 lg:pb-0 pb-4">
+						<label for="chat-drawer" class="drawer-overlay lg:hidden" />
+						<div
+							class="h-full pt-12 lg:p-5 md:w-fit lg:ml-0 md:ml-0 w-max-full mobile-margin lg:drop-shadow-lg">
+							<DrawerChat bind:channel bind:showEditChannelDrawer bind:viewers {chatHistory} />
 						</div>
 					</div>
 				</div>
-			{/if}
-		</div>
-
-		<input
-			type="checkbox"
-			id="modal-delete-channel"
-			class="modal-toggle"
-			bind:checked={isDeleteModalOpen} />
-		<Modal
-			id="modal-delete-channel"
-			title="Delete channel"
-			message="Are you sure you want to delete this channel?"
-			no="Cancel"
-			noAction={deleteChannelNoAction}
-			yes="Yes"
-			yesAction={deleteChannelYesAction}
-			isError={true} />
-		{#if $is_feature_premium_enabled}
-			<DialogSponsor profile={{ _id: channel.userId, username: channel.username }} />
+			</div>
 		{/if}
+	</div>
+
+	<input
+		type="checkbox"
+		id="modal-delete-channel"
+		class="modal-toggle"
+		bind:checked={isDeleteModalOpen} />
+	<Modal
+		id="modal-delete-channel"
+		title="Delete channel"
+		message="Are you sure you want to delete this channel?"
+		no="Cancel"
+		noAction={deleteChannelNoAction}
+		yes="Yes"
+		yesAction={deleteChannelYesAction}
+		isError={true} />
+	{#if $is_feature_premium_enabled}
+		<DialogSponsor profile={{ _id: channel.userId, username: channel.username }} />
 	{/if}
-{/key}
+{/if}
 
 <style>
 	.with-drawer {
