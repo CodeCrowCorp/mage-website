@@ -393,9 +393,12 @@
 	}
 
 	const unmuteTracks = async () => {
-		if (video.screen?.isConnected || video.audio?.isConnected) {
+		if (screen_element && video.screen?.isConnected) {
 			screen_element.play()
 			screen_element.muted = video._id === $page.data.user?.userId
+			isListenBtnShown = false
+		}
+		if (audio_element && video.audio?.isConnected) {
 			audio_element.play()
 			audio_element.muted = video._id === $page.data.user?.userId
 			isListenBtnShown = false
