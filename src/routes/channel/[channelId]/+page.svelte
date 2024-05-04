@@ -253,13 +253,14 @@
 					console.log(data)
 					clearInterval(platformPollingInterval)
 					platformPollingInterval = null
+					attemptReconnect()
 				})
 				channel.socket.addEventListener('close', (data: any) => {
 					console.log('channel socket connection close')
 					console.log(data)
 
 					//if manually closed, don't reconnect
-					if (data.code === 1005 || channel.socket.readyState >= WebSocket.CLOSING) {
+					if (data.code === 1005 && channel.socket.readyState >= WebSocket.CLOSING) {
 						clearInterval(platformPollingInterval)
 						platformPollingInterval = null
 						return
@@ -275,9 +276,9 @@
 	const attemptReconnect = () => {
 		setTimeout(async () => {
 			if (!$page.params.channelId) return
-			console.log('Reconnecting to WebSocket...')
 			channel = channels.find((ch: any) => ch._id === parseInt($page.params.channelId))
 			if (channel) {
+				console.log('Reconnecting to WebSocket...')
 				channel.socket = null
 				await handleWebsocket()
 			}
