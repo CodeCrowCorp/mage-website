@@ -148,10 +148,10 @@ export default class WHIPClient extends EventTarget {
 	 * Note that once you call this method, this instance of this WHIPClient cannot be reused.
 	 */
 	public async disconnectStream() {
-		const response = await fetch(this.endpoint, {
-			method: 'DELETE',
-			mode: 'cors'
-		})
+		// const response = await fetch(this.endpoint, {
+		// 	method: 'DELETE',
+		// 	mode: 'cors'
+		// })
 		this.peerConnection.close()
 		this.localStream?.getTracks().forEach((track) => track.stop())
 		this.videoElement.srcObject = null
