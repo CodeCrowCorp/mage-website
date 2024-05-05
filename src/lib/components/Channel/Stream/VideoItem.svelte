@@ -116,87 +116,91 @@
 	}
 
 	onMount(() => {
-		handleRtmpsChanges()
-		handleScreenChanges()
-		handleWebcamChanges()
-		handleAudioChanges()
-		if (video._id === $page.data.user?.userId) {
-			is_sharing_screen.subscribe(async (value: any) => {
-				if (value === true) {
-					screenWhip = getWhip({
-						whip: screenWhip,
-						url: video.screen?.webRTC.url,
-						videoElement: screen_element,
-						trackType: `screen`
-					})
-					screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
-					if (screen_element) {
-						screen_element.addEventListener('dblclick', (event: any) => {
-							if (document.fullscreenElement) {
-								document.exitFullscreen()
-							} else {
-								screen_element.requestFullscreen()
-							}
+		try {
+			handleRtmpsChanges()
+			handleScreenChanges()
+			handleWebcamChanges()
+			handleAudioChanges()
+			if (video._id === $page.data.user?.userId) {
+				is_sharing_screen.subscribe(async (value: any) => {
+					if (value === true) {
+						screenWhip = getWhip({
+							whip: screenWhip,
+							url: video.screen?.webRTC.url,
+							videoElement: screen_element,
+							trackType: `screen`
 						})
-						screenWhip.addEventListener(`localStreamStopped-screen`, () => {
-							$is_sharing_screen = undefined
-						})
+						screenWhip.addEventListener(`isScreenLive`, (ev: any) => (isScreenLive = ev.detail))
+						if (screen_element) {
+							screen_element.addEventListener('dblclick', (event: any) => {
+								if (document.fullscreenElement) {
+									document.exitFullscreen()
+								} else {
+									screen_element.requestFullscreen()
+								}
+							})
+							screenWhip.addEventListener(`localStreamStopped-screen`, () => {
+								$is_sharing_screen = undefined
+							})
+						}
+					} else {
+						if (value === false) screenWhip?.disconnectStream()
+						if (screen_element) screen_element.srcObject = null
+						isScreenLive = false
 					}
-				} else {
-					if (value === false) screenWhip?.disconnectStream()
-					if (screen_element) screen_element.srcObject = null
-					isScreenLive = false
-				}
-			})
+				})
 
-			is_sharing_webcam.subscribe(async (value: any) => {
-				if (value === true) {
-					webcamWhip = getWhip({
-						whip: webcamWhip,
-						url: video.webcam?.webRTC.url,
-						videoElement: webcam_element,
-						trackType: `webcam`
-					})
-					if (webcam_element) {
-						webcam_element.addEventListener('dblclick', (event: any) => {
-							if (document.fullscreenElement) {
-								document.exitFullscreen()
-							} else {
-								webcam_element.requestFullscreen()
-							}
+				is_sharing_webcam.subscribe(async (value: any) => {
+					if (value === true) {
+						webcamWhip = getWhip({
+							whip: webcamWhip,
+							url: video.webcam?.webRTC.url,
+							videoElement: webcam_element,
+							trackType: `webcam`
 						})
-						webcamWhip.addEventListener(`localStreamStopped-webcam`, () => {
-							$is_sharing_webcam = undefined
-						})
+						if (webcam_element) {
+							webcam_element.addEventListener('dblclick', (event: any) => {
+								if (document.fullscreenElement) {
+									document.exitFullscreen()
+								} else {
+									webcam_element.requestFullscreen()
+								}
+							})
+							webcamWhip.addEventListener(`localStreamStopped-webcam`, () => {
+								$is_sharing_webcam = undefined
+							})
+						}
+					} else {
+						if (value === false) webcamWhip?.disconnectStream()
+						if (webcam_element) webcam_element.srcObject = null
 					}
-				} else {
-					if (value === false) webcamWhip?.disconnectStream()
-					if (webcam_element) webcam_element.srcObject = null
-				}
-			})
+				})
 
-			is_sharing_audio.subscribe(async (value: any) => {
-				if (value === true) {
-					audioWhip = getWhip({
-						whip: audioWhip,
-						url: video.audio?.webRTC.url,
-						videoElement: audio_element,
-						trackType: `audio`
-					})
-					audioWhip.addEventListener(`localStreamStopped-audio`, () => {
-						audioWhip.removeEventListener(`localAudioSpeakingValue`, () => {})
-						$is_sharing_audio = undefined
-					})
-					audioWhip.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
-						speakingValue = ev.detail
-					})
-				} else {
-					if (value === false) audioWhip?.disconnectStream()
-					if (audio_element) audio_element.srcObject = null
-				}
-			})
+				is_sharing_audio.subscribe(async (value: any) => {
+					if (value === true) {
+						audioWhip = getWhip({
+							whip: audioWhip,
+							url: video.audio?.webRTC.url,
+							videoElement: audio_element,
+							trackType: `audio`
+						})
+						audioWhip.addEventListener(`localStreamStopped-audio`, () => {
+							audioWhip.removeEventListener(`localAudioSpeakingValue`, () => {})
+							$is_sharing_audio = undefined
+						})
+						audioWhip.addEventListener(`localAudioSpeakingValue`, (ev: any) => {
+							speakingValue = ev.detail
+						})
+					} else {
+						if (value === false) audioWhip?.disconnectStream()
+						if (audio_element) audio_element.srcObject = null
+					}
+				})
+			}
+			isMounted = true
+		} catch (err) {
+			console.error(err)
 		}
-		isMounted = true
 	})
 
 	const toggleClient = async ({ trackType }: { trackType: string }) => {
@@ -389,9 +393,12 @@
 	}
 
 	const unmuteTracks = async () => {
-		if (video.screen?.isConnected || video.audio?.isConnected) {
+		if (screen_element && video.screen?.isConnected) {
 			screen_element.play()
 			screen_element.muted = video._id === $page.data.user?.userId
+			isListenBtnShown = false
+		}
+		if (audio_element && video.audio?.isConnected) {
 			audio_element.play()
 			audio_element.muted = video._id === $page.data.user?.userId
 			isListenBtnShown = false

@@ -21,7 +21,12 @@
 	})
 
 	const loadMore = () => {
-		emitGetConnectedUsers({ channelSocket: channel.socket, cursor })
+		if (
+			$channel_connection === `open-${channel._id}` &&
+			channel.socket?.readyState === WebSocket.OPEN
+		) {
+			emitGetConnectedUsers({ channelSocket: channel.socket, cursor })
+		}
 	}
 
 	channel_message.subscribe((value) => {
