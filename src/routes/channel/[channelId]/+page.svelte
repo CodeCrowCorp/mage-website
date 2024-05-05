@@ -144,7 +144,6 @@
 			if (ch.socket && ch.socket.constructor === WebSocket) ch.socket.close()
 		})
 		channels = []
-		channel = null
 	})
 
 	const disableSharing = () => {
@@ -255,7 +254,7 @@
 					console.log(data)
 
 					//if manually closed, don't reconnect
-					if (data.code === 1005 && channel.socket.readyState >= WebSocket.CLOSING) {
+					if (data.code === 1005) {
 						clearInterval(platformPollingInterval)
 						platformPollingInterval = null
 						return
@@ -270,7 +269,6 @@
 
 	const attemptReconnect = () => {
 		setTimeout(async () => {
-			if (!$page.params.channelId) return
 			channel = channels.find((ch: any) => ch._id === parseInt($page.params.channelId))
 			if (channel) {
 				console.log('Reconnecting to WebSocket...')
