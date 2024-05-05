@@ -144,6 +144,7 @@
 			if (ch.socket && ch.socket.constructor === WebSocket) ch.socket.close()
 		})
 		channels = []
+		channel = null
 	})
 
 	const disableSharing = () => {
