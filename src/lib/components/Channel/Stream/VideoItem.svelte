@@ -126,7 +126,7 @@
 					if (value === true) {
 						screenWhip = getWhip({
 							whip: screenWhip,
-							url: video.screen?.webRTC.url,
+							url: video.screen?.webRTCPlayback.url,
 							videoElement: screen_element,
 							trackType: `screen`
 						})
