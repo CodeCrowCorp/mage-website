@@ -40,7 +40,7 @@
 		channel?.guests?.includes($page.data.user?.userId)
 
 	$: if (channel) {
-		if (channel._id !== parseInt($page.params.channelId)) {
+		if ($page.params.channelId && channel._id !== parseInt($page.params.channelId)) {
 			disableSharing()
 			handleWebsocket()
 			timeoutConnection()
