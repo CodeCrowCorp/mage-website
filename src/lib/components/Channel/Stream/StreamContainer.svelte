@@ -48,7 +48,7 @@
 
 		function callback(entries: IntersectionObserverEntry[]) {
 			const entry = entries.find((entry) => entry.isIntersecting)
-			if (entry) {
+			if (entry && $page.url.pathname.includes('/channel')) {
 				const id = parseInt(entry.target.id)
 				channel = channels?.find((channel: any) => channel?._id === id)
 				// If the channel ID is the same as the current page's channel ID, return early
