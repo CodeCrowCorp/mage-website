@@ -178,7 +178,7 @@
 			<div class="grid grid-cols-5 gap-2">
 				<label
 					for="edit-channel-drawer"
-					class="btn btn-neutral text-white col-span-3 flex tooltip font-normal normal-case"
+					class="btn btn-neutral text-white col-span-2 flex tooltip font-normal normal-case"
 					data-tip="Edit channel"
 					on:click={() => (showEditChannelDrawer = true)}>
 					Edit channel
@@ -198,6 +198,14 @@
 					data-tip="Delete channel">
 					<IconChatDelete />
 				</label>
+				<button
+					class="btn btn-neutral col-span-1 bg-red-300 text-black hover:bg-red-500 border-none font-normal normal-case tooltip tooltip-left flex tooltip-error"
+					data-tip="Close sock"
+					on:click={() => {
+						channel.socket.close()
+					}}>
+					Close Sock
+				</button>
 			</div>
 		{:else}
 			<div class="grid grid-cols-5 gap-2">
