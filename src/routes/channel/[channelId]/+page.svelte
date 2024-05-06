@@ -223,6 +223,7 @@
 
 	const handleWebsocket = async () => {
 		try {
+			if (!$page.url.pathname.includes('/channel')) return
 			channel = channels.find((ch: any) => ch._id === parseInt($page.params.channelId))
 			await insertChannelView(channel)
 			chatHistory = []
@@ -270,6 +271,7 @@
 	}
 
 	const attemptReconnect = () => {
+		if (!$page.url.pathname.includes('/channel')) return
 		setTimeout(async () => {
 			channel = channels.find((ch: any) => ch._id === parseInt($page.params.channelId))
 			if (channel) {
