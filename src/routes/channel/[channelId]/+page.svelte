@@ -48,7 +48,6 @@
 	}
 
 	$: isLive = channel?.videoItems?.some((input: any) => input?.rtmps?.isConnected) ?? false
-	let wasCloseIntentional = false
 
 	onMount(async () => {
 		clearInterval(platformPollingInterval)
@@ -141,10 +140,10 @@
 		clearInterval(platformPollingInterval)
 		platformPollingInterval = null
 		disableSharing()
-		wasCloseIntentional = true
 		channels.forEach((ch: any) => {
 			if (ch.socket && ch.socket.constructor === WebSocket) ch.socket.close()
 		})
+		$channel_connection = `closed`
 		channels = []
 	})
 
@@ -257,7 +256,7 @@
 					console.log(data)
 
 					//if manually closed, don't reconnect
-					if (wasCloseIntentional) {
+					if (data.code === 1005) {
 						clearInterval(platformPollingInterval)
 						platformPollingInterval = null
 						return
@@ -277,7 +276,6 @@
 			if (channel) {
 				console.log('Reconnecting to WebSocket...')
 				channel.socket = null
-				wasCloseIntentional = false // Reset the flag before reconnecting
 				await handleWebsocket()
 			}
 		}, 4000)
