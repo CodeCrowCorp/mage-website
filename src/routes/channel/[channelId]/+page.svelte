@@ -181,14 +181,14 @@
 		if (chan.socket?.readyState === WebSocket.OPEN) {
 			emitChannelSubscribeByUser({
 				channelSocket: chan.socket,
-				channelId: $page.params.channelId,
+				channelId: parseInt($page.params.channelId),
 				hostId: chan.userId,
 				userId: $page.data.user?.userId,
 				username: $page.data.user?.user?.username
 			})
 			emitChatHistoryToChannel({
 				channelSocket: chan.socket,
-				channelId: $page.params.channelId,
+				channelId: parseInt($page.params.channelId),
 				limit: 100
 			})
 			platformPollingInterval = setInterval(async () => {
@@ -268,7 +268,7 @@
 				channel.userId === $page.data.user?.userId ||
 				channel.guests?.includes($page.data.user?.userId)
 			if (!channel.socket) {
-				channel.socket = initChannelSocket({ channelId: $page.params.channelId })
+				channel.socket = initChannelSocket({ channelId: parseInt($page.params.channelId) })
 			} else {
 				initChannel(channel)
 			}
@@ -321,7 +321,7 @@
 		})
 		emitDeleteAllMessagesToChannel({
 			channelSocket: channel.socket,
-			channelId: $page.params.channelId
+			channelId: parseInt($page.params.channelId)
 		})
 		goto('/browse')
 	}
