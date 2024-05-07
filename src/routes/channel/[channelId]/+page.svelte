@@ -140,10 +140,17 @@
 		clearInterval(platformPollingInterval)
 		platformPollingInterval = null
 		disableSharing()
-		channels.forEach((ch: any) => {
-			if (ch.socket && ch.socket.constructor === WebSocket) ch.socket.close()
-		})
 		$channel_connection = `closed`
+		$channel_message = ''
+		channels.forEach((ch: any) => {
+			if (ch.socket && ch.socket.constructor === WebSocket) {
+				ch.socket.removeEventListener('open', openHandler)
+				ch.socket.removeEventListener('message', messageHandler)
+				ch.socket.removeEventListener('error', errorHandler)
+				ch.socket.removeEventListener('close', closeHandler)
+				ch.socket.close()
+			}
+		})
 		channels = []
 	})
 
@@ -220,6 +227,37 @@
 		}
 	}
 
+	let openHandler = (data: any) => {
+		initChannel(channel)
+	}
+
+	let messageHandler = (data: any) => {
+		console.log('channel listening to messages')
+		if (isJsonString(data.data)) {
+			$channel_message = data.data
+		}
+	}
+
+	let errorHandler = (data: any) => {
+		console.log('channel socket connection error')
+		console.log(data)
+		clearInterval(platformPollingInterval)
+		platformPollingInterval = null
+		attemptReconnect()
+	}
+
+	let closeHandler = (data: any) => {
+		console.log('channel socket connection close')
+		console.log(data)
+		//if manually closed, don't reconnect
+		if (data.code === 1005) {
+			clearInterval(platformPollingInterval)
+			platformPollingInterval = null
+			return
+		}
+		attemptReconnect()
+	}
+
 	const handleWebsocket = async () => {
 		try {
 			if (!$page.url.pathname.includes('/channel')) return
@@ -235,34 +273,10 @@
 				initChannel(channel)
 			}
 			if (channel.socket && channel.socket.constructor === WebSocket) {
-				channel.socket.addEventListener('open', async (data: any) => {
-					initChannel(channel)
-				})
-				channel.socket.addEventListener('message', (data: any) => {
-					console.log('channel listening to messages')
-					if (isJsonString(data.data)) {
-						$channel_message = data.data
-					}
-				})
-				channel.socket.addEventListener('error', (data: any) => {
-					console.log('channel socket connection error')
-					console.log(data)
-					clearInterval(platformPollingInterval)
-					platformPollingInterval = null
-					attemptReconnect()
-				})
-				channel.socket.addEventListener('close', (data: any) => {
-					console.log('channel socket connection close')
-					console.log(data)
-
-					//if manually closed, don't reconnect
-					if (data.code === 1005) {
-						clearInterval(platformPollingInterval)
-						platformPollingInterval = null
-						return
-					}
-					attemptReconnect()
-				})
+				channel.socket.addEventListener('open', openHandler)
+				channel.socket.addEventListener('message', messageHandler)
+				channel.socket.addEventListener('error', errorHandler)
+				channel.socket.addEventListener('close', closeHandler)
 			}
 		} catch (err) {
 			attemptReconnect()
