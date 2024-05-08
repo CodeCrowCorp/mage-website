@@ -232,6 +232,9 @@
 	}
 
 	let messageHandler = (data: any) => {
+		if (data.error) {
+			console.error({ Error: data.error })
+		}
 		console.log('channel listening to messages')
 		if (isJsonString(data.data)) {
 			$channel_message = data.data
