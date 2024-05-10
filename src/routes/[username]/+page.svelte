@@ -29,7 +29,7 @@
 					viewId: data.profile._id
 				},
 				{
-					userId: $page.data.user.userId,
+					userId: $page.data.user?.userId,
 					token: $page.data.user.token
 				}
 			)
