@@ -179,13 +179,13 @@
 		clearInterval(platformPollingInterval)
 		platformPollingInterval = null
 		if (chan.socket?.readyState === WebSocket.OPEN) {
-			emitChannelSubscribeByUser({
-				channelSocket: chan.socket,
-				channelId: parseInt($page.params.channelId),
-				hostId: chan.userId,
-				userId: $page.data.user?.userId,
-				username: $page.data.user?.user?.username
-			})
+			// emitChannelSubscribeByUser({
+			// 	channelSocket: chan.socket,
+			// 	channelId: parseInt($page.params.channelId),
+			// 	hostId: chan.userId,
+			// 	userId: $page.data.user?.userId,
+			// 	username: $page.data.user?.user?.username
+			// })
 			emitChatHistoryToChannel({
 				channelSocket: chan.socket,
 				channelId: parseInt($page.params.channelId),
