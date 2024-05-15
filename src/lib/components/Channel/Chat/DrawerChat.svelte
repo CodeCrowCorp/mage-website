@@ -4,8 +4,8 @@
 	import { channel_connection, channel_message } from '$lib/stores/websocketStore'
 	import DropdownViewChannel from '$lib/components/Channel/Chat/DropdownViewChannel.svelte'
 	import { page } from '$app/stores'
-	import { onDestroy, onMount } from 'svelte'
-	import { is_chat_drawer_open, was_chat_drawer_closed } from '$lib/stores/channelStore'
+	import { onDestroy } from 'svelte'
+	import { is_chat_drawer_open } from '$lib/stores/channelStore'
 	import { emitChatHistoryToChannel } from '$lib/websocket'
 	import { setRole } from '$lib/utils'
 	import LastItemInViewport from '$lib/actions/LastItemInViewport'
@@ -47,21 +47,6 @@
 				chatHistory.unshift(parsedMsg)
 			}
 			chatHistory = chatHistory
-		}
-	})
-
-	onMount(() => {
-		if (
-			$was_chat_drawer_closed &&
-			!chatHistory?.length &&
-			$channel_connection === `open-${channel._id}` &&
-			channel.socket?.readyState === WebSocket.OPEN
-		) {
-			emitChatHistoryToChannel({
-				channelSocket: channel.socket,
-				channelId: channel._id,
-				limit: 100
-			})
 		}
 	})
 

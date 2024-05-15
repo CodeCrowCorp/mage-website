@@ -1,6 +1,6 @@
 import { env } from '$env/dynamic/public'
 
-const initChannelSocket = ({ channelId }: { channelId: string }) => {
+const initChannelSocket = ({ channelId }: { channelId: number }) => {
 	return new WebSocket(`${env.PUBLIC_WEBSOCKET_URL}/wsinit/channelid/${channelId}/connect`)
 }
 
@@ -30,9 +30,9 @@ const emitChannelSubscribeByUser = ({
 	username
 }: {
 	channelSocket: WebSocket
-	channelId: string
-	hostId: string
-	userId: string
+	channelId: number
+	hostId: number
+	userId: number
 	username: string
 }) => {
 	channelSocket.send(
@@ -51,7 +51,7 @@ const emitMessageToChannel = ({
 	message
 }: {
 	channelSocket: WebSocket
-	channelId: string
+	channelId: number
 	message: any
 }) => {
 	channelSocket.send(JSON.stringify({ eventName: `channel-message`, channelId, message }))
@@ -63,7 +63,7 @@ const emitDeleteMessageToChannel = ({
 	message
 }: {
 	channelSocket: WebSocket
-	channelId: string
+	channelId: number
 	message: string
 }) => {
 	channelSocket.send(
@@ -80,7 +80,7 @@ const emitDeleteAllMessagesToChannel = ({
 	channelId
 }: {
 	channelSocket: WebSocket
-	channelId: string
+	channelId: number
 }) => {
 	channelSocket.send(JSON.stringify({ eventName: `delete-all-channel-messages`, channelId }))
 }
@@ -92,28 +92,18 @@ const emitChatHistoryToChannel = ({
 	cursor
 }: {
 	channelSocket: WebSocket
-	channelId: string
+	channelId: number
 	limit: number
 	cursor?: string
 }) => {
-	if (!cursor) {
-		channelSocket.send(
-			JSON.stringify({
-				eventName: `channel-message-history`,
-				channelId,
-				limit
-			})
-		)
-	} else {
-		channelSocket.send(
-			JSON.stringify({
-				eventName: `channel-message-history`,
-				channelId,
-				limit,
-				cursor
-			})
-		)
-	}
+	channelSocket.send(
+		JSON.stringify({
+			eventName: `channel-message-history`,
+			channelId,
+			limit,
+			cursor
+		})
+	)
 }
 
 const emitReactToMessage = ({
@@ -124,7 +114,7 @@ const emitReactToMessage = ({
 	reaction
 }: {
 	channelSocket: WebSocket
-	channelId: string
+	channelId: number
 	message: any
 	user: any
 	reaction: string
