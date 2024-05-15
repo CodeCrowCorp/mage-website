@@ -50,16 +50,6 @@
 	$: isLive = channel?.videoItems?.some((input: any) => input?.rtmps?.isConnected) ?? false
 
 	onMount(async () => {
-		clearInterval(platformPollingInterval)
-		platformPollingInterval = null
-		await loadChannel()
-		await handleWebsocket()
-		await loadMoreChannels()
-		$is_chat_drawer_destroy = false
-		setTimeout(() => {
-			$is_chat_drawer_open = true
-		}, 600)
-
 		channel_message.subscribe(async (value: any) => {
 			if (!value || !channel || (channel && parseInt($page.params.channelId) !== channel._id))
 				return
@@ -134,6 +124,15 @@
 					break
 			}
 		})
+		clearInterval(platformPollingInterval)
+		platformPollingInterval = null
+		await loadChannel()
+		await handleWebsocket()
+		await loadMoreChannels()
+		$is_chat_drawer_destroy = false
+		setTimeout(() => {
+			$is_chat_drawer_open = true
+		}, 600)
 	})
 
 	onDestroy(async () => {
