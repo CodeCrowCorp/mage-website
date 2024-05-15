@@ -154,7 +154,9 @@ export default class WHIPClient extends EventTarget {
 		// })
 		this.peerConnection.close()
 		this.localStream?.getTracks().forEach((track) => track.stop())
-		this.videoElement.srcObject = null
+		if (this.videoElement) {
+			this.videoElement.srcObject = null
+		}
 		this.dispatchEvent(new CustomEvent(`localStreamStopped-${this.trackType}`))
 		console.log('Disconnected')
 	}
