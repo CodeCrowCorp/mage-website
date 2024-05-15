@@ -436,8 +436,7 @@
 						class="rounded-md w-full h-full"
 						allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;" />
 				</div>
-			{/if}
-			{#if !iframeUrl}
+			{:else}
 				<video
 					bind:this={screen_element}
 					id={`screen-${video._id}`}
