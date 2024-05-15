@@ -20,19 +20,21 @@
 
 	onMount(async () => {
 		if ($page.data.user?.userId !== data.profile._id) {
-			await post(
-				`analytics/view`,
-				{
-					type: 'view',
-					userId: $page.data.user?.userId,
-					viewType: 'user',
-					viewId: data.profile._id
-				},
-				{
-					userId: $page.data.user?.userId,
-					token: $page.data.user.token
-				}
-			)
+			if ($page.data.user?.userId) {
+				await post(
+					`analytics/view`,
+					{
+						type: 'view',
+						userId: $page.data.user?.userId,
+						viewType: 'user',
+						viewId: data.profile._id
+					},
+					{
+						userId: $page.data.user?.userId,
+						token: $page.data.user?.token
+					}
+				)
+			}
 		}
 		totalPageViews = (await data.lazy.totalPageViews) || 0
 		totalChannelViews = (await data.lazy.totalChannelViews) || 0
