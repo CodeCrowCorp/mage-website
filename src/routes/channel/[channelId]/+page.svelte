@@ -368,6 +368,8 @@
 					emitMessageToChannel({
 						channelSocket: channel.socket,
 						channelId: channel._id,
+						hostId: channel.userId,
+						platforms: [],
 						message: {
 							isAiChatEnabled: false,
 							body: item.message,
