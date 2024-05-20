@@ -49,13 +49,13 @@ const emitMessageToChannel = ({
 	channelSocket,
 	channelId,
 	hostId,
-	platforms,
+	platforms = [],
 	message
 }: {
 	channelSocket: WebSocket
 	channelId: number
 	hostId: number
-	platforms: string[]
+	platforms?: string[]
 	message: any
 }) => {
 	platforms = platforms.map((platform: any) => platform.name.toLowerCase())

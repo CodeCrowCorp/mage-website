@@ -108,6 +108,7 @@
 								// for new users joining the channel
 								const liveInputs = await get(`live-inputs?channelId=${$page.params.channelId}`)
 								channel.videoItems = updateVideoItems([...activeGuests], liveInputs)
+								await getPlatformCount()
 							}
 						}
 					}
@@ -343,11 +344,11 @@
 	}
 
 	const getPlatformCount = async () => {
-		// check if host's video and is connected
-		const isConnectedUser = channel.videoItems.some(
+		// check if host's video
+		const isHostsVideo = channel.videoItems.some(
 			(videoItem: any) => videoItem._id === channel.userId
 		)
-		if (isConnectedUser) {
+		if (isHostsVideo) {
 			channel.platforms = await get(`outputs/platforms?userId=${channel.userId}`)
 		}
 	}
