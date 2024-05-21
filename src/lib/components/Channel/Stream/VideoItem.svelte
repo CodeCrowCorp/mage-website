@@ -368,7 +368,7 @@
 					if (
 						!channel.thumbnail &&
 						video._id === channel.userId &&
-						video._id === $page.data.user.userId &&
+						video._id === $page.data.user?.userId &&
 						streamTime === 60
 					) {
 						const imageSrc = captureScreenShot(channel)

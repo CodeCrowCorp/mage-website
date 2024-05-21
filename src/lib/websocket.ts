@@ -48,13 +48,20 @@ const emitChannelSubscribeByUser = ({
 const emitMessageToChannel = ({
 	channelSocket,
 	channelId,
+	hostId,
+	platforms = [],
 	message
 }: {
 	channelSocket: WebSocket
 	channelId: number
+	hostId: number
+	platforms?: string[]
 	message: any
 }) => {
-	channelSocket.send(JSON.stringify({ eventName: `channel-message`, channelId, message }))
+	platforms = platforms.map((platform: any) => platform.name.toLowerCase())
+	channelSocket.send(
+		JSON.stringify({ eventName: `channel-message`, channelId, hostId, platforms, message })
+	)
 }
 
 const emitDeleteMessageToChannel = ({

@@ -57,6 +57,8 @@
 			emitMessageToChannel({
 				channelSocket: channel.socket,
 				channelId: channel._id,
+				hostId: channel.userId,
+				platforms: channel.platforms,
 				message: {
 					isAiChatEnabled: channel.isAiChatEnabled,
 					body: chatMessage
