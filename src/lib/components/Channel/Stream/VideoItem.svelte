@@ -477,7 +477,9 @@
 					{/if}
 				</label>
 				{#if showBanItem || showRoleItem}
-					<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+					<ul
+						tabindex="0"
+						class="dropdown-content dropdown-top menu p-2 shadow bg-base-100 rounded-box w-52">
 						{#if showRoleItem && !channel.bans.includes(video._id)}
 							<li>
 								<a on:click={() => toggleMod()}
