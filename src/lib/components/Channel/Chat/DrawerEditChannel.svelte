@@ -10,7 +10,7 @@
 	import IconChatScreenshot from '$lib/assets/icons/chat/IconChatScreenshot.svelte'
 	import { captureScreenShot } from '$lib/utils'
 
-	export let channel: any, showDrawer: boolean
+	export let channel: any, showDrawer: boolean, isLive: boolean
 
 	let fileuploader: HTMLInputElement,
 		thumbnailRef: any,
@@ -18,14 +18,14 @@
 		showAddCategory = false,
 		maxTag = 3,
 		maxCategory = 4,
-		imageSrc: string = ''
+		imageSrc: string = '',
+		inputTags: HTMLInputElement
 
 	$: maxTagLabel = channel?.tags.length == maxTag ? 'max reached' : 'max ' + maxTag
 	$: maxCategoryLabel =
 		channel?.category.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 
 	onMount(async () => {
-		let inputTags = document.getElementById('tags')
 		inputTags?.setAttribute('maxlength', '20')
 		if (!$tags.length) {
 			const suggestedTags = await get(`tags`)
@@ -56,7 +56,7 @@
 	const checkVideo = (e: any) => {
 		e.preventDefault()
 		showThumbnail = true
-		if (channel.videoItems.length > 0) {
+		if (isLive && channel.videoItems.length > 0) {
 			imageSrc = captureScreenShot(channel)
 		}
 	}
@@ -181,7 +181,7 @@
 							<Tags
 								bind:tags={channel.tags}
 								maxTags={maxTag}
-								id="tags"
+								bind:this={inputTags}
 								placeholder={channel.tags.length > 0 ? '' : 'Tag'} />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxTagLabel})</span>
 							{#if channel.tags.length === 0}
@@ -217,7 +217,7 @@
 					<div class="flex flex-row gap-2 mt-auto p-3">
 						<button type="button" class="btn btn-neutral grow" on:click={() => toggleDrawer()}
 							>Cancel</button>
-						<button type="submit" class="btn btn-primary grow">Edit</button>
+						<button type="submit" class="btn btn-primary grow">Apply</button>
 					</div>
 				</div>
 			</form>
