@@ -10,7 +10,7 @@
 	import IconChatScreenshot from '$lib/assets/icons/chat/IconChatScreenshot.svelte'
 	import { captureScreenShot } from '$lib/utils'
 
-	export let channel: any, showDrawer: boolean
+	export let channel: any, showDrawer: boolean, isLive: boolean
 
 	let fileuploader: HTMLInputElement,
 		thumbnailRef: any,
@@ -56,7 +56,7 @@
 	const checkVideo = (e: any) => {
 		e.preventDefault()
 		showThumbnail = true
-		if (channel.videoItems.length > 0) {
+		if (isLive && channel.videoItems.length > 0) {
 			imageSrc = captureScreenShot(channel)
 		}
 	}
@@ -217,7 +217,7 @@
 					<div class="flex flex-row gap-2 mt-auto p-3">
 						<button type="button" class="btn btn-neutral grow" on:click={() => toggleDrawer()}
 							>Cancel</button>
-						<button type="submit" class="btn btn-primary grow">Edit</button>
+						<button type="submit" class="btn btn-primary grow">Apply</button>
 					</div>
 				</div>
 			</form>

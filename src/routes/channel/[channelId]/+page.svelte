@@ -407,7 +407,7 @@
 					bind:viewers />
 
 				{#if showEditChannelDrawer}
-					<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} />
+					<DrawerEditChannel bind:channel bind:showDrawer={showEditChannelDrawer} bind:isLive />
 				{/if}
 			</div>
 			{#if !$is_chat_drawer_destroy}
