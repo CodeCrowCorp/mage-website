@@ -22,7 +22,9 @@
 	import DrawerRestream from '$lib/components/Channel/Chat/DrawerRestream.svelte'
 	import DialogSponsor from '$lib/components/Channel/Chat/DialogSponsor.svelte'
 	import { is_feature_premium_enabled } from '$lib/stores/remoteConfigStore'
+	import type { PageData } from './$types'
 
+	export let data: PageData
 	let channel: any,
 		isDeleteModalOpen = false,
 		showEditChannelDrawer = false,
@@ -163,7 +165,7 @@
 	}
 
 	const loadChannel = async () => {
-		const chan = await get(`channel?channelId=${$page.params.channelId}`)
+		const chan = data.channel
 		chan.videoItems = []
 		const isOnboarded = await get(`plan/onboarded?userId=${chan.userId}`)
 		chan.isOnboarded = isOnboarded || false
