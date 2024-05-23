@@ -387,7 +387,7 @@ export const getHref = async ({
 			'x-api-key': xApiKey
 		}
 	})
-	const { loginUrl } = await response.json()
+	const { loginUrl }: any = await response.json()
 	window.location.replace(loginUrl)
 }
 
