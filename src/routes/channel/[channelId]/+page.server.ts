@@ -1,8 +1,26 @@
-import { putImage } from '$lib/api'
+import { get, putImage } from '$lib/api'
 import { dataURLtoFile } from '$lib/utils'
-import type { Actions } from './$types'
+import { error } from '@sveltejs/kit'
+import type { Actions, PageServerLoad } from './$types'
 
-//TODO: get channel in server side and set SEO data
+export const load = (async ({ params, url }) => {
+	if (!params.channelId) error(404)
+	const channel = await get(`channel?channelId=${params.channelId}`)
+	if (!channel || channel?.error) {
+		error(404)
+	}
+	return {
+		seo: {
+			title: channel.title,
+			description: channel.description,
+			image: channel.thumbnail || 'https://mage.stream/placeholder/programming-placeholder.jpg',
+			imageAlt: `channel thumbnail`,
+			url: url.href,
+			username: channel.username
+		},
+		channel
+	}
+}) satisfies PageServerLoad
 
 export const actions = {
 	'edit-channel': async ({ request, locals }) => {
