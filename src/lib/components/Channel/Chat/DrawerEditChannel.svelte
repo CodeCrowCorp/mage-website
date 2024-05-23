@@ -18,14 +18,14 @@
 		showAddCategory = false,
 		maxTag = 3,
 		maxCategory = 4,
-		imageSrc: string = '',
-		inputTags: HTMLInputElement
+		imageSrc: string = ''
 
 	$: maxTagLabel = channel?.tags.length == maxTag ? 'max reached' : 'max ' + maxTag
 	$: maxCategoryLabel =
 		channel?.category.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 
 	onMount(async () => {
+		let inputTags = document.getElementById('tags')
 		inputTags?.setAttribute('maxlength', '20')
 		if (!$tags.length) {
 			const suggestedTags = await get(`tags`)
@@ -181,7 +181,7 @@
 							<Tags
 								bind:tags={channel.tags}
 								maxTags={maxTag}
-								bind:this={inputTags}
+								id="tags"
 								placeholder={channel.tags.length > 0 ? '' : 'Tag'} />
 							<span class="absolute right-0 top-1/2 text-gray-400 pr-3">({maxTagLabel})</span>
 							{#if channel.tags.length === 0}
