@@ -46,7 +46,7 @@
 		"@baselime/node-opentelemetry": "^0.5.8",
 		"@baselime/sveltekit-opentelemetry-middleware": "^0.1.6",
 		"@event-calendar/core": "^2.0.0",
-		"@event-calendar/time-grid": "^2.0.0",
+		"@event-calendar/time-grid": "^3.0.0",
 		"@jill64/sentry-sveltekit-cloudflare": "^1.7.11",
 		"@neodrag/svelte": "^2.0.3",
 		"@stripe/stripe-js": "^3.0.10",
