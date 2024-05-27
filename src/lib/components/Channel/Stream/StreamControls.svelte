@@ -82,7 +82,7 @@
 				trackType,
 				liveInput: {
 					meta: {
-						name: `${$page.params.channelId}-${$page.data.user?.userId}-webrtc-${trackType}`
+						name: $page.params.channelId
 					},
 					recording: { mode: 'off' }
 				}
@@ -124,7 +124,7 @@
 			trackType: 'rtmps',
 			liveInput: {
 				meta: {
-					name: `${$page.params.channelId}-${$page.data.user?.userId}-rtmps`
+					name: $page.params.channelId
 				},
 				recording: { mode: 'automatic' }
 			}
