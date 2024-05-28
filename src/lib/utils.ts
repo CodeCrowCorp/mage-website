@@ -429,3 +429,13 @@ export const updateVideoItems = (videoItems: any, liveInputs: any[]) => {
 	}
 	return vidItems
 }
+
+export const getTimeFormat = (duration: number) => {
+	const hours = Math.floor(duration / 3600)
+	const minutes = Math.floor((duration % 3600) / 60)
+	const seconds = Math.floor(duration % 60)
+
+	const secondsFormat = seconds < 10 ? `0${seconds}` : seconds
+
+	return hours > 0 ? `${hours}:${minutes}:${secondsFormat}` : `${minutes}:${secondsFormat}`
+}

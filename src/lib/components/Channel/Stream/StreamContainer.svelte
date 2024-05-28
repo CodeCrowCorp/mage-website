@@ -24,6 +24,7 @@
 	import { is_feature_premium_enabled } from '$lib/stores/remoteConfigStore'
 	import DropdownSponsors from '$lib/components/Channel/Stream/DropdownSponsors.svelte'
 	import IconChatSponsor from '$lib/assets/icons/chat/IconChatSponsor.svelte'
+	import VodList from './VodList.svelte'
 
 	const dispatch = createEventDispatcher()
 	export let userCount: number = 1,
@@ -159,6 +160,7 @@
 					</div>
 					{#if channel && nextchannel?._id === parseInt($page.params.channelId)}
 						<VideoGrid bind:channel />
+						<VodList channelId={channel._id} />
 					{/if}
 				</div>
 			</div>

@@ -82,7 +82,7 @@
 				trackType,
 				liveInput: {
 					meta: {
-						name: `${$page.params.channelId}-${$page.data.user?.userId}-webrtc-${trackType}`
+						name: $page.params.channelId
 					},
 					recording: { mode: 'off' }
 				}
@@ -124,7 +124,7 @@
 			trackType: 'rtmps',
 			liveInput: {
 				meta: {
-					name: `${$page.params.channelId}-${$page.data.user?.userId}-rtmps`
+					name: $page.params.channelId
 				},
 				recording: { mode: 'automatic' }
 			}
@@ -149,92 +149,92 @@
 </script>
 
 <div class="flex flex-col sm:flex-row gap-4">
-	<div class="dropdown dropdown-top dropdown-end py-3">
-		<button
-			tabindex="0"
-			class="btn border-none tooltip tooltip-left font-normal normal-case {$is_sharing_screen ||
-			$is_sharing_webcam ||
-			$is_sharing_audio ||
-			$is_sharing_rtmps
-				? 'btn-primary'
-				: 'btn-neutral'}"
-			data-tip="Sources"
-			disabled={!isHostOrGuest || !isChannelSocketConnected || !videoItemIsActive}>
-			<IconSources />
-		</button>
-		<ul tabindex="0" class="dropdown-content">
-			<div class="flex flex-row card p-3 bg-base-300">
-				<div class="flex gap-4">
+	<div class="flex flex-row gap-4 card">
+		<div class="dropdown dropdown-top dropdown-end py-3">
+			<button
+				tabindex="0"
+				class="btn border-none tooltip tooltip-left font-normal normal-case {$is_sharing_screen ||
+				$is_sharing_webcam ||
+				$is_sharing_audio ||
+				$is_sharing_rtmps
+					? 'btn-primary'
+					: 'btn-neutral'}"
+				data-tip="Sources"
+				disabled={!isHostOrGuest || !isChannelSocketConnected || !videoItemIsActive}>
+				<IconSources />
+			</button>
+			<ul tabindex="0" class="dropdown-content">
+				<div class="flex flex-row card p-3 bg-base-300">
+					<div class="flex gap-4">
+						<button
+							class="btn border-none tooltip font-normal normal-case {$is_sharing_screen
+								? 'btn-primary'
+								: 'btn-neutral'}"
+							data-tip="Screen"
+							on:click={async () => {
+								if ($is_sharing_screen === false || $is_sharing_screen === undefined) {
+									await startWebrtcStream(`screen`)
+								}
+								$is_sharing_screen = !$is_sharing_screen
+							}}
+							disabled={$is_sharing_rtmps ||
+								!isHostOrGuest ||
+								!isChannelSocketConnected ||
+								!videoItemIsActive}>
+							<IconShareScreen />
+						</button>
+						<button
+							class="btn border-none tooltip font-normal normal-case {$is_sharing_webcam
+								? 'btn-primary'
+								: 'btn-neutral'}"
+							data-tip="Webcam"
+							on:click={async () => {
+								if ($is_sharing_webcam === false || $is_sharing_webcam === undefined) {
+									await startWebrtcStream(`webcam`)
+								}
+								$is_sharing_webcam = !$is_sharing_webcam
+							}}
+							disabled={$is_sharing_rtmps ||
+								!isHostOrGuest ||
+								!isChannelSocketConnected ||
+								!videoItemIsActive}>
+							<IconShareWebcam />
+						</button>
+						<button
+							class="btn border-none tooltip font-normal normal-case {$is_sharing_audio
+								? 'btn-primary'
+								: 'btn-neutral'}"
+							data-tip="Audio"
+							on:click={async () => {
+								if ($is_sharing_audio === false || $is_sharing_audio === undefined) {
+									await startWebrtcStream(`audio`)
+								}
+								$is_sharing_audio = !$is_sharing_audio
+							}}
+							disabled={$is_sharing_rtmps ||
+								!isHostOrGuest ||
+								!isChannelSocketConnected ||
+								!videoItemIsActive}>
+							<IconShareAudio />
+						</button>
+					</div>
+					<div class="divider lg:divider-horizontal" />
 					<button
-						class="btn border-none tooltip font-normal normal-case {$is_sharing_screen
-							? 'btn-primary'
-							: 'btn-neutral'}"
-						data-tip="Screen"
-						on:click={async () => {
-							if ($is_sharing_screen === false || $is_sharing_screen === undefined) {
-								await startWebrtcStream(`screen`)
-							}
-							$is_sharing_screen = !$is_sharing_screen
-						}}
-						disabled={$is_sharing_rtmps ||
+						class="btn border-none tooltip font-normal normal-case btn-neutral"
+						data-tip="Stream key"
+						on:click={() => showStreamKeyModal()}
+						disabled={$is_sharing_screen ||
+							$is_sharing_webcam ||
+							$is_sharing_audio ||
 							!isHostOrGuest ||
 							!isChannelSocketConnected ||
 							!videoItemIsActive}>
-						<IconShareScreen />
-					</button>
-					<button
-						class="btn border-none tooltip font-normal normal-case {$is_sharing_webcam
-							? 'btn-primary'
-							: 'btn-neutral'}"
-						data-tip="Webcam"
-						on:click={async () => {
-							if ($is_sharing_webcam === false || $is_sharing_webcam === undefined) {
-								await startWebrtcStream(`webcam`)
-							}
-							$is_sharing_webcam = !$is_sharing_webcam
-						}}
-						disabled={$is_sharing_rtmps ||
-							!isHostOrGuest ||
-							!isChannelSocketConnected ||
-							!videoItemIsActive}>
-						<IconShareWebcam />
-					</button>
-					<button
-						class="btn border-none tooltip font-normal normal-case {$is_sharing_audio
-							? 'btn-primary'
-							: 'btn-neutral'}"
-						data-tip="Audio"
-						on:click={async () => {
-							if ($is_sharing_audio === false || $is_sharing_audio === undefined) {
-								await startWebrtcStream(`audio`)
-							}
-							$is_sharing_audio = !$is_sharing_audio
-						}}
-						disabled={$is_sharing_rtmps ||
-							!isHostOrGuest ||
-							!isChannelSocketConnected ||
-							!videoItemIsActive}>
-						<IconShareAudio />
+						<IconStreamKey />
 					</button>
 				</div>
-				<div class="divider lg:divider-horizontal" />
-				<button
-					class="btn border-none tooltip font-normal normal-case btn-neutral"
-					data-tip="Stream key"
-					on:click={() => showStreamKeyModal()}
-					disabled={$is_sharing_screen ||
-						$is_sharing_webcam ||
-						$is_sharing_audio ||
-						!isHostOrGuest ||
-						!isChannelSocketConnected ||
-						!videoItemIsActive}>
-					<IconStreamKey />
-				</button>
-			</div>
-		</ul>
-	</div>
+			</ul>
+		</div>
 
-	<div class="flex flex-row gap-4 card">
 		<button
 			class="flex items-center btn border-none tooltip font-normal normal-case mt-3 {$is_restream_drawer_open
 				? 'btn-primary'
