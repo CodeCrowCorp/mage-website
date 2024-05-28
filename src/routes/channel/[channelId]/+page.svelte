@@ -131,7 +131,7 @@
 		platformPollingInterval = null
 		await loadChannel()
 		await handleWebsocket()
-		await loadMoreChannels()
+		// await loadMoreChannels()
 		$is_chat_drawer_destroy = false
 		setTimeout(() => {
 			$is_chat_drawer_open = true

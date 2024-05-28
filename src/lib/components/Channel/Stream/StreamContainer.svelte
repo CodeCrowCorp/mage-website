@@ -160,8 +160,8 @@
 					</div>
 					{#if channel && nextchannel?._id === parseInt($page.params.channelId)}
 						<VideoGrid bind:channel />
+						<VodList channelId={channel._id} />
 					{/if}
-					<VodList channelId={channel._id} />
 				</div>
 			</div>
 		{/each}
