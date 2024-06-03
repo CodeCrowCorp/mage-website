@@ -324,7 +324,7 @@ export const captureScreenShot = (channel: any) => {
 		ctx.drawImage(webcamElement, 1400, 750, canvas.width - 1400, canvas.height - 750)
 	}
 
-	return canvas.toDataURL('image/jpeg')
+	return canvas.toDataURL('image/webp')
 	//thumbnailRef.setAttribute('src', screenshot);
 }
 

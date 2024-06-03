@@ -52,7 +52,11 @@
 				{#if channel.category && channel.category.length}
 					{#each channel.category as category}
 						<div class="tooltip" data-tip={category}>
-							<img src={$category_list[category]} alt="" class="h-7 w-7 m-1" />
+							<img
+								loading="lazy"
+								src={$category_list[category]}
+								alt="category icon"
+								class="h-7 w-7 m-1" />
 						</div>
 					{/each}
 				{/if}
@@ -63,7 +67,7 @@
 			<div class="flex flex-row items-center gap-2">
 				<div class="avatar">
 					<div class="w-14 mask {channel?.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
-						<img src={channel.avatar} alt="" />
+						<img class="w-14" loading="lazy" src={channel.avatar} alt="user avatar" />
 					</div>
 				</div>
 				<div class="w-4/5 flex gap-1">

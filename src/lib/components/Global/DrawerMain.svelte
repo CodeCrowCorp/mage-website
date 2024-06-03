@@ -93,13 +93,12 @@
 					<div class={isChannelPage ? 'md:text-center' : ''}>
 						<div class={isChannelPage ? '' : 'my-1'}>
 							<div class="flex gap-3 {isChannelPage ? 'max-w-md' : 'max-w-full'}">
-								<div class="avatar">
-									<div
-										class="w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser?.planTier > 0
-											? 'mask-hexagon'
-											: 'mask-squircle'}">
-										<img src={currentUser.avatar} alt="" />
-									</div>
+								<div
+									class="avatar w-24 {isChannelPage ? 'md:w-12' : ''} mask {currentUser?.planTier >
+									0
+										? 'mask-hexagon'
+										: 'mask-squircle'}">
+									<img class="w-24" loading="lazy" src={currentUser.avatar} alt="user avatar" />
 								</div>
 							</div>
 						</div>
@@ -284,7 +283,7 @@
 				<IconSocialGitHub />
 			</a>
 			<a href="https://discord.mage.stream" target="_blank" rel="noreferrer">
-				<img src={IconSocialDiscord} alt="" />
+				<img src={IconSocialDiscord} alt="discord icon" />
 			</a>
 			<a
 				href="https://twitter.com/i/communities/1747324016921026613"

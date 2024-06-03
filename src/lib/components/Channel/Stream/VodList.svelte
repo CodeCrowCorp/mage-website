@@ -28,7 +28,7 @@
 					selectedVod = vod
 				}}>
 				<!-- <iframe src={vod.url} class="rounded-box"></iframe> -->
-				<img src={vod.thumbnail} class="rounded-md" alt="vod thumbnail" />
+				<img loading="lazy" src={vod.thumbnail} class="rounded-md" alt="vod thumbnail" />
 				<span
 					class="badge badge-md text-ghost rounded-md font-semibold border-none absolute m-1 bottom-0"
 					>{timeSince(vod.createdAt)}</span>

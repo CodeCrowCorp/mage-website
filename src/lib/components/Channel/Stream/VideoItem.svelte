@@ -415,8 +415,9 @@
 	on:click={unmuteTracks}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
 		<img
+			loading="lazy"
 			src={video.avatar}
-			alt=""
+			alt="user avatar"
 			class="absolute inset-0 w-24 md:w-24 mask {video.planTier > 0
 				? 'mask-hexagon'
 				: 'mask-squircle'} object-cover m-auto" />

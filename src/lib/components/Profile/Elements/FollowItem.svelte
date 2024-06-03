@@ -40,7 +40,7 @@
 	<div class="flex">
 		<div class="avatar">
 			<div class="w-16 mask {followItem.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
-				<img src={followItem.avatar} alt="" />
+				<img class="w-16" loading="lazy" src={followItem.avatar} alt="user avatar" />
 			</div>
 		</div>
 
