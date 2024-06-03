@@ -64,7 +64,7 @@
 				<div class="flex gap-2 justify-center">
 					{#each profile.category as category}
 						<div class="tooltip" data-tip={category}>
-							<img src={$category_list[category]} alt="" class="h-7 w-7 m-1" />
+							<img src={$category_list[category]} alt="category icon" class="h-7 w-7 m-1" />
 						</div>
 					{/each}
 				</div>

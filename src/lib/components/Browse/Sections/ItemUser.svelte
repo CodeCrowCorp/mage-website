@@ -9,7 +9,7 @@
 	<div class="text-center space-y-3 w-[200px]">
 		<div class="avatar">
 			<div class="w-36 mask {user?.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
-				<img src={user.avatar} alt="" />
+				<img class="w-36" loading="lazy" src={user.avatar} alt="user avatar" />
 			</div>
 		</div>
 		<div class="tooltip w-full flex gap-1 justify-center" data-tip="@{user.username}">
@@ -26,7 +26,7 @@
 			{#if user.category && user.category.length}
 				{#each user.category as category}
 					<div class="tooltip" data-tip={category}>
-						<img src={$category_list[category]} alt="" class="h-10 w-10 m-1" />
+						<img src={$category_list[category]} alt="category icon" class="h-10 w-10 m-1" />
 					</div>
 				{/each}
 			{/if}

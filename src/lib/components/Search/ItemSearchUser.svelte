@@ -11,7 +11,7 @@
 		<div class="max-w-md">
 			<div class="avatar">
 				<div class="w-32 mask {item?.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
-					<img loading="lazy" src={item.avatar} alt="" />
+					<img class="w-32" loading="lazy" src={item.avatar} alt="user avatar" />
 				</div>
 			</div>
 		</div>
@@ -20,7 +20,7 @@
 				<div class="flex flex-wrap">
 					{#each item.category as category}
 						<div class="tooltip" data-tip={category}>
-							<img src={$category_list[category]} alt="" class="h-10 w-10 m-1" />
+							<img src={$category_list[category]} alt="category icon" class="h-10 w-10 m-1" />
 						</div>
 					{/each}
 				</div>

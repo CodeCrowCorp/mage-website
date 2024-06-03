@@ -212,7 +212,7 @@
 								</label>
 								<input
 									type="file"
-									accept="image/png, image/jpeg"
+									accept="image/png, image/jpeg, image/webp"
 									name="banner"
 									id="banner"
 									class="file-input file-input-bordered file-input-primary w-full" />
@@ -225,7 +225,7 @@
 								</label>
 								<input
 									type="file"
-									accept="image/png, image/jpeg"
+									accept="image/png, image/jpeg, image/webp"
 									name="avatar"
 									id="avatar"
 									class="file-input file-input-bordered file-input-primary w-full" />
@@ -246,7 +246,7 @@
 								<span class="absolute flex flex-row gap-2 left-0 top-[60%] pl-5">
 									{#if profile?.category?.length}
 										{#each profile?.category as icon}
-											<img src={$category_list[icon]} alt="" class="h-5 w-5" />
+											<img src={$category_list[icon]} alt="category icon" class="h-5 w-5" />
 										{/each}
 									{/if}
 								</span>

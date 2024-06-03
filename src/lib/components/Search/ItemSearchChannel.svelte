@@ -29,14 +29,14 @@
 				loading="lazy"
 				src={item.thumbnail ? item.thumbnail : '/placeholder/programming-placeholder.jpg'}
 				class="h-64 w-full object-cover rounded shadow"
-				alt="" />
+				alt="channel thumbnail" />
 		</div>
 		<div class="flex-auto flex flex-col gap-2">
 			<div class="flex flex-wrap">
 				{#if item.category && item.category.length}
 					{#each item.category as category}
 						<div class="tooltip" data-tip={category}>
-							<img src={$category_list[category]} alt="" class="h-10 w-10 m-1" />
+							<img src={$category_list[category]} alt="category icon" class="h-10 w-10 m-1" />
 						</div>
 					{/each}
 				{/if}
@@ -53,7 +53,7 @@
 			<div class="flex items-center">
 				<div class="avatar">
 					<div class="w-12 mask {item?.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
-						<img src={item.avatar} alt="" />
+						<img class="w-12" loading="lazy" src={item.avatar} alt="user avatar" />
 					</div>
 				</div>
 				<a class="ml-2 link link-hover flex gap-1" href="/{item.username}"
