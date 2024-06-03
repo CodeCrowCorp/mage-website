@@ -72,7 +72,7 @@
 							{#each categories as icon}
 								<img
 									src={$category_list[icon]}
-									alt=""
+									alt="category icon"
 									class="h-5 w-5 cursor-pointer"
 									on:click={() => removeCategory(icon)} />
 							{/each}
@@ -109,7 +109,7 @@
 								checked={categories.includes(name)}
 								class="checkbox checkbox-primary"
 								disabled={categories.length === maxCategory && !categories.includes(name)} />
-							<img src={image_url} alt="" class="h-7 w-7 m-1" />
+							<img src={image_url} alt="category icon" class="h-7 w-7 m-1" />
 							<span class="label-text">{name}</span>
 						</div>
 					{/each}

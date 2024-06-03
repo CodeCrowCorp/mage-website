@@ -125,10 +125,11 @@
 								<div class="items-center max-h-40 cursor-pointer {showThumbnail ? '!p-3' : ''}">
 									{#if imageSrc || channel.thumbnail}
 										<img
+											loading="lazy"
 											bind:this={thumbnailRef}
 											src={imageSrc || channel.thumbnail}
 											alt="Preview"
-											class="rounded-lg h-full" />
+											class="rounded-lg h-full max-h-40" />
 									{:else}
 										<div class="h-40 flex flex-col justify-center items-center">
 											<IconChatScreenshot />
@@ -144,7 +145,7 @@
 							bind:this={fileuploader}
 							on:change={fileupload}
 							type="file"
-							accept="image/png, image/jpeg"
+							accept="image/png, image/jpeg, image/webp"
 							name="thumbnail"
 							class="file-input file-input-bordered file-input-primary w-full mt-5" />
 						<input
@@ -207,7 +208,7 @@
 							<span class="absolute flex flex-row gap-2 left-0 top-1/2 pl-5">
 								{#if channel?.category?.length}
 									{#each channel?.category as icon}
-										<img src={$category_list[icon]} alt="" class="h-5 w-5" />
+										<img src={$category_list[icon]} alt="category icon" class="h-5 w-5" />
 									{/each}
 								{/if}
 							</span>

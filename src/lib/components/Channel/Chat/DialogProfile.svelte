@@ -104,6 +104,7 @@
 							</div>
 						{:else}
 							<img
+								loading="lazy"
 								class="w-10 h-10 mask {profileData.profile?.planTier > 0
 									? 'mask-hexagon'
 									: 'mask-squircle'}"

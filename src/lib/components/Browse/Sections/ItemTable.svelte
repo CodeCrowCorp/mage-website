@@ -15,7 +15,7 @@
 		<div class="flex items-center space-x-2 pl-3">
 			<div class="avatar">
 				<div class="w-12 mask {channel.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
-					<img src={channel.avatar} alt="" />
+					<img class="w-12" loading="lazy" src={channel.avatar} alt="user avatar" />
 				</div>
 			</div>
 			<div>
@@ -76,7 +76,7 @@
 			{#if channel.category && channel.category.length}
 				{#each channel.category as category}
 					<div class="tooltip" data-tip={category}>
-						<img src={$category_list[category]} alt="" class="h-7 w-7 m-1" />
+						<img src={$category_list[category]} alt="category icon" class="h-7 w-7 m-1" />
 					</div>
 				{/each}
 			{/if}
