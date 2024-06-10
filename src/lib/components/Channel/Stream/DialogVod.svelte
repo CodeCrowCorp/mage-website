@@ -1,8 +1,18 @@
 <script lang="ts">
+	import { patch } from '$lib/api'
 	import { is_vod_modal_open } from '$lib/stores/channelStore'
-	import { getTimeFormat, timeSince } from '$lib/utils'
+	import { timeSince } from '$lib/utils'
 
 	export let vod: any
+
+	const toggleVodVisibility = async () => {
+		const updatedVod = await patch(`vod`, {
+			channel: vod.channel,
+			inputId: vod.inputId,
+			isVisible: !vod.isVisible
+		})
+		vod.isVisible = updatedVod.isVisible
+	}
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -28,6 +38,11 @@
 		</form>
 		<h3 class="font-bold text-lg">@{vod?.username}</h3>
 		{timeSince(vod?.createdAt)}
+		<div class="form-control w-52">
+			<label class="cursor-pointer label">
+				<input type="checkbox" class="toggle toggle-secondary" on:click={toggleVodVisibility} />
+			</label>
+		</div>
 		<iframe
 			src={vod?.url}
 			class="w-full h-full max-w-full max-h-full"
