@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { patch } from '$lib/api'
+	import IconMore from '$lib/assets/icons/IconMore.svelte'
 	import { is_vod_modal_open } from '$lib/stores/channelStore'
 	import { timeSince } from '$lib/utils'
 
@@ -29,20 +30,20 @@
 			e.stopPropagation()
 		}}>
 		<form method="dialog">
-			<button
-				class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-				on:click={() => {
-					$is_vod_modal_open = false
-					vod = null
-				}}>✕</button>
+			<div class="flex absolute right-2 top-2">
+				<button class="btn btn-sm btn-circle btn-ghost">
+					<IconMore />
+				</button>
+				<button
+					class="btn btn-sm btn-circle btn-ghost"
+					on:click={() => {
+						$is_vod_modal_open = false
+						vod = null
+					}}>✕</button>
+			</div>
 		</form>
 		<h3 class="font-bold text-lg">@{vod?.username}</h3>
 		{timeSince(vod?.createdAt)}
-		<div class="form-control w-52">
-			<label class="cursor-pointer label">
-				<input type="checkbox" class="toggle toggle-secondary" on:click={toggleVodVisibility} />
-			</label>
-		</div>
 		<iframe
 			src={vod?.url}
 			class="w-full h-full max-w-full max-h-full"
