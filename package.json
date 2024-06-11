@@ -19,7 +19,7 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@playwright/test": "1.43.1",
+		"@playwright/test": "1.44.1",
 		"@sveltejs/adapter-cloudflare": "^4.0.1",
 		"@sveltejs/kit": "^2.0.6",
 		"@sveltejs/vite-plugin-svelte": "^3.0.1",
@@ -45,8 +45,8 @@
 	"dependencies": {
 		"@baselime/node-opentelemetry": "^0.5.8",
 		"@baselime/sveltekit-opentelemetry-middleware": "^0.1.6",
-		"@event-calendar/core": "^2.0.0",
-		"@event-calendar/time-grid": "^2.0.0",
+		"@event-calendar/core": "^3.0.0",
+		"@event-calendar/time-grid": "^3.0.0",
 		"@jill64/sentry-sveltekit-cloudflare": "^1.7.11",
 		"@neodrag/svelte": "^2.0.3",
 		"@stripe/stripe-js": "^3.0.10",
