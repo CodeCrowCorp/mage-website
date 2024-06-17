@@ -11,6 +11,7 @@
 	const toggleVodVisibility = async () => {
 		const updatedVod = await patch(`vod`, {
 			channelId: vod.channelId,
+			uid: vod.uid,
 			inputId: vod.inputId,
 			isVisible: !vod.isVisible
 		})
@@ -46,7 +47,7 @@
 									type="checkbox"
 									class="toggle toggle-primary toggle-xs"
 									bind:checked={vodIsVisible} />
-								Hide</a>
+								Visible to viewers</a>
 						</li>
 						<li><a>Download</a></li>
 					</ul>
