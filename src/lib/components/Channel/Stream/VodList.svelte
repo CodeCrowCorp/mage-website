@@ -4,18 +4,19 @@
 	import { onMount } from 'svelte'
 	import DialogVod from './DialogVod.svelte'
 	import { is_vod_modal_open } from '$lib/stores/channelStore'
+	import { page } from '$app/stores'
 
-	export let channelId: number
+	export let channelId: number, hostUserId: number
 	let vods: any = [],
 		selectedVod: any
 
 	onMount(async () => {
-		await getVods()
-	})
-
-	const getVods = async () => {
 		vods = await get(`vods?channelId=${channelId}`)
-	}
+		console.log('channel', vods)
+		if (hostUserId !== $page.data.user?.userId) {
+			vods = vods.filter((vod: any) => !vod.isVisible)
+		}
+	})
 </script>
 
 {#if vods?.length}
@@ -28,7 +29,12 @@
 					selectedVod = vod
 				}}>
 				<!-- <iframe src={vod.url} class="rounded-box"></iframe> -->
-				<img loading="eager" src={vod.thumbnail} class="rounded-md" alt="vod thumbnail" />
+				<img
+					loading="eager"
+					src={vod.thumbnail}
+					class="rounded-md"
+					alt="vod thumbnail"
+					style={vod?.isVisible ? '' : 'filter: grayscale(100%)'} />
 				<span
 					class="badge badge-md text-ghost rounded-md font-semibold border-none absolute m-1 bottom-0"
 					>{timeSince(vod.createdAt)}</span>

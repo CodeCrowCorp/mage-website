@@ -17,7 +17,7 @@
 		clientSecret: string = ''
 
 	onMount(async () => {
-		stripe = await loadStripe(env.PUBLIC_STRIPE_KEY || '')
+		stripe = env.PUBLIC_STRIPE_KEY ? await loadStripe(env.PUBLIC_STRIPE_KEY || '') : null
 	})
 
 	const showCheckoutDialog = async () => {
@@ -53,7 +53,7 @@
 						{duration === 1 ? `${duration} month` : `${duration} months`}
 					</button>
 				{/each}
-			{:else if step === 2}
+			{:else if step === 2 && stripe}
 				<div class="mb-3">
 					Selected duration:
 					<button class="btn btn-accent">

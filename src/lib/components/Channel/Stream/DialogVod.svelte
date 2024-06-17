@@ -6,9 +6,11 @@
 
 	export let vod: any
 
+	$: vodIsVisible = vod?.isVisible
+
 	const toggleVodVisibility = async () => {
 		const updatedVod = await patch(`vod`, {
-			channel: vod.channel,
+			channelId: vod.channelId,
 			inputId: vod.inputId,
 			isVisible: !vod.isVisible
 		})
@@ -31,9 +33,24 @@
 		}}>
 		<form method="dialog">
 			<div class="flex absolute right-2 top-2">
-				<button class="btn btn-sm btn-circle btn-ghost">
-					<IconMore />
-				</button>
+				<div class="dropdown-menu dropdown dropdown-end" tabindex="1">
+					<button class="btn btn-sm btn-circle btn-ghost">
+						<IconMore />
+					</button>
+					<ul
+						tabindex="1"
+						class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 z-10">
+						<li>
+							<a on:click={toggleVodVisibility}
+								><input
+									type="checkbox"
+									class="toggle toggle-primary toggle-xs"
+									bind:checked={vodIsVisible} />
+								Hide</a>
+						</li>
+						<li><a>Download</a></li>
+					</ul>
+				</div>
 				<button
 					class="btn btn-sm btn-circle btn-ghost"
 					on:click={() => {
