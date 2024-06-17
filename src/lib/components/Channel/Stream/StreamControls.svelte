@@ -288,14 +288,14 @@
 		</div>
 	</div>
 </div>
-<input
+<!-- <input
 	type="checkbox"
 	class="toggle toggle-primary toggle-xs tooltip absolute right-20 hidden sm:block"
 	data-tip="Lock scroll"
 	bind:checked={isScrollable}
 	on:click={() => {
 		isScrollable = !isScrollable
-	}} />
+	}} /> -->
 
 <dialog bind:this={rtmps_modal} class="modal">
 	<form method="dialog" class="modal-box overflow-x-hidden">

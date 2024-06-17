@@ -7,12 +7,18 @@
 	import { page } from '$app/stores'
 
 	export let channelId: number, hostUserId: number
+
 	let vods: any = [],
 		selectedVod: any
 
+	$: {
+		if (selectedVod) {
+			vods = vods.map((vod: any) => (vod.id === selectedVod.id ? selectedVod : vod))
+		}
+	}
+
 	onMount(async () => {
 		vods = await get(`vods?channelId=${channelId}`)
-		console.log('channel', vods)
 		if (hostUserId !== $page.data.user?.userId) {
 			vods = vods.filter((vod: any) => !vod.isVisible)
 		}
@@ -47,5 +53,5 @@
 			</div>
 		{/each}
 	</div>
-	<DialogVod vod={selectedVod} />
+	<DialogVod bind:vod={selectedVod} />
 {/if}
