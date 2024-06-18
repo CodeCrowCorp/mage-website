@@ -49,7 +49,7 @@
 									bind:checked={vodIsVisible} />
 								Visible to viewers</a>
 						</li>
-						<li><a>Download</a></li>
+						<!-- <li><a>Download</a></li> -->
 					</ul>
 				</div>
 				<button
