@@ -1,8 +1,22 @@
 <script lang="ts">
+	import { patch } from '$lib/api'
+	import IconMore from '$lib/assets/icons/IconMore.svelte'
 	import { is_vod_modal_open } from '$lib/stores/channelStore'
-	import { getTimeFormat, timeSince } from '$lib/utils'
+	import { timeSince } from '$lib/utils'
 
 	export let vod: any
+
+	$: vodIsVisible = vod?.isVisible
+
+	const toggleVodVisibility = async () => {
+		const updatedVod = await patch(`vod`, {
+			channelId: vod.channelId,
+			uid: vod.uid,
+			inputId: vod.inputId,
+			isVisible: !vod.isVisible
+		})
+		vod.isVisible = updatedVod.isVisible
+	}
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -19,12 +33,32 @@
 			e.stopPropagation()
 		}}>
 		<form method="dialog">
-			<button
-				class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-				on:click={() => {
-					$is_vod_modal_open = false
-					vod = null
-				}}>✕</button>
+			<div class="flex absolute right-2 top-2">
+				<div class="dropdown-menu dropdown dropdown-end" tabindex="1">
+					<button class="btn btn-sm btn-circle btn-ghost">
+						<IconMore />
+					</button>
+					<ul
+						tabindex="1"
+						class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 z-10">
+						<li>
+							<a on:click={toggleVodVisibility}
+								><input
+									type="checkbox"
+									class="toggle toggle-primary toggle-xs"
+									bind:checked={vodIsVisible} />
+								Visible to viewers</a>
+						</li>
+						<!-- <li><a>Download</a></li> -->
+					</ul>
+				</div>
+				<button
+					class="btn btn-sm btn-circle btn-ghost"
+					on:click={() => {
+						$is_vod_modal_open = false
+						vod = null
+					}}>✕</button>
+			</div>
 		</form>
 		<h3 class="font-bold text-lg">@{vod?.username}</h3>
 		{timeSince(vod?.createdAt)}
