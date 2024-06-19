@@ -1,9 +1,9 @@
 <script lang="ts">
-	import IconBrowseCreate from '$lib/assets/icons/browse/IconBrowseCreate.svelte'
 	import IconSearch from '$lib/assets/icons/IconSearch.svelte'
 	import DrawerCreateChannel from './DrawerCreateChannel.svelte'
 	import { is_login_modal_open } from '$lib/stores/helperStore'
 	import { page } from '$app/stores'
+	import IconBrowserGoLive from '$lib/assets/icons/browse/IconBrowserGoLive.svelte'
 
 	export let query: string | null = ''
 
@@ -37,8 +37,8 @@
 					$is_login_modal_open = true
 				}
 			}}>
-			<IconBrowseCreate />
-			Create a channel
+			<IconBrowserGoLive />
+			Go live
 		</label>
 	</div>
 
