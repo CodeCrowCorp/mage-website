@@ -1,4 +1,5 @@
 <script lang="ts">
+	import IconDrawerApps from '$lib/assets/icons/drawer/IconDrawerApps.svelte'
 	import IconDrawerStreak from '$lib/assets/icons/drawer/IconDrawerStreak.svelte'
 	import IconDrawerStreamDuration from '$lib/assets/icons/drawer/IconDrawerStreamDuration.svelte'
 	import IconDrawerHome from '$lib/assets/icons/drawer/IconDrawerHome.svelte'
@@ -196,9 +197,6 @@
 			<a class="custom-menu-item" href="https://blog.mage.stream" target="_blank">
 				<IconDrawerBlog />
 				<span class={isChannelPage ? 'md:hidden' : ''}>Blog </span>
-				{#if !isChannelPage}
-					<span class="badge badge-secondary text-secondary-content">New</span>
-				{/if}
 			</a>
 		</li>
 		{#if $is_feature_merch_enabled}
@@ -213,6 +211,22 @@
 			</li>
 		{/if}
 		<li>
+			<a
+				class="custom-menu-item whitespace-nowrap"
+				on:click={() => {
+					$is_apps_modal_open = true
+					if (nav_drawer.checked) {
+						nav_drawer.checked = false
+					}
+				}}>
+				<IconDrawerApps />
+				<span class={isChannelPage ? 'md:hidden' : ''}>Get apps</span>
+				{#if !isChannelPage}
+					<span class="badge badge-secondary">New</span>
+				{/if}
+			</a>
+		</li>
+		<li>
 			<a class="custom-menu-item" href="/settings">
 				<IconDrawerSettings />
 				<span class={isChannelPage ? 'md:hidden' : ''}>Settings </span>
@@ -224,21 +238,6 @@
 					><IconDrawerMore />
 					<span class={isChannelPage ? 'md:hidden' : ''}>More</span></summary>
 				<ul class="p-2 {isChannelPage ? 'lg:menu-sm' : 'ml-5'}">
-					<li>
-						<a
-							class="whitespace-nowrap"
-							on:click={() => {
-								$is_apps_modal_open = true
-								if (nav_drawer.checked) {
-									nav_drawer.checked = false
-								}
-							}}>
-							Get apps
-							{#if !isChannelPage}
-								<span class="badge badge-secondary">New</span>
-							{/if}
-						</a>
-					</li>
 					<li>
 						<a href="https://codecrow.io/careers" target="_blank">Careers</a>
 					</li>
