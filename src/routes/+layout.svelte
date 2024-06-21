@@ -93,7 +93,7 @@
 		name="twitter:description"
 		content={$page.data.seo?.description ||
 			'Mage is a collaborative streaming platform for gamers and developers'} />
-	<meta name="twitter:image" content={$page.data.seo?.image || '%sveltekit.assets%/banner.png'} />
+	<meta name="twitter:image" content={$page.data.seo?.image || '%sveltekit.assets%/banner.jpg'} />
 	<meta name="twitter:image:alt" content={$page.data.seo?.imageAlt || 'Mage Banner'} />
 
 	<meta property="og:site_name" content="Mage" />
@@ -106,7 +106,7 @@
 		property="og:description"
 		content={$page.data.seo?.description ||
 			'Mage is a collaborative streaming platform for gamers and developers'} />
-	<meta property="og:image" content={$page.data.seo?.image || '%sveltekit.assets%/banner.png'} />
+	<meta property="og:image" content={$page.data.seo?.image || '%sveltekit.assets%/banner.jpg'} />
 	<meta property="og:image:alt" content={$page.data.seo?.imageAlt || 'Mage Banner'} />
 
 	<meta charset="utf-8" />
