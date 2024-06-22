@@ -86,26 +86,20 @@
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:site" content={`@${$page.data.seo?.username || 'gagansuie'}`} />
 	<meta name="twitter:creator" content={`@${$page.data.seo?.username || 'gagansuie'}`} />
-	<meta
-		name="twitter:title"
-		content={$page.data.seo?.title || 'Mage - A collaborative streaming platform'} />
+	<meta name="twitter:title" content={$page.data.seo?.title || 'Mage - A re/streaming platform'} />
 	<meta
 		name="twitter:description"
-		content={$page.data.seo?.description ||
-			'Mage is a collaborative streaming platform for gamers and developers'} />
+		content={$page.data.seo?.description || 'Mage is a re/streaming platform'} />
 	<meta name="twitter:image" content={$page.data.seo?.image || '%sveltekit.assets%/banner.jpg'} />
 	<meta name="twitter:image:alt" content={$page.data.seo?.imageAlt || 'Mage Banner'} />
 
 	<meta property="og:site_name" content="Mage" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={$page.data.seo?.url || 'https://mage.stream'} />
-	<meta
-		property="og:title"
-		content={$page.data.seo?.title || 'Mage - A collaborative streaming platform'} />
+	<meta property="og:title" content={$page.data.seo?.title || 'Mage - A re/streaming platform'} />
 	<meta
 		property="og:description"
-		content={$page.data.seo?.description ||
-			'Mage is a collaborative streaming platform for gamers and developers'} />
+		content={$page.data.seo?.description || 'Mage is a re/streaming platform'} />
 	<meta property="og:image" content={$page.data.seo?.image || '%sveltekit.assets%/banner.jpg'} />
 	<meta property="og:image:alt" content={$page.data.seo?.imageAlt || 'Mage Banner'} />
 
