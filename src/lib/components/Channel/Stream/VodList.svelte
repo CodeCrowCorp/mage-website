@@ -14,7 +14,7 @@
 	// Update the vod list with the selected vod
 	$: {
 		if (selectedVod) {
-			vods = vods.map((vod: any) => (vod.id === selectedVod.id ? selectedVod : vod))
+			vods = vods.map((vod: any) => (vod.uid === selectedVod.uid ? selectedVod : vod))
 		}
 	}
 
