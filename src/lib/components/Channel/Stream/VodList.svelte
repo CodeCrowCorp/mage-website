@@ -11,6 +11,7 @@
 	let vods: any = [],
 		selectedVod: any
 
+	// Update the vod list with the selected vod
 	$: {
 		if (selectedVod) {
 			vods = vods.map((vod: any) => (vod.id === selectedVod.id ? selectedVod : vod))
@@ -20,7 +21,7 @@
 	onMount(async () => {
 		vods = await get(`vods?channelId=${channelId}`)
 		if (hostUserId !== $page.data.user?.userId) {
-			vods = vods.filter((vod: any) => !vod.isVisible)
+			vods = vods.filter((vod: any) => vod.isVisible)
 		}
 	})
 </script>
@@ -53,5 +54,5 @@
 			</div>
 		{/each}
 	</div>
-	<DialogVod bind:vod={selectedVod} />
+	<DialogVod bind:vod={selectedVod} isHost={hostUserId === $page.data.user?.userId} />
 {/if}

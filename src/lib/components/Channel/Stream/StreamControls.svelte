@@ -21,6 +21,7 @@
 	import IconRefresh from '$lib/assets/icons/IconRefresh.svelte'
 	import IconCopy from '$lib/assets/icons/IconCopy.svelte'
 	import { copyToClipboard, updateVideoItems } from '$lib/utils'
+	import { env } from '$env/dynamic/public'
 
 	export let isHostOrGuest: boolean = false,
 		channel: any,
@@ -82,7 +83,7 @@
 				trackType,
 				liveInput: {
 					meta: {
-						name: $page.params.channelId
+						name: `${env.PUBLIC_ENV}-${$page.params.channelId}`
 					},
 					recording: { mode: 'off' }
 				}
@@ -124,7 +125,7 @@
 			trackType: 'rtmps',
 			liveInput: {
 				meta: {
-					name: $page.params.channelId
+					name: `${env.PUBLIC_ENV}-${$page.params.channelId}`
 				},
 				recording: { mode: 'automatic' }
 			}

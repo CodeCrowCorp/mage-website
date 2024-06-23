@@ -4,7 +4,7 @@
 	import { is_vod_modal_open } from '$lib/stores/channelStore'
 	import { timeSince } from '$lib/utils'
 
-	export let vod: any
+	export let vod: any, isHost: boolean
 
 	$: vodIsVisible = vod?.isVisible
 
@@ -34,24 +34,26 @@
 		}}>
 		<form method="dialog">
 			<div class="flex absolute right-2 top-2">
-				<div class="dropdown-menu dropdown dropdown-end" tabindex="1">
-					<button class="btn btn-sm btn-circle btn-ghost">
-						<IconMore />
-					</button>
-					<ul
-						tabindex="1"
-						class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 z-10">
-						<li>
-							<a on:click={toggleVodVisibility}
-								><input
-									type="checkbox"
-									class="toggle toggle-primary toggle-xs"
-									bind:checked={vodIsVisible} />
-								Visible to viewers</a>
-						</li>
-						<!-- <li><a>Download</a></li> -->
-					</ul>
-				</div>
+				{#if isHost}
+					<div class="dropdown-menu dropdown dropdown-end" tabindex="1">
+						<button class="btn btn-sm btn-circle btn-ghost">
+							<IconMore />
+						</button>
+						<ul
+							tabindex="1"
+							class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52 z-10">
+							<li>
+								<a on:click={toggleVodVisibility}
+									><input
+										type="checkbox"
+										class="toggle toggle-primary toggle-xs"
+										bind:checked={vodIsVisible} />
+									Visible to viewers</a>
+							</li>
+							<!-- <li><a>Download</a></li> -->
+						</ul>
+					</div>
+				{/if}
 				<button
 					class="btn btn-sm btn-circle btn-ghost"
 					on:click={() => {
