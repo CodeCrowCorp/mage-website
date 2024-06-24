@@ -66,7 +66,9 @@
 										bind:checked={vodIsVisible} />
 									Visible to viewers</a>
 							</li>
-							<li><a href={downloadUrl} target="_blank">Download</a></li>
+							{#if downloadUrl}
+								<li><a href={downloadUrl} target="_blank">Download</a></li>
+							{/if}
 						</ul>
 					</div>
 				{/if}
