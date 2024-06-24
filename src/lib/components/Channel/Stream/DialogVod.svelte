@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { patch } from '$lib/api'
+	import { page } from '$app/stores'
+	import { get, patch } from '$lib/api'
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
 	import { is_vod_modal_open } from '$lib/stores/channelStore'
 	import { timeSince } from '$lib/utils'
@@ -7,15 +8,30 @@
 	export let vod: any, isHost: boolean
 
 	$: vodIsVisible = vod?.isVisible
+	let downloadUrl = ''
+	$: if (vod) {
+		getDownloadUrl().then((url) => (downloadUrl = url))
+	}
 
 	const toggleVodVisibility = async () => {
-		const updatedVod = await patch(`vod`, {
-			channelId: vod.channelId,
-			uid: vod.uid,
-			inputId: vod.inputId,
-			isVisible: !vod.isVisible
-		})
+		const updatedVod = await patch(
+			`vod`,
+			{
+				channelId: vod.channelId,
+				uid: vod.uid,
+				inputId: vod.inputId,
+				isVisible: !vod.isVisible
+			},
+			{ userId: $page.data.user?.userId, token: $page.data.user?.token }
+		)
 		vod.isVisible = updatedVod.isVisible
+	}
+
+	const getDownloadUrl = async () => {
+		return await get(`vod/download-url?videoUid=${vod?.uid}&createdAt=${vod?.createdAt}`, {
+			userId: $page.data.user?.userId,
+			token: $page.data.user?.token
+		})
 	}
 </script>
 
@@ -50,7 +66,7 @@
 										bind:checked={vodIsVisible} />
 									Visible to viewers</a>
 							</li>
-							<!-- <li><a>Download</a></li> -->
+							<li><a href={downloadUrl} target="_blank">Download</a></li>
 						</ul>
 					</div>
 				{/if}
