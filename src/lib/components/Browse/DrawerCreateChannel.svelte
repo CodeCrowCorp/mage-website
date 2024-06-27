@@ -105,10 +105,7 @@
 						Create a new channel
 					</p>
 					<div class="flex flex-col p-3">
-						<p class="text-s">
-							When you create a channel, you may share your screen, webcam, and chat with the
-							community
-						</p>
+						<p class="text-s">A channel is used to organize your stream, chat, and VoDs</p>
 						<p class="text-lg font-semibold mt-10">
 							Please hide all sensitive data before going live.
 						</p>
