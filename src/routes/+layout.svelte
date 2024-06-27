@@ -89,7 +89,7 @@
 	<meta name="twitter:title" content={$page.data.seo?.title || 'Mage - A re/streaming platform'} />
 	<meta
 		name="twitter:description"
-		content={$page.data.seo?.description || 'Mage is a re/streaming platform'} />
+		content={$page.data.seo?.description || 'Stream everywhere effortlessly'} />
 	<meta name="twitter:image" content={$page.data.seo?.image || '%sveltekit.assets%/banner.jpg'} />
 	<meta name="twitter:image:alt" content={$page.data.seo?.imageAlt || 'Mage Banner'} />
 
@@ -99,7 +99,7 @@
 	<meta property="og:title" content={$page.data.seo?.title || 'Mage - A re/streaming platform'} />
 	<meta
 		property="og:description"
-		content={$page.data.seo?.description || 'Mage is a re/streaming platform'} />
+		content={$page.data.seo?.description || 'Stream everywhere effortlessly'} />
 	<meta property="og:image" content={$page.data.seo?.image || '%sveltekit.assets%/banner.jpg'} />
 	<meta property="og:image:alt" content={$page.data.seo?.imageAlt || 'Mage Banner'} />
 
