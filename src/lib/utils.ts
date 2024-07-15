@@ -477,19 +477,19 @@ export const base64ToFile = (base64: string): File => {
 	return new File([ab], filename, { type: mimeType })
 }
 
-export const convertFileToStringOrDel = async (formData: any, inputName: string) => {
-	let file = formData.get(inputName) || null
-	if (file != null && file instanceof File && file.size > 0) {
-		await fileToBase64(file)
-			.then((base64String) => {
-				if (base64String) {
-					formData.set(inputName, base64String)
-				}
-			})
-			.catch((error) => {
-				console.error('Error converting file to base64:', error)
-			})
-	} else {
-		formData.delete(inputName)
-	}
-}
+// export const convertFileToStringOrDel = async (formData: any, inputName: string) => {
+// 	let file = formData.get(inputName) || null
+// 	if (file != null && file instanceof File && file.size > 0) {
+// 		await fileToBase64(file)
+// 			.then((base64String) => {
+// 				if (base64String) {
+// 					formData.set(inputName, base64String)
+// 				}
+// 			})
+// 			.catch((error) => {
+// 				console.error('Error converting file to base64:', error)
+// 			})
+// 	} else {
+// 		formData.delete(inputName)
+// 	}
+// }

@@ -8,7 +8,7 @@
 	import { category_list } from '$lib/stores/channelStore'
 	import { emitChannelUpdate } from '$lib/websocket'
 	import IconChatScreenshot from '$lib/assets/icons/chat/IconChatScreenshot.svelte'
-	import { captureScreenShot, convertFileToStringOrDel } from '$lib/utils'
+	import { captureScreenShot, fileToBase64 } from '$lib/utils'
 
 	export let channel: any, showDrawer: boolean, isLive: boolean
 
@@ -106,9 +106,22 @@
 				class="flex h-full p-5"
 				action="?/edit-channel"
 				method="post"
-				use:enhance={({ formData }) => {
+				use:enhance={async ({ formData }) => {
+					let thumbnail = formData.get('thumbnail') || null
+					if (thumbnail != null && thumbnail instanceof File && thumbnail.size > 0) {
+						await fileToBase64(thumbnail)
+							.then((base64String) => {
+								if (base64String) {
+									formData.set('thumbnail', base64String)
+								}
+							})
+							.catch((error) => {
+								console.error('Error converting file to base64:', error)
+							})
+					} else {
+						formData.delete('thumbnail')
+					}
 					return ({ result }) => {
-						convertFileToStringOrDel(formData, 'thumbnail')
 						if (result.type === 'success') {
 							console.log('channel', channel)
 							emitChannelUpdate({ channelSocket: channel.socket, channel })
