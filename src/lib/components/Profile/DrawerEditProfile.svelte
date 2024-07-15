@@ -114,9 +114,9 @@
 					if (profile?.category?.length) {
 						formData.append('category', JSON.stringify(profile?.category))
 					}
-					// return async ({ result }) => {
-					// 	location.reload()
-					// }
+					return async ({ result }) => {
+						// location.reload()
+					}
 				}}
 				on:submit={() => {
 					submitBtn.disabled = true
