@@ -80,8 +80,6 @@ export const actions = {
 			const username = data.get('username')
 			return fail(422, { username, exists: true })
 		} else {
-			locals.user.user = updatedUser
-			// redirect(303, `/${updatedUser.username}`)
 			return { success: true }
 		}
 	},
