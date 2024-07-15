@@ -42,7 +42,7 @@
 		if (file) {
 			const reader = new FileReader()
 			reader.addEventListener('load', function () {
-				thumbnailRef.setAttribute('src', reader.result)
+				thumbnailRef?.setAttribute('src', reader.result)
 			})
 			reader.readAsDataURL(file)
 
