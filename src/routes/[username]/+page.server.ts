@@ -85,7 +85,7 @@ export const actions = {
 					locals.user.user = updatedUser
 					redirect(303, `/${updatedUser.username}`)
 				} else {
-					redirect(303, 'browse')
+					redirect(303, '/browse')
 				}
 			}
 		} catch (err: any) {
