@@ -439,3 +439,41 @@ export const getTimeFormat = (duration: number) => {
 
 	return hours > 0 ? `${hours}:${minutes}:${secondsFormat}` : `${minutes}:${secondsFormat}`
 }
+
+export const fileToBase64 = (file: File): Promise<string> => {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader()
+		reader.readAsDataURL(file)
+		reader.onload = () => {
+			const base64String = reader.result as string
+			const mimeType = file.type
+			const filename = file.name
+			const base64WithMetadata = `${base64String};name=${filename};type=${mimeType}`
+			resolve(base64WithMetadata)
+		}
+		reader.onerror = (error) => reject(error)
+	})
+}
+
+export const base64ToFile = (base64: string): File => {
+	// Extract MIME type and filename from base64 string
+	const mimeMatch = base64.match(/^data:(.*?);base64,/)
+	if (!mimeMatch || !mimeMatch[1]) {
+		throw new Error('MIME type could not be determined.')
+	}
+	const mimeType = mimeMatch[1]
+
+	const nameMatch = base64.match(/;name=([^;]*)/)
+	if (!nameMatch || !nameMatch[1]) {
+		throw new Error('Filename could not be determined.')
+	}
+	const filename = nameMatch[1]
+
+	const byteString = atob(base64.split(',')[1].split(';')[0])
+	const ab = new ArrayBuffer(byteString.length)
+	const ia = new Uint8Array(ab)
+	for (let i = 0; i < byteString.length; i++) {
+		ia[i] = byteString.charCodeAt(i)
+	}
+	return new File([ab], filename, { type: mimeType })
+}

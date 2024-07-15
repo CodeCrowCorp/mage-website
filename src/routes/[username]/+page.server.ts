@@ -1,6 +1,7 @@
 import type { Actions, PageServerLoad } from './$types'
 import { get, patch, putImage } from '$lib/api'
 import { redirect, fail, error } from '@sveltejs/kit'
+import { base64ToFile } from '$lib/utils'
 
 export const load = (async ({ params, url }) => {
 	if (!params.username) error(404)
@@ -53,22 +54,31 @@ export const actions = {
 		addPropertyIfDefined(data, 'urls', newUser, true)
 
 		newUser.urls = newUser.urls.filter((i: string) => i)
-		const avatar = data.get('avatar') as File
-		const banner = data.get('banner') as File
-
-		if (data.get('avatar') !== null && avatar.size > 0) {
-			const urlLocation = await putImage(`user/current/avatar?bucketName=avatars`, avatar, {
-				userId: locals.user.userId,
-				token: locals.user.token
-			})
+		const avatar = data.get('avatar') as string
+		const banner = data.get('banner') as string
+		const convertedAvatar = avatar ? base64ToFile(avatar) : null
+		const convertedBanner = banner ? base64ToFile(banner) : null
+		if (convertedAvatar !== null && convertedAvatar.size > 0) {
+			const urlLocation = await putImage(
+				`user/current/avatar?bucketName=avatars`,
+				convertedAvatar,
+				{
+					userId: locals.user.userId,
+					token: locals.user.token
+				}
+			)
 			console.log(urlLocation)
 		}
 
-		if (data.get('banner') !== null && banner.size > 0) {
-			const urlLocation = await putImage(`user/current/banner?bucketName=banners`, banner, {
-				userId: locals.user.userId,
-				token: locals.user.token
-			})
+		if (convertedBanner !== null && convertedBanner.size > 0) {
+			const urlLocation = await putImage(
+				`user/current/banner?bucketName=banners`,
+				convertedBanner,
+				{
+					userId: locals.user.userId,
+					token: locals.user.token
+				}
+			)
 			console.log(urlLocation)
 		}
 
