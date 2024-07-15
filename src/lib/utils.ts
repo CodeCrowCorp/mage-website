@@ -456,7 +456,6 @@ export const fileToBase64 = (file: File): Promise<string> => {
 }
 
 export const base64ToFile = (base64: string): File => {
-	// Extract MIME type and filename from base64 string
 	const mimeMatch = base64.match(/^data:(.*?);base64,/)
 	if (!mimeMatch || !mimeMatch[1]) {
 		throw new Error('MIME type could not be determined.')
@@ -476,4 +475,21 @@ export const base64ToFile = (base64: string): File => {
 		ia[i] = byteString.charCodeAt(i)
 	}
 	return new File([ab], filename, { type: mimeType })
+}
+
+export const convertFileToStringOrDel = async (formData: any, inputName: string) => {
+	let file = formData.get(inputName) || null
+	if (file != null && file instanceof File && file.size > 0) {
+		await fileToBase64(file)
+			.then((base64String) => {
+				if (base64String) {
+					formData.set(inputName, base64String)
+				}
+			})
+			.catch((error) => {
+				console.error('Error converting file to base64:', error)
+			})
+	} else {
+		formData.delete(inputName)
+	}
 }
