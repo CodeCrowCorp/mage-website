@@ -44,52 +44,45 @@ export const load = (async ({ params, url }) => {
 
 export const actions = {
 	'update-profile': async ({ request, locals }: { request: any; locals: any }) => {
-		try {
-			const data: FormData = await request.formData()
-			const newUser: any = {}
-			addPropertyIfDefined(data, 'displayName', newUser)
-			addPropertyIfDefined(data, 'username', newUser)
-			addPropertyIfDefined(data, 'category', newUser)
-			addPropertyIfDefined(data, 'bio', newUser)
-			addPropertyIfDefined(data, 'urls', newUser, true)
+		const data: FormData = await request.formData()
+		const newUser: any = {}
+		addPropertyIfDefined(data, 'displayName', newUser)
+		addPropertyIfDefined(data, 'username', newUser)
+		addPropertyIfDefined(data, 'category', newUser)
+		addPropertyIfDefined(data, 'bio', newUser)
+		addPropertyIfDefined(data, 'urls', newUser, true)
 
-			newUser.urls = newUser.urls.filter((i: string) => i)
-			const avatar = data.get('avatar') as File
-			const banner = data.get('banner') as File
+		newUser.urls = newUser.urls.filter((i: string) => i)
+		const avatar = data.get('avatar') as File
+		const banner = data.get('banner') as File
 
-			if (data.get('avatar') !== null && avatar.size > 0) {
-				const urlLocation = await putImage(`user/current/avatar?bucketName=avatars`, avatar, {
-					userId: locals.user.userId,
-					token: locals.user.token
-				})
-				console.log(urlLocation)
-			}
-
-			if (data.get('banner') !== null && banner.size > 0) {
-				const urlLocation = await putImage(`user/current/banner?bucketName=banners`, banner, {
-					userId: locals.user.userId,
-					token: locals.user.token
-				})
-				console.log(urlLocation)
-			}
-
-			const updatedUser = await patch(`user`, newUser, {
+		if (data.get('avatar') !== null && avatar.size > 0) {
+			const urlLocation = await putImage(`user/current/avatar?bucketName=avatars`, avatar, {
 				userId: locals.user.userId,
 				token: locals.user.token
 			})
-			if (updatedUser.exists) {
-				const username = data.get('username')
-				return fail(422, { username, exists: true })
-			} else {
-				if (updatedUser._id) {
-					locals.user.user = updatedUser
-					redirect(303, `/${updatedUser.username}`)
-				} else {
-					redirect(303, '/browse')
-				}
-			}
-		} catch (err: any) {
-			console.log('update-profile error', err)
+			console.log(urlLocation)
+		}
+
+		if (data.get('banner') !== null && banner.size > 0) {
+			const urlLocation = await putImage(`user/current/banner?bucketName=banners`, banner, {
+				userId: locals.user.userId,
+				token: locals.user.token
+			})
+			console.log(urlLocation)
+		}
+
+		const updatedUser = await patch(`user`, newUser, {
+			userId: locals.user.userId,
+			token: locals.user.token
+		})
+		if (updatedUser.exists) {
+			const username = data.get('username')
+			return fail(422, { username, exists: true })
+		} else {
+			locals.user.user = updatedUser
+			// redirect(303, `/${updatedUser.username}`)
+			return { success: true }
 		}
 	},
 	onboard: async ({ locals }: { locals: any }) => {

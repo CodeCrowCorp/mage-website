@@ -114,8 +114,10 @@
 					if (profile?.category?.length) {
 						formData.append('category', JSON.stringify(profile?.category))
 					}
-					return async ({ result }) => {
-						// location.reload()
+					return ({ result }) => {
+						if (result.type === 'success') {
+							location.reload()
+						}
 					}
 				}}
 				on:submit={() => {
