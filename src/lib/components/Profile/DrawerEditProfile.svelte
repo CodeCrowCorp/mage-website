@@ -3,13 +3,7 @@
 	import { page } from '$app/stores'
 	import DrawerAddCategory from '$lib/components/Browse/DrawerAddCategory.svelte'
 	import { category_list } from '$lib/stores/channelStore'
-	import {
-		createEffect,
-		objectMonitor,
-		isValidUrl,
-		fileToBase64,
-		convertFileToStringOrDel
-	} from '$lib/utils'
+	import { createEffect, objectMonitor, isValidUrl, fileToBase64 } from '$lib/utils'
 
 	export let showDrawer: boolean
 	export let profile: any
@@ -116,8 +110,34 @@
 				action="?/update-profile"
 				method="post"
 				use:enhance={async ({ formData }) => {
-					convertFileToStringOrDel(formData, 'avatar')
-					convertFileToStringOrDel(formData, 'banner')
+					let avatar = formData.get('avatar') || null
+					if (avatar != null && avatar instanceof File && avatar.size > 0) {
+						await fileToBase64(avatar)
+							.then((base64String) => {
+								if (base64String) {
+									formData.set('avatar', base64String)
+								}
+							})
+							.catch((error) => {
+								console.error('Error converting file to base64:', error)
+							})
+					} else {
+						formData.delete('avatar')
+					}
+					let banner = formData.get('banner') || null
+					if (banner != null && banner instanceof File && banner.size > 0) {
+						await fileToBase64(banner)
+							.then((base64String) => {
+								if (base64String) {
+									formData.set('banner', base64String)
+								}
+							})
+							.catch((error) => {
+								console.error('Error converting file to base64:', error)
+							})
+					} else {
+						formData.delete('banner')
+					}
 					if (profile?.category?.length) {
 						formData.append('category', JSON.stringify(profile?.category))
 					}
