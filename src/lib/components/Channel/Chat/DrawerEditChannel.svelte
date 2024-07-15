@@ -8,7 +8,7 @@
 	import { category_list } from '$lib/stores/channelStore'
 	import { emitChannelUpdate } from '$lib/websocket'
 	import IconChatScreenshot from '$lib/assets/icons/chat/IconChatScreenshot.svelte'
-	import { captureScreenShot } from '$lib/utils'
+	import { captureScreenShot, convertFileToStringOrDel } from '$lib/utils'
 
 	export let channel: any, showDrawer: boolean, isLive: boolean
 
@@ -108,6 +108,7 @@
 				method="post"
 				use:enhance={({ formData }) => {
 					return ({ result }) => {
+						convertFileToStringOrDel(formData, 'thumbnail')
 						if (result.type === 'success') {
 							console.log('channel', channel)
 							emitChannelUpdate({ channelSocket: channel.socket, channel })

@@ -1,5 +1,5 @@
 import { get, putImage } from '$lib/api'
-import { dataURLtoFile } from '$lib/utils'
+import { base64ToFile, dataURLtoFile } from '$lib/utils'
 import { error } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
 
@@ -25,12 +25,13 @@ export const load = (async ({ params, url }) => {
 export const actions = {
 	'edit-channel': async ({ request, locals }) => {
 		const data: FormData = await request.formData()
-		const thumbnail = data.get('thumbnail') as File
+		const thumbnail = data.get('thumbnail') as string
+		const convertedThumbnail = thumbnail ? base64ToFile(thumbnail) : null
 		const imageSrc = data.get('imageSrc') as string
 		const channelId = data.get('channelId') as string
 		const file =
-			thumbnail !== null && thumbnail.size > 0
-				? thumbnail
+			convertedThumbnail !== null && convertedThumbnail.size > 0
+				? convertedThumbnail
 				: imageSrc
 					? dataURLtoFile(imageSrc, 'thumbnail-image')
 					: null
