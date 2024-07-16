@@ -117,7 +117,13 @@
 					break
 				case `channel-streaming-action-${$page.params.channelId}`:
 					if (channel) {
-						channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
+						if (channel.videoItems.length) {
+							// update the video item if it exists
+							channel.videoItems = updateVideoItems(channel.videoItems, [parsedMsg.data.video])
+						} else {
+							// add the video item if it doesn't exist
+							channel.videoItems = updateVideoItems([parsedMsg.data.user], [parsedMsg.data.video])
+						}
 					}
 					break
 				case `channel-get-sponsors-${$page.params.channelId}`:
