@@ -44,7 +44,8 @@
 		formattedTime: string = '00:00:00',
 		isHoverVideo: boolean = false,
 		iframeUrl: string = '',
-		isListenBtnShown: boolean = true
+		isListenBtnShown: boolean = true,
+		imgElement: HTMLImageElement
 
 	// WHIP/WHEP variables that determine if stream is coming in
 	$: isScreenLive = false
@@ -415,9 +416,12 @@
 	on:click={unmuteTracks}>
 	<div class="bg-base-200 relative w-full h-full rounded-md">
 		<img
+			bind:this={imgElement}
 			loading="lazy"
 			src={video.avatar}
 			alt="user avatar"
+			on:error={() =>
+				(imgElement.src = `https://ui-avatars.com/api/?name=${video.username}&background=random`)}
 			class="absolute inset-0 w-24 md:w-24 mask {video.planTier > 0
 				? 'mask-hexagon'
 				: 'mask-squircle'} object-cover m-auto" />

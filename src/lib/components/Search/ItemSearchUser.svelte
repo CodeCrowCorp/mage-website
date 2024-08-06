@@ -2,6 +2,7 @@
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 	import Favicon from '$lib/components/Profile/Favicon.svelte'
+	import Avatar from '$lib/components/Global/Avatar.svelte'
 
 	export let item: any
 </script>
@@ -11,7 +12,7 @@
 		<div class="max-w-md">
 			<div class="avatar">
 				<div class="w-32 mask {item?.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
-					<img class="w-32" loading="lazy" src={item.avatar} alt="user avatar" />
+					<Avatar avatar={item.avatar} username={item.username} className="w-32" />
 				</div>
 			</div>
 		</div>

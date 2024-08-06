@@ -33,6 +33,7 @@
 	import IconSocialTikTok from '$lib/assets/icons/social/IconSocialTikTok.svelte'
 	import IconSocialTwitch from '$lib/assets/icons/social/IconSocialTwitch.svelte'
 	import IconDrawerMerch from '$lib/assets/icons/drawer/IconDrawerMerch.svelte'
+	import Avatar from '$lib/components/Global/Avatar.svelte'
 
 	export var nav_drawer: HTMLInputElement
 
@@ -99,7 +100,10 @@
 									0
 										? 'mask-hexagon'
 										: 'mask-squircle'}">
-									<img class="w-24" loading="lazy" src={currentUser.avatar} alt="user avatar" />
+									<Avatar
+										avatar={currentUser.avatar}
+										username={currentUser.username}
+										className="w-24" />
 								</div>
 							</div>
 						</div>
