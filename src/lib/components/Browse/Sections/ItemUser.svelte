@@ -1,5 +1,6 @@
 <script lang="ts">
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
+	import Avatar from '$lib/components/Global/Avatar.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 
 	export let user: any = {}
@@ -9,7 +10,7 @@
 	<div class="text-center space-y-3 w-[200px]">
 		<div class="avatar">
 			<div class="w-36 mask {user?.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
-				<img class="w-36" loading="lazy" src={user.avatar} alt="user avatar" />
+				<Avatar avatar={user.avatar} username={user.username} className="w-36" />
 			</div>
 		</div>
 		<div class="tooltip w-full flex gap-1 justify-center" data-tip="@{user.username}">

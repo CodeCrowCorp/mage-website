@@ -4,6 +4,7 @@
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 	import { getNumberInThousands } from '$lib/utils'
+	import Avatar from '$lib/components/Global/Avatar.svelte'
 
 	export let channel: any = {}
 
@@ -62,7 +63,7 @@
 	<div class="flex flex-row gap-2 max-w-[25rem]">
 		<div class="avatar">
 			<div class="w-12 mask {channel?.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
-				<img class="w-12" loading="lazy" src={channel.avatar} alt="user avatar" />
+				<Avatar avatar={channel.avatar} username={channel.username} className="w-12" />
 			</div>
 		</div>
 		<div class="flex items-center gap-1">

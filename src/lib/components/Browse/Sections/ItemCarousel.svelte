@@ -5,6 +5,7 @@
 	import { category_list } from '$lib/stores/channelStore'
 	import { getNumberInThousands } from '$lib/utils'
 	import { onMount } from 'svelte'
+	import Avatar from '$lib/components/Global/Avatar.svelte'
 
 	export let channel: any = {}
 
@@ -67,7 +68,7 @@
 			<div class="flex flex-row items-center gap-2">
 				<div class="avatar">
 					<div class="w-14 mask {channel?.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
-						<img class="w-14" loading="lazy" src={channel.avatar} alt="user avatar" />
+						<Avatar avatar={channel.avatar} username={channel.username} className="w-14" />
 					</div>
 				</div>
 				<div class="w-4/5 flex gap-1">
