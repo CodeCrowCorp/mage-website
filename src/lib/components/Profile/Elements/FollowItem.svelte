@@ -3,6 +3,7 @@
 	import { del, get, put } from '$lib/api'
 	import IconMore from '$lib/assets/icons/IconMore.svelte'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
+	import Avatar from '$lib/components/Global/Avatar.svelte'
 	import { follower_count, following_count } from '$lib/stores/profileStore'
 	export let followItem: any
 
@@ -40,7 +41,7 @@
 	<div class="flex">
 		<div class="avatar">
 			<div class="w-16 mask {followItem.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
-				<img class="w-16" loading="lazy" src={followItem.avatar} alt="user avatar" />
+				<Avatar avatar={followItem.avatar} username={followItem.username} className="w-16" />
 			</div>
 		</div>
 

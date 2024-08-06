@@ -5,6 +5,7 @@
 	import { category_list } from '$lib/stores/channelStore'
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { getNumberInThousands } from '$lib/utils'
+	import Avatar from '$lib/components/Global/Avatar.svelte'
 	export let channel: any = {}
 </script>
 
@@ -15,7 +16,7 @@
 		<div class="flex items-center space-x-2 pl-3">
 			<div class="avatar">
 				<div class="w-12 mask {channel.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
-					<img class="w-12" loading="lazy" src={channel.avatar} alt="user avatar" />
+					<Avatar avatar={channel.avatar} username={channel.username} className="w-12" />
 				</div>
 			</div>
 			<div>

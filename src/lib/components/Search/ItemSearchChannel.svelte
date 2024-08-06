@@ -3,6 +3,7 @@
 	import IconDrawerVerification from '$lib/assets/icons/drawer/IconDrawerVerification.svelte'
 	import { category_list } from '$lib/stores/channelStore'
 	import { timeSince } from '$lib/utils'
+	import Avatar from '$lib/components/Global/Avatar.svelte'
 
 	export let item: any
 </script>
@@ -53,7 +54,7 @@
 			<div class="flex items-center">
 				<div class="avatar">
 					<div class="w-12 mask {item?.planTier > 0 ? 'mask-hexagon' : 'mask-squircle'}">
-						<img class="w-12" loading="lazy" src={item.avatar} alt="user avatar" />
+						<Avatar avatar={item.avatar} username={item.username} className="w-12" />
 					</div>
 				</div>
 				<a class="ml-2 link link-hover flex gap-1" href="/{item.username}"

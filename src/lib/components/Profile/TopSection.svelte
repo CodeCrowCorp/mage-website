@@ -10,6 +10,7 @@
 	import DialogSponsor from '../Channel/Chat/DialogSponsor.svelte'
 	import { is_sponsor_dialog_open } from '$lib/stores/channelStore'
 	import IconChatSponsor from '$lib/assets/icons/chat/IconChatSponsor.svelte'
+	import Avatar from '$lib/components/Global/Avatar.svelte'
 
 	export let profile: any,
 		showDrawer = false,
@@ -66,7 +67,7 @@
 							class="mask {profile.planTier > 0
 								? 'mask-hexagon'
 								: 'mask-squircle'} h-auto align-middle max-w-150-px">
-							<img loading="lazy" src={profile.avatar} alt="user avatar" class="!w-32 !h-32" />
+							<Avatar avatar={profile.avatar} username={profile.username} className="!w-32 !h-32" />
 						</div>
 					</div>
 				</div>
