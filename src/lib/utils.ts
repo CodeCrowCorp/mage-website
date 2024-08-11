@@ -165,30 +165,26 @@ export const cardCounts: { [key: number]: number[] } = {
 
 export const timeSince = (date: string) => {
 	if (!date) return 'Date created unknown'
-	const created: any = new Date(date)
-	const currentDate: any = new Date(Date.now())
+	const created = new Date(date).getTime()
+	const currentDate = Date.now()
 	const seconds = Math.floor((currentDate - created) / 1000)
-	let interval = seconds / 31536000
-	if (interval > 1) {
-		return Math.floor(interval) + ' years ago'
+
+	const intervals = [
+		{ label: 'year', seconds: 31536000 },
+		{ label: 'month', seconds: 2592000 },
+		{ label: 'day', seconds: 86400 },
+		{ label: 'hour', seconds: 3600 },
+		{ label: 'minute', seconds: 60 }
+	]
+
+	for (const interval of intervals) {
+		const count = Math.floor(seconds / interval.seconds)
+		if (count >= 1) {
+			return `${count} ${interval.label}${count > 1 ? 's' : ''} ago`
+		}
 	}
-	interval = seconds / 2592000
-	if (interval > 1) {
-		return Math.floor(interval) + ' months ago'
-	}
-	interval = seconds / 86400
-	if (interval > 1) {
-		return Math.floor(interval) + ' days ago'
-	}
-	interval = seconds / 3600
-	if (interval > 1) {
-		return Math.floor(interval) + ' hours ago'
-	}
-	interval = seconds / 60
-	if (interval > 1) {
-		return Math.floor(interval) + ' minutes ago'
-	}
-	return Math.floor(seconds) + ' seconds ago'
+
+	return `${seconds} second${seconds !== 1 ? 's' : ''} ago`
 }
 
 export const getVideoGrids = (list: any, limit: number) => {
