@@ -127,7 +127,8 @@
 				meta: {
 					name: `${env.PUBLIC_ENV}-${$page.params.channelId}`
 				},
-				recording: { mode: 'automatic' }
+				recording: { mode: 'automatic' },
+				deleteRecordingAfterDays: 3
 			}
 		})
 	}

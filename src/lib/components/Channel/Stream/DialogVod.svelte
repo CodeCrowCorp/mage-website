@@ -8,10 +8,10 @@
 	export let vod: any, isHost: boolean
 
 	$: vodIsVisible = vod?.isVisible
-	let downloadUrl = ''
-	$: if (vod) {
-		getDownloadUrl().then((url) => (downloadUrl = url))
-	}
+	// let downloadUrl = ''
+	// $: if (vod) {
+	// 	getDownloadUrl().then((url) => (downloadUrl = url))
+	// }
 
 	const toggleVodVisibility = async () => {
 		const updatedVod = await patch(
@@ -27,12 +27,12 @@
 		vod.isVisible = updatedVod.isVisible
 	}
 
-	const getDownloadUrl = async () => {
-		return await get(`vod/download-url?videoUid=${vod?.uid}&createdAt=${vod?.createdAt}`, {
-			userId: $page.data.user?.userId,
-			token: $page.data.user?.token
-		})
-	}
+	// const getDownloadUrl = async () => {
+	// 	return await get(`vod/download-url?videoUid=${vod?.uid}&createdAt=${vod?.createdAt}`, {
+	// 		userId: $page.data.user?.userId,
+	// 		token: $page.data.user?.token
+	// 	})
+	// }
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -66,9 +66,9 @@
 										bind:checked={vodIsVisible} />
 									Visible to viewers</a>
 							</li>
-							{#if downloadUrl}
+							<!-- {#if downloadUrl}
 								<li><a href={downloadUrl} target="_blank">Download</a></li>
-							{/if}
+							{/if} -->
 						</ul>
 					</div>
 				{/if}
