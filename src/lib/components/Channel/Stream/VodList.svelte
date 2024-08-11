@@ -20,8 +20,8 @@
 
 	onMount(async () => {
 		vods = await get(`vods?channelId=${channelId}`)
-		if (hostUserId !== $page.data.user?.userId) {
-			vods = vods.filter((vod: any) => vod.isVisible)
+		if (vods?.length && hostUserId !== $page.data.user?.userId) {
+			vods = vods.filter((vod: any) => vod?.isVisible)
 		}
 	})
 </script>
