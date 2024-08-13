@@ -15,7 +15,7 @@
 
 <SearchBar />
 
-<SectionChannel sectionId={'weekly'} bind:channels={data.lazy.weeklyChannels} />
+<!-- <SectionChannel sectionId={'weekly'} bind:channels={data.lazy.weeklyChannels} /> -->
 
 <SectionUser
 	sectionId={'highest-ranked'}
