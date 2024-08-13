@@ -9,7 +9,7 @@ export const load = (async ({ locals }) => {
 			mostActiveChannels: get(
 				getSectionUrl({ sectionId: 'most-active', query: '', lastId: 0, limit: 5 })
 			),
-			weeklyChannels: get(getSectionUrl({ sectionId: 'weekly', query: '', lastId: 0, limit: 10 })),
+			// weeklyChannels: get(getSectionUrl({ sectionId: 'weekly', query: '', lastId: 0, limit: 10 })),
 			highestRankedUsers: get(
 				getSectionUrl({ sectionId: 'highest-ranked', query: '', lastId: 0, limit: 10 })
 			),
