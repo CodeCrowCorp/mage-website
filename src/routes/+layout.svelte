@@ -69,6 +69,9 @@
 				.replace(/-/g, ' ')
 				.replace(/_/g, '+')
 				.replace(/\w\S*/g, (w: any) => w.replace(/^\w/, (c: any) => c.toUpperCase()))
+			if (!$category_assets[category]) {
+				$category_assets[category] = {}
+			}
 			$category_list[filename] = module.default
 			$category_assets[category][filename] = module.default
 		})
