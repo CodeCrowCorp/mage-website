@@ -8,7 +8,7 @@
 		classes: string = ''
 
 	let maxCategory = 4,
-		tabs = ['Game', 'Dev'],
+		tabs = ['Game', 'Dev', 'Extra'],
 		activeTab = 'Game',
 		assetIcons: any = {},
 		allIcons: any = {},
@@ -17,7 +17,7 @@
 		renderingAssets: Array<[string, string]>
 
 	const setActiveIcons = () => {
-		assetIcons = activeTab == 'Game' ? $category_assets.game : $category_assets.dev
+		assetIcons = $category_assets[activeTab.toLowerCase()] || {}
 	}
 
 	const setActiveTab = async (tab: string) => {
@@ -25,7 +25,7 @@
 		setActiveIcons()
 	}
 
-	$: allIcons = { ...$category_assets.dev, ...$category_assets.game }
+	$: allIcons = { ...$category_assets.dev, ...$category_assets.game, ...$category_assets.extra }
 	$: maxCategoryLabel = categories.length == maxCategory ? 'max reached' : 'max ' + maxCategory
 	$: renderingAssets = searchQuery != '' ? Object.entries(searchResult) : Object.entries(assetIcons)
 
