@@ -51,7 +51,7 @@
 		const gameSvgs = import.meta.glob('$lib/assets/icons/category-icons/game/*.svg', {
 			eager: true
 		})
-		const extraSvgs = import.meta.glob('$lib/assets/icons/category-icons/extras/*.svg', {
+		const extraSvgs = import.meta.glob('$lib/assets/icons/category-icons/extra/*.svg', {
 			eager: true
 		})
 		processSvgs(devSvgs, 'dev')
