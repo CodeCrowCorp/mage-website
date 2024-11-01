@@ -4,6 +4,7 @@
 	import { category_list } from '$lib/stores/channelStore'
 	import { timeSince } from '$lib/utils'
 	import Avatar from '$lib/components/Global/Avatar.svelte'
+	import { goto } from '$app/navigation'
 
 	export let item: any
 </script>
@@ -57,13 +58,13 @@
 						<Avatar avatar={item.avatar} username={item.username} className="w-12" />
 					</div>
 				</div>
-				<a class="ml-2 link link-hover flex gap-1" href="/{item.username}"
+				<span class="ml-2 link link-hover flex gap-1" on:click={() => goto(`/${item.username}`)}
 					>@{item.username || ''}
 					{#if item.planTier > 0}
 						<div class="text-accent font-bold">
 							<IconDrawerVerification />
 						</div>
-					{/if}</a>
+					{/if}</span>
 			</div>
 
 			<div class="flex flex-wrap gap-2 my-1">
