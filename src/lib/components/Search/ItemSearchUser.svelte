@@ -3,6 +3,7 @@
 	import { category_list } from '$lib/stores/channelStore'
 	import Favicon from '$lib/components/Profile/Favicon.svelte'
 	import Avatar from '$lib/components/Global/Avatar.svelte'
+	import { goto } from '$app/navigation'
 
 	export let item: any
 </script>
@@ -31,14 +32,14 @@
 				{item.displayName || ''}
 			</h2>
 			<div class="flex items-center">
-				<a class="link link-hover flex gap-1" href="/{item.username}"
+				<span class="link link-hover flex gap-1" on:click={() => goto(`/${item.username}`)}
 					>@{item.username || ''}
 					{#if item.planTier > 0}
 						<div class="text-accent font-bold">
 							<IconDrawerVerification />
 						</div>
 					{/if}
-				</a>
+				</span>
 			</div>
 			<h2 class="text-md">
 				{item.bio || ''}
