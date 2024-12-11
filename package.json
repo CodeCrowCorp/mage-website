@@ -45,7 +45,6 @@
 		"@event-calendar/time-grid": "^3.0.0",
 		"@jill64/sentry-sveltekit-cloudflare": "^1.7.11",
 		"@neodrag/svelte": "^2.0.3",
-		"@stripe/stripe-js": "^5.0.0",
 		"daisyui": "^4.7.2",
 		"emoji-picker-element": "^1.18.1",
 		"moment": "^2.29.4",
