@@ -128,7 +128,7 @@
 					name: `${env.PUBLIC_ENV}-${$page.params.channelId}`
 				},
 				recording: { mode: 'automatic' },
-				deleteRecordingAfterDays: 3
+				deleteRecordingAfterDays: 30
 			}
 		})
 	}
