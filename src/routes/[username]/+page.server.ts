@@ -11,12 +11,12 @@ export const load = (async ({ params, url }) => {
 	}
 	return {
 		seo: {
-			title: profile.displayName?.toLowerCase(),
-			description: profile.bio,
-			image: profile.avatar,
-			imageAlt: `${profile.username?.toLowerCase()} avatar`,
-			url: url.href,
-			username: profile.username?.toLowerCase()
+			// title: profile.displayName?.toLowerCase(),
+			// description: profile.bio,
+			// image: profile.avatar,
+			// imageAlt: `${profile.username?.toLowerCase()} avatar`,
+			// url: url.href,
+			// username: profile.username?.toLowerCase()
 		},
 		profile: profile,
 		lazy: {

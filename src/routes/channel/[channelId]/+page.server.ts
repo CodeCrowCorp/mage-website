@@ -11,12 +11,12 @@ export const load = (async ({ params, url }) => {
 	}
 	return {
 		seo: {
-			title: channel.title,
-			description: channel.description,
-			image: channel.thumbnail || 'https://mage.stream/placeholder/programming-placeholder.jpg',
-			imageAlt: `channel thumbnail`,
-			url: url.href,
-			username: channel.username
+			// title: channel.title,
+			// description: channel.description,
+			// image: channel.thumbnail || 'https://mage.stream/placeholder/programming-placeholder.jpg',
+			// imageAlt: `channel thumbnail`,
+			// url: url.href,
+			// username: channel.username
 		},
 		channel
 	}
