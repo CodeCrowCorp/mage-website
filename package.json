@@ -45,7 +45,7 @@
 		"@event-calendar/time-grid": "^3.0.0",
 		"@jill64/sentry-sveltekit-cloudflare": "^2.0.1",
 		"@neodrag/svelte": "^2.0.3",
-		"daisyui": "^4.7.2",
+		"daisyui": "^5.0.0",
 		"emoji-picker-element": "^1.18.1",
 		"moment": "^2.29.4",
 		"nprogress": "^0.2.0",
