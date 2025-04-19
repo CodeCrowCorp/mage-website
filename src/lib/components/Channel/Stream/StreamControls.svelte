@@ -173,14 +173,15 @@
 							class="btn border-none tooltip font-normal normal-case {$is_sharing_screen
 								? 'btn-primary'
 								: 'btn-neutral'}"
-							data-tip="Screen"
+							data-tip="Screen (WIP)"
 							on:click={async () => {
 								if ($is_sharing_screen === false || $is_sharing_screen === undefined) {
 									await startWebrtcStream(`screen`)
 								}
 								$is_sharing_screen = !$is_sharing_screen
 							}}
-							disabled={$is_sharing_rtmps ||
+							disabled={true ||
+								$is_sharing_rtmps ||
 								!isHostOrGuest ||
 								!isChannelSocketConnected ||
 								!videoItemIsActive}>
@@ -190,14 +191,15 @@
 							class="btn border-none tooltip font-normal normal-case {$is_sharing_webcam
 								? 'btn-primary'
 								: 'btn-neutral'}"
-							data-tip="Webcam"
+							data-tip="Webcam (WIP)"
 							on:click={async () => {
 								if ($is_sharing_webcam === false || $is_sharing_webcam === undefined) {
 									await startWebrtcStream(`webcam`)
 								}
 								$is_sharing_webcam = !$is_sharing_webcam
 							}}
-							disabled={$is_sharing_rtmps ||
+							disabled={true ||
+								$is_sharing_rtmps ||
 								!isHostOrGuest ||
 								!isChannelSocketConnected ||
 								!videoItemIsActive}>
@@ -207,14 +209,15 @@
 							class="btn border-none tooltip font-normal normal-case {$is_sharing_audio
 								? 'btn-primary'
 								: 'btn-neutral'}"
-							data-tip="Audio"
+							data-tip="Audio (WIP)"
 							on:click={async () => {
 								if ($is_sharing_audio === false || $is_sharing_audio === undefined) {
 									await startWebrtcStream(`audio`)
 								}
 								$is_sharing_audio = !$is_sharing_audio
 							}}
-							disabled={$is_sharing_rtmps ||
+							disabled={true ||
+								$is_sharing_rtmps ||
 								!isHostOrGuest ||
 								!isChannelSocketConnected ||
 								!videoItemIsActive}>
