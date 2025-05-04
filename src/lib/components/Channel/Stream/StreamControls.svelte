@@ -128,8 +128,8 @@
 					name: `${env.PUBLIC_ENV}-${$page.params.channelId}`
 				},
 				recording: { mode: 'off' },
-				deleteRecordingAfterDays: 30,
-				preferLowLatency: true
+				deleteRecordingAfterDays: 30
+				// preferLowLatency: true
 			}
 		})
 	}
