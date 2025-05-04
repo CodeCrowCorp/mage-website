@@ -87,7 +87,7 @@
 					},
 					recording: { mode: 'automatic' },
 					deleteRecordingAfterDays: 30,
-					preferLowLatency: true
+					preferLowLatency: false
 				}
 			})
 		}
@@ -131,7 +131,7 @@
 				},
 				recording: { mode: 'automatic' },
 				deleteRecordingAfterDays: 30,
-				preferLowLatency: true
+				preferLowLatency: false
 			}
 		})
 	}
