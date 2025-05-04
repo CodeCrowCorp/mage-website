@@ -85,7 +85,9 @@
 					meta: {
 						name: `${env.PUBLIC_ENV}-${$page.params.channelId}`
 					},
-					recording: { mode: 'off' }
+					recording: { mode: 'automatic' },
+					deleteRecordingAfterDays: 30,
+					preferLowLatency: true
 				}
 			})
 		}
@@ -127,9 +129,9 @@
 				meta: {
 					name: `${env.PUBLIC_ENV}-${$page.params.channelId}`
 				},
-				recording: { mode: 'off' },
-				deleteRecordingAfterDays: 30
-				// preferLowLatency: true
+				recording: { mode: 'automatic' },
+				deleteRecordingAfterDays: 30,
+				preferLowLatency: true
 			}
 		})
 	}
