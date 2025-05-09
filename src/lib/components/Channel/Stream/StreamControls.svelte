@@ -86,8 +86,8 @@
 						name: `${env.PUBLIC_ENV}-${$page.params.channelId}`
 					},
 					recording: { mode: 'automatic' },
-					deleteRecordingAfterDays: 30
-					// preferLowLatency: true
+					deleteRecordingAfterDays: 30,
+					preferLowLatency: true
 				}
 			})
 		}
@@ -130,8 +130,8 @@
 					name: `${env.PUBLIC_ENV}-${$page.params.channelId}`
 				},
 				recording: { mode: 'automatic' },
-				deleteRecordingAfterDays: 30
-				// preferLowLatency: true
+				deleteRecordingAfterDays: 30,
+				preferLowLatency: true
 			}
 		})
 	}
